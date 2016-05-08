@@ -26,4 +26,6 @@ This section will contain the current status of the project.  Currently the proj
 
 ## Documentation
 * [Tools](docs/tools.md) - list of tools being used
+* [Building](docs/building.md) - details for building
+* [Testing](docs/testing.md) - details for testing
 * [Windows](docs/windows.md) - details for development on Windows
