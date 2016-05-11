@@ -4,7 +4,7 @@
 # Distributed under GNU General Public License Version 3
 # (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
 
-project(ibcx)
+project(ibc)
 
 cmake_minimum_required(VERSION 2.8)
 
@@ -45,13 +45,14 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-if (IBCX_COVERAGE)
+if (IBC_COVERAGE)
     if (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-        message(FATAL_ERROR "IBCX_COVERAGE is only supported with Debug build")
+        message(WARNING "IBC_COVERAGE is only supported with Debug build type")
+    else ()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+        set(GCOV_LIB gcov)
+        message(STATUS "Coverage: Activated")
     endif ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-    set(GCOV_LIB gcov)
-    message("++ IBCX coverage has been activated")
 endif ()
 
 enable_testing()
