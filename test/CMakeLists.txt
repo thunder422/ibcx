@@ -1,11 +1,11 @@
-set(CATCH_SOURCES
-    catch.hpp
-    catch_main.cpp
-)
+# vim:ts=4:sw=4:et:sts=4:
+#
+# Copyright 2016 Thunder422.  All rights reserved.
+# Distributed under GNU General Public License Version 3
+# (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
 
-add_executable(parsenumber_unittests
-    parsenumber.cpp
-    ${CATCH_SOURCES}
+set(CATCH_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/catch.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/catch_main.cpp
+    PARENT_SCOPE
 )
-target_link_libraries(parsenumber_unittests ${GCOV_LIB})
-add_test(parsenumber_unittests parsenumber_unittests)

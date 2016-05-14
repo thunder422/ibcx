@@ -55,6 +55,21 @@ if (IBC_COVERAGE)
     endif ()
 endif ()
 
+set(IBC_SOURCES
+    constnumparser.cpp
+    token.cpp
+)
+
 enable_testing()
 
 add_subdirectory(test)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_executable(constnum_unittests
+    test/constnum_unittests.cpp
+    ${IBC_SOURCES}
+    ${CATCH_SOURCES}
+)
+target_link_libraries(constnum_unittests ${GCOV_LIB})
+add_test(ConstantNumber_UnitTests constnum_unittests)

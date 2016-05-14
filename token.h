@@ -5,9 +5,19 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#include "catch.hpp"
+#ifndef TOKEN_H
+#define TOKEN_H
 
-TEST_CASE("1. proof of concept", "[initial]")
-{
-    REQUIRE(1 == 1);
-}
+#include <memory>
+
+
+class Token {
+public:
+    Token();
+    virtual ~Token();
+};
+
+using UniqueToken = std::unique_ptr<Token>;
+
+
+#endif  // TOKEN_H
