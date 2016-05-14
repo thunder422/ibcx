@@ -21,6 +21,7 @@ public:
     UniqueToken getToken();
     void changeState(State *);
     void add(char c);
+    void setDone();
 
 private:
     void processInput();
@@ -28,6 +29,7 @@ private:
     std::istream &is;
     State *state;
     std::string number;
+    bool done;
 };
 
 

@@ -14,7 +14,6 @@
 class State {
 public:
     virtual void process(ConstNumParser &parser, int c) const = 0;
-    virtual bool done() const = 0;
 };
 
 class StartState : public State {
@@ -24,19 +23,12 @@ public:
     bool done() const;
 };
 
-
-class EndState : public State {
-public:
-    static EndState *instance();
-    void process(ConstNumParser &parser, int c) const override;
-    bool done() const;
-};
-
 // ----------------------------------------
 
 ConstNumParser::ConstNumParser(std::istream &is_) :
-    is(is_),
-    state(StartState::instance())
+    is {is_},
+    state {StartState::instance()},
+    done {false}
 {
 }
 
@@ -51,7 +43,7 @@ void ConstNumParser::processInput()
     do {
         auto c = is.get();
         state->process(*this, c);
-    } while (!state->done());
+    } while (!done);
 }
 
 void ConstNumParser::changeState(State *state_)
@@ -62,6 +54,11 @@ void ConstNumParser::changeState(State *state_)
 void ConstNumParser::add(char c)
 {
     number += c;
+}
+
+void ConstNumParser::setDone()
+{
+    done = true;
 }
 
 // ----------------------------------------
@@ -75,31 +72,7 @@ StartState *StartState::instance()
 void StartState::process(ConstNumParser &parser, int c) const
 {
     if (isdigit(c)) {
-        parser.changeState(EndState::instance());
         parser.add(c);
     }
-}
-
-bool StartState::done() const
-{
-    return true;
-}
-
-// ----------------------------------------
-
-EndState *EndState::instance()
-{
-    static EndState end_state;
-    return &end_state;
-}
-
-void EndState::process(ConstNumParser &parser, int c) const
-{
-    (void)parser;
-    (void)c;
-}
-
-bool EndState::done() const
-{
-    return true;
+    parser.setDone();
 }
