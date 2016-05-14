@@ -35,4 +35,12 @@ TEST_CASE("parsing integers from a string", "[integers]")
         auto operand = code[1].operand();
         REQUIRE(program.constIntDictionary().get(operand) == "1");
     }
+    SECTION("parse a multiple digit number (integer)")
+    {
+        std::istringstream iss("123");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(code.size() == 2);
+        auto operand = code[1].operand();
+        REQUIRE(program.constIntDictionary().get(operand) == "123");
+    }
 }

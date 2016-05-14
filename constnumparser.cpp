@@ -21,9 +21,15 @@ public:
 
 class StartState : public State {
 public:
-    static StartState *instance();
+    static State *instance();
     void process(ConstNumParser &parser, int c) const override;
     bool done() const;
+};
+
+class MantissaState : public State {
+public:
+    static State *instance();
+    void process(ConstNumParser &parser, int c) const override;
 };
 
 // ----------------------------------------
@@ -73,7 +79,7 @@ void ConstNumParser::setDone()
 
 // ----------------------------------------
 
-StartState *StartState::instance()
+State *StartState::instance()
 {
     static StartState start_state;
     return &start_state;
@@ -82,7 +88,26 @@ StartState *StartState::instance()
 void StartState::process(ConstNumParser &parser, int c) const
 {
     if (isdigit(c)) {
+        parser.changeState(MantissaState::instance());
         parser.add(c);
+    } else {
+        parser.setDone();
     }
-    parser.setDone();
+}
+
+// ----------------------------------------
+
+State *MantissaState::instance()
+{
+    static MantissaState mantissa_state;
+    return &mantissa_state;
+}
+
+void MantissaState::process(ConstNumParser &parser, int c) const
+{
+    if (isdigit(c)) {
+        parser.add(c);
+    } else {
+        parser.setDone();
+    }
 }
