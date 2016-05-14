@@ -17,4 +17,10 @@ TEST_CASE("parsing integers from a string", "[integers]")
         auto token = ConstNumParser(iss).getToken();
         REQUIRE_FALSE(token);
     }
+    SECTION("parse a single digit number (integer)")
+    {
+        std::istringstream iss("1");
+        auto token = ConstNumParser(iss).getToken();
+        REQUIRE(token);
+    }
 }

@@ -8,17 +8,26 @@
 #ifndef CONSTANTNUMBERPARSER_H
 #define CONSTANTNUMBERPARSER_H
 
+#include <iosfwd>
+
 #include "token.h"
 
+class State;
 
 class ConstNumParser {
 public:
     ConstNumParser(std::istream &is_);
 
     UniqueToken getToken();
+    void changeState(State *);
+    void add(char c);
 
 private:
+    void processInput();
+
     std::istream &is;
+    State *state;
+    std::string number;
 };
 
 
