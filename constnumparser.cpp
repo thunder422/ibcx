@@ -37,7 +37,12 @@ DataType ConstNumParser::getCode(ProgramCode &code)
 {
     (void)code;
     processInput();
-    return number.empty() ? DataType::Null : DataType::Integer;
+    if (number.empty()) {
+        return DataType::Null;
+    }
+    code.emplace_back(0);
+    code.emplace_back(0);
+    return DataType::Integer;
 }
 
 void ConstNumParser::processInput()

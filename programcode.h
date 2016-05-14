@@ -20,9 +20,30 @@ class ProgramCode {
 public:
     ProgramCode();
 
+    bool empty() const;
+    std::size_t size() const;
+    template <typename... Args> void emplace_back(Args&&... args);
+
 private:
     ProgramVector code;
 };
+
+
+inline bool ProgramCode::empty() const
+{
+    return code.empty();
+}
+
+inline std::size_t ProgramCode::size() const
+{
+    return code.size();
+}
+
+template <typename... Args>
+inline void ProgramCode::emplace_back(Args&&... args)
+{
+    code.emplace_back(std::forward<Args>(args)...);
+}
 
 
 #endif  // PROGRAMCODE_H

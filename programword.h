@@ -13,11 +13,15 @@
 
 class ProgramWord {
 public:
-    ProgramWord();
+    ProgramWord(uint16_t word_);
+
+private:
+    uint16_t word;
 };
 
 
-inline ProgramWord::ProgramWord()
+inline ProgramWord::ProgramWord(uint16_t word_) :
+    word {word_}
 {
 }
 

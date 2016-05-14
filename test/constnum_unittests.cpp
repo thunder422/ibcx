@@ -19,11 +19,13 @@ TEST_CASE("parsing integers from a string", "[integers]")
         std::istringstream iss("A");
         auto data_type = ConstNumParser(iss).getCode(code);
         REQUIRE(data_type == DataType::Null);
+        REQUIRE(code.empty());
     }
     SECTION("parse a single digit number (integer)")
     {
         std::istringstream iss("1");
         auto data_type = ConstNumParser(iss).getCode(code);
         REQUIRE(data_type == DataType::Integer);
+        REQUIRE(code.size() == 2);
     }
 }
