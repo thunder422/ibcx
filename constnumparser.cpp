@@ -11,6 +11,7 @@
 #include "code.h"
 #include "constnumparser.h"
 #include "programcode.h"
+#include "programmodel.h"
 
 
 class State {
@@ -36,14 +37,14 @@ ConstNumParser::ConstNumParser(std::istream &is_) :
 
 Code constIntCode;
 
-DataType ConstNumParser::getCode(ProgramCode &code)
+DataType ConstNumParser::getCode(ProgramCode &code, ProgramModel &program)
 {
     processInput();
     if (number.empty()) {
         return DataType::Null;
     }
     code.emplace_back(constIntCode);
-    code.emplace_back(0);
+    code.emplace_back(program.constIntDictionary().add(number));
     return DataType::Integer;
 }
 

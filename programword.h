@@ -15,10 +15,11 @@
 
 class ProgramWord {
 public:
-    ProgramWord(Code code);
-    ProgramWord(uint16_t word_);
+    explicit ProgramWord(Code code);
+    explicit ProgramWord(uint16_t word_);
 
     uint16_t instructionCode() const;
+    uint16_t operand() const;
 
 private:
     uint16_t word;
@@ -36,6 +37,11 @@ inline ProgramWord::ProgramWord(uint16_t word_) :
 }
 
 inline uint16_t ProgramWord::instructionCode() const
+{
+    return word;
+}
+
+inline uint16_t ProgramWord::operand() const
 {
     return word;
 }

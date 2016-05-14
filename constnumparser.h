@@ -12,14 +12,16 @@
 
 #include "datatype.h"
 
+
 class ProgramCode;
+class ProgramModel;
 class State;
 
 class ConstNumParser {
 public:
     ConstNumParser(std::istream &is_);
 
-    DataType getCode(ProgramCode &code);
+    DataType getCode(ProgramCode &code, ProgramModel &program);
     void changeState(State *);
     void add(char c);
     void setDone();

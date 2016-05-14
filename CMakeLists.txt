@@ -58,8 +58,10 @@ endif ()
 set(IBC_SOURCES
     code.cpp
     constnumparser.cpp
+    dictionary.cpp
     datatype.h
     programcode.cpp
+    programmodel.cpp
     programword.h
 )
 
