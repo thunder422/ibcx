@@ -14,6 +14,7 @@
 
 
 using ProgramVector = std::vector<ProgramWord>;
+using ProgramReference = ProgramVector::reference;
 
 
 class ProgramCode {
@@ -22,6 +23,7 @@ public:
 
     bool empty() const;
     std::size_t size() const;
+    ProgramReference operator[](std::size_t index);
     template <typename... Args> void emplace_back(Args&&... args);
 
 private:
@@ -37,6 +39,11 @@ inline bool ProgramCode::empty() const
 inline std::size_t ProgramCode::size() const
 {
     return code.size();
+}
+
+inline ProgramReference ProgramCode::operator[](std::size_t index)
+{
+    return code[index];
 }
 
 template <typename... Args>

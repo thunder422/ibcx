@@ -23,9 +23,12 @@ TEST_CASE("parsing integers from a string", "[integers]")
     }
     SECTION("parse a single digit number (integer)")
     {
+        extern Code constIntCode;
+
         std::istringstream iss("1");
         auto data_type = ConstNumParser(iss).getCode(code);
         REQUIRE(data_type == DataType::Integer);
         REQUIRE(code.size() == 2);
+        REQUIRE(code[0].instructionCode() == constIntCode.getValue());
     }
 }

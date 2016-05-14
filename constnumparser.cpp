@@ -8,6 +8,7 @@
 #include <cctype>
 #include <iostream>
 
+#include "code.h"
 #include "constnumparser.h"
 #include "programcode.h"
 
@@ -33,14 +34,15 @@ ConstNumParser::ConstNumParser(std::istream &is_) :
 {
 }
 
+Code constIntCode;
+
 DataType ConstNumParser::getCode(ProgramCode &code)
 {
-    (void)code;
     processInput();
     if (number.empty()) {
         return DataType::Null;
     }
-    code.emplace_back(0);
+    code.emplace_back(constIntCode);
     code.emplace_back(0);
     return DataType::Integer;
 }

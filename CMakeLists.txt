@@ -56,6 +56,7 @@ if (IBC_COVERAGE)
 endif ()
 
 set(IBC_SOURCES
+    code.cpp
     constnumparser.cpp
     datatype.h
     programcode.cpp
