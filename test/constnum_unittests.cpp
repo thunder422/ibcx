@@ -23,7 +23,7 @@ TEST_CASE("parsing integers from a string", "[integers]")
     SECTION("parse a single digit number (integer)")
     {
         std::istringstream iss("1");
-        auto token = ConstNumParser(iss).getToken();
-        REQUIRE(token);
+        auto data_type = ConstNumParser(iss).getCode(code);
+        REQUIRE(data_type == DataType::Integer);
     }
 }

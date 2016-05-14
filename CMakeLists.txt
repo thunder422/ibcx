@@ -60,7 +60,6 @@ set(IBC_SOURCES
     datatype.h
     programcode.cpp
     programword.h
-    token.cpp
 )
 
 enable_testing()

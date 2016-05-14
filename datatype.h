@@ -11,6 +11,7 @@
 
 enum class DataType {
     Null,
+    Integer
 };
 
 

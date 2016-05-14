@@ -33,16 +33,11 @@ ConstNumParser::ConstNumParser(std::istream &is_) :
 {
 }
 
-UniqueToken ConstNumParser::getToken()
-{
-    processInput();
-    return number.empty() ? UniqueToken() : UniqueToken(new Token);
-}
-
 DataType ConstNumParser::getCode(ProgramCode &code)
 {
     (void)code;
-    return DataType::Null;
+    processInput();
+    return number.empty() ? DataType::Null : DataType::Integer;
 }
 
 void ConstNumParser::processInput()
