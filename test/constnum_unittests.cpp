@@ -7,15 +7,18 @@
 
 #include "catch.hpp"
 #include "constnumparser.h"
+#include "programcode.h"
 
 
 TEST_CASE("parsing integers from a string", "[integers]")
 {
+    ProgramCode code;
+
     SECTION("not a number in string (null token pointer)")
     {
         std::istringstream iss("A");
-        auto token = ConstNumParser(iss).getToken();
-        REQUIRE_FALSE(token);
+        auto data_type = ConstNumParser(iss).getCode(code);
+        REQUIRE(data_type == DataType::Null);
     }
     SECTION("parse a single digit number (integer)")
     {

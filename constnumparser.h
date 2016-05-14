@@ -10,8 +10,10 @@
 
 #include <iosfwd>
 
+#include "datatype.h"
 #include "token.h"
 
+class ProgramCode;
 class State;
 
 class ConstNumParser {
@@ -19,6 +21,7 @@ public:
     ConstNumParser(std::istream &is_);
 
     UniqueToken getToken();
+    DataType getCode(ProgramCode &code);
     void changeState(State *);
     void add(char c);
     void setDone();

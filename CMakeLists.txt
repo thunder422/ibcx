@@ -57,6 +57,9 @@ endif ()
 
 set(IBC_SOURCES
     constnumparser.cpp
+    datatype.h
+    programcode.cpp
+    programword.h
     token.cpp
 )
 

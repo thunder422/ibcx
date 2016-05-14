@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "constnumparser.h"
+#include "programcode.h"
 
 
 class State {
@@ -36,6 +37,12 @@ UniqueToken ConstNumParser::getToken()
 {
     processInput();
     return number.empty() ? UniqueToken() : UniqueToken(new Token);
+}
+
+DataType ConstNumParser::getCode(ProgramCode &code)
+{
+    (void)code;
+    return DataType::Null;
 }
 
 void ConstNumParser::processInput()
