@@ -126,6 +126,8 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
 {
     if (next_char == '.' && !parser.isDouble()) {
         parser.setDouble();
+    } else if (toupper(next_char) == 'E') {
+        parser.setDouble();
     } else if (!isdigit(next_char)) {
         parser.setDone();
         return;

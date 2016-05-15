@@ -99,4 +99,13 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         auto operand = code[1].operand();
         REQUIRE(program.constDblDictionary().get(operand) == "1.2");
     }
+    SECTION("parse a number with an exponent")
+    {
+        std::istringstream iss("1e0");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(data_type == DataType::Double);
+        REQUIRE(code.size() == 2);
+        auto operand = code[1].operand();
+        REQUIRE(program.constDblDictionary().get(operand) == "1e0");
+    }
 }
