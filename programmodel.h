@@ -14,12 +14,19 @@
 class ProgramModel {
 public:
     ProgramModel();
+    Dictionary &constDblDictionary();
     Dictionary &constIntDictionary();
 
 private:
     Dictionary const_int_dictionary;
+    Dictionary const_dbl_dictionary;
 };
 
+
+inline Dictionary &ProgramModel::constDblDictionary()
+{
+    return const_dbl_dictionary;
+}
 
 inline Dictionary &ProgramModel::constIntDictionary()
 {

@@ -96,5 +96,7 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code.size() == 2);
         REQUIRE(code[0].instructionCode() == constDblCode.getValue());
+        auto operand = code[1].operand();
+        REQUIRE(program.constDblDictionary().get(operand) == "1.2");
     }
 }

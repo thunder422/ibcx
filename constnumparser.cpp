@@ -52,7 +52,7 @@ DataType ConstNumParser::getCode(ProgramCode &code, ProgramModel &program)
         return DataType::Null;
     } else if (floating_point) {
         code.emplace_back(constDblCode);
-        code.emplace_back(program.constIntDictionary().add(number));
+        code.emplace_back(program.constDblDictionary().add(number));
         return DataType::Double;
     } else {
         code.emplace_back(constIntCode);
