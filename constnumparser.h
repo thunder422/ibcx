@@ -24,6 +24,7 @@ public:
     DataType getCode(ProgramCode &code, ProgramModel &program);
     void changeState(State *);
     void addNextChar();
+    void setDouble();
     void setDone();
 
 private:
@@ -32,6 +33,7 @@ private:
     std::istream &is;
     State *state;
     std::string number;
+    bool floating_point;
     bool done;
 };
 

@@ -11,7 +11,7 @@
 #include "programmodel.h"
 
 
-TEST_CASE("parsing integers from a string", "[integers]")
+TEST_CASE("parsing integer constants from a string", "[integers]")
 {
     ProgramModel program;
     ProgramCode code;
@@ -59,5 +59,19 @@ TEST_CASE("parsing integers from a string", "[integers]")
         auto operand = code[1].operand();
         REQUIRE(program.constIntDictionary().get(operand) == "345");
         REQUIRE(iss.peek() == '+');
+    }
+}
+
+
+TEST_CASE("parsing floating point constants from a string", "[doubles]")
+{
+    ProgramModel program;
+    ProgramCode code;
+
+    SECTION("parse a number with a decimal point")
+    {
+        std::istringstream iss("0.5");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(data_type == DataType::Double);
     }
 }

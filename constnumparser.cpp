@@ -37,6 +37,7 @@ public:
 ConstNumParser::ConstNumParser(std::istream &is_) :
     is {is_},
     state {StartState::instance()},
+    floating_point {false},
     done {false}
 {
 }
@@ -51,7 +52,7 @@ DataType ConstNumParser::getCode(ProgramCode &code, ProgramModel &program)
     }
     code.emplace_back(constIntCode);
     code.emplace_back(program.constIntDictionary().add(number));
-    return DataType::Integer;
+    return floating_point ? DataType::Double : DataType::Integer;
 }
 
 void ConstNumParser::processInput()
@@ -70,6 +71,11 @@ void ConstNumParser::changeState(State *state_)
 void ConstNumParser::addNextChar()
 {
     number += is.get();
+}
+
+void ConstNumParser::setDouble()
+{
+    floating_point = true;
 }
 
 void ConstNumParser::setDone()
@@ -105,7 +111,10 @@ State *MantissaState::instance()
 
 void MantissaState::process(ConstNumParser &parser, int next_char) const
 {
-    if (isdigit(next_char)) {
+    if (next_char == '.') {
+        parser.setDouble();
+        parser.addNextChar();
+    } else if (isdigit(next_char)) {
         parser.addNextChar();
     } else {
         parser.setDone();
