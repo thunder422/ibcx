@@ -42,6 +42,7 @@ ConstNumParser::ConstNumParser(std::istream &is_) :
 {
 }
 
+Code constDblCode;
 Code constIntCode;
 
 DataType ConstNumParser::getCode(ProgramCode &code, ProgramModel &program)
@@ -49,10 +50,15 @@ DataType ConstNumParser::getCode(ProgramCode &code, ProgramModel &program)
     processInput();
     if (number.empty()) {
         return DataType::Null;
+    } else if (floating_point) {
+        code.emplace_back(constDblCode);
+        code.emplace_back(program.constIntDictionary().add(number));
+        return DataType::Double;
+    } else {
+        code.emplace_back(constIntCode);
+        code.emplace_back(program.constIntDictionary().add(number));
+        return DataType::Integer;
     }
-    code.emplace_back(constIntCode);
-    code.emplace_back(program.constIntDictionary().add(number));
-    return floating_point ? DataType::Double : DataType::Integer;
 }
 
 void ConstNumParser::processInput()

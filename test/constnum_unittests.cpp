@@ -87,4 +87,14 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         REQUIRE(data_type == DataType::Double);
         REQUIRE(iss.peek() == '.');
     }
+    SECTION("parse a number to a double constant in the code")
+    {
+        extern Code constDblCode;
+
+        std::istringstream iss("1.2");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(data_type == DataType::Double);
+        REQUIRE(code.size() == 2);
+        REQUIRE(code[0].instructionCode() == constDblCode.getValue());
+    }
 }
