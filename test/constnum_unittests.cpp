@@ -74,4 +74,10 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         auto data_type = ConstNumParser(iss).getCode(code, program);
         REQUIRE(data_type == DataType::Double);
     }
+    SECTION("parse a number with a decimal point at the beginning")
+    {
+        std::istringstream iss(".75");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(data_type == DataType::Double);
+    }
 }

@@ -93,12 +93,14 @@ State *StartState::instance()
 
 void StartState::process(ConstNumParser &parser, int next_char) const
 {
-    if (isdigit(next_char) || next_char == '-') {
-        parser.changeState(MantissaState::instance());
-        parser.addNextChar();
-    } else {
+    if (next_char == '.') {
+        parser.setDouble();
+    } else if (!isdigit(next_char) && next_char != '-') {
         parser.setDone();
+        return;
     }
+    parser.changeState(MantissaState::instance());
+    parser.addNextChar();
 }
 
 // ----------------------------------------
@@ -113,10 +115,9 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
 {
     if (next_char == '.') {
         parser.setDouble();
-        parser.addNextChar();
-    } else if (isdigit(next_char)) {
-        parser.addNextChar();
-    } else {
+    } else if (!isdigit(next_char)) {
         parser.setDone();
+        return;
     }
+    parser.addNextChar();
 }
