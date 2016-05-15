@@ -87,7 +87,7 @@ State *StartState::instance()
 
 void StartState::process(ConstNumParser &parser, int c) const
 {
-    if (isdigit(c)) {
+    if (isdigit(c) || c == '-') {
         parser.changeState(MantissaState::instance());
         parser.add(c);
     } else {

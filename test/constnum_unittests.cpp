@@ -23,7 +23,7 @@ TEST_CASE("parsing integers from a string", "[integers]")
         REQUIRE(data_type == DataType::Null);
         REQUIRE(code.empty());
     }
-    SECTION("parse a single digit number (integer)")
+    SECTION("parse a single digit number")
     {
         extern Code constIntCode;
 
@@ -35,12 +35,20 @@ TEST_CASE("parsing integers from a string", "[integers]")
         auto operand = code[1].operand();
         REQUIRE(program.constIntDictionary().get(operand) == "1");
     }
-    SECTION("parse a multiple digit number (integer)")
+    SECTION("parse a multiple digit number")
     {
         std::istringstream iss("123");
         auto data_type = ConstNumParser(iss).getCode(code, program);
         REQUIRE(code.size() == 2);
         auto operand = code[1].operand();
         REQUIRE(program.constIntDictionary().get(operand) == "123");
+    }
+    SECTION("parse a negative number")
+    {
+        std::istringstream iss("-234");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(code.size() == 2);
+        auto operand = code[1].operand();
+        REQUIRE(program.constIntDictionary().get(operand) == "-234");
     }
 }
