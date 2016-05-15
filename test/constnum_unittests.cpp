@@ -108,4 +108,14 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         auto operand = code[1].operand();
         REQUIRE(program.constDblDictionary().get(operand) == "1e0");
     }
+    SECTION("make sure parsing stops before a second 'E'")
+    {
+        std::istringstream iss("1e0E");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(data_type == DataType::Double);
+        REQUIRE(code.size() == 2);
+        auto operand = code[1].operand();
+        REQUIRE(program.constDblDictionary().get(operand) == "1e0");
+        REQUIRE(iss.peek() == 'E');
+    }
 }

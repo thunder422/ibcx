@@ -32,6 +32,12 @@ public:
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
+class ExponentState : public State {
+public:
+    static State *instance();
+    void process(ConstNumParser &parser, int next_char) const override;
+};
+
 // ----------------------------------------
 
 ConstNumParser::ConstNumParser(std::istream &is_) :
@@ -127,10 +133,29 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
     if (next_char == '.' && !parser.isDouble()) {
         parser.setDouble();
     } else if (toupper(next_char) == 'E') {
+        parser.changeState(ExponentState::instance());
         parser.setDouble();
     } else if (!isdigit(next_char)) {
         parser.setDone();
         return;
     }
     parser.addNextChar();
+}
+
+// ----------------------------------------
+
+State *ExponentState::instance()
+{
+    static ExponentState expononent_state;
+    return &expononent_state;
+
+}
+
+void ExponentState::process(ConstNumParser &parser, int next_char) const
+{
+    if (isdigit(next_char)) {
+        parser.addNextChar();
+    } else {
+        parser.setDone();
+    }
 }
