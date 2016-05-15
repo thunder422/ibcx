@@ -16,20 +16,20 @@
 
 class State {
 public:
-    virtual void process(ConstNumParser &parser, int c) const = 0;
+    virtual void process(ConstNumParser &parser, int next_char) const = 0;
 };
 
 class StartState : public State {
 public:
     static State *instance();
-    void process(ConstNumParser &parser, int c) const override;
+    void process(ConstNumParser &parser, int next_char) const override;
     bool done() const;
 };
 
 class MantissaState : public State {
 public:
     static State *instance();
-    void process(ConstNumParser &parser, int c) const override;
+    void process(ConstNumParser &parser, int next_char) const override;
 };
 
 // ----------------------------------------
@@ -57,8 +57,8 @@ DataType ConstNumParser::getCode(ProgramCode &code, ProgramModel &program)
 void ConstNumParser::processInput()
 {
     do {
-        auto c = is.get();
-        state->process(*this, c);
+        auto next_char = is.peek();
+        state->process(*this, next_char);
     } while (!done);
 }
 
@@ -67,9 +67,9 @@ void ConstNumParser::changeState(State *state_)
     state = state_;
 }
 
-void ConstNumParser::add(char c)
+void ConstNumParser::addNextChar()
 {
-    number += c;
+    number += is.get();
 }
 
 void ConstNumParser::setDone()
@@ -85,11 +85,11 @@ State *StartState::instance()
     return &start_state;
 }
 
-void StartState::process(ConstNumParser &parser, int c) const
+void StartState::process(ConstNumParser &parser, int next_char) const
 {
-    if (isdigit(c) || c == '-') {
+    if (isdigit(next_char) || next_char == '-') {
         parser.changeState(MantissaState::instance());
-        parser.add(c);
+        parser.addNextChar();
     } else {
         parser.setDone();
     }
@@ -103,10 +103,10 @@ State *MantissaState::instance()
     return &mantissa_state;
 }
 
-void MantissaState::process(ConstNumParser &parser, int c) const
+void MantissaState::process(ConstNumParser &parser, int next_char) const
 {
-    if (isdigit(c)) {
-        parser.add(c);
+    if (isdigit(next_char)) {
+        parser.addNextChar();
     } else {
         parser.setDone();
     }

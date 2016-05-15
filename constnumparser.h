@@ -23,7 +23,7 @@ public:
 
     DataType getCode(ProgramCode &code, ProgramModel &program);
     void changeState(State *);
-    void add(char c);
+    void addNextChar();
     void setDone();
 
 private:

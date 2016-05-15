@@ -51,4 +51,13 @@ TEST_CASE("parsing integers from a string", "[integers]")
         auto operand = code[1].operand();
         REQUIRE(program.constIntDictionary().get(operand) == "-234");
     }
+    SECTION("terminate parsing at correct character")
+    {
+        std::istringstream iss("345+");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(code.size() == 2);
+        auto operand = code[1].operand();
+        REQUIRE(program.constIntDictionary().get(operand) == "345");
+        REQUIRE(iss.peek() == '+');
+    }
 }
