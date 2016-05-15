@@ -80,4 +80,11 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         auto data_type = ConstNumParser(iss).getCode(code, program);
         REQUIRE(data_type == DataType::Double);
     }
+    SECTION("parse a number with a second decimal point (should ignore second one)")
+    {
+        std::istringstream iss("0.1.");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(data_type == DataType::Double);
+        REQUIRE(iss.peek() == '.');
+    }
 }

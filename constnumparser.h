@@ -25,6 +25,7 @@ public:
     void changeState(State *);
     void addNextChar();
     void setDouble();
+    bool isDouble();
     void setDone();
 
 private:

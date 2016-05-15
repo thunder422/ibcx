@@ -78,6 +78,11 @@ void ConstNumParser::setDouble()
     floating_point = true;
 }
 
+bool ConstNumParser::isDouble()
+{
+    return floating_point;
+}
+
 void ConstNumParser::setDone()
 {
     done = true;
@@ -113,7 +118,7 @@ State *MantissaState::instance()
 
 void MantissaState::process(ConstNumParser &parser, int next_char) const
 {
-    if (next_char == '.') {
+    if (next_char == '.' && !parser.isDouble()) {
         parser.setDouble();
     } else if (!isdigit(next_char)) {
         parser.setDone();
