@@ -38,6 +38,12 @@ public:
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
+class ExponentDigitsState : public State {
+public:
+    static State *instance();
+    void process(ConstNumParser &parser, int next_char) const override;
+};
+
 // ----------------------------------------
 
 ConstNumParser::ConstNumParser(std::istream &is_) :
@@ -104,8 +110,8 @@ void ConstNumParser::setDone()
 
 State *StartState::instance()
 {
-    static StartState start_state;
-    return &start_state;
+    static StartState state;
+    return &state;
 }
 
 void StartState::process(ConstNumParser &parser, int next_char) const
@@ -124,8 +130,8 @@ void StartState::process(ConstNumParser &parser, int next_char) const
 
 State *MantissaState::instance()
 {
-    static MantissaState mantissa_state;
-    return &mantissa_state;
+    static MantissaState state;
+    return &state;
 }
 
 void MantissaState::process(ConstNumParser &parser, int next_char) const
@@ -146,16 +152,29 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
 
 State *ExponentState::instance()
 {
-    static ExponentState expononent_state;
-    return &expononent_state;
-
+    static ExponentState state;
+    return &state;
 }
 
 void ExponentState::process(ConstNumParser &parser, int next_char) const
 {
-    if (isdigit(next_char)) {
+    if (isdigit(next_char) || next_char == '-') {
+        parser.changeState(ExponentDigitsState::instance());
         parser.addNextChar();
-    } else if (next_char == '-') {
+    }
+}
+
+// ----------------------------------------
+
+State *ExponentDigitsState::instance()
+{
+    static ExponentDigitsState state;
+    return &state;
+}
+
+void ExponentDigitsState::process(ConstNumParser &parser, int next_char) const
+{
+    if (isdigit(next_char)) {
         parser.addNextChar();
     } else {
         parser.setDone();

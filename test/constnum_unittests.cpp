@@ -127,4 +127,14 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         auto operand = code[1].operand();
         REQUIRE(program.constDblDictionary().get(operand) == "1e-2");
     }
+    SECTION("parse a number with a minus exponent terminated be a minus operator")
+    {
+        std::istringstream iss("1e-2-");
+        auto data_type = ConstNumParser(iss).getCode(code, program);
+        REQUIRE(data_type == DataType::Double);
+        REQUIRE(code.size() == 2);
+        auto operand = code[1].operand();
+        REQUIRE(program.constDblDictionary().get(operand) == "1e-2");
+        REQUIRE(iss.peek() == '-');
+    }
 }
