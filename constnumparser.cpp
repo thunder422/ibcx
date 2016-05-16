@@ -155,6 +155,8 @@ void ExponentState::process(ConstNumParser &parser, int next_char) const
 {
     if (isdigit(next_char)) {
         parser.addNextChar();
+    } else if (next_char == '-') {
+        parser.addNextChar();
     } else {
         parser.setDone();
     }
