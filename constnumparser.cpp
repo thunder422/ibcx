@@ -158,7 +158,7 @@ State *ExponentState::instance()
 
 void ExponentState::process(ConstNumParser &parser, int next_char) const
 {
-    if (isdigit(next_char) || next_char == '-') {
+    if (isdigit(next_char) || next_char == '-' || next_char == '+') {
         parser.changeState(ExponentDigitsState::instance());
         parser.addNextChar();
     }
