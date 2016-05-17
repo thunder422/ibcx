@@ -153,4 +153,15 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
         std::istringstream iss("%");
         REQUIRE_THROWS_AS(ConstNumParser(iss).getCode(program, code_line), ParseError);
     }
+    SECTION("error message for an unexpected symbol at the beginning")
+    {
+        std::istringstream iss("%");
+        try {
+            ConstNumParser(iss).getCode(program, code_line);
+        }
+        catch (const ParseError &error) {
+            std::string expected = "expected numerical constant or unary operator";
+            REQUIRE(error.what() == expected);
+        }
+    }
 }

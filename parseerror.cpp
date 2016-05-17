@@ -7,3 +7,8 @@
 
 #include "parseerror.h"
 
+
+ParseError::ParseError(const char *message) :
+    runtime_error(message)
+{
+}

@@ -118,7 +118,7 @@ void StartState::process(ConstNumParser &parser, int next_char) const
     if (next_char == '.') {
         parser.setDouble();
     } else if (!isdigit(next_char) && next_char != '-') {
-        throw ParseError {};
+        throw ParseError {"expected numerical constant or unary operator"};
     }
     parser.changeState(MantissaState::instance());
     parser.addNextChar();
