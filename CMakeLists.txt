@@ -62,7 +62,7 @@ set(IBC_SOURCES
     datatype.h
     parseerror.cpp
     programcode.cpp
-    programmodel.cpp
+    programunit.cpp
     programword.h
 )
 

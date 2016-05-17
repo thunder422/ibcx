@@ -14,14 +14,14 @@
 
 
 class ProgramCode;
-class ProgramModel;
+class ProgramUnit;
 class State;
 
 class ConstNumParser {
 public:
     ConstNumParser(std::istream &is_);
 
-    DataType getCode(ProgramCode &code, ProgramModel &program);
+    DataType getCode(ProgramUnit &program, ProgramCode &code_line);
     void changeState(State *);
     void addNextChar();
     void setDouble();

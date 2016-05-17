@@ -11,9 +11,9 @@
 #include "dictionary.h"
 
 
-class ProgramModel {
+class ProgramUnit {
 public:
-    ProgramModel();
+    ProgramUnit();
     Dictionary &constDblDictionary();
     Dictionary &constIntDictionary();
 
@@ -23,12 +23,12 @@ private:
 };
 
 
-inline Dictionary &ProgramModel::constDblDictionary()
+inline Dictionary &ProgramUnit::constDblDictionary()
 {
     return const_dbl_dictionary;
 }
 
-inline Dictionary &ProgramModel::constIntDictionary()
+inline Dictionary &ProgramUnit::constIntDictionary()
 {
     return const_int_dictionary;
 }

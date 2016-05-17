@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#include "programmodel.h"
+#include "programunit.h"
 
-ProgramModel::ProgramModel()
+ProgramUnit::ProgramUnit()
 {
 }

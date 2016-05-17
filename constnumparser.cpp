@@ -12,7 +12,7 @@
 #include "constnumparser.h"
 #include "parseerror.h"
 #include "programcode.h"
-#include "programmodel.h"
+#include "programunit.h"
 
 
 class State {
@@ -58,16 +58,16 @@ ConstNumParser::ConstNumParser(std::istream &is_) :
 Code constDblCode;
 Code constIntCode;
 
-DataType ConstNumParser::getCode(ProgramCode &code, ProgramModel &program)
+DataType ConstNumParser::getCode(ProgramUnit &program, ProgramCode &code_line)
 {
     processInput();
     if (floating_point) {
-        code.emplace_back(constDblCode);
-        code.emplace_back(program.constDblDictionary().add(number));
+        code_line.emplace_back(constDblCode);
+        code_line.emplace_back(program.constDblDictionary().add(number));
         return DataType::Double;
     } else {
-        code.emplace_back(constIntCode);
-        code.emplace_back(program.constIntDictionary().add(number));
+        code_line.emplace_back(constIntCode);
+        code_line.emplace_back(program.constIntDictionary().add(number));
         return DataType::Integer;
     }
 }
