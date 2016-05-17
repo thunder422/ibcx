@@ -10,6 +10,7 @@
 
 #include "code.h"
 #include "constnumparser.h"
+#include "parseerror.h"
 #include "programcode.h"
 #include "programmodel.h"
 
@@ -60,9 +61,7 @@ Code constIntCode;
 DataType ConstNumParser::getCode(ProgramCode &code, ProgramModel &program)
 {
     processInput();
-    if (number.empty()) {
-        return DataType::Null;
-    } else if (floating_point) {
+    if (floating_point) {
         code.emplace_back(constDblCode);
         code.emplace_back(program.constDblDictionary().add(number));
         return DataType::Double;
@@ -119,8 +118,7 @@ void StartState::process(ConstNumParser &parser, int next_char) const
     if (next_char == '.') {
         parser.setDouble();
     } else if (!isdigit(next_char) && next_char != '-') {
-        parser.setDone();
-        return;
+        throw ParseError {};
     }
     parser.changeState(MantissaState::instance());
     parser.addNextChar();

@@ -7,6 +7,7 @@
 
 #include "catch.hpp"
 #include "constnumparser.h"
+#include "parseerror.h"
 #include "programcode.h"
 #include "programmodel.h"
 
@@ -16,13 +17,6 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
     ProgramModel program;
     ProgramCode code;
 
-    SECTION("not a number in string (null token pointer)")
-    {
-        std::istringstream iss("A");
-        auto data_type = ConstNumParser(iss).getCode(code, program);
-        REQUIRE(data_type == DataType::Null);
-        REQUIRE(code.empty());
-    }
     SECTION("parse a single digit number")
     {
         extern Code constIntCode;
@@ -145,5 +139,18 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         REQUIRE(code.size() == 2);
         auto operand = code[1].operand();
         REQUIRE(program.constDblDictionary().get(operand) == "1e+2");
+    }
+}
+
+
+TEST_CASE("check for various number constant parsing errors", "[errors]")
+{
+    ProgramModel program;
+    ProgramCode code;
+
+    SECTION("error from an unexpected symbol at the beginning")
+    {
+        std::istringstream iss("%");
+        REQUIRE_THROWS_AS(ConstNumParser(iss).getCode(code, program), ParseError);
     }
 }
