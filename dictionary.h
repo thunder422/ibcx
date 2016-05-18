@@ -21,7 +21,7 @@ public:
 
 private:
     struct EntryValue {
-        EntryValue(uint16_t index_);
+        EntryValue(uint16_t index);
 
         uint16_t index;
     };
@@ -33,8 +33,8 @@ private:
 };
 
 
-inline Dictionary::EntryValue::EntryValue(uint16_t index_) :
-    index {index_}
+inline Dictionary::EntryValue::EntryValue(uint16_t index) :
+    index {index}
 {
 }
 

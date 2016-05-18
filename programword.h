@@ -16,7 +16,7 @@
 class ProgramWord {
 public:
     explicit ProgramWord(Code code);
-    explicit ProgramWord(uint16_t word_);
+    explicit ProgramWord(uint16_t word);
 
     uint16_t instructionCode() const;
     uint16_t operand() const;
@@ -31,8 +31,8 @@ inline ProgramWord::ProgramWord(Code code) :
 {
 }
 
-inline ProgramWord::ProgramWord(uint16_t word_) :
-    word {word_}
+inline ProgramWord::ProgramWord(uint16_t word) :
+    word {word}
 {
 }
 

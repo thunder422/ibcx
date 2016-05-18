@@ -47,8 +47,8 @@ public:
 
 // ----------------------------------------
 
-ConstNumParser::ConstNumParser(std::istream &is_) :
-    is {is_},
+ConstNumParser::ConstNumParser(std::istream &is) :
+    is {is},
     state {StartState::instance()},
     floating_point {false},
     done {false}
@@ -80,9 +80,9 @@ void ConstNumParser::processInput()
     } while (!done);
 }
 
-void ConstNumParser::changeState(State *state_)
+void ConstNumParser::changeState(State *new_state)
 {
-    state = state_;
+    state = new_state;
 }
 
 void ConstNumParser::addNextChar()

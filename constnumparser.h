@@ -19,10 +19,10 @@ class State;
 
 class ConstNumParser {
 public:
-    ConstNumParser(std::istream &is_);
+    ConstNumParser(std::istream &is);
 
     DataType getCode(ProgramUnit &program, ProgramCode &code_line);
-    void changeState(State *);
+    void changeState(State *new_state);
     void addNextChar();
     void setDouble();
     bool isDouble();
