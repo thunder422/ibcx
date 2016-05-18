@@ -9,7 +9,7 @@
 
 
 ParseError::ParseError(const char *message, unsigned column) :
-    runtime_error(message),
-    column(column)
+    runtime_error {message},
+    column {column}
 {
 }

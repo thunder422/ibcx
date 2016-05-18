@@ -11,6 +11,6 @@
 uint16_t Code::count;
 
 Code::Code() :
-    value(count++)
+    value {count++}
 {
 }
