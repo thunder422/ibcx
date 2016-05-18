@@ -8,7 +8,8 @@
 #include "parseerror.h"
 
 
-ParseError::ParseError(const char *message) :
-    runtime_error(message)
+ParseError::ParseError(const char *message, unsigned column) :
+    runtime_error(message),
+    column(column)
 {
 }

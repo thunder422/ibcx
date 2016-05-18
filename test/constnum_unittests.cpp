@@ -162,6 +162,7 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
         catch (const ParseError &error) {
             std::string expected = "expected numerical constant or unary operator";
             REQUIRE(error.what() == expected);
+            REQUIRE(error.column == 0);
         }
     }
 }
