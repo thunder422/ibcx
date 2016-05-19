@@ -61,7 +61,9 @@ Code constIntCode;
 DataType ConstNumParser::getCode(ProgramUnit &program, ProgramCode &code_line)
 {
     processInput();
-    if (floating_point) {
+    if (number.empty()) {
+        return DataType::Null;
+    } else if (floating_point) {
         code_line.emplace_back(constDblCode);
         code_line.emplace_back(program.constDblDictionary().add(number));
         return DataType::Double;
@@ -118,7 +120,8 @@ void StartState::process(ConstNumParser &parser, int next_char) const
     if (next_char == '.') {
         parser.setDouble();
     } else if (!isdigit(next_char) && next_char != '-') {
-        throw ParseError {"expected numerical constant or unary operator", 0};
+        parser.setDone();
+        return;
     }
     parser.changeState(MantissaState::instance());
     parser.addNextChar();

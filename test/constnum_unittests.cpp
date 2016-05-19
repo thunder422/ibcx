@@ -148,21 +148,11 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
     ProgramUnit program;
     ProgramCode code_line;
 
-    SECTION("error from an unexpected symbol at the beginning")
+    SECTION("non-constant character at beginning (not a number, error determined by caller")
     {
         std::istringstream iss {"%"};
-        REQUIRE_THROWS_AS(ConstNumParser{iss}.getCode(program, code_line), ParseError);
-    }
-    SECTION("error message for an unexpected symbol at the beginning")
-    {
-        std::istringstream iss {"%"};
-        try {
-            ConstNumParser{iss}.getCode(program, code_line);
-        }
-        catch (const ParseError &error) {
-            std::string expected = "expected numerical constant or unary operator";
-            REQUIRE(error.what() == expected);
-            REQUIRE(error.column == 0);
-        }
+        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        REQUIRE(data_type == DataType::Null);
+        REQUIRE(iss.peek() == '%');
     }
 }
