@@ -8,13 +8,8 @@
 #ifndef PARSEERROR_H
 #define PARSEERROR_H
 
-#include <stdexcept>
 
-
-struct ParseError : public std::runtime_error {
-    ParseError(const char *message, unsigned column);
-
-    unsigned column;
+struct ParseError {
 };
 
 

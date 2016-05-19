@@ -60,7 +60,7 @@ set(IBC_SOURCES
     constnumparser.cpp
     dictionary.cpp
     datatype.h
-    parseerror.cpp
+    parseerror.h
     programcode.cpp
     programunit.cpp
     programword.h

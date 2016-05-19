@@ -148,11 +148,16 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
     ProgramUnit program;
     ProgramCode code_line;
 
-    SECTION("non-constant character at beginning (not a number, error determined by caller")
+    SECTION("input stream does not contain a constant (caller will determine action)")
     {
         std::istringstream iss {"%"};
         auto data_type = ConstNumParser{iss}.getCode(program, code_line);
         REQUIRE(data_type == DataType::Null);
         REQUIRE(iss.peek() == '%');
+    }
+    SECTION("a leading zero not followed by a decimal point error")
+    {
+        std::istringstream iss {"01"};
+        REQUIRE_THROWS_AS(ConstNumParser{iss}.getCode(program, code_line), ParseError);
     }
 }

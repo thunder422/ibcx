@@ -24,7 +24,12 @@ class StartState : public State {
 public:
     static State *instance();
     void process(ConstNumParser &parser, int next_char) const override;
-    bool done() const;
+};
+
+class ZeroState : public State {
+public:
+    static State *instance();
+    void process(ConstNumParser &parser, int next_char) const override;
 };
 
 class MantissaState : public State {
@@ -117,13 +122,17 @@ State *StartState::instance()
 
 void StartState::process(ConstNumParser &parser, int next_char) const
 {
-    if (next_char == '.') {
-        parser.setDouble();
-    } else if (!isdigit(next_char) && next_char != '-') {
-        parser.setDone();
-        return;
+    if (next_char == '0') {
+        parser.changeState(ZeroState::instance());
+    } else {
+        if (next_char == '.') {
+            parser.setDouble();
+        } else if (!isdigit(next_char) && next_char != '-') {
+            parser.setDone();
+            return;
+        }
+        parser.changeState(MantissaState::instance());
     }
-    parser.changeState(MantissaState::instance());
     parser.addNextChar();
 }
 
@@ -179,5 +188,24 @@ void ExponentDigitsState::process(ConstNumParser &parser, int next_char) const
         parser.addNextChar();
     } else {
         parser.setDone();
+    }
+}
+
+// ----------------------------------------
+
+State *ZeroState::instance()
+{
+    static ZeroState state;
+    return &state;
+}
+
+void ZeroState::process(ConstNumParser &parser, int next_char) const
+{
+    if (next_char == '.') {
+        parser.setDouble();
+        parser.changeState(MantissaState::instance());
+        parser.addNextChar();
+    } else if (isdigit(next_char)) {
+        throw ParseError {};
     }
 }
