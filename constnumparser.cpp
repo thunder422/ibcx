@@ -206,6 +206,6 @@ void ZeroState::process(ConstNumParser &parser, int next_char) const
         parser.changeState(MantissaState::instance());
         parser.addNextChar();
     } else if (isdigit(next_char)) {
-        throw ParseError {};
+        throw ParseError {"expected decimal point after leading zero"};
     }
 }

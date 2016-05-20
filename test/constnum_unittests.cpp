@@ -160,4 +160,15 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
         std::istringstream iss {"01"};
         REQUIRE_THROWS_AS(ConstNumParser{iss}.getCode(program, code_line), ParseError);
     }
+    SECTION("error message for a leading zero not followed by a decimal point")
+    {
+        std::istringstream iss("01");
+        try {
+            ConstNumParser(iss).getCode(program, code_line);
+        }
+        catch (const ParseError &error) {
+            std::string expected = "expected decimal point after leading zero";
+            REQUIRE(error.what() == expected);
+        }
+    }
 }
