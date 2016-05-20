@@ -197,3 +197,16 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
         REQUIRE(iss.peek() == '-');
     }
 }
+
+
+TEST_CASE("handle leading period of a constant correctly including errors", "[period]")
+{
+    ProgramUnit program;
+    ProgramCode code_line;
+
+    SECTION("check for an error when a leading period is followed by another period")
+    {
+        std::istringstream iss("..");
+        REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
+    }
+}

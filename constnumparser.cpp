@@ -32,6 +32,12 @@ public:
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
+class PeriodState : public State {
+public:
+    static State *instance();
+    void process(ConstNumParser &parser, int next_char) const override;
+};
+
 class MantissaState : public State {
 public:
     static State *instance();
@@ -132,11 +138,13 @@ void StartState::process(ConstNumParser &parser, int next_char) const
     } else {
         if (next_char == '.') {
             parser.setDouble();
-        } else if (!isdigit(next_char) && next_char != '-') {
+            parser.changeState(PeriodState::instance());
+        } else if (isdigit(next_char) || next_char == '-') {
+            parser.changeState(MantissaState::instance());
+        } else {
             parser.setDone();
             return;
         }
-        parser.changeState(MantissaState::instance());
     }
     parser.addNextChar();
 }
@@ -214,5 +222,22 @@ void ZeroState::process(ConstNumParser &parser, int next_char) const
         throw ParseError {"expected decimal point after leading zero", parser.getColumn()};
     } else {
         parser.setDone();
+    }
+}
+
+// ----------------------------------------
+
+State *PeriodState::instance()
+{
+    static PeriodState state;
+    return &state;
+}
+
+void PeriodState::process(ConstNumParser &parser, int next_char) const
+{
+    if (isdigit(next_char)) {
+        parser.changeState(MantissaState::instance());
+    } else {
+        throw ParseError {"expected digit after decimal point", parser.getColumn()};
     }
 }
