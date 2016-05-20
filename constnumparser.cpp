@@ -92,6 +92,11 @@ void ConstNumParser::changeState(State *new_state)
     state = new_state;
 }
 
+unsigned ConstNumParser::getColumn() const
+{
+    return is.tellg();
+}
+
 void ConstNumParser::addNextChar()
 {
     number += is.get();
@@ -206,6 +211,6 @@ void ZeroState::process(ConstNumParser &parser, int next_char) const
         parser.changeState(MantissaState::instance());
         parser.addNextChar();
     } else if (isdigit(next_char)) {
-        throw ParseError {"expected decimal point after leading zero", 1};
+        throw ParseError {"expected decimal point after leading zero", parser.getColumn()};
     }
 }

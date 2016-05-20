@@ -22,7 +22,9 @@ public:
     ConstNumParser(std::istream &is);
 
     DataType getCode(ProgramUnit &program, ProgramCode &code_line);
+
     void changeState(State *new_state);
+    unsigned getColumn() const;
     void addNextChar();
     void setDouble();
     bool isDouble();

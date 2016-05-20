@@ -172,4 +172,18 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
             REQUIRE(error.column == 1);
         }
     }
+    SECTION("check for the correct column on the leading zero not followed by a period error")
+    {
+        std::istringstream iss("word 01");
+        std::string skip_word;
+        iss >> skip_word >> std::ws;
+        try {
+            ConstNumParser(iss).getCode(program, code_line);
+        }
+        catch (const ParseError &error) {
+            std::string expected = "expected decimal point after leading zero";
+            REQUIRE(error.what() == expected);
+            REQUIRE(error.column == 6);
+        }
+    }
 }
