@@ -22,7 +22,7 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
         extern Code constIntCode;
 
         std::istringstream iss {"1"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Integer);
         REQUIRE(code_line.size() == 2);
         REQUIRE(code_line[0].instructionCode() == constIntCode.getValue());
@@ -32,7 +32,7 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
     SECTION("parse a multiple digit number")
     {
         std::istringstream iss {"123"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
         REQUIRE(program.constIntDictionary().get(operand) == "123");
@@ -40,7 +40,7 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
     SECTION("parse a negative number")
     {
         std::istringstream iss {"-234"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
         REQUIRE(program.constIntDictionary().get(operand) == "-234");
@@ -48,7 +48,7 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
     SECTION("terminate parsing at correct character")
     {
         std::istringstream iss {"345+"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
         REQUIRE(program.constIntDictionary().get(operand) == "345");
@@ -65,19 +65,19 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
     SECTION("parse a number with a decimal point")
     {
         std::istringstream iss {"0.5"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
     }
     SECTION("parse a number with a decimal point at the beginning")
     {
         std::istringstream iss {".75"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
     }
     SECTION("parse a number with a second decimal point (should ignore second one)")
     {
         std::istringstream iss {"0.1."};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
         REQUIRE(iss.peek() == '.');
     }
@@ -86,7 +86,7 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
         extern Code constDblCode;
 
         std::istringstream iss {"1.2"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 2);
         REQUIRE(code_line[0].instructionCode() == constDblCode.getValue());
@@ -96,7 +96,7 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
     SECTION("parse a number with an exponent")
     {
         std::istringstream iss {"1e0"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
@@ -105,7 +105,7 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
     SECTION("make sure parsing stops before a second 'E'")
     {
         std::istringstream iss {"1e0E"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
@@ -115,7 +115,7 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
     SECTION("parse a number with a minus exponent")
     {
         std::istringstream iss {"1e-2"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
@@ -124,7 +124,7 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
     SECTION("parse a number with a minus exponent terminated be a minus operator")
     {
         std::istringstream iss {"1e-2-"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
@@ -134,7 +134,7 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
     SECTION("parse a number with a plus exponent")
     {
         std::istringstream iss {"1e+2"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
@@ -151,20 +151,20 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
     SECTION("input stream does not contain a constant (caller will determine action)")
     {
         std::istringstream iss {"%"};
-        auto data_type = ConstNumParser{iss}.getCode(program, code_line);
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Null);
         REQUIRE(iss.peek() == '%');
     }
     SECTION("a leading zero not followed by a decimal point error")
     {
         std::istringstream iss {"01"};
-        REQUIRE_THROWS_AS(ConstNumParser{iss}.getCode(program, code_line), ParseError);
+        REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
     }
     SECTION("error message for a leading zero not followed by a decimal point")
     {
         std::istringstream iss("01");
         try {
-            ConstNumParser(iss).getCode(program, code_line);
+            ConstNumParser(iss).parse(code_line, program);
         }
         catch (const ParseError &error) {
             std::string expected = "expected decimal point after leading zero";
@@ -178,12 +178,22 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
         std::string skip_word;
         iss >> skip_word >> std::ws;
         try {
-            ConstNumParser(iss).getCode(program, code_line);
+            ConstNumParser(iss).parse(code_line, program);
         }
         catch (const ParseError &error) {
             std::string expected = "expected decimal point after leading zero";
             REQUIRE(error.what() == expected);
             REQUIRE(error.column == 6);
         }
+    }
+    SECTION("verify a non-period non-digit terminates the constant after a leading zero")
+    {
+        std::istringstream iss("0-");
+        auto data_type = ConstNumParser(iss).parse(code_line, program);
+        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(code_line.size() == 2);
+        auto operand = code_line[1].operand();
+        REQUIRE(program.constIntDictionary().get(operand) == "0");
+        REQUIRE(iss.peek() == '-');
     }
 }

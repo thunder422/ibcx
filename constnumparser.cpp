@@ -63,7 +63,7 @@ ConstNumParser::ConstNumParser(std::istream &is) :
 Code constDblCode;
 Code constIntCode;
 
-DataType ConstNumParser::getCode(ProgramUnit &program, ProgramCode &code_line)
+DataType ConstNumParser::parse(ProgramCode &code_line, ProgramUnit &program)
 {
     processInput();
     if (number.empty()) {
@@ -212,5 +212,7 @@ void ZeroState::process(ConstNumParser &parser, int next_char) const
         parser.addNextChar();
     } else if (isdigit(next_char)) {
         throw ParseError {"expected decimal point after leading zero", parser.getColumn()};
+    } else {
+        parser.setDone();
     }
 }

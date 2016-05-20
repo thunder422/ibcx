@@ -21,7 +21,7 @@ class ConstNumParser {
 public:
     ConstNumParser(std::istream &is);
 
-    DataType getCode(ProgramUnit &program, ProgramCode &code_line);
+    DataType parse(ProgramCode &code_line, ProgramUnit &program);
 
     void changeState(State *new_state);
     unsigned getColumn() const;
