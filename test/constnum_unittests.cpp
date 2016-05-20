@@ -17,6 +17,13 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
     ProgramUnit program;
     ProgramCode code_line;
 
+    SECTION("input stream does not contain a constant (caller will determine action)")
+    {
+        std::istringstream iss {"%"};
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
+        REQUIRE(data_type == DataType::Null);
+        REQUIRE(iss.peek() == '%');
+    }
     SECTION("parse a single digit number")
     {
         extern Code constIntCode;
@@ -143,24 +150,17 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
 }
 
 
-TEST_CASE("check for various number constant parsing errors", "[errors]")
+TEST_CASE("handle leading zero of a constant correctly including errors", "[zero]")
 {
     ProgramUnit program;
     ProgramCode code_line;
 
-    SECTION("input stream does not contain a constant (caller will determine action)")
-    {
-        std::istringstream iss {"%"};
-        auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Null);
-        REQUIRE(iss.peek() == '%');
-    }
-    SECTION("a leading zero not followed by a decimal point error")
+    SECTION("check for an error when a leading zero is not followed by a digit")
     {
         std::istringstream iss {"01"};
         REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
     }
-    SECTION("error message for a leading zero not followed by a decimal point")
+    SECTION("check for the correct error message and a column")
     {
         std::istringstream iss("01");
         try {
@@ -172,7 +172,7 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
             REQUIRE(error.column == 1);
         }
     }
-    SECTION("check for the correct column on the leading zero not followed by a period error")
+    SECTION("check for the correct error column")
     {
         std::istringstream iss("word 01");
         std::string skip_word;
@@ -186,7 +186,7 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
             REQUIRE(error.column == 6);
         }
     }
-    SECTION("verify a non-period non-digit terminates the constant after a leading zero")
+    SECTION("check parsing ends when followed by a non-period non-digit")
     {
         std::istringstream iss("0-");
         auto data_type = ConstNumParser(iss).parse(code_line, program);
