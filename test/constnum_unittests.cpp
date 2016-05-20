@@ -169,6 +169,7 @@ TEST_CASE("check for various number constant parsing errors", "[errors]")
         catch (const ParseError &error) {
             std::string expected = "expected decimal point after leading zero";
             REQUIRE(error.what() == expected);
+            REQUIRE(error.column == 1);
         }
     }
 }

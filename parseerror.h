@@ -12,7 +12,9 @@
 
 
 struct ParseError : public std::runtime_error {
-    ParseError(const char *message) : runtime_error(message) { }
+    ParseError(const char *message, unsigned column) : runtime_error(message), column(column) { }
+
+    unsigned column;
 };
 
 
