@@ -41,6 +41,7 @@ private:
     std::string number;
     bool floating_point;
     bool done;
+    bool negate_operator;
     unsigned column;
 };
 

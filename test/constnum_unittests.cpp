@@ -296,4 +296,13 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         REQUIRE(iss.peek() == '-');
         REQUIRE_FALSE(number.negateOperator());
     }
+    SECTION("look for negate operator status (true for negate operator)")
+    {
+        std::istringstream iss {"-e"};
+        ConstNumParser number {iss};
+        auto data_type = number.parse(code_line, program);
+        REQUIRE(data_type == DataType::Null);
+        REQUIRE(iss.peek() == 'e');
+        REQUIRE(number.negateOperator());
+    }
 }

@@ -79,7 +79,8 @@ ConstNumParser::ConstNumParser(std::istream &is) :
     is {is},
     state {&start},
     floating_point {false},
-    done {false}
+    done {false},
+    negate_operator {false}
 {
 }
 
@@ -104,7 +105,7 @@ DataType ConstNumParser::parse(ProgramCode &code_line, ProgramUnit &program)
 
 bool ConstNumParser::negateOperator() const
 {
-    return false;
+    return negate_operator;
 }
 
 void ConstNumParser::processInput()
@@ -148,6 +149,7 @@ void ConstNumParser::setDone()
 
 void ConstNumParser::setNegateOperator()
 {
+    negate_operator = true;
     number.clear();
     setDone();
 }
