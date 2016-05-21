@@ -269,7 +269,7 @@ TEST_CASE("check for correct exponent format", "[exponent]")
 }
 
 
-TEST_CASE("look for possible non-constant exit conditions", "[exit]")
+TEST_CASE("look for possible exit conditions", "[exit]")
 {
     ProgramUnit program;
     ProgramCode code_line;
@@ -286,5 +286,14 @@ TEST_CASE("look for possible non-constant exit conditions", "[exit]")
         std::istringstream iss {"-.1"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE_DOUBLE_OPERAND("-.1");
+    }
+    SECTION("look for negate operator status (false if not negate operator)")
+    {
+        std::istringstream iss {"-1-"};
+        ConstNumParser number {iss};
+        auto data_type = number.parse(code_line, program);
+        REQUIRE_INTEGER_OPERAND("-1");
+        REQUIRE(iss.peek() == '-');
+        REQUIRE_FALSE(number.negateOperator());
     }
 }

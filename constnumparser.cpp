@@ -102,6 +102,11 @@ DataType ConstNumParser::parse(ProgramCode &code_line, ProgramUnit &program)
     }
 }
 
+bool ConstNumParser::negateOperator() const
+{
+    return false;
+}
+
 void ConstNumParser::processInput()
 {
     do {

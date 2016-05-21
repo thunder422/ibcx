@@ -22,6 +22,7 @@ public:
     ConstNumParser(std::istream &is);
 
     DataType parse(ProgramCode &code_line, ProgramUnit &program);
+    bool negateOperator() const;
 
     void changeState(State &new_state);
     unsigned getColumn() const;
