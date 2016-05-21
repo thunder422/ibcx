@@ -125,6 +125,12 @@ void ConstNumParser::setDone()
     done = true;
 }
 
+void ConstNumParser::setPossibleOperator()
+{
+    number.pop_back();
+    setDone();
+}
+
 // ----------------------------------------
 
 void StartState::process(ConstNumParser &parser, int next_char) const
@@ -169,7 +175,6 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
         parser.setDouble();
     } else if (toupper(next_char) == 'E') {
         parser.changeState(exponent);
-        parser.setDouble();
     } else if (!isdigit(next_char)) {
         parser.setDone();
         return;
@@ -180,8 +185,11 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
 void ExponentState::process(ConstNumParser &parser, int next_char) const
 {
     if (isdigit(next_char) || next_char == '-' || next_char == '+') {
+        parser.setDouble();
         parser.changeState(exponent_digits);
         parser.addNextChar();
+    } else if (isalpha(next_char)) {
+        parser.setPossibleOperator();
     } else {
         throw ParseError {"expected sign or digit for exponent", parser.getColumn()};
     }

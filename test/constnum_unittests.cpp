@@ -231,4 +231,11 @@ TEST_CASE("check for correct exponent format", "[exponent]")
             REQUIRE(error.column == 2);
         }
     }
+    SECTION("allow for possible EQV operator ('E' lost, which will be handled by caller)")
+    {
+        std::istringstream iss {"1eq"};
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
+        REQUIRE_INTEGER_OPERAND("1");
+        REQUIRE(iss.peek() == 'q');
+    }
 }
