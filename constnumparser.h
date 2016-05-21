@@ -23,7 +23,7 @@ public:
 
     DataType parse(ProgramCode &code_line, ProgramUnit &program);
 
-    void changeState(State *new_state);
+    void changeState(State &new_state);
     unsigned getColumn() const;
     void addNextChar();
     void setDouble();

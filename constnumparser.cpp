@@ -22,45 +22,47 @@ public:
 
 class StartState : public State {
 public:
-    static State *instance();
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
 class ZeroState : public State {
 public:
-    static State *instance();
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
 class PeriodState : public State {
 public:
-    static State *instance();
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
 class MantissaState : public State {
 public:
-    static State *instance();
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
 class ExponentState : public State {
 public:
-    static State *instance();
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
 class ExponentDigitsState : public State {
 public:
-    static State *instance();
     void process(ConstNumParser &parser, int next_char) const override;
 };
+
+
+static StartState start;
+static ZeroState zero;
+static PeriodState period;
+static MantissaState mantissa;
+static ExponentState exponent;
+static ExponentDigitsState exponent_digits;
 
 // ----------------------------------------
 
 ConstNumParser::ConstNumParser(std::istream &is) :
     is {is},
-    state {StartState::instance()},
+    state {&start},
     floating_point {false},
     done {false}
 {
@@ -93,9 +95,9 @@ void ConstNumParser::processInput()
     } while (!done);
 }
 
-void ConstNumParser::changeState(State *new_state)
+void ConstNumParser::changeState(State &new_state)
 {
-    state = new_state;
+    state = &new_state;
 }
 
 unsigned ConstNumParser::getColumn() const
@@ -125,36 +127,40 @@ void ConstNumParser::setDone()
 
 // ----------------------------------------
 
-State *StartState::instance()
-{
-    static StartState state;
-    return &state;
-}
-
 void StartState::process(ConstNumParser &parser, int next_char) const
 {
     if (next_char == '0') {
-        parser.changeState(ZeroState::instance());
+        parser.changeState(zero);
+    } else if (next_char == '.') {
+        parser.setDouble();
+        parser.changeState(period);
+    } else if (isdigit(next_char) || next_char == '-') {
+        parser.changeState(mantissa);
     } else {
-        if (next_char == '.') {
-            parser.setDouble();
-            parser.changeState(PeriodState::instance());
-        } else if (isdigit(next_char) || next_char == '-') {
-            parser.changeState(MantissaState::instance());
-        } else {
-            parser.setDone();
-            return;
-        }
+        parser.setDone();
+        return;
     }
     parser.addNextChar();
 }
 
-// ----------------------------------------
-
-State *MantissaState::instance()
+void ZeroState::process(ConstNumParser &parser, int next_char) const
 {
-    static MantissaState state;
-    return &state;
+    if (next_char == '.') {
+        parser.changeState(mantissa);
+    } else if (isdigit(next_char)) {
+        throw ParseError {"expected decimal point after leading zero", parser.getColumn()};
+    } else {
+        parser.setDone();
+    }
+}
+
+void PeriodState::process(ConstNumParser &parser, int next_char) const
+{
+    if (isdigit(next_char)) {
+        parser.changeState(mantissa);
+    } else {
+        throw ParseError {"expected digit after decimal point", parser.getColumn()};
+    }
 }
 
 void MantissaState::process(ConstNumParser &parser, int next_char) const
@@ -162,7 +168,7 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
     if (next_char == '.' && !parser.isDouble()) {
         parser.setDouble();
     } else if (toupper(next_char) == 'E') {
-        parser.changeState(ExponentState::instance());
+        parser.changeState(exponent);
         parser.setDouble();
     } else if (!isdigit(next_char)) {
         parser.setDone();
@@ -171,28 +177,12 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
     parser.addNextChar();
 }
 
-// ----------------------------------------
-
-State *ExponentState::instance()
-{
-    static ExponentState state;
-    return &state;
-}
-
 void ExponentState::process(ConstNumParser &parser, int next_char) const
 {
     if (isdigit(next_char) || next_char == '-' || next_char == '+') {
-        parser.changeState(ExponentDigitsState::instance());
+        parser.changeState(exponent_digits);
         parser.addNextChar();
     }
-}
-
-// ----------------------------------------
-
-State *ExponentDigitsState::instance()
-{
-    static ExponentDigitsState state;
-    return &state;
 }
 
 void ExponentDigitsState::process(ConstNumParser &parser, int next_char) const
@@ -201,43 +191,5 @@ void ExponentDigitsState::process(ConstNumParser &parser, int next_char) const
         parser.addNextChar();
     } else {
         parser.setDone();
-    }
-}
-
-// ----------------------------------------
-
-State *ZeroState::instance()
-{
-    static ZeroState state;
-    return &state;
-}
-
-void ZeroState::process(ConstNumParser &parser, int next_char) const
-{
-    if (next_char == '.') {
-        parser.setDouble();
-        parser.changeState(MantissaState::instance());
-        parser.addNextChar();
-    } else if (isdigit(next_char)) {
-        throw ParseError {"expected decimal point after leading zero", parser.getColumn()};
-    } else {
-        parser.setDone();
-    }
-}
-
-// ----------------------------------------
-
-State *PeriodState::instance()
-{
-    static PeriodState state;
-    return &state;
-}
-
-void PeriodState::process(ConstNumParser &parser, int next_char) const
-{
-    if (isdigit(next_char)) {
-        parser.changeState(MantissaState::instance());
-    } else {
-        throw ParseError {"expected digit after decimal point", parser.getColumn()};
     }
 }

@@ -12,6 +12,19 @@
 #include "programunit.h"
 
 
+#define REQUIRE_INTEGER_OPERAND(number) \
+    REQUIRE(data_type == DataType::Integer); \
+    REQUIRE(code_line.size() == 2); \
+    auto operand = code_line[1].operand(); \
+    REQUIRE(program.constIntDictionary().get(operand) == number);
+
+#define REQUIRE_DOUBLE_OPERAND(number) \
+    REQUIRE(data_type == DataType::Double); \
+    REQUIRE(code_line.size() == 2); \
+    auto operand = code_line[1].operand(); \
+    REQUIRE(program.constDblDictionary().get(operand) == number);
+
+
 TEST_CASE("parsing integer constants from a string", "[integers]")
 {
     ProgramUnit program;
@@ -22,6 +35,7 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
         std::istringstream iss {"%"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Null);
+        REQUIRE(code_line.size() == 0);
         REQUIRE(iss.peek() == '%');
     }
     SECTION("parse a single digit number")
@@ -30,35 +44,26 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
 
         std::istringstream iss {"1"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Integer);
-        REQUIRE(code_line.size() == 2);
+        REQUIRE_INTEGER_OPERAND("1");
         REQUIRE(code_line[0].instructionCode() == constIntCode.getValue());
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constIntDictionary().get(operand) == "1");
     }
     SECTION("parse a multiple digit number")
     {
         std::istringstream iss {"123"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constIntDictionary().get(operand) == "123");
+        REQUIRE_INTEGER_OPERAND("123");
     }
     SECTION("parse a negative number")
     {
         std::istringstream iss {"-234"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constIntDictionary().get(operand) == "-234");
+        REQUIRE_INTEGER_OPERAND("-234");
     }
     SECTION("terminate parsing at correct character")
     {
         std::istringstream iss {"345+"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constIntDictionary().get(operand) == "345");
+        REQUIRE_INTEGER_OPERAND("345");
         REQUIRE(iss.peek() == '+');
     }
 }
@@ -73,19 +78,19 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
     {
         std::istringstream iss {"0.5"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE_DOUBLE_OPERAND("0.5");
     }
     SECTION("parse a number with a decimal point at the beginning")
     {
         std::istringstream iss {".75"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE_DOUBLE_OPERAND(".75");
     }
     SECTION("parse a number with a second decimal point (should ignore second one)")
     {
         std::istringstream iss {"0.1."};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE_DOUBLE_OPERAND("0.1");
         REQUIRE(iss.peek() == '.');
     }
     SECTION("parse a number to a double constant in the code_line")
@@ -94,58 +99,40 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
 
         std::istringstream iss {"1.2"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
-        REQUIRE(code_line.size() == 2);
+        REQUIRE_DOUBLE_OPERAND("1.2");
         REQUIRE(code_line[0].instructionCode() == constDblCode.getValue());
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constDblDictionary().get(operand) == "1.2");
     }
     SECTION("parse a number with an exponent")
     {
         std::istringstream iss {"1e0"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constDblDictionary().get(operand) == "1e0");
+        REQUIRE_DOUBLE_OPERAND("1e0");
     }
     SECTION("make sure parsing stops before a second 'E'")
     {
         std::istringstream iss {"1e0E"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constDblDictionary().get(operand) == "1e0");
+        REQUIRE_DOUBLE_OPERAND("1e0");
         REQUIRE(iss.peek() == 'E');
     }
     SECTION("parse a number with a minus exponent")
     {
         std::istringstream iss {"1e-2"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constDblDictionary().get(operand) == "1e-2");
+        REQUIRE_DOUBLE_OPERAND("1e-2");
     }
     SECTION("parse a number with a minus exponent terminated be a minus operator")
     {
         std::istringstream iss {"1e-2-"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constDblDictionary().get(operand) == "1e-2");
+        REQUIRE_DOUBLE_OPERAND("1e-2");
         REQUIRE(iss.peek() == '-');
     }
     SECTION("parse a number with a plus exponent")
     {
         std::istringstream iss {"1e+2"};
         auto data_type = ConstNumParser{iss}.parse(code_line, program);
-        REQUIRE(data_type == DataType::Double);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constDblDictionary().get(operand) == "1e+2");
+        REQUIRE_DOUBLE_OPERAND("1e+2");
     }
 }
 
@@ -191,9 +178,7 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
         std::istringstream iss("0-");
         auto data_type = ConstNumParser(iss).parse(code_line, program);
         REQUIRE(data_type == DataType::Integer);
-        REQUIRE(code_line.size() == 2);
-        auto operand = code_line[1].operand();
-        REQUIRE(program.constIntDictionary().get(operand) == "0");
+        REQUIRE_INTEGER_OPERAND("0");
         REQUIRE(iss.peek() == '-');
     }
 }
