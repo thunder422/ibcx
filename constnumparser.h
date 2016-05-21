@@ -23,6 +23,7 @@ public:
 
     DataType parse(ProgramCode &code_line, ProgramUnit &program);
     bool negateOperator() const;
+    bool possibleOperator() const;
 
     void changeState(State &new_state);
     unsigned getColumn() const;

@@ -108,6 +108,11 @@ bool ConstNumParser::negateOperator() const
     return negate_operator;
 }
 
+bool ConstNumParser::possibleOperator() const
+{
+    return false;
+}
+
 void ConstNumParser::processInput()
 {
     do {

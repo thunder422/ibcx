@@ -305,4 +305,13 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         REQUIRE(iss.peek() == 'e');
         REQUIRE(number.negateOperator());
     }
+    SECTION("look for possible operator status (false if no operator starting with 'E')")
+    {
+        std::istringstream iss {"-1e1-"};
+        ConstNumParser number {iss};
+        auto data_type = number.parse(code_line, program);
+        REQUIRE_DOUBLE_OPERAND("-1e1");
+        REQUIRE(iss.peek() == '-');
+        REQUIRE_FALSE(number.possibleOperator());
+    }
 }
