@@ -1,0 +1,30 @@
+/* vim:ts=4:sw=4:et:sts=4:
+ *
+ * Copyright 2016 Thunder422.  All rights reserved.
+ * Distributed under GNU General Public License Version 3
+ * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
+ */
+
+#ifndef NUMEXPRPARSER_H
+#define NUMEXPRPARSER_H
+
+#include <iosfwd>
+
+#include <datatype.h>
+
+
+class ProgramCode;
+class ProgramUnit;
+
+class NumExprParser {
+public:
+    NumExprParser(std::istream &is);
+
+    DataType parse(ProgramCode &code_line, ProgramUnit &program);
+
+private:
+    std::istream &is;
+};
+
+
+#endif  // NUMEXPRPARSER_H
