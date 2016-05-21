@@ -61,7 +61,7 @@ static ZeroState zero;
 static PeriodState period;
 static MantissaState mantissa;
 static ExponentState exponent;
-static ExponentState exponent_sign;
+static ExponentSignState exponent_sign;
 static ExponentDigitsState exponent_digits;
 
 // ----------------------------------------
@@ -209,7 +209,7 @@ void ExponentSignState::process(ConstNumParser &parser, int next_char) const
     if (isdigit(next_char)) {
         parser.changeState(exponent_digits);
     } else {
-        throw ParseError {"", 0};
+        throw ParseError {"expected digit after exponent sign", parser.getColumn()};
     }
 }
 

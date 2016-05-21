@@ -243,4 +243,16 @@ TEST_CASE("check for correct exponent format", "[exponent]")
         std::istringstream iss {"1e+"};
         REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
     }
+    SECTION("check error message and column if no digit after exponent sign")
+    {
+        std::istringstream iss {"1e-A"};
+        try {
+            ConstNumParser{iss}.parse(code_line, program);
+        }
+        catch (const ParseError &error) {
+            std::string expected = "expected digit after exponent sign";
+            REQUIRE(error.what() == expected);
+            REQUIRE(error.column == 3);
+        }
+    }
 }
