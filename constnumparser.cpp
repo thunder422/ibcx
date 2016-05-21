@@ -45,6 +45,11 @@ public:
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
+class ExponentSignState : public State {
+public:
+    void process(ConstNumParser &parser, int next_char) const override;
+};
+
 class ExponentDigitsState : public State {
 public:
     void process(ConstNumParser &parser, int next_char) const override;
@@ -56,6 +61,7 @@ static ZeroState zero;
 static PeriodState period;
 static MantissaState mantissa;
 static ExponentState exponent;
+static ExponentState exponent_sign;
 static ExponentDigitsState exponent_digits;
 
 // ----------------------------------------
@@ -184,14 +190,26 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
 
 void ExponentState::process(ConstNumParser &parser, int next_char) const
 {
-    if (isdigit(next_char) || next_char == '-' || next_char == '+') {
-        parser.setDouble();
+    if (next_char == '-' || next_char == '+') {
+        parser.changeState(exponent_sign);
+    } else if (isdigit(next_char)) {
         parser.changeState(exponent_digits);
-        parser.addNextChar();
     } else if (isalpha(next_char)) {
         parser.setPossibleOperator();
+        return;
     } else {
         throw ParseError {"expected sign or digit for exponent", parser.getColumn()};
+    }
+    parser.setDouble();
+    parser.addNextChar();
+}
+
+void ExponentSignState::process(ConstNumParser &parser, int next_char) const
+{
+    if (isdigit(next_char)) {
+        parser.changeState(exponent_digits);
+    } else {
+        throw ParseError {"", 0};
     }
 }
 

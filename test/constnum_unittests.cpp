@@ -238,4 +238,9 @@ TEST_CASE("check for correct exponent format", "[exponent]")
         REQUIRE_INTEGER_OPERAND("1");
         REQUIRE(iss.peek() == 'q');
     }
+    SECTION("make sure there is a digit after an exponent sign")
+    {
+        std::istringstream iss {"1e+"};
+        REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
+    }
 }
