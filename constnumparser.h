@@ -43,6 +43,7 @@ private:
     bool floating_point;
     bool done;
     bool negate_operator;
+    bool possible_operator;
     unsigned column;
 };
 

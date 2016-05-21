@@ -80,7 +80,8 @@ ConstNumParser::ConstNumParser(std::istream &is) :
     state {&start},
     floating_point {false},
     done {false},
-    negate_operator {false}
+    negate_operator {false},
+    possible_operator {false}
 {
 }
 
@@ -110,7 +111,7 @@ bool ConstNumParser::negateOperator() const
 
 bool ConstNumParser::possibleOperator() const
 {
-    return false;
+    return possible_operator;
 }
 
 void ConstNumParser::processInput()
@@ -161,6 +162,7 @@ void ConstNumParser::setNegateOperator()
 
 void ConstNumParser::setPossibleOperator()
 {
+    possible_operator = true;
     number.pop_back();
     setDone();
 }

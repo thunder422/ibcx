@@ -314,4 +314,13 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         REQUIRE(iss.peek() == '-');
         REQUIRE_FALSE(number.possibleOperator());
     }
+    SECTION("look for possible operator status (true if 'E' followed by another letter)")
+    {
+        std::istringstream iss {"-1eqv"};
+        ConstNumParser number {iss};
+        auto data_type = number.parse(code_line, program);
+        REQUIRE_INTEGER_OPERAND("-1");
+        REQUIRE(iss.peek() == 'q');
+        REQUIRE(number.possibleOperator());
+    }
 }
