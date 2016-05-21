@@ -323,4 +323,76 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         REQUIRE(iss.peek() == 'q');
         REQUIRE(number.possibleOperator());
     }
+    SECTION("check when 'E' character not followed by a another letter throws an error")
+    {
+        std::istringstream iss {"-1e$"};
+        REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
+    }
+    SECTION("check error message and column when 'E' character not followed by a another letter")
+    {
+        std::istringstream iss {"-1e$"};
+        try {
+            ConstNumParser{iss}.parse(code_line, program);
+        }
+        catch (const ParseError &error) {
+            std::string expected_what = "expected sign or digit for exponent";
+            REQUIRE(error.what() == expected_what);
+            REQUIRE(error.column == 3);
+        }
+    }
+}
+
+
+bool test_error_input(const char *input, const std::string &expected_what, unsigned expected_column)
+{
+    ProgramUnit program;
+    ProgramCode code_line;
+
+    CAPTURE(input);
+    std::istringstream iss {input};
+    try {
+        ConstNumParser{iss}.parse(code_line, program);
+        return false;
+    }
+    catch (const ParseError &error) {
+        REQUIRE(error.what() == expected_what);
+        REQUIRE(error.column == expected_column);
+        return true;
+    }
+}
+
+TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
+{
+    ProgramUnit program;
+    ProgramCode code_line;
+
+    SECTION("various error tests")
+    {
+        struct ErrorTest {
+            const char *input;
+            const char *expected_what;
+            unsigned expected_column;
+        };
+
+        std::vector<ErrorTest> error_tests = {
+            {".A", "expected digit after decimal point", 1},
+            {".e", "expected digit after decimal point", 1},
+            {"..01", "expected digit after decimal point", 1},
+            {".", "expected digit after decimal point", 1},
+            {"1e", "expected sign or digit for exponent", 2}
+        };
+
+        for (auto &test : error_tests) {
+            CAPTURE(test.input);
+            REQUIRE(test_error_input(test.input, test.expected_what, test.expected_column));
+        }
+    }
+
+    SECTION("miscellenous test")
+    {
+        std::istringstream iss {"1.."};
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
+        REQUIRE_DOUBLE_OPERAND("1.");
+        REQUIRE(iss.peek() == '.');
+    }
 }
