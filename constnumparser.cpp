@@ -183,7 +183,7 @@ void ExponentState::process(ConstNumParser &parser, int next_char) const
         parser.changeState(exponent_digits);
         parser.addNextChar();
     } else {
-        throw ParseError {"expected sign or digits for exponent", parser.getColumn()};
+        throw ParseError {"expected sign or digit for exponent", parser.getColumn()};
     }
 }
 

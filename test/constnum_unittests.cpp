@@ -194,6 +194,18 @@ TEST_CASE("handle leading period of a constant correctly including errors", "[pe
         std::istringstream iss {".."};
         REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
     }
+    SECTION("check error message and column if no digits after period")
+    {
+        std::istringstream iss {".."};
+        try {
+            ConstNumParser{iss}.parse(code_line, program);
+        }
+        catch (const ParseError &error) {
+            std::string expected = "expected digit after decimal point";
+            REQUIRE(error.what() == expected);
+            REQUIRE(error.column == 1);
+        }
+    }
 }
 
 
@@ -206,5 +218,17 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     {
         std::istringstream iss {"1e."};
         REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
+    }
+    SECTION("check error message and column if no sign or digits at start of exponent")
+    {
+        std::istringstream iss {"1e."};
+        try {
+            ConstNumParser{iss}.parse(code_line, program);
+        }
+        catch (const ParseError &error) {
+            std::string expected = "expected sign or digit for exponent";
+            REQUIRE(error.what() == expected);
+            REQUIRE(error.column == 2);
+        }
     }
 }
