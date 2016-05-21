@@ -29,6 +29,7 @@ public:
     void setDouble();
     bool isDouble();
     void setDone();
+    void setNegateOperator();
     void setPossibleOperator();
 
 private:

@@ -267,3 +267,18 @@ TEST_CASE("check for correct exponent format", "[exponent]")
 
     }
 }
+
+
+TEST_CASE("look for possible non-constant exit conditions", "[exit]")
+{
+    ProgramUnit program;
+    ProgramCode code_line;
+
+    SECTION("look for possible negate operator ('-' not followed by '.' or digit)")
+    {
+        std::istringstream iss {"-e"};
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
+        REQUIRE(data_type == DataType::Null);
+        REQUIRE(code_line.size() == 0);
+    }
+}

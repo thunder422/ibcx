@@ -25,6 +25,11 @@ public:
     void process(ConstNumParser &parser, int next_char) const override;
 };
 
+class NegativeState : public State {
+public:
+    void process(ConstNumParser &parser, int next_char) const override;
+};
+
 class ZeroState : public State {
 public:
     void process(ConstNumParser &parser, int next_char) const override;
@@ -58,6 +63,7 @@ public:
 
 static StartState start;
 static ZeroState zero;
+static NegativeState negative;
 static PeriodState period;
 static MantissaState mantissa;
 static ExponentState exponent;
@@ -132,6 +138,12 @@ void ConstNumParser::setDone()
     done = true;
 }
 
+void ConstNumParser::setNegateOperator()
+{
+    number.clear();
+    setDone();
+}
+
 void ConstNumParser::setPossibleOperator()
 {
     number.pop_back();
@@ -144,13 +156,26 @@ void StartState::process(ConstNumParser &parser, int next_char) const
 {
     if (next_char == '0') {
         parser.changeState(zero);
+    } else if (next_char == '-') {
+        parser.changeState(negative);
     } else if (next_char == '.') {
         parser.setDouble();
         parser.changeState(period);
-    } else if (isdigit(next_char) || next_char == '-') {
+    } else if (isdigit(next_char)) {
         parser.changeState(mantissa);
     } else {
         parser.setDone();
+        return;
+    }
+    parser.addNextChar();
+}
+
+void NegativeState::process(ConstNumParser &parser, int next_char) const
+{
+    if (isdigit(next_char)) {
+        parser.changeState(mantissa);
+    } else {
+        parser.setNegateOperator();
         return;
     }
     parser.addNextChar();
