@@ -255,4 +255,15 @@ TEST_CASE("check for correct exponent format", "[exponent]")
             REQUIRE(error.column == 3);
         }
     }
+    SECTION("check correct error column when terminated by end of line")
+    {
+        std::istringstream iss {"1e-"};
+        try {
+            ConstNumParser{iss}.parse(code_line, program);
+        }
+        catch (const ParseError &error) {
+            REQUIRE(error.column == 3);
+        }
+
+    }
 }

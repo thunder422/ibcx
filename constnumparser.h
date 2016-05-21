@@ -39,6 +39,7 @@ private:
     std::string number;
     bool floating_point;
     bool done;
+    unsigned column;
 };
 
 

@@ -96,6 +96,7 @@ DataType ConstNumParser::parse(ProgramCode &code_line, ProgramUnit &program)
 void ConstNumParser::processInput()
 {
     do {
+        column = is.tellg();
         auto next_char = is.peek();
         state->process(*this, next_char);
     } while (!done);
@@ -108,7 +109,7 @@ void ConstNumParser::changeState(State &new_state)
 
 unsigned ConstNumParser::getColumn() const
 {
-    return is.tellg();
+    return column;
 }
 
 void ConstNumParser::addNextChar()
