@@ -281,4 +281,10 @@ TEST_CASE("look for possible non-constant exit conditions", "[exit]")
         REQUIRE(data_type == DataType::Null);
         REQUIRE(code_line.size() == 0);
     }
+    SECTION("allow a period after a negative sign")
+    {
+        std::istringstream iss {"-.1"};
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
+        REQUIRE_DOUBLE_OPERAND("-.1");
+    }
 }

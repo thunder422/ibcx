@@ -18,6 +18,9 @@
 class State {
 public:
     virtual void process(ConstNumParser &parser, int next_char) const = 0;
+
+protected:
+    bool validMantissaChar(ConstNumParser &parser, int next_char) const;
 };
 
 class StartState : public State {
@@ -158,12 +161,7 @@ void StartState::process(ConstNumParser &parser, int next_char) const
         parser.changeState(zero);
     } else if (next_char == '-') {
         parser.changeState(negative);
-    } else if (next_char == '.') {
-        parser.setDouble();
-        parser.changeState(period);
-    } else if (isdigit(next_char)) {
-        parser.changeState(mantissa);
-    } else {
+    } else if (!validMantissaChar(parser, next_char)) {
         parser.setDone();
         return;
     }
@@ -172,13 +170,24 @@ void StartState::process(ConstNumParser &parser, int next_char) const
 
 void NegativeState::process(ConstNumParser &parser, int next_char) const
 {
-    if (isdigit(next_char)) {
-        parser.changeState(mantissa);
+    if (validMantissaChar(parser, next_char)) {
+        parser.addNextChar();
     } else {
         parser.setNegateOperator();
-        return;
     }
-    parser.addNextChar();
+}
+
+bool State::validMantissaChar(ConstNumParser &parser, int next_char) const
+{
+    if (next_char == '.') {
+        parser.setDouble();
+        parser.changeState(period);
+    } else if (isdigit(next_char)) {
+        parser.changeState(mantissa);
+    } else {
+        return false;
+    }
+    return true;
 }
 
 void ZeroState::process(ConstNumParser &parser, int next_char) const
