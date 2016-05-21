@@ -149,9 +149,9 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     }
     SECTION("check for the correct error message and a column")
     {
-        std::istringstream iss("01");
+        std::istringstream iss {"01"};
         try {
-            ConstNumParser(iss).parse(code_line, program);
+            ConstNumParser{iss}.parse(code_line, program);
         }
         catch (const ParseError &error) {
             std::string expected = "expected decimal point after leading zero";
@@ -161,11 +161,11 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     }
     SECTION("check for the correct error column")
     {
-        std::istringstream iss("word 01");
+        std::istringstream iss {"word 01"};
         std::string skip_word;
         iss >> skip_word >> std::ws;
         try {
-            ConstNumParser(iss).parse(code_line, program);
+            ConstNumParser{iss}.parse(code_line, program);
         }
         catch (const ParseError &error) {
             std::string expected = "expected decimal point after leading zero";
@@ -175,8 +175,8 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     }
     SECTION("check parsing ends when followed by a non-period non-digit")
     {
-        std::istringstream iss("0-");
-        auto data_type = ConstNumParser(iss).parse(code_line, program);
+        std::istringstream iss {"0-"};
+        auto data_type = ConstNumParser{iss}.parse(code_line, program);
         REQUIRE(data_type == DataType::Integer);
         REQUIRE_INTEGER_OPERAND("0");
         REQUIRE(iss.peek() == '-');
@@ -191,7 +191,20 @@ TEST_CASE("handle leading period of a constant correctly including errors", "[pe
 
     SECTION("check for an error when a leading period is followed by another period")
     {
-        std::istringstream iss("..");
+        std::istringstream iss {".."};
+        REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
+    }
+}
+
+
+TEST_CASE("check for correct exponent format", "[exponent]")
+{
+    ProgramUnit program;
+    ProgramCode code_line;
+
+    SECTION("check for sign or digits at the start of an exponent")
+    {
+        std::istringstream iss {"1e."};
         REQUIRE_THROWS_AS(ConstNumParser{iss}.parse(code_line, program), ParseError);
     }
 }
