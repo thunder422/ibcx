@@ -60,7 +60,7 @@ set(IBC_SOURCES
     constnumparser.cpp
     dictionary.cpp
     datatype.h
-    numexprparser.cpp
+    expressionparser.cpp
     parseerror.h
     programcode.cpp
     programunit.cpp
@@ -82,11 +82,11 @@ add_executable(constnum_unittests
 target_link_libraries(constnum_unittests ${GCOV_LIB})
 add_test(ConstantNumber_UnitTests constnum_unittests)
 
-add_executable(numexpr_unittests
-    test/numexpr_unittests.cpp
+add_executable(expression_unittests
+    test/expression_unittests.cpp
     test/support.h
     ${IBC_SOURCES}
     ${CATCH_SOURCES}
 )
-target_link_libraries(numexpr_unittests ${GCOV_LIB})
-add_test(NumericExpression_UnitTests numexpr_unittests)
+target_link_libraries(expression_unittests ${GCOV_LIB})
+add_test(Expression_UnitTests expression_unittests)

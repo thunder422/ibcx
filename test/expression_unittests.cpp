@@ -6,14 +6,14 @@
  */
 
 #include "catch.hpp"
-#include "numexprparser.h"
+#include "expressionparser.h"
 #include "parseerror.h"
 #include "programcode.h"
 #include "programunit.h"
 #include "support.h"
 
 
-TEST_CASE("parse expressions with constants", "[constant]")
+TEST_CASE("parse numeric expressions with constants", "[constant]")
 {
     ProgramUnit program;
     ProgramCode code_line;
@@ -23,14 +23,14 @@ TEST_CASE("parse expressions with constants", "[constant]")
         extern Code constIntCode;
 
         std::istringstream iss {"1"};
-        NumExprParser parse_expression {iss, code_line, program};
+        ExpressionParser parse_expression {iss, code_line, program};
         auto data_type = parse_expression(DataType::Null);
         REQUIRE_INTEGER_OPERAND("1");
     }
     SECTION("verify an error is thrown when nothing is in the input stream")
     {
         std::istringstream iss;
-        NumExprParser parse_expression {iss, code_line, program};
+        ExpressionParser parse_expression {iss, code_line, program};
         REQUIRE_THROWS_AS(parse_expression(DataType::Null), ParseError);
     }
     SECTION("verify error message and column when nothing is left in the input stream")
@@ -39,7 +39,7 @@ TEST_CASE("parse expressions with constants", "[constant]")
         std::string skip_word;
         iss >> skip_word;
         auto skip_space = iss.get();
-        NumExprParser parse_expression {iss, code_line, program};
+        ExpressionParser parse_expression {iss, code_line, program};
         try {
             parse_expression(DataType::Null);
         }

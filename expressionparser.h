@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef NUMEXPRPARSER_H
-#define NUMEXPRPARSER_H
+#ifndef _IBC_EXPRESSIONPARSER_H
+#define _IBC_EXPRESSIONPARSER_H
 
 #include <iosfwd>
 #include <memory>
@@ -17,11 +17,11 @@
 class ProgramCode;
 class ProgramUnit;
 
-class NumExprParser {
+class ExpressionParser {
 public:
-    NumExprParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    ExpressionParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
     DataType operator()(DataType expected_data_type);
-    ~NumExprParser();
+    ~ExpressionParser();
 
 private:
     class Impl;
@@ -29,4 +29,4 @@ private:
 };
 
 
-#endif  // NUMEXPRPARSER_H
+#endif  // _IBC_EXPRESSIONPARSER_H

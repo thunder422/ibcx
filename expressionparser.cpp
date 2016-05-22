@@ -8,56 +8,56 @@
 #include <iostream>
 
 #include "constnumparser.h"
-#include "numexprparser.h"
+#include "expressionparser.h"
 #include "parseerror.h"
 #include "programcode.h"
 #include "programunit.h"
 
 
-class NumExprParser::Impl {
+class ExpressionParser::Impl {
 public:
     Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
 
     DataType parseExpression(DataType expected_data_type);
 
 private:
-    DataType parseOperand();
+    DataType parseNumOperand();
 
     std::istream &is;
     ProgramCode &code_line;
     ProgramUnit &program;
 };
 
-NumExprParser::NumExprParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
+ExpressionParser::ExpressionParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
     impl {new Impl(is, code_line, program)}
 {
 }
 
-DataType NumExprParser::operator ()(DataType expected_data_type)
+DataType ExpressionParser::operator ()(DataType expected_data_type)
 {
     return impl->parseExpression(expected_data_type);
 }
 
-NumExprParser::~NumExprParser()
+ExpressionParser::~ExpressionParser()
 {
 }
 
 // ----------------------------------------
 
-NumExprParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
+ExpressionParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
     is {is},
     code_line {code_line},
     program {program}
 {
 }
 
-DataType NumExprParser::Impl::parseExpression(DataType expected_data_type)
+DataType ExpressionParser::Impl::parseExpression(DataType expected_data_type)
 {
     (void)expected_data_type;
-    return parseOperand();
+    return parseNumOperand();
 }
 
-DataType NumExprParser::Impl::parseOperand()
+DataType ExpressionParser::Impl::parseNumOperand()
 {
     ConstNumParser constant {is};
     unsigned column = is.tellg();
