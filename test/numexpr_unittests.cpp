@@ -23,14 +23,15 @@ TEST_CASE("parse expressions with constants", "[constant]")
         extern Code constIntCode;
 
         std::istringstream iss {"1"};
-        auto data_type = NumExprParser{iss, code_line, program}.parse();
+        NumExprParser parse_expression {iss, code_line, program};
+        auto data_type = parse_expression();
         REQUIRE_INTEGER_OPERAND("1");
     }
     SECTION("verify an error is thrown when nothing is in the input stream")
     {
         std::istringstream iss;
-        NumExprParser expression {iss, code_line, program};
-        REQUIRE_THROWS_AS(expression.parse(), ParseError);
+        NumExprParser parse_expression {iss, code_line, program};
+        REQUIRE_THROWS_AS(parse_expression(), ParseError);
     }
     SECTION("verify error message and column when nothing is left in the input stream")
     {
@@ -38,9 +39,9 @@ TEST_CASE("parse expressions with constants", "[constant]")
         std::string skip_word;
         iss >> skip_word;
         auto skip_space = iss.get();
-        NumExprParser expression {iss, code_line, program};
+        NumExprParser parse_expression {iss, code_line, program};
         try {
-            expression.parse();
+            parse_expression();
         }
         catch (const ParseError &error) {
             REQUIRE(error.what() == std::string("expected numeric expression"));

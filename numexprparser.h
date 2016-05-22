@@ -20,13 +20,11 @@ class ProgramUnit;
 class NumExprParser {
 public:
     NumExprParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    DataType operator()();
     ~NumExprParser();
-
-    DataType parse();
 
 private:
     class Impl;
-
     std::unique_ptr<Impl> impl;
 };
 
