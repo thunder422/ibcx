@@ -20,7 +20,7 @@ class ProgramUnit;
 class NumExprParser {
 public:
     NumExprParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
-    DataType operator()();
+    DataType operator()(DataType expected_data_type);
     ~NumExprParser();
 
 private:

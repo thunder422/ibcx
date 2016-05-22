@@ -18,7 +18,7 @@ class NumExprParser::Impl {
 public:
     Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
 
-    DataType parseExpression();
+    DataType parseExpression(DataType expected_data_type);
 
 private:
     DataType parseOperand();
@@ -33,9 +33,9 @@ NumExprParser::NumExprParser(std::istream &is, ProgramCode &code_line, ProgramUn
 {
 }
 
-DataType NumExprParser::operator()()
+DataType NumExprParser::operator ()(DataType expected_data_type)
 {
-    return impl->parseExpression();
+    return impl->parseExpression(expected_data_type);
 }
 
 NumExprParser::~NumExprParser()
@@ -51,8 +51,9 @@ NumExprParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit 
 {
 }
 
-DataType NumExprParser::Impl::parseExpression()
+DataType NumExprParser::Impl::parseExpression(DataType expected_data_type)
 {
+    (void)expected_data_type;
     return parseOperand();
 }
 

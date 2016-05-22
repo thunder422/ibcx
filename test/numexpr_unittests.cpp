@@ -24,14 +24,14 @@ TEST_CASE("parse expressions with constants", "[constant]")
 
         std::istringstream iss {"1"};
         NumExprParser parse_expression {iss, code_line, program};
-        auto data_type = parse_expression();
+        auto data_type = parse_expression(DataType::Null);
         REQUIRE_INTEGER_OPERAND("1");
     }
     SECTION("verify an error is thrown when nothing is in the input stream")
     {
         std::istringstream iss;
         NumExprParser parse_expression {iss, code_line, program};
-        REQUIRE_THROWS_AS(parse_expression(), ParseError);
+        REQUIRE_THROWS_AS(parse_expression(DataType::Null), ParseError);
     }
     SECTION("verify error message and column when nothing is left in the input stream")
     {
@@ -41,7 +41,7 @@ TEST_CASE("parse expressions with constants", "[constant]")
         auto skip_space = iss.get();
         NumExprParser parse_expression {iss, code_line, program};
         try {
-            parse_expression();
+            parse_expression(DataType::Null);
         }
         catch (const ParseError &error) {
             REQUIRE(error.what() == std::string("expected numeric expression"));
