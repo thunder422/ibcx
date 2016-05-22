@@ -10,19 +10,7 @@
 #include "parseerror.h"
 #include "programcode.h"
 #include "programunit.h"
-
-
-#define REQUIRE_INTEGER_OPERAND(number) \
-    REQUIRE(data_type == DataType::Integer); \
-    REQUIRE(code_line.size() == 2); \
-    auto operand = code_line[1].operand(); \
-    REQUIRE(program.constIntDictionary().get(operand) == number);
-
-#define REQUIRE_DOUBLE_OPERAND(number) \
-    REQUIRE(data_type == DataType::Double); \
-    REQUIRE(code_line.size() == 2); \
-    auto operand = code_line[1].operand(); \
-    REQUIRE(program.constDblDictionary().get(operand) == number);
+#include "support.h"
 
 
 TEST_CASE("parsing integer constants from a string", "[integers]")
@@ -387,7 +375,6 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
             REQUIRE(test_error_input(test.input, test.expected_what, test.expected_column));
         }
     }
-
     SECTION("miscellenous test")
     {
         std::istringstream iss {"1.."};

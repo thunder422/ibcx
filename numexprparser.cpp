@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+#include "constnumparser.h"
 #include "numexprparser.h"
 #include "programcode.h"
 #include "programunit.h"
@@ -20,8 +21,8 @@ public:
 
 private:
     std::istream &is;
-    ProgramCode code_line;
-    ProgramUnit program;
+    ProgramCode &code_line;
+    ProgramUnit &program;
 };
 
 NumExprParser::NumExprParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
@@ -49,5 +50,7 @@ NumExprParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit 
 
 DataType NumExprParser::Impl::parseOperand()
 {
-    return DataType::Integer;
+    ConstNumParser constant {is};
+    auto data_type = constant.parse(code_line, program);
+    return data_type;
 }

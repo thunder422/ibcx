@@ -75,6 +75,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(constnum_unittests
     test/constnum_unittests.cpp
+    test/support.h
     ${IBC_SOURCES}
     ${CATCH_SOURCES}
 )
@@ -83,6 +84,7 @@ add_test(ConstantNumber_UnitTests constnum_unittests)
 
 add_executable(numexpr_unittests
     test/numexpr_unittests.cpp
+    test/support.h
     ${IBC_SOURCES}
     ${CATCH_SOURCES}
 )

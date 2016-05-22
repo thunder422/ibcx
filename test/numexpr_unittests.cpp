@@ -10,6 +10,7 @@
 #include "parseerror.h"
 #include "programcode.h"
 #include "programunit.h"
+#include "support.h"
 
 
 TEST_CASE("parse expressions with constants", "[constant]")
@@ -17,12 +18,12 @@ TEST_CASE("parse expressions with constants", "[constant]")
     ProgramUnit program;
     ProgramCode code_line;
 
-    SECTION("input stream does not contain a constant (caller will determine action)")
+    SECTION("parse an expression with an integer constant to the code line")
     {
         extern Code constIntCode;
 
         std::istringstream iss {"1"};
         auto data_type = NumExprParser{iss, code_line, program}.parse();
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE_INTEGER_OPERAND("1");
     }
 }
