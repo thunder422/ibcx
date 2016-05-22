@@ -9,6 +9,7 @@
 
 #include "constnumparser.h"
 #include "numexprparser.h"
+#include "parseerror.h"
 #include "programcode.h"
 #include "programunit.h"
 
@@ -52,5 +53,8 @@ DataType NumExprParser::Impl::parseOperand()
 {
     ConstNumParser constant {is};
     auto data_type = constant.parse(code_line, program);
+    if (data_type == DataType::Null) {
+        throw ParseError {"", 0};
+    }
     return data_type;
 }

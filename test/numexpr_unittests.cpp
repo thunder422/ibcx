@@ -26,4 +26,10 @@ TEST_CASE("parse expressions with constants", "[constant]")
         auto data_type = NumExprParser{iss, code_line, program}.parse();
         REQUIRE_INTEGER_OPERAND("1");
     }
+    SECTION("verify an error is thrown when nothing is in the input stream")
+    {
+        std::istringstream iss;
+        NumExprParser expression {iss, code_line, program};
+        REQUIRE_THROWS_AS(expression.parse(), ParseError);
+    }
 }
