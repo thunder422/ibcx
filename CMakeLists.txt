@@ -57,6 +57,7 @@ endif ()
 
 set(IBC_SOURCES
     code.cpp
+    commandparser.cpp
     constnumparser.cpp
     dictionary.cpp
     datatype.h
@@ -90,3 +91,11 @@ add_executable(expression_unittests
 )
 target_link_libraries(expression_unittests ${GCOV_LIB})
 add_test(Expression_UnitTests expression_unittests)
+
+add_executable(command_unittests
+    test/command_unittests.cpp
+    ${IBC_SOURCES}
+    ${CATCH_SOURCES}
+)
+target_link_libraries(command_unittests ${GCOV_LIB})
+add_test(Command_UnitTests command_unittests)
