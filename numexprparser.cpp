@@ -52,9 +52,10 @@ NumExprParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit 
 DataType NumExprParser::Impl::parseOperand()
 {
     ConstNumParser constant {is};
+    unsigned column = is.tellg();
     auto data_type = constant.parse(code_line, program);
     if (data_type == DataType::Null) {
-        throw ParseError {"", 0};
+        throw ParseError {"expected numeric expression", column};
     }
     return data_type;
 }

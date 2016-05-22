@@ -32,4 +32,19 @@ TEST_CASE("parse expressions with constants", "[constant]")
         NumExprParser expression {iss, code_line, program};
         REQUIRE_THROWS_AS(expression.parse(), ParseError);
     }
+    SECTION("verify error message and column when nothing is left in the input stream")
+    {
+        std::istringstream iss {"word "};
+        std::string skip_word;
+        iss >> skip_word;
+        auto skip_space = iss.get();
+        NumExprParser expression {iss, code_line, program};
+        try {
+            expression.parse();
+        }
+        catch (const ParseError &error) {
+            REQUIRE(error.what() == std::string("expected numeric expression"));
+            REQUIRE(error.column == 5);
+        }
+    }
 }
