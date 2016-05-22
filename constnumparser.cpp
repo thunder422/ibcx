@@ -15,52 +15,115 @@
 #include "programunit.h"
 
 
+class State;
+
+class ConstNumParser::Impl {
+public:
+    Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+
+    DataType parse();
+    bool negateOperator() const noexcept;
+    bool possibleOperator() const noexcept;
+
+    void changeState(State &new_state) noexcept;
+    unsigned getColumn() const noexcept;
+    void addNextChar();
+    void setDouble() noexcept;
+    bool isDouble() const noexcept;
+    void setDone() noexcept;
+    void setNegateOperator() noexcept;
+    void setPossibleOperator() noexcept;
+
+private:
+    void processInput();
+
+    std::istream &is;
+    ProgramCode &code_line;
+    ProgramUnit &program;
+
+    State *state;
+    std::string number;
+    bool floating_point;
+    bool done;
+    bool negate_operator;
+    bool possible_operator;
+    unsigned column;
+};
+
+// ----------------------------------------
+
+ConstNumParser::ConstNumParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
+    pimpl {new Impl(is, code_line, program)}
+{
+}
+
+DataType ConstNumParser::operator()()
+{
+    return pimpl->parse();
+}
+
+bool ConstNumParser::negateOperator() const noexcept
+{
+    return pimpl->negateOperator();
+}
+
+bool ConstNumParser::possibleOperator() const noexcept
+{
+    return pimpl->possibleOperator();
+}
+
+ConstNumParser::~ConstNumParser()
+{
+}
+
+// ----------------------------------------
+
 class State {
 public:
-    virtual void process(ConstNumParser &parser, int next_char) const = 0;
+    virtual void process(ConstNumParser::Impl &parser, int next_char) const = 0;
 
 protected:
-    bool validMantissaChar(ConstNumParser &parser, int next_char) const;
+    bool validMantissaChar(ConstNumParser::Impl &parser, int next_char) const;
 };
 
 class StartState : public State {
 public:
-    void process(ConstNumParser &parser, int next_char) const override;
+    void process(ConstNumParser::Impl &parser, int next_char) const override;
 };
 
 class NegativeState : public State {
 public:
-    void process(ConstNumParser &parser, int next_char) const override;
+    void process(ConstNumParser::Impl &parser, int next_char) const override;
 };
 
 class ZeroState : public State {
 public:
-    void process(ConstNumParser &parser, int next_char) const override;
+    void process(ConstNumParser::Impl &parser, int next_char) const override;
 };
 
 class PeriodState : public State {
 public:
-    void process(ConstNumParser &parser, int next_char) const override;
+    void process(ConstNumParser::Impl &parser, int next_char) const override;
 };
 
 class MantissaState : public State {
 public:
-    void process(ConstNumParser &parser, int next_char) const override;
+    void process(ConstNumParser::Impl &parser, int next_char) const override;
 };
 
 class ExponentState : public State {
 public:
-    void process(ConstNumParser &parser, int next_char) const override;
+    void process(ConstNumParser::Impl &parser, int next_char) const override;
 };
 
 class ExponentSignState : public State {
 public:
-    void process(ConstNumParser &parser, int next_char) const override;
+    void process(ConstNumParser::Impl &parser, int next_char) const override;
 };
 
 class ExponentDigitsState : public State {
 public:
-    void process(ConstNumParser &parser, int next_char) const override;
+    void process(ConstNumParser::Impl &parser, int next_char) const override;
 };
 
 
@@ -75,8 +138,10 @@ static ExponentDigitsState exponent_digits;
 
 // ----------------------------------------
 
-ConstNumParser::ConstNumParser(std::istream &is) :
+ConstNumParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
     is {is},
+    code_line {code_line},
+    program {program},
     state {&start},
     floating_point {false},
     done {false},
@@ -88,7 +153,7 @@ ConstNumParser::ConstNumParser(std::istream &is) :
 Code constDblCode;
 Code constIntCode;
 
-DataType ConstNumParser::parse(ProgramCode &code_line, ProgramUnit &program)
+DataType ConstNumParser::Impl::parse()
 {
     processInput();
     if (number.empty()) {
@@ -104,17 +169,17 @@ DataType ConstNumParser::parse(ProgramCode &code_line, ProgramUnit &program)
     }
 }
 
-bool ConstNumParser::negateOperator() const
+inline bool ConstNumParser::Impl::negateOperator() const noexcept
 {
     return negate_operator;
 }
 
-bool ConstNumParser::possibleOperator() const
+inline bool ConstNumParser::Impl::possibleOperator() const noexcept
 {
     return possible_operator;
 }
 
-void ConstNumParser::processInput()
+void ConstNumParser::Impl::processInput()
 {
     do {
         column = is.tellg();
@@ -123,44 +188,44 @@ void ConstNumParser::processInput()
     } while (!done);
 }
 
-void ConstNumParser::changeState(State &new_state)
+void ConstNumParser::Impl::changeState(State &new_state) noexcept
 {
     state = &new_state;
 }
 
-unsigned ConstNumParser::getColumn() const
+unsigned ConstNumParser::Impl::getColumn() const noexcept
 {
     return column;
 }
 
-void ConstNumParser::addNextChar()
+void ConstNumParser::Impl::addNextChar()
 {
     number += is.get();
 }
 
-void ConstNumParser::setDouble()
+void ConstNumParser::Impl::setDouble() noexcept
 {
     floating_point = true;
 }
 
-bool ConstNumParser::isDouble()
+bool ConstNumParser::Impl::isDouble() const noexcept
 {
     return floating_point;
 }
 
-void ConstNumParser::setDone()
+void ConstNumParser::Impl::setDone() noexcept
 {
     done = true;
 }
 
-void ConstNumParser::setNegateOperator()
+void ConstNumParser::Impl::setNegateOperator() noexcept
 {
     negate_operator = true;
     number.clear();
     setDone();
 }
 
-void ConstNumParser::setPossibleOperator()
+void ConstNumParser::Impl::setPossibleOperator() noexcept
 {
     possible_operator = true;
     number.pop_back();
@@ -169,7 +234,7 @@ void ConstNumParser::setPossibleOperator()
 
 // ----------------------------------------
 
-void StartState::process(ConstNumParser &parser, int next_char) const
+void StartState::process(ConstNumParser::Impl &parser, int next_char) const
 {
     if (next_char == '0') {
         parser.changeState(zero);
@@ -182,7 +247,7 @@ void StartState::process(ConstNumParser &parser, int next_char) const
     parser.addNextChar();
 }
 
-void NegativeState::process(ConstNumParser &parser, int next_char) const
+void NegativeState::process(ConstNumParser::Impl &parser, int next_char) const
 {
     if (validMantissaChar(parser, next_char)) {
         parser.addNextChar();
@@ -191,7 +256,7 @@ void NegativeState::process(ConstNumParser &parser, int next_char) const
     }
 }
 
-bool State::validMantissaChar(ConstNumParser &parser, int next_char) const
+bool State::validMantissaChar(ConstNumParser::Impl &parser, int next_char) const
 {
     if (next_char == '.') {
         parser.setDouble();
@@ -204,7 +269,7 @@ bool State::validMantissaChar(ConstNumParser &parser, int next_char) const
     return true;
 }
 
-void ZeroState::process(ConstNumParser &parser, int next_char) const
+void ZeroState::process(ConstNumParser::Impl &parser, int next_char) const
 {
     if (next_char == '.') {
         parser.changeState(mantissa);
@@ -215,7 +280,7 @@ void ZeroState::process(ConstNumParser &parser, int next_char) const
     }
 }
 
-void PeriodState::process(ConstNumParser &parser, int next_char) const
+void PeriodState::process(ConstNumParser::Impl &parser, int next_char) const
 {
     if (isdigit(next_char)) {
         parser.changeState(mantissa);
@@ -224,7 +289,7 @@ void PeriodState::process(ConstNumParser &parser, int next_char) const
     }
 }
 
-void MantissaState::process(ConstNumParser &parser, int next_char) const
+void MantissaState::process(ConstNumParser::Impl &parser, int next_char) const
 {
     if (next_char == '.' && !parser.isDouble()) {
         parser.setDouble();
@@ -237,7 +302,7 @@ void MantissaState::process(ConstNumParser &parser, int next_char) const
     parser.addNextChar();
 }
 
-void ExponentState::process(ConstNumParser &parser, int next_char) const
+void ExponentState::process(ConstNumParser::Impl &parser, int next_char) const
 {
     if (next_char == '-' || next_char == '+') {
         parser.changeState(exponent_sign);
@@ -253,7 +318,7 @@ void ExponentState::process(ConstNumParser &parser, int next_char) const
     parser.addNextChar();
 }
 
-void ExponentSignState::process(ConstNumParser &parser, int next_char) const
+void ExponentSignState::process(ConstNumParser::Impl &parser, int next_char) const
 {
     if (isdigit(next_char)) {
         parser.changeState(exponent_digits);
@@ -262,7 +327,7 @@ void ExponentSignState::process(ConstNumParser &parser, int next_char) const
     }
 }
 
-void ExponentDigitsState::process(ConstNumParser &parser, int next_char) const
+void ExponentDigitsState::process(ConstNumParser::Impl &parser, int next_char) const
 {
     if (isdigit(next_char)) {
         parser.addNextChar();

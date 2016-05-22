@@ -5,47 +5,30 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef CONSTANTNUMBERPARSER_H
-#define CONSTANTNUMBERPARSER_H
+#ifndef IBC_CONSTANTNUMBERPARSER_H
+#define IBC_CONSTANTNUMBERPARSER_H
 
 #include <iosfwd>
+#include <memory>
 
 #include "datatype.h"
 
 
 class ProgramCode;
 class ProgramUnit;
-class State;
 
 class ConstNumParser {
 public:
-    ConstNumParser(std::istream &is);
+    ConstNumParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    DataType operator()();
+    bool negateOperator() const noexcept;
+    bool possibleOperator() const noexcept;
+    ~ConstNumParser();
 
-    DataType parse(ProgramCode &code_line, ProgramUnit &program);
-    bool negateOperator() const;
-    bool possibleOperator() const;
-
-    void changeState(State &new_state);
-    unsigned getColumn() const;
-    void addNextChar();
-    void setDouble();
-    bool isDouble();
-    void setDone();
-    void setNegateOperator();
-    void setPossibleOperator();
-
+    class Impl;
 private:
-    void processInput();
-
-    std::istream &is;
-    State *state;
-    std::string number;
-    bool floating_point;
-    bool done;
-    bool negate_operator;
-    bool possible_operator;
-    unsigned column;
+    std::unique_ptr<Impl> pimpl;
 };
 
 
-#endif  // CONSTANTNUMBERPARSER_H
+#endif  // IBC_CONSTANTNUMBERPARSER_H

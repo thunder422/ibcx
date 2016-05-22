@@ -29,13 +29,13 @@ private:
 };
 
 ExpressionParser::ExpressionParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
-    impl {new Impl(is, code_line, program)}
+    pimpl {new Impl(is, code_line, program)}
 {
 }
 
 DataType ExpressionParser::operator ()(DataType expected_data_type)
 {
-    return impl->parseExpression(expected_data_type);
+    return pimpl->parseExpression(expected_data_type);
 }
 
 ExpressionParser::~ExpressionParser()
@@ -59,9 +59,9 @@ DataType ExpressionParser::Impl::parseExpression(DataType expected_data_type)
 
 DataType ExpressionParser::Impl::parseNumOperand()
 {
-    ConstNumParser constant {is};
+    ConstNumParser parse_constant {is, code_line, program};
     unsigned column = is.tellg();
-    auto data_type = constant.parse(code_line, program);
+    auto data_type = parse_constant();
     if (data_type == DataType::Null) {
         throw ParseError {"expected numeric expression", column};
     }

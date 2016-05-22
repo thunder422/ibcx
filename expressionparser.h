@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef _IBC_EXPRESSIONPARSER_H
-#define _IBC_EXPRESSIONPARSER_H
+#ifndef IBC_EXPRESSIONPARSER_H
+#define IBC_EXPRESSIONPARSER_H
 
 #include <iosfwd>
 #include <memory>
@@ -25,8 +25,8 @@ public:
 
 private:
     class Impl;
-    std::unique_ptr<Impl> impl;
+    std::unique_ptr<Impl> pimpl;
 };
 
 
-#endif  // _IBC_EXPRESSIONPARSER_H
+#endif  // IBC_EXPRESSIONPARSER_H
