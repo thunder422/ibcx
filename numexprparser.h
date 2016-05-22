@@ -9,6 +9,7 @@
 #define NUMEXPRPARSER_H
 
 #include <iosfwd>
+#include <memory>
 
 #include <datatype.h>
 
@@ -18,12 +19,15 @@ class ProgramUnit;
 
 class NumExprParser {
 public:
-    NumExprParser(std::istream &is);
+    NumExprParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    ~NumExprParser();
 
-    DataType parse(ProgramCode &code_line, ProgramUnit &program);
+    DataType parse();
 
 private:
-    std::istream &is;
+    class Impl;
+
+    std::unique_ptr<Impl> impl;
 };
 
 

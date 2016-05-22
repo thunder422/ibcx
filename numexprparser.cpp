@@ -12,15 +12,42 @@
 #include "programunit.h"
 
 
-NumExprParser::NumExprParser(std::istream &is) :
-    is {is}
-{
+class NumExprParser::Impl {
+public:
+    Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
 
+    DataType parseOperand();
+
+private:
+    std::istream &is;
+    ProgramCode code_line;
+    ProgramUnit program;
+};
+
+NumExprParser::NumExprParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
+    impl {new Impl(is, code_line, program)}
+{
 }
 
-DataType NumExprParser::parse(ProgramCode &code_line, ProgramUnit &program)
+NumExprParser::~NumExprParser()
 {
-    (void)code_line;
-    (void)program;
-    return DataType::Null;
+}
+
+DataType NumExprParser::parse()
+{
+    return impl->parseOperand();
+}
+
+NumExprParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
+    is {is},
+    code_line {code_line},
+    program {program}
+{
+}
+
+
+
+DataType NumExprParser::Impl::parseOperand()
+{
+    return DataType::Integer;
 }

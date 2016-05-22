@@ -22,6 +22,7 @@ TEST_CASE("parse expressions with constants", "[constant]")
         extern Code constIntCode;
 
         std::istringstream iss {"1"};
-        auto data_type = NumExprParser{iss}.parse(code_line, program);
+        auto data_type = NumExprParser{iss, code_line, program}.parse();
+        REQUIRE(data_type == DataType::Integer);
     }
 }
