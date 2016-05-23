@@ -7,7 +7,10 @@
 
 #include <iostream>
 
+#include "commandcode.h"
 #include "commandparser.h"
+#include "parseerror.h"
+#include "programcode.h"
 
 
 class CommandParser::Impl {
@@ -51,5 +54,10 @@ CommandParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit 
 
 void CommandParser::Impl::parse()
 {
+    if (is.peek() == EOF) {
+        return;
+    }
+    auto code = CommandCode::findCode("PRINT");
+    code->parse(is, code_line, program);
 }
 

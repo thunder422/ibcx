@@ -28,12 +28,12 @@ TEST_CASE("parsing integer constants from a string", "[integers]")
     }
     SECTION("parse a single digit number")
     {
-        extern Code constIntCode;
+        extern Code const_int_code;
 
         std::istringstream iss {"1"};
         auto data_type = ConstNumParser{iss, code_line, program}();
         REQUIRE_INTEGER_OPERAND("1");
-        REQUIRE(code_line[0].instructionCode() == constIntCode.getValue());
+        REQUIRE(code_line[0].instructionCode() == const_int_code.getValue());
     }
     SECTION("parse a multiple digit number")
     {
@@ -83,12 +83,12 @@ TEST_CASE("parsing floating point constants from a string", "[doubles]")
     }
     SECTION("parse a number to a double constant in the code_line")
     {
-        extern Code constDblCode;
+        extern Code const_dbl_code;
 
         std::istringstream iss {"1.2"};
         auto data_type = ConstNumParser{iss, code_line, program}();
         REQUIRE_DOUBLE_OPERAND("1.2");
-        REQUIRE(code_line[0].instructionCode() == constDblCode.getValue());
+        REQUIRE(code_line[0].instructionCode() == const_dbl_code.getValue());
     }
     SECTION("parse a number with an exponent")
     {

@@ -6,6 +6,7 @@
  */
 
 #include "catch.hpp"
+#include "commandcode.h"
 #include "commandparser.h"
 #include "parseerror.h"
 #include "programcode.h"
@@ -23,5 +24,15 @@ TEST_CASE("parse simple commands", "[simple]")
         CommandParser parse_command {iss, code_line, program};
         parse_command();
         REQUIRE(code_line.empty());
+    }
+    SECTION("parse a simple PRINT command")
+    {
+        std::istringstream iss {"PRINT"};
+        CommandParser parse_command {iss, code_line, program};
+        parse_command();
+        REQUIRE(code_line.size() == 1);
+        auto code = CommandCode::findCode("PRINT");
+        REQUIRE(code != nullptr);
+        REQUIRE(code_line[0].instructionCode() == code->getValue());
     }
 }

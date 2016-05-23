@@ -150,8 +150,8 @@ ConstNumParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit
 {
 }
 
-Code constDblCode;
-Code constIntCode;
+Code const_dbl_code;
+Code const_int_code;
 
 DataType ConstNumParser::Impl::parse()
 {
@@ -159,11 +159,11 @@ DataType ConstNumParser::Impl::parse()
     if (number.empty()) {
         return DataType::Null;
     } else if (floating_point) {
-        code_line.emplace_back(constDblCode);
+        code_line.emplace_back(const_dbl_code);
         code_line.emplace_back(program.constDblDictionary().add(number));
         return DataType::Double;
     } else {
-        code_line.emplace_back(constIntCode);
+        code_line.emplace_back(const_int_code);
         code_line.emplace_back(program.constIntDictionary().add(number));
         return DataType::Integer;
     }
