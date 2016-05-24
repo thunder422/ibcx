@@ -169,16 +169,6 @@ DataType ConstNumParser::Impl::parse()
     }
 }
 
-inline bool ConstNumParser::Impl::negateOperator() const noexcept
-{
-    return negate_operator;
-}
-
-inline bool ConstNumParser::Impl::possibleOperator() const noexcept
-{
-    return possible_operator;
-}
-
 void ConstNumParser::Impl::processInput()
 {
     do {
@@ -186,6 +176,16 @@ void ConstNumParser::Impl::processInput()
         auto next_char = is.peek();
         state->process(*this, next_char);
     } while (!done);
+}
+
+bool ConstNumParser::Impl::negateOperator() const noexcept
+{
+    return negate_operator;
+}
+
+bool ConstNumParser::Impl::possibleOperator() const noexcept
+{
+    return possible_operator;
 }
 
 void ConstNumParser::Impl::changeState(State &new_state) noexcept

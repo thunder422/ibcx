@@ -5,7 +5,10 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <iostream>
+
 #include "commandcode.h"
+#include "expressionparser.h"
 #include "programcode.h"
 
 
@@ -16,6 +19,7 @@ public:
 };
 
 PrintCode print_code;
+Code print_int_code;
 
 PrintCode::PrintCode() :
     CommandCode("PRINT")
@@ -24,7 +28,9 @@ PrintCode::PrintCode() :
 
 void PrintCode::parse(std::istream &is, ProgramCode &code_line, ProgramUnit &program)
 {
-    (void)is;
-    (void)program;
+    if (is.peek() != EOF) {
+        ExpressionParser{is, code_line, program}(DataType::Null);
+        code_line.emplace_back(print_int_code);
+    }
     code_line.emplace_back(print_code);
 }
