@@ -45,4 +45,14 @@ TEST_CASE("parse simple commands", "[simple]")
         REQUIRE(code != nullptr);
         REQUIRE(code_line[0].instructionCode() == code->getValue());
     }
+    SECTION("allow white space before a command")
+    {
+        std::istringstream iss {"   PRINT"};
+        CommandParser parse_command {iss, code_line, program};
+        parse_command();
+        REQUIRE(code_line.size() == 1);
+        auto code = CommandCode::find("PRINT");
+        REQUIRE(code != nullptr);
+        REQUIRE(code_line[0].instructionCode() == code->getValue());
+    }
 }

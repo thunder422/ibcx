@@ -65,6 +65,7 @@ void CommandParser::Impl::parse()
 std::string CommandParser::Impl::parseKeyword()
 {
     std::string keyword;
+    is >> std::ws;
     while (isalpha(is.peek())) {
         keyword += is.get();
     }
