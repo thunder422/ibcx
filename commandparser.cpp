@@ -20,11 +20,11 @@ public:
     void parse();
 
 private:
+    std::string parseKeyword();
 
     std::istream &is;
     ProgramCode &code_line;
     ProgramUnit &program;
-
 };
 
 // ----------------------------------------
@@ -57,7 +57,16 @@ void CommandParser::Impl::parse()
     if (is.peek() == EOF) {
         return;
     }
-    auto code = CommandCode::findCode("PRINT");
+    auto keyword = parseKeyword();
+    auto code = CommandCode::find(keyword);
     code->parse(is, code_line, program);
 }
 
+std::string CommandParser::Impl::parseKeyword()
+{
+    std::string keyword;
+    while (isalpha(is.peek())) {
+        keyword += is.get();
+    }
+    return keyword;
+}

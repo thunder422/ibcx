@@ -62,6 +62,7 @@ set(IBC_SOURCES
     constnumparser.cpp
     dictionary.cpp
     datatype.h
+    end.cpp
     expressionparser.cpp
     parseerror.h
     print.cpp

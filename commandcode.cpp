@@ -10,7 +10,7 @@
 
 std::unordered_map<std::string, CommandCode *> CommandCode::command_names;
 
-CommandCode *CommandCode::findCode(const std::string &keyword)
+CommandCode *CommandCode::find(const std::string &keyword)
 {
     auto result = command_names.find(keyword);
     return result->second;

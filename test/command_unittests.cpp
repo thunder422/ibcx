@@ -31,7 +31,17 @@ TEST_CASE("parse simple commands", "[simple]")
         CommandParser parse_command {iss, code_line, program};
         parse_command();
         REQUIRE(code_line.size() == 1);
-        auto code = CommandCode::findCode("PRINT");
+        auto code = CommandCode::find("PRINT");
+        REQUIRE(code != nullptr);
+        REQUIRE(code_line[0].instructionCode() == code->getValue());
+    }
+    SECTION("parse an END command")
+    {
+        std::istringstream iss {"END"};
+        CommandParser parse_command {iss, code_line, program};
+        parse_command();
+        REQUIRE(code_line.size() == 1);
+        auto code = CommandCode::find("END");
         REQUIRE(code != nullptr);
         REQUIRE(code_line[0].instructionCode() == code->getValue());
     }

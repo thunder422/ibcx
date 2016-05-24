@@ -18,7 +18,7 @@ class ProgramUnit;
 
 class CommandCode : public Code {
 public:
-    static CommandCode *findCode(const std::string &keyword);
+    static CommandCode *find(const std::string &keyword);
 
     CommandCode(const char *keyword);
     virtual void parse(std::istream &is, ProgramCode &code_line, ProgramUnit &program) = 0;
