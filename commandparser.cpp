@@ -58,6 +58,9 @@ void CommandParser::Impl::parse()
         return;
     }
     auto keyword = parseKeyword();
+    if (keyword.empty()) {
+        throw ParseError{"expected command keyword", 0};
+    }
     auto code = CommandCode::find(keyword);
     code->parse(is, code_line, program);
 }

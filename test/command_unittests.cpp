@@ -55,4 +55,10 @@ TEST_CASE("parse simple commands", "[simple]")
         REQUIRE(code != nullptr);
         REQUIRE(code_line[0].instructionCode() == code->getValue());
     }
+    SECTION("check for an error if non-alphabetic word if first")
+    {
+        std::istringstream iss {"   123"};
+        CommandParser parse_command {iss, code_line, program};
+        REQUIRE_THROWS_AS(parse_command(), ParseError);
+    }
 }
