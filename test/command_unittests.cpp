@@ -76,4 +76,20 @@ TEST_CASE("parse simple commands", "[simple]")
         auto code = CommandCode::find("PRINT");
         REQUIRE(code_line[3].instructionCode() == code->getValue());
     }
+    SECTION("parse a PRINT comamnd with an expression (single constant for now)")
+    {
+        extern Code const_dbl_code;
+        extern Code print_dbl_code;
+
+        std::istringstream iss {"PRINT -5.6e14"};
+        CommandParser parse_command {iss, code_line, program};
+        parse_command();
+        REQUIRE(code_line.size() == 4);
+        REQUIRE(code_line[0].instructionCode() == const_dbl_code.getValue());
+        auto operand = code_line[1].operand();
+        REQUIRE(program.constDblDictionary().get(operand) == "-5.6e14");
+        REQUIRE(code_line[2].instructionCode() == print_dbl_code.getValue());
+        auto code = CommandCode::find("PRINT");
+        REQUIRE(code_line[3].instructionCode() == code->getValue());
+    }
 }

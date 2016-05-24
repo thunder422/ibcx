@@ -19,6 +19,7 @@ public:
 };
 
 PrintCode print_code;
+Code print_dbl_code;
 Code print_int_code;
 
 PrintCode::PrintCode() :
@@ -29,8 +30,12 @@ PrintCode::PrintCode() :
 void PrintCode::parse(std::istream &is, ProgramCode &code_line, ProgramUnit &program)
 {
     if (is.peek() != EOF) {
-        ExpressionParser{is, code_line, program}(DataType::Null);
-        code_line.emplace_back(print_int_code);
+        auto data_type = ExpressionParser{is, code_line, program}(DataType::Null);
+        if (data_type == DataType::Double) {
+            code_line.emplace_back(print_dbl_code);
+        } else {
+            code_line.emplace_back(print_int_code);
+        }
     }
     code_line.emplace_back(print_code);
 }
