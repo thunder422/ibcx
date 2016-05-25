@@ -13,6 +13,7 @@
 #include <code.h>
 
 
+class Compiler;
 class ProgramCode;
 class ProgramUnit;
 
@@ -21,7 +22,7 @@ public:
     static CommandCode *find(const std::string &keyword);
 
     CommandCode(const char *keyword);
-    virtual void parse(std::istream &is, ProgramCode &code_line, ProgramUnit &program) = 0;
+    virtual void compile(Compiler &compiler) const = 0;
 
 private:
     static std::unordered_map<std::string, CommandCode *> command_names;

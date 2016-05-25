@@ -14,12 +14,11 @@
 #include "datatype.h"
 
 
-class ProgramCode;
-class ProgramUnit;
+class Compiler;
 
 class ConstNumParser {
 public:
-    ConstNumParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    ConstNumParser(Compiler &compiler);
     DataType operator()();
     bool negateOperator() const noexcept;
     bool possibleOperator() const noexcept;

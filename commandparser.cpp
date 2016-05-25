@@ -9,28 +9,27 @@
 
 #include "commandcode.h"
 #include "commandparser.h"
+#include "compiler.h"
 #include "parseerror.h"
 #include "programcode.h"
 
 
 class CommandParser::Impl {
 public:
-    Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    Impl(Compiler &compiler);
 
     void parse();
 
 private:
     std::string parseKeyword();
 
-    std::istream &is;
-    ProgramCode &code_line;
-    ProgramUnit &program;
+    Compiler &compiler;
 };
 
 // ----------------------------------------
 
-CommandParser::CommandParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
-    pimpl {new Impl(is, code_line, program)}
+CommandParser::CommandParser(Compiler &compiler) :
+    pimpl {new Impl(compiler)}
 {
 }
 
@@ -45,16 +44,14 @@ CommandParser::~CommandParser()
 
 // ----------------------------------------
 
-CommandParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
-    is {is},
-    code_line {code_line},
-    program {program}
+CommandParser::Impl::Impl(Compiler &compiler) :
+    compiler {compiler}
 {
 }
 
 void CommandParser::Impl::parse()
 {
-    if (is.peek() == EOF) {
+    if (compiler.is.peek() == EOF) {
         return;
     }
     auto keyword = parseKeyword();
@@ -62,16 +59,16 @@ void CommandParser::Impl::parse()
         throw ParseError{"expected command keyword", 0};
     }
     auto code = CommandCode::find(keyword);
-    code->parse(is, code_line, program);
+    code->compile(compiler);
 }
 
 std::string CommandParser::Impl::parseKeyword()
 {
     std::string keyword;
-    is >> std::ws;
-    while (isalpha(is.peek())) {
-        keyword += is.get();
+    compiler.is >> std::ws;
+    while (isalpha(compiler.is.peek())) {
+        keyword += compiler.is.get();
     }
-    is >> std::ws;
+    compiler.is >> std::ws;
     return keyword;
 }

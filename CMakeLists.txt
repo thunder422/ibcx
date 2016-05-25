@@ -59,6 +59,7 @@ set(IBC_SOURCES
     code.cpp
     commandcode.cpp
     commandparser.cpp
+    compiler.cpp
     constnumparser.cpp
     dictionary.cpp
     datatype.h

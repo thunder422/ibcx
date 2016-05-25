@@ -6,13 +6,14 @@
  */
 
 #include "commandcode.h"
+#include "compiler.h"
 #include "programcode.h"
 
 
 class EndCode : public CommandCode {
 public:
     EndCode();
-    void parse(std::istream &is, ProgramCode &code_line, ProgramUnit &program) override;
+    void compile(Compiler &compiler) const override;
 };
 
 EndCode end_code;
@@ -22,9 +23,7 @@ EndCode::EndCode() :
 {
 }
 
-void EndCode::parse(std::istream &is, ProgramCode &code_line, ProgramUnit &program)
+void EndCode::compile(Compiler &compiler) const
 {
-    (void)is;
-    (void)program;
-    code_line.emplace_back(end_code);
+    compiler.code_line.emplace_back(end_code);
 }

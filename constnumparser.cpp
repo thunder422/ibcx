@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "code.h"
+#include "compiler.h"
 #include "constnumparser.h"
 #include "parseerror.h"
 #include "programcode.h"
@@ -19,7 +20,7 @@ class State;
 
 class ConstNumParser::Impl {
 public:
-    Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    Impl(Compiler &compiler);
 
     DataType parse();
     bool negateOperator() const noexcept;
@@ -37,9 +38,7 @@ public:
 private:
     void processInput();
 
-    std::istream &is;
-    ProgramCode &code_line;
-    ProgramUnit &program;
+    Compiler &compiler;
 
     State *state;
     std::string number;
@@ -52,8 +51,8 @@ private:
 
 // ----------------------------------------
 
-ConstNumParser::ConstNumParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
-    pimpl {new Impl(is, code_line, program)}
+ConstNumParser::ConstNumParser(Compiler &compiler) :
+    pimpl {new Impl(compiler)}
 {
 }
 
@@ -138,10 +137,8 @@ static ExponentDigitsState exponent_digits;
 
 // ----------------------------------------
 
-ConstNumParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
-    is {is},
-    code_line {code_line},
-    program {program},
+ConstNumParser::Impl::Impl(Compiler &compiler) :
+    compiler {compiler},
     state {&start},
     floating_point {false},
     done {false},
@@ -159,12 +156,12 @@ DataType ConstNumParser::Impl::parse()
     if (number.empty()) {
         return DataType::Null;
     } else if (floating_point) {
-        code_line.emplace_back(const_dbl_code);
-        code_line.emplace_back(program.constDblDictionary().add(number));
+        compiler.code_line.emplace_back(const_dbl_code);
+        compiler.code_line.emplace_back(compiler.program.constDblDictionary().add(number));
         return DataType::Double;
     } else {
-        code_line.emplace_back(const_int_code);
-        code_line.emplace_back(program.constIntDictionary().add(number));
+        compiler.code_line.emplace_back(const_int_code);
+        compiler.code_line.emplace_back(compiler.program.constIntDictionary().add(number));
         return DataType::Integer;
     }
 }
@@ -172,8 +169,8 @@ DataType ConstNumParser::Impl::parse()
 void ConstNumParser::Impl::processInput()
 {
     do {
-        column = is.tellg();
-        auto next_char = is.peek();
+        column = compiler.is.tellg();
+        auto next_char = compiler.is.peek();
         state->process(*this, next_char);
     } while (!done);
 }
@@ -200,7 +197,7 @@ unsigned ConstNumParser::Impl::getColumn() const noexcept
 
 void ConstNumParser::Impl::addNextChar()
 {
-    number += is.get();
+    number += compiler.is.get();
 }
 
 void ConstNumParser::Impl::setDouble() noexcept

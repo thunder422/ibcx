@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "commandcode.h"
 #include "commandparser.h"
+#include "compiler.h"
 #include "parseerror.h"
 #include "programcode.h"
 #include "programunit.h"
@@ -21,14 +22,16 @@ TEST_CASE("parse simple commands", "[simple]")
     SECTION("parse an empty command line")
     {
         std::istringstream iss {""};
-        CommandParser parse_command {iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
+        CommandParser parse_command {compiler};
         parse_command();
         REQUIRE(code_line.empty());
     }
     SECTION("parse a simple PRINT command")
     {
         std::istringstream iss {"PRINT"};
-        CommandParser parse_command {iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
+        CommandParser parse_command {compiler};
         parse_command();
         REQUIRE(code_line.size() == 1);
         auto code = CommandCode::find("PRINT");
@@ -38,7 +41,8 @@ TEST_CASE("parse simple commands", "[simple]")
     SECTION("parse an END command")
     {
         std::istringstream iss {"END"};
-        CommandParser parse_command {iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
+        CommandParser parse_command {compiler};
         parse_command();
         REQUIRE(code_line.size() == 1);
         auto code = CommandCode::find("END");
@@ -48,7 +52,8 @@ TEST_CASE("parse simple commands", "[simple]")
     SECTION("allow white space before a command")
     {
         std::istringstream iss {"   PRINT"};
-        CommandParser parse_command {iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
+        CommandParser parse_command {compiler};
         parse_command();
         REQUIRE(code_line.size() == 1);
         auto code = CommandCode::find("PRINT");
@@ -57,7 +62,8 @@ TEST_CASE("parse simple commands", "[simple]")
     SECTION("check for an error if non-alphabetic word if first")
     {
         std::istringstream iss {"   123"};
-        CommandParser parse_command {iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
+        CommandParser parse_command {compiler};
         REQUIRE_THROWS_AS(parse_command(), ParseError);
     }
     SECTION("parse a PRINT comamnd with an expression (single constant for now)")
@@ -66,7 +72,8 @@ TEST_CASE("parse simple commands", "[simple]")
         extern Code print_int_code;
 
         std::istringstream iss {"PRINT 234"};
-        CommandParser parse_command {iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
+        CommandParser parse_command {compiler};
         parse_command();
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode() == const_int_code.getValue());
@@ -82,7 +89,8 @@ TEST_CASE("parse simple commands", "[simple]")
         extern Code print_dbl_code;
 
         std::istringstream iss {"PRINT -5.6e14"};
-        CommandParser parse_command {iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
+        CommandParser parse_command {compiler};
         parse_command();
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode() == const_dbl_code.getValue());

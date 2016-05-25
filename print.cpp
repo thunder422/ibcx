@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "commandcode.h"
+#include "compiler.h"
 #include "expressionparser.h"
 #include "programcode.h"
 
@@ -15,7 +16,7 @@
 class PrintCode : public CommandCode {
 public:
     PrintCode();
-    void parse(std::istream &is, ProgramCode &code_line, ProgramUnit &program) override;
+    void compile(Compiler &compiler) const override;
 };
 
 PrintCode print_code;
@@ -27,15 +28,15 @@ PrintCode::PrintCode() :
 {
 }
 
-void PrintCode::parse(std::istream &is, ProgramCode &code_line, ProgramUnit &program)
+void PrintCode::compile(Compiler &compiler) const
 {
-    if (is.peek() != EOF) {
-        auto data_type = ExpressionParser{is, code_line, program}(DataType::Null);
+    if (compiler.is.peek() != EOF) {
+        auto data_type = ExpressionParser{compiler}(DataType::Null);
         if (data_type == DataType::Double) {
-            code_line.emplace_back(print_dbl_code);
+            compiler.code_line.emplace_back(print_dbl_code);
         } else {
-            code_line.emplace_back(print_int_code);
+            compiler.code_line.emplace_back(print_int_code);
         }
     }
-    code_line.emplace_back(print_code);
+    compiler.code_line.emplace_back(print_code);
 }

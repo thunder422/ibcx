@@ -14,12 +14,11 @@
 #include <datatype.h>
 
 
-class ProgramCode;
-class ProgramUnit;
+class Compiler;
 
 class ExpressionParser {
 public:
-    ExpressionParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    ExpressionParser(Compiler &compiler);
     DataType operator()(DataType expected_data_type);
     ~ExpressionParser();
 

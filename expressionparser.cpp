@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+#include "compiler.h"
 #include "constnumparser.h"
 #include "expressionparser.h"
 #include "parseerror.h"
@@ -16,20 +17,18 @@
 
 class ExpressionParser::Impl {
 public:
-    Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    Impl(Compiler compiler);
 
     DataType parseExpression(DataType expected_data_type);
 
 private:
     DataType parseNumOperand();
 
-    std::istream &is;
-    ProgramCode &code_line;
-    ProgramUnit &program;
+    Compiler compiler;
 };
 
-ExpressionParser::ExpressionParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
-    pimpl {new Impl(is, code_line, program)}
+ExpressionParser::ExpressionParser(Compiler &compiler) :
+    pimpl {new Impl(compiler)}
 {
 }
 
@@ -44,10 +43,8 @@ ExpressionParser::~ExpressionParser()
 
 // ----------------------------------------
 
-ExpressionParser::Impl::Impl(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
-    is {is},
-    code_line {code_line},
-    program {program}
+ExpressionParser::Impl::Impl(Compiler compiler) :
+    compiler {compiler}
 {
 }
 
@@ -59,8 +56,8 @@ DataType ExpressionParser::Impl::parseExpression(DataType expected_data_type)
 
 DataType ExpressionParser::Impl::parseNumOperand()
 {
-    ConstNumParser parse_constant {is, code_line, program};
-    unsigned column = is.tellg();
+    ConstNumParser parse_constant {compiler};
+    unsigned column = compiler.is.tellg();
     auto data_type = parse_constant();
     if (data_type == DataType::Null) {
         throw ParseError {"expected numeric expression", column};

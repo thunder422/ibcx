@@ -12,12 +12,11 @@
 #include <memory>
 
 
-class ProgramCode;
-class ProgramUnit;
+class Compiler;
 
 class CommandParser {
 public:
-    CommandParser(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    CommandParser(Compiler &compiler);
     void operator()();
     ~CommandParser();
 
