@@ -78,7 +78,7 @@ TEST_CASE("compile simple commands", "[simple]")
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode() == const_int_code.getValue());
         auto operand = code_line[1].operand();
-        REQUIRE(program.constIntDictionary().get(operand) == "234");
+        REQUIRE(program.constNumDictionary().get(operand) == "234");
         REQUIRE(code_line[2].instructionCode() == print_int_code.getValue());
         auto code = CommandCode::find("PRINT");
         REQUIRE(code_line[3].instructionCode() == code->getValue());
@@ -95,7 +95,7 @@ TEST_CASE("compile simple commands", "[simple]")
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode() == const_dbl_code.getValue());
         auto operand = code_line[1].operand();
-        REQUIRE(program.constDblDictionary().get(operand) == "-5.6e14");
+        REQUIRE(program.constNumDictionary().get(operand) == "-5.6e14");
         REQUIRE(code_line[2].instructionCode() == print_dbl_code.getValue());
         auto code = CommandCode::find("PRINT");
         REQUIRE(code_line[3].instructionCode() == code->getValue());

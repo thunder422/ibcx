@@ -14,23 +14,16 @@
 class ProgramUnit {
 public:
     ProgramUnit();
-    Dictionary &constDblDictionary();
-    Dictionary &constIntDictionary();
+    Dictionary &constNumDictionary();
 
 private:
-    Dictionary const_int_dictionary;
-    Dictionary const_dbl_dictionary;
+    Dictionary const_num_dictionary;
 };
 
 
-inline Dictionary &ProgramUnit::constDblDictionary()
+inline Dictionary &ProgramUnit::constNumDictionary()
 {
-    return const_dbl_dictionary;
-}
-
-inline Dictionary &ProgramUnit::constIntDictionary()
-{
-    return const_int_dictionary;
+    return const_num_dictionary;
 }
 
 

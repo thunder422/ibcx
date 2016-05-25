@@ -9,17 +9,11 @@
 #define SUPPORT_H
 
 
-#define REQUIRE_INTEGER_OPERAND(number) \
-    REQUIRE(data_type == DataType::Integer); \
+#define REQUIRE_OPERAND(expected_data_type, number) \
+    REQUIRE(data_type == expected_data_type); \
     REQUIRE(code_line.size() == 2); \
     auto operand = code_line[1].operand(); \
-    REQUIRE(program.constIntDictionary().get(operand) == number);
-
-#define REQUIRE_DOUBLE_OPERAND(number) \
-    REQUIRE(data_type == DataType::Double); \
-    REQUIRE(code_line.size() == 2); \
-    auto operand = code_line[1].operand(); \
-    REQUIRE(program.constDblDictionary().get(operand) == number);
+    REQUIRE(program.constNumDictionary().get(operand) == number);
 
 
 #endif  // SUPPORT_H

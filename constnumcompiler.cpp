@@ -157,11 +157,11 @@ DataType ConstNumCompiler::Impl::compile()
         return DataType::Null;
     } else if (floating_point) {
         compiler.code_line.emplace_back(const_dbl_code);
-        compiler.code_line.emplace_back(compiler.program.constDblDictionary().add(number));
+        compiler.code_line.emplace_back(compiler.program.constNumDictionary().add(number));
         return DataType::Double;
     } else {
         compiler.code_line.emplace_back(const_int_code);
-        compiler.code_line.emplace_back(compiler.program.constIntDictionary().add(number));
+        compiler.code_line.emplace_back(compiler.program.constNumDictionary().add(number));
         return DataType::Integer;
     }
 }

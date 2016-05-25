@@ -27,7 +27,7 @@ TEST_CASE("compile numeric expressions with constants", "[constant]")
         Compiler compiler {iss, code_line, program};
         ExpressionCompiler compile_expression {compiler};
         auto data_type = compile_expression(DataType::Null);
-        REQUIRE_INTEGER_OPERAND("1");
+        REQUIRE_OPERAND(DataType::Integer, "1");
     }
     SECTION("verify an error is thrown when nothing is in the input stream")
     {
