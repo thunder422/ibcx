@@ -5,17 +5,17 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef PARSEERROR_H
-#define PARSEERROR_H
+#ifndef IBC_COMPILEERROR_H
+#define IBC_COMPILEERROR_H
 
 #include <stdexcept>
 
 
-struct ParseError : public std::runtime_error {
-    ParseError(const char *message, unsigned column) : runtime_error(message), column(column) { }
+struct CompileError : public std::runtime_error {
+    CompileError(const char *message, unsigned column) : runtime_error(message), column(column) { }
 
     unsigned column;
 };
 
 
-#endif  // PARSEERROR_H
+#endif  // IBC_COMPILEERROR_H

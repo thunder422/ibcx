@@ -16,13 +16,13 @@
 
 class Compiler;
 
-class ConstNumParser {
+class ConstNumCompiler {
 public:
-    ConstNumParser(Compiler &compiler);
+    ConstNumCompiler(Compiler &compiler);
     DataType operator()();
     bool negateOperator() const noexcept;
     bool possibleOperator() const noexcept;
-    ~ConstNumParser();
+    ~ConstNumCompiler();
 
     class Impl;
 private:

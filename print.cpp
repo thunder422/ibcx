@@ -9,7 +9,7 @@
 
 #include "commandcode.h"
 #include "compiler.h"
-#include "expressionparser.h"
+#include "expressioncompiler.h"
 #include "programcode.h"
 
 
@@ -31,7 +31,7 @@ PrintCode::PrintCode() :
 void PrintCode::compile(Compiler &compiler) const
 {
     if (compiler.is.peek() != EOF) {
-        auto data_type = ExpressionParser{compiler}(DataType::Null);
+        auto data_type = ExpressionCompiler{compiler}(DataType::Null);
         if (data_type == DataType::Double) {
             compiler.code_line.emplace_back(print_dbl_code);
         } else {

@@ -5,22 +5,20 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef IBC_EXPRESSIONPARSER_H
-#define IBC_EXPRESSIONPARSER_H
+#ifndef IBC_COMMANDPARSER_H
+#define IBC_COMMANDPARSER_H
 
 #include <iosfwd>
 #include <memory>
 
-#include <datatype.h>
-
 
 class Compiler;
 
-class ExpressionParser {
+class CommandCompiler {
 public:
-    ExpressionParser(Compiler &compiler);
-    DataType operator()(DataType expected_data_type);
-    ~ExpressionParser();
+    CommandCompiler(Compiler &compiler);
+    void operator()();
+    ~CommandCompiler();
 
 private:
     class Impl;
@@ -28,4 +26,4 @@ private:
 };
 
 
-#endif  // IBC_EXPRESSIONPARSER_H
+#endif  // IBC_COMMANDPARSER_H

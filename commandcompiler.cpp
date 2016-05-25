@@ -8,17 +8,17 @@
 #include <iostream>
 
 #include "commandcode.h"
-#include "commandparser.h"
+#include "commandcompiler.h"
 #include "compiler.h"
-#include "parseerror.h"
+#include "compileerror.h"
 #include "programcode.h"
 
 
-class CommandParser::Impl {
+class CommandCompiler::Impl {
 public:
     Impl(Compiler &compiler);
 
-    void parse();
+    void compile();
 
 private:
     std::string parseKeyword();
@@ -28,41 +28,41 @@ private:
 
 // ----------------------------------------
 
-CommandParser::CommandParser(Compiler &compiler) :
+CommandCompiler::CommandCompiler(Compiler &compiler) :
     pimpl {new Impl(compiler)}
 {
 }
 
-void CommandParser::operator()()
+void CommandCompiler::operator()()
 {
-    return pimpl->parse();
+    return pimpl->compile();
 }
 
-CommandParser::~CommandParser()
+CommandCompiler::~CommandCompiler()
 {
 }
 
 // ----------------------------------------
 
-CommandParser::Impl::Impl(Compiler &compiler) :
+CommandCompiler::Impl::Impl(Compiler &compiler) :
     compiler {compiler}
 {
 }
 
-void CommandParser::Impl::parse()
+void CommandCompiler::Impl::compile()
 {
     if (compiler.is.peek() == EOF) {
         return;
     }
     auto keyword = parseKeyword();
     if (keyword.empty()) {
-        throw ParseError{"expected command keyword", 0};
+        throw CompileError{"expected command keyword", 0};
     }
     auto code = CommandCode::find(keyword);
     code->compile(compiler);
 }
 
-std::string CommandParser::Impl::parseKeyword()
+std::string CommandCompiler::Impl::parseKeyword()
 {
     std::string keyword;
     compiler.is >> std::ws;

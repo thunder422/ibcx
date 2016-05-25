@@ -58,14 +58,14 @@ endif ()
 set(IBC_SOURCES
     code.cpp
     commandcode.cpp
-    commandparser.cpp
+    commandcompiler.cpp
+    compileerror.h
     compiler.cpp
-    constnumparser.cpp
+    constnumcompiler.cpp
     dictionary.cpp
     datatype.h
     end.cpp
-    expressionparser.cpp
-    parseerror.h
+    expressioncompiler.cpp
     print.cpp
     programcode.cpp
     programunit.cpp
