@@ -9,8 +9,10 @@
 #define COMPILER_H
 
 #include <iosfwd>
+#include <string>
 
 
+class Code;
 class ProgramCode;
 class ProgramUnit;
 
@@ -18,6 +20,15 @@ class Compiler {
 public:
     Compiler(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
 
+    std::string getKeyword() const;
+    char peekNextChar() const;
+    char getNextChar() const;
+    char getColumn() const;
+
+    void addInstruction(Code &code) const;
+    void addConstNumInstruction(Code &code, const std::string &number) const;
+
+private:
     std::istream &is;
     ProgramCode &code_line;
     ProgramUnit &program;

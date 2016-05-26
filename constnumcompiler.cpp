@@ -156,12 +156,10 @@ DataType ConstNumCompiler::Impl::compile()
     if (number.empty()) {
         return DataType::Null;
     } else if (floating_point) {
-        compiler.code_line.emplace_back(const_dbl_code);
-        compiler.code_line.emplace_back(compiler.program.constNumDictionary().add(number));
+        compiler.addConstNumInstruction(const_dbl_code, number);
         return DataType::Double;
     } else {
-        compiler.code_line.emplace_back(const_int_code);
-        compiler.code_line.emplace_back(compiler.program.constNumDictionary().add(number));
+        compiler.addConstNumInstruction(const_int_code, number);
         return DataType::Integer;
     }
 }
@@ -169,8 +167,8 @@ DataType ConstNumCompiler::Impl::compile()
 void ConstNumCompiler::Impl::parseInput()
 {
     do {
-        column = compiler.is.tellg();
-        auto next_char = compiler.is.peek();
+        column = compiler.getColumn();
+        auto next_char = compiler.peekNextChar();
         state->parse(*this, next_char);
     } while (!done);
 }
@@ -197,7 +195,7 @@ unsigned ConstNumCompiler::Impl::getColumn() const noexcept
 
 void ConstNumCompiler::Impl::addNextChar()
 {
-    number += compiler.is.get();
+    number += compiler.getNextChar();
 }
 
 void ConstNumCompiler::Impl::setDouble() noexcept

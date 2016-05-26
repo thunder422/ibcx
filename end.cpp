@@ -25,5 +25,5 @@ EndCode::EndCode() :
 
 void EndCode::compile(Compiler &compiler) const
 {
-    compiler.code_line.emplace_back(end_code);
+    compiler.addInstruction(end_code);
 }

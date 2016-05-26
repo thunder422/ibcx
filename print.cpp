@@ -30,13 +30,13 @@ PrintCode::PrintCode() :
 
 void PrintCode::compile(Compiler &compiler) const
 {
-    if (compiler.is.peek() != EOF) {
+    if (compiler.peekNextChar() != EOF) {
         auto data_type = ExpressionCompiler{compiler}(DataType::Null);
         if (data_type == DataType::Double) {
-            compiler.code_line.emplace_back(print_dbl_code);
+            compiler.addInstruction(print_dbl_code);
         } else {
-            compiler.code_line.emplace_back(print_int_code);
+            compiler.addInstruction(print_int_code);
         }
     }
-    compiler.code_line.emplace_back(print_code);
+    compiler.addInstruction(print_code);
 }

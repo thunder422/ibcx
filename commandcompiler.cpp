@@ -21,8 +21,6 @@ public:
     void compile();
 
 private:
-    std::string parseKeyword();
-
     Compiler &compiler;
 };
 
@@ -51,24 +49,13 @@ CommandCompiler::Impl::Impl(Compiler &compiler) :
 
 void CommandCompiler::Impl::compile()
 {
-    if (compiler.is.peek() == EOF) {
+    if (compiler.peekNextChar() == EOF) {
         return;
     }
-    auto keyword = parseKeyword();
+    auto keyword = compiler.getKeyword();
     if (keyword.empty()) {
         throw CompileError{"expected command keyword", 0};
     }
     auto code = CommandCode::find(keyword);
     code->compile(compiler);
-}
-
-std::string CommandCompiler::Impl::parseKeyword()
-{
-    std::string keyword;
-    compiler.is >> std::ws;
-    while (isalpha(compiler.is.peek())) {
-        keyword += compiler.is.get();
-    }
-    compiler.is >> std::ws;
-    return keyword;
 }
