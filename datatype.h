@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef DATATYPE_H
-#define DATATYPE_H
+#ifndef IBC_DATATYPE_H
+#define IBC_DATATYPE_H
 
 
 enum class DataType {
@@ -16,4 +16,4 @@ enum class DataType {
 };
 
 
-#endif  // DATATYPE_H
+#endif  // IBC_DATATYPE_H

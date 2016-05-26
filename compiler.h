@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef COMPILER_H
-#define COMPILER_H
+#ifndef IBC_COMPILER_H
+#define IBC_COMPILER_H
 
 #include <iosfwd>
 #include <string>
@@ -35,4 +35,4 @@ private:
 };
 
 
-#endif  // COMPILER_H
+#endif  // IBC_COMPILER_H

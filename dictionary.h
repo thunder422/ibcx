@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef DICTIONARY_H
-#define DICTIONARY_H
+#ifndef IBC_DICTIONARY_H
+#define IBC_DICTIONARY_H
 
 #include <cstdint>
 #include <unordered_map>
@@ -39,4 +39,4 @@ inline Dictionary::EntryValue::EntryValue(uint16_t index) :
 }
 
 
-#endif  // DICTIONARY_H
+#endif  // IBC_DICTIONARY_H

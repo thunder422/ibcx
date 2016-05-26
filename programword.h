@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef PROGRAMWORD_H
-#define PROGRAMWORD_H
+#ifndef IBC_PROGRAMWORD_H
+#define IBC_PROGRAMWORD_H
 
 #include <cstdint>
 
@@ -47,4 +47,4 @@ inline uint16_t ProgramWord::operand() const
 }
 
 
-#endif // PROGRAMWORD_H
+#endif  // IBC_PROGRAMWORD_H

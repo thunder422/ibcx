@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef PROGRAMCODE_H
-#define PROGRAMCODE_H
+#ifndef IBC_PROGRAMCODE_H
+#define IBC_PROGRAMCODE_H
 
 #include <vector>
 
@@ -53,4 +53,4 @@ inline void ProgramCode::emplace_back(Args&&... args)
 }
 
 
-#endif  // PROGRAMCODE_H
+#endif  // IBC_PROGRAMCODE_H

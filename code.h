@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef CODE_H
-#define CODE_H
+#ifndef IBC_CODE_H
+#define IBC_CODE_H
 
 #include <cstdint>
 
@@ -30,4 +30,4 @@ inline uint16_t Code::getValue()
 }
 
 
-#endif  // CODE_H
+#endif  // IBC_CODE_H

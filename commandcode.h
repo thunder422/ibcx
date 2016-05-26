@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef COMMANDCODE_H
-#define COMMANDCODE_H
+#ifndef IBC_COMMANDCODE_H
+#define IBC_COMMANDCODE_H
 
 #include <unordered_map>
 
@@ -29,4 +29,4 @@ private:
 };
 
 
-#endif  // COMMANDCODE_H
+#endif  // IBC_COMMANDCODE_H

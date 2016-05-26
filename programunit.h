@@ -5,8 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#ifndef PROGRAMMODEL_H
-#define PROGRAMMODEL_H
+#ifndef IBC_PROGRAMMODEL_H
+#define IBC_PROGRAMMODEL_H
 
 #include "dictionary.h"
 
@@ -27,4 +27,4 @@ inline Dictionary &ProgramUnit::constNumDictionary()
 }
 
 
-#endif  // PROGRAMMODEL_H
+#endif  // IBC_PROGRAMMODEL_H
