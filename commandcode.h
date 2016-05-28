@@ -8,24 +8,26 @@
 #ifndef IBC_COMMANDCODE_H
 #define IBC_COMMANDCODE_H
 
-#include <unordered_map>
+#include <map>
 
-#include <code.h>
+#include "code.h"
+#include "cistring.h"
 
 
 class Compiler;
 class ProgramCode;
 class ProgramUnit;
 
+
 class CommandCode : public Code {
 public:
-    static CommandCode *find(const std::string &keyword);
+    static CommandCode *find(const ci_string &keyword);
 
     CommandCode(const char *keyword);
     virtual void compile(Compiler &compiler) const = 0;
 
 private:
-    static std::unordered_map<std::string, CommandCode *> command_names;
+    static std::map<ci_string, CommandCode *> command_names;
 };
 
 

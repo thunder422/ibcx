@@ -8,9 +8,9 @@
 #include "commandcode.h"
 
 
-std::unordered_map<std::string, CommandCode *> CommandCode::command_names;
+std::map<ci_string, CommandCode *> CommandCode::command_names;
 
-CommandCode *CommandCode::find(const std::string &keyword)
+CommandCode *CommandCode::find(const ci_string &keyword)
 {
     auto result = command_names.find(keyword);
     return result->second;

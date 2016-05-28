@@ -56,6 +56,7 @@ if (IBC_COVERAGE)
 endif ()
 
 set(IBC_SOURCES
+    cistring.h
     code.cpp
     commandcode.cpp
     commandcompiler.cpp
@@ -103,3 +104,11 @@ add_executable(command_unittests
 )
 target_link_libraries(command_unittests ${GCOV_LIB})
 add_test(Command_UnitTests command_unittests)
+
+add_executable(cistring_unittests
+    test/cistring_unittests.cpp
+    ${IBC_SOURCES}
+    ${CATCH_SOURCES}
+)
+target_link_libraries(cistring_unittests ${GCOV_LIB})
+add_test(CI_String_UnitTests cistring_unittests)

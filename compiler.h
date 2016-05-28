@@ -11,6 +11,8 @@
 #include <iosfwd>
 #include <string>
 
+#include "cistring.h"
+
 
 class Code;
 class ProgramCode;
@@ -20,7 +22,7 @@ class Compiler {
 public:
     Compiler(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
 
-    std::string getKeyword() const;
+    ci_string getKeyword() const;
     char peekNextChar() const;
     char getNextChar() const;
     char getColumn() const;

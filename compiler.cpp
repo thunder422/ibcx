@@ -20,9 +20,9 @@ Compiler::Compiler(std::istream &is, ProgramCode &code_line, ProgramUnit &progra
 {
 }
 
-std::string Compiler::getKeyword() const
+ci_string Compiler::getKeyword() const
 {
-    std::string keyword;
+    ci_string keyword;
     is >> std::ws;
     while (isalpha(peekNextChar())) {
         keyword += getNextChar();
