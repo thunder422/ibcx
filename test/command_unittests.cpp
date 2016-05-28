@@ -139,4 +139,13 @@ TEST_CASE("recreate simple commands", "[recreate]")
         recreator.recreateOneCode();
         REQUIRE(recreator.top() == "PRINT");
     }
+    SECTION("recreate an END command")
+    {
+        compiler.addInstruction(*end_code);
+        program.addCodeLine(code_line);
+
+        Recreator recreator {program};
+        recreator.recreateOneCode();
+        REQUIRE(recreator.top() == "END");
+    }
 }

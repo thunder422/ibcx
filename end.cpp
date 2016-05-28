@@ -8,12 +8,14 @@
 #include "commandcode.h"
 #include "compiler.h"
 #include "programcode.h"
+#include "recreator.h"
 
 
 class EndCode : public CommandCode {
 public:
     EndCode();
     void compile(Compiler &compiler) const override;
+    void recreate(Recreator &recreator) const override;
 };
 
 EndCode end_code;
@@ -26,4 +28,9 @@ EndCode::EndCode() :
 void EndCode::compile(Compiler &compiler) const
 {
     compiler.addInstruction(end_code);
+}
+
+void EndCode::recreate(Recreator &recreator) const
+{
+    recreator.push(getKeyword());
 }
