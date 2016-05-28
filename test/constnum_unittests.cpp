@@ -431,15 +431,15 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
 TEST_CASE("recreate a constant", "[recreate]")
 {
     ProgramUnit program;
-    ProgramCode code;
+    ProgramCode code_line;
     std::istringstream not_used_iss;
-    Compiler compiler {not_used_iss, code, program};
+    Compiler compiler {not_used_iss, code_line, program};
 
     SECTION("recreate an integer constant")
     {
         extern ConstNumCode const_int_code;
         compiler.addConstNumInstruction(const_int_code, "12345");
-        program.addCodeLine(code);
+        program.addCodeLine(code_line);
 
         Recreator recreator {program};
         recreator.recreateOneCode();

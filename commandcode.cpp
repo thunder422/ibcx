@@ -8,15 +8,22 @@
 #include "commandcode.h"
 
 
-std::map<ci_string, CommandCode *> CommandCode::command_names;
+std::map<ci_string, CommandCode *> CommandCode::command_codes;
+std::map<uint16_t, const char *> CommandCode::command_names;
 
 CommandCode *CommandCode::find(const ci_string &keyword)
 {
-    auto result = command_names.find(keyword);
-    return result->second;
+    return command_codes.find(keyword)->second;
 }
+
 
 CommandCode::CommandCode(const char *keyword)
 {
-    command_names.emplace(keyword, this);
+    command_codes.emplace(keyword, this);
+    command_names.emplace(getValue(), keyword);
+}
+
+const char *CommandCode::getKeyword() const
+{
+    return command_names.find(getValue())->second;
 }

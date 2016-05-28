@@ -25,9 +25,11 @@ public:
 
     CommandCode(const char *keyword);
     virtual void compile(Compiler &compiler) const = 0;
+    const char *getKeyword() const;
 
 private:
-    static std::map<ci_string, CommandCode *> command_names;
+    static std::map<ci_string, CommandCode *> command_codes;
+    static std::map<uint16_t, const char *> command_names;
 };
 
 

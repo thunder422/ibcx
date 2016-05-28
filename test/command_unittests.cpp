@@ -13,9 +13,10 @@
 #include "constnum.h"
 #include "programcode.h"
 #include "programunit.h"
+#include "recreator.h"
 
 
-TEST_CASE("compile simple commands", "[simple]")
+TEST_CASE("compile simple commands", "[compile]")
 {
     extern ConstNumCode const_int_code;
     extern ConstNumCode print_int_code;
@@ -90,7 +91,7 @@ TEST_CASE("compile simple commands", "[simple]")
     }
     SECTION("compile a PRINT comamnd with an expression (single constant for now)")
     {
-        extern Code const_dbl_code;
+        extern ConstNumCode const_dbl_code;
         extern Code print_dbl_code;
 
         std::istringstream iss {"PRINT -5.6e14"};
@@ -114,5 +115,28 @@ TEST_CASE("compile simple commands", "[simple]")
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code->getValue());
+    }
+}
+
+TEST_CASE("recreate simple commands", "[recreate]")
+{
+    extern ConstNumCode const_int_code;
+    extern ConstNumCode print_int_code;
+    auto print_code = CommandCode::find("PRINT");
+    auto end_code = CommandCode::find("END");
+
+    ProgramUnit program;
+    ProgramCode code_line;
+    std::istringstream not_used_iss;
+    Compiler compiler {not_used_iss, code_line, program};
+
+    SECTION("recreate a blank PRINT command")
+    {
+        compiler.addInstruction(*print_code);
+        program.addCodeLine(code_line);
+
+        Recreator recreator {program};
+        recreator.recreateOneCode();
+        REQUIRE(recreator.top() == "PRINT");
     }
 }

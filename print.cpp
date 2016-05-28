@@ -11,12 +11,14 @@
 #include "compiler.h"
 #include "expressioncompiler.h"
 #include "programcode.h"
+#include "recreator.h"
 
 
 class PrintCode : public CommandCode {
 public:
     PrintCode();
     void compile(Compiler &compiler) const override;
+    void recreate(Recreator &recreator) const override;
 };
 
 PrintCode print_code;
@@ -39,4 +41,9 @@ void PrintCode::compile(Compiler &compiler) const
         }
     }
     compiler.addInstruction(print_code);
+}
+
+void PrintCode::recreate(Recreator &recreator) const
+{
+    recreator.push(getKeyword());
 }
