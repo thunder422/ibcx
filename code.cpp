@@ -8,9 +8,27 @@
 #include "code.h"
 
 
-uint16_t Code::count;
+std::vector<Code *> Code::codes;
+
+uint16_t Code::addCode(Code *code)
+{
+    uint16_t value = codes.size();
+    codes.emplace_back(code);
+    return value;
+}
+
+Code *Code::getCode(uint16_t value)
+{
+    return codes[value];
+}
+
 
 Code::Code() :
-    value {count++}
+    value {addCode(this)}
 {
+}
+
+void Code::recreate(Recreator &recreator) const
+{
+    (void)recreator;
 }

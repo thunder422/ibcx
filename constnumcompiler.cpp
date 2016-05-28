@@ -8,7 +8,7 @@
 #include <cctype>
 #include <iostream>
 
-#include "code.h"
+#include "constnum.h"
 #include "compiler.h"
 #include "constnumcompiler.h"
 #include "compileerror.h"
@@ -147,8 +147,8 @@ ConstNumCompiler::Impl::Impl(Compiler &compiler) :
 {
 }
 
-Code const_dbl_code;
-Code const_int_code;
+extern ConstNumCode const_dbl_code;
+extern ConstNumCode const_int_code;
 
 DataType ConstNumCompiler::Impl::compile()
 {

@@ -8,16 +8,18 @@
 #include "programreader.h"
 #include "programunit.h"
 
-ProgramUnit::ProgramUnit()
+
+ProgramReader::ProgramReader(ProgramConstIterator begin) :
+    iterator {begin}
 {
 }
 
-void ProgramUnit::addCodeLine(ProgramCode &code_line)
+Code *ProgramReader::getInstruction()
 {
-    code.append(code_line);
+    return (*iterator++).instructionCode();
 }
 
-ProgramReader ProgramUnit::createProgramReader() const
+uint16_t ProgramReader::getOperand()
 {
-    return ProgramReader {code.begin()};
+    return (*iterator++).operand();
 }

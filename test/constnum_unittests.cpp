@@ -7,10 +7,12 @@
 
 #include "catch.hpp"
 #include "compiler.h"
+#include "constnum.h"
 #include "constnumcompiler.h"
 #include "compileerror.h"
 #include "programcode.h"
 #include "programunit.h"
+#include "recreator.h"
 #include "support.h"
 
 
@@ -22,7 +24,7 @@ TEST_CASE("compiling integer constants from a string", "[integers]")
     SECTION("input stream does not contain a constant (caller will determine action)")
     {
         std::istringstream iss {"%"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE(data_type == DataType::Null);
         REQUIRE(code_line.size() == 0);
@@ -33,29 +35,29 @@ TEST_CASE("compiling integer constants from a string", "[integers]")
         extern Code const_int_code;
 
         std::istringstream iss {"1"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Integer, "1");
-        REQUIRE(code_line[0].instructionCode() == const_int_code.getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
     }
     SECTION("compile a multiple digit number")
     {
         std::istringstream iss {"123"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Integer, "123");
     }
     SECTION("compile a negative number")
     {
         std::istringstream iss {"-234"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Integer, "-234");
     }
     SECTION("terminate compiling at correct character")
     {
         std::istringstream iss {"345+"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Integer, "345");
         REQUIRE(iss.peek() == '+');
@@ -71,21 +73,21 @@ TEST_CASE("compiling floating point constants from a string", "[doubles]")
     SECTION("compile a number with a decimal point")
     {
         std::istringstream iss {"0.5"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "0.5");
     }
     SECTION("compile a number with a decimal point at the beginning")
     {
         std::istringstream iss {".75"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, ".75");
     }
     SECTION("compile a number with a second decimal point (should ignore second one)")
     {
         std::istringstream iss {"0.1."};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "0.1");
         REQUIRE(iss.peek() == '.');
@@ -95,22 +97,22 @@ TEST_CASE("compiling floating point constants from a string", "[doubles]")
         extern Code const_dbl_code;
 
         std::istringstream iss {"1.2"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "1.2");
-        REQUIRE(code_line[0].instructionCode() == const_dbl_code.getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
     }
     SECTION("compile a number with an exponent")
     {
         std::istringstream iss {"1e0"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "1e0");
     }
     SECTION("make sure compiling stops before a second 'E'")
     {
         std::istringstream iss {"1e0E"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "1e0");
         REQUIRE(iss.peek() == 'E');
@@ -118,14 +120,14 @@ TEST_CASE("compiling floating point constants from a string", "[doubles]")
     SECTION("compile a number with a minus exponent")
     {
         std::istringstream iss {"1e-2"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "1e-2");
     }
     SECTION("compile a number with a minus exponent terminated be a minus operator")
     {
         std::istringstream iss {"1e-2-"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "1e-2");
         REQUIRE(iss.peek() == '-');
@@ -133,7 +135,7 @@ TEST_CASE("compiling floating point constants from a string", "[doubles]")
     SECTION("compile a number with a plus exponent")
     {
         std::istringstream iss {"1e+2"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "1e+2");
     }
@@ -148,14 +150,14 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     SECTION("check for an error when a leading zero is not followed by a digit")
     {
         std::istringstream iss {"01"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         REQUIRE_THROWS_AS(compile_constant(), CompileError);
     }
     SECTION("check for the correct error message and a column")
     {
         std::istringstream iss {"01"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         try {
             ConstNumCompiler{compiler}();
         }
@@ -168,7 +170,7 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     SECTION("check for the correct error column")
     {
         std::istringstream iss {"word 01"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         std::string skip_word;
         iss >> skip_word >> std::ws;
         try {
@@ -183,7 +185,7 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     SECTION("check compiling ends when followed by a non-period non-digit")
     {
         std::istringstream iss {"0-"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE(data_type == DataType::Integer);
         REQUIRE_OPERAND(DataType::Integer, "0");
@@ -200,14 +202,14 @@ TEST_CASE("handle leading period of a constant correctly including errors", "[pe
     SECTION("check for an error when a leading period is followed by another period")
     {
         std::istringstream iss {".."};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         REQUIRE_THROWS_AS(compile_constant(), CompileError);
     }
     SECTION("check error message and column if no digits after period")
     {
         std::istringstream iss {".."};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         try {
             ConstNumCompiler{compiler}();
         }
@@ -228,14 +230,14 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     SECTION("check for sign or digits at the start of an exponent")
     {
         std::istringstream iss {"1e."};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         REQUIRE_THROWS_AS(compile_constant(), CompileError);
     }
     SECTION("check error message and column if no sign or digits at start of exponent")
     {
         std::istringstream iss {"1e."};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         try {
             ConstNumCompiler{compiler}();
         }
@@ -248,7 +250,7 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     SECTION("allow for possible EQV operator ('E' lost, which will be handled by caller)")
     {
         std::istringstream iss {"1eq"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Integer, "1");
         REQUIRE(iss.peek() == 'q');
@@ -256,14 +258,14 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     SECTION("make sure there is a digit after an exponent sign")
     {
         std::istringstream iss {"1e+"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         REQUIRE_THROWS_AS(compile_constant(), CompileError);
     }
     SECTION("check error message and column if no digit after exponent sign")
     {
         std::istringstream iss {"1e-A"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         try {
             ConstNumCompiler{compiler}();
         }
@@ -276,7 +278,7 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     SECTION("check correct error column when terminated by end of line")
     {
         std::istringstream iss {"1e-"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         try {
             ConstNumCompiler{compiler}();
         }
@@ -296,7 +298,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     SECTION("look for possible negate operator ('-' not followed by '.' or digit)")
     {
         std::istringstream iss {"-e"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE(data_type == DataType::Null);
         REQUIRE(code_line.size() == 0);
@@ -304,14 +306,14 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     SECTION("allow a period after a negative sign")
     {
         std::istringstream iss {"-.1"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "-.1");
     }
     SECTION("look for negate operator status (false if not negate operator)")
     {
         std::istringstream iss {"-1-"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         auto data_type = compile_constant();
         REQUIRE_OPERAND(DataType::Integer, "-1");
@@ -321,7 +323,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     SECTION("look for negate operator status (true for negate operator)")
     {
         std::istringstream iss {"-e"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         auto data_type = compile_constant();
         REQUIRE(data_type == DataType::Null);
@@ -331,7 +333,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     SECTION("look for possible operator status (false if no operator starting with 'E')")
     {
         std::istringstream iss {"-1e1-"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         auto data_type = compile_constant();
         REQUIRE_OPERAND(DataType::Double, "-1e1");
@@ -341,7 +343,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     SECTION("look for possible operator status (true if 'E' followed by another letter)")
     {
         std::istringstream iss {"-1eqv"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         auto data_type = compile_constant();
         REQUIRE_OPERAND(DataType::Integer, "-1");
@@ -351,14 +353,14 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     SECTION("check when 'E' character not followed by a another letter throws an error")
     {
         std::istringstream iss {"-1e$"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         ConstNumCompiler compile_constant {compiler};
         REQUIRE_THROWS_AS(compile_constant(), CompileError);
     }
     SECTION("check error message and column when 'E' character not followed by a another letter")
     {
         std::istringstream iss {"-1e$"};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         try {
             ConstNumCompiler{compiler}();
         }
@@ -378,7 +380,7 @@ bool test_error_input(const char *input, const std::string &expected_what, unsig
 
     CAPTURE(input);
     std::istringstream iss {input};
-    Compiler compiler{iss, code_line, program};
+    Compiler compiler {iss, code_line, program};
     try {
         ConstNumCompiler{compiler}();
         return false;
@@ -419,9 +421,28 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
     SECTION("miscellenous test")
     {
         std::istringstream iss {"1.."};
-        Compiler compiler{iss, code_line, program};
+        Compiler compiler {iss, code_line, program};
         auto data_type = ConstNumCompiler{compiler}();
         REQUIRE_OPERAND(DataType::Double, "1.");
         REQUIRE(iss.peek() == '.');
+    }
+}
+
+TEST_CASE("recreate a constant", "[recreate]")
+{
+    ProgramUnit program;
+    ProgramCode code;
+    std::istringstream not_used_iss;
+    Compiler compiler {not_used_iss, code, program};
+
+    SECTION("recreate an integer constant")
+    {
+        extern ConstNumCode const_int_code;
+        compiler.addConstNumInstruction(const_int_code, "12345");
+        program.addCodeLine(code);
+
+        Recreator recreator {program};
+        recreator.recreateOneCode();
+        REQUIRE(recreator.top() == "12345");
     }
 }

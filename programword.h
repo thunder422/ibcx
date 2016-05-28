@@ -18,7 +18,7 @@ public:
     explicit ProgramWord(Code code);
     explicit ProgramWord(uint16_t word);
 
-    uint16_t instructionCode() const;
+    Code *instructionCode() const;
     uint16_t operand() const;
 
 private:
@@ -36,9 +36,9 @@ inline ProgramWord::ProgramWord(uint16_t word) :
 {
 }
 
-inline uint16_t ProgramWord::instructionCode() const
+inline Code *ProgramWord::instructionCode() const
 {
-    return word;
+    return Code::getCode(word);
 }
 
 inline uint16_t ProgramWord::operand() const

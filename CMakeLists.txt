@@ -62,6 +62,7 @@ set(IBC_SOURCES
     commandcompiler.cpp
     compileerror.h
     compiler.cpp
+    constnum.cpp
     constnumcompiler.cpp
     dictionary.cpp
     datatype.h
@@ -69,8 +70,10 @@ set(IBC_SOURCES
     expressioncompiler.cpp
     print.cpp
     programcode.cpp
+    programreader.cpp
     programunit.cpp
     programword.h
+    recreator.cpp
 )
 
 enable_testing()

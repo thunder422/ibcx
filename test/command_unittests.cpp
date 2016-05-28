@@ -10,14 +10,15 @@
 #include "commandcompiler.h"
 #include "compiler.h"
 #include "compileerror.h"
+#include "constnum.h"
 #include "programcode.h"
 #include "programunit.h"
 
 
 TEST_CASE("compile simple commands", "[simple]")
 {
-    extern Code const_int_code;
-    extern Code print_int_code;
+    extern ConstNumCode const_int_code;
+    extern ConstNumCode print_int_code;
     auto print_code = CommandCode::find("PRINT");
     auto end_code = CommandCode::find("END");
 
@@ -42,7 +43,7 @@ TEST_CASE("compile simple commands", "[simple]")
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(print_code != nullptr);
-        REQUIRE(code_line[0].instructionCode() == print_code->getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == print_code->getValue());
     }
     SECTION("compile an END command")
     {
@@ -53,7 +54,7 @@ TEST_CASE("compile simple commands", "[simple]")
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(end_code != nullptr);
-        REQUIRE(code_line[0].instructionCode() == end_code->getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == end_code->getValue());
     }
     SECTION("allow white space before a command")
     {
@@ -63,7 +64,7 @@ TEST_CASE("compile simple commands", "[simple]")
         compile_command();
 
         REQUIRE(code_line.size() == 1);
-        REQUIRE(code_line[0].instructionCode() == print_code->getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == print_code->getValue());
     }
     SECTION("check for an error if non-alphabetic word if first")
     {
@@ -81,11 +82,11 @@ TEST_CASE("compile simple commands", "[simple]")
         compile_command();
 
         REQUIRE(code_line.size() == 4);
-        REQUIRE(code_line[0].instructionCode() == const_int_code.getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
         auto operand = code_line[1].operand();
         REQUIRE(program.constNumDictionary().get(operand) == "234");
-        REQUIRE(code_line[2].instructionCode() == print_int_code.getValue());
-        REQUIRE(code_line[3].instructionCode() == print_code->getValue());
+        REQUIRE(code_line[2].instructionCode()->getValue() == print_int_code.getValue());
+        REQUIRE(code_line[3].instructionCode()->getValue() == print_code->getValue());
     }
     SECTION("compile a PRINT comamnd with an expression (single constant for now)")
     {
@@ -98,11 +99,11 @@ TEST_CASE("compile simple commands", "[simple]")
         compile_command();
 
         REQUIRE(code_line.size() == 4);
-        REQUIRE(code_line[0].instructionCode() == const_dbl_code.getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
         auto operand = code_line[1].operand();
         REQUIRE(program.constNumDictionary().get(operand) == "-5.6e14");
-        REQUIRE(code_line[2].instructionCode() == print_dbl_code.getValue());
-        REQUIRE(code_line[3].instructionCode() == print_code->getValue());
+        REQUIRE(code_line[2].instructionCode()->getValue() == print_dbl_code.getValue());
+        REQUIRE(code_line[3].instructionCode()->getValue() == print_code->getValue());
     }
     SECTION("compile a lower case PRINT command")
     {
@@ -112,6 +113,6 @@ TEST_CASE("compile simple commands", "[simple]")
         compile_command();
 
         REQUIRE(code_line.size() == 1);
-        REQUIRE(code_line[0].instructionCode() == print_code->getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == print_code->getValue());
     }
 }

@@ -9,22 +9,30 @@
 #define IBC_CODE_H
 
 #include <cstdint>
+#include <vector>
 
+
+class Recreator;
 
 class Code {
 public:
-    Code();
+    static Code *getCode(uint16_t value);
 
-    uint16_t getValue();
+    Code();
+    explicit Code(uint16_t value);
+
+    uint16_t getValue() const;
+    virtual void recreate(Recreator &recreator) const;
 
 private:
-    static uint16_t count;
+    static uint16_t addCode(Code *code);
+    static std::vector<Code *> codes;
 
     uint16_t value;
 };
 
 
-inline uint16_t Code::getValue()
+inline uint16_t Code::getValue() const
 {
     return value;
 }

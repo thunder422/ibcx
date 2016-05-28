@@ -8,15 +8,21 @@
 #ifndef IBC_PROGRAMMODEL_H
 #define IBC_PROGRAMMODEL_H
 
+#include "programcode.h"
 #include "dictionary.h"
 
+
+class ProgramReader;
 
 class ProgramUnit {
 public:
     ProgramUnit();
     Dictionary &constNumDictionary();
+    void addCodeLine(ProgramCode &code_line);
+    ProgramReader createProgramReader() const;
 
 private:
+    ProgramCode code;
     Dictionary const_num_dictionary;
 };
 

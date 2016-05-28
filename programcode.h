@@ -15,6 +15,7 @@
 
 using ProgramVector = std::vector<ProgramWord>;
 using ProgramReference = ProgramVector::reference;
+using ProgramConstIterator = ProgramVector::const_iterator;
 
 
 class ProgramCode {
@@ -25,6 +26,8 @@ public:
     std::size_t size() const;
     ProgramReference operator[](std::size_t index);
     template <typename... Args> void emplace_back(Args&&... args);
+    void append(ProgramCode &more);
+    ProgramConstIterator begin() const;
 
 private:
     ProgramVector code;
@@ -50,6 +53,11 @@ template <typename... Args>
 inline void ProgramCode::emplace_back(Args&&... args)
 {
     code.emplace_back(std::forward<Args>(args)...);
+}
+
+inline ProgramConstIterator ProgramCode::begin() const
+{
+    return code.cbegin();
 }
 
 

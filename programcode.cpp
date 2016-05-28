@@ -10,3 +10,8 @@
 ProgramCode::ProgramCode()
 {
 }
+
+void ProgramCode::append(ProgramCode &more)
+{
+    code.insert(code.end(), more.code.begin(), more.code.end());
+}
