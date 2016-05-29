@@ -8,6 +8,8 @@
 #ifndef IBC_PROGRAMMODEL_H
 #define IBC_PROGRAMMODEL_H
 
+#include <string>
+
 #include "programcode.h"
 #include "dictionary.h"
 
@@ -18,10 +20,19 @@ class ProgramUnit {
 public:
     ProgramUnit();
     Dictionary &constNumDictionary();
-    void addCodeLine(ProgramCode &code_line);
-    ProgramReader createProgramReader() const;
+    void appendCodeLine(ProgramCode &code_line);
+    std::string recreateLine(unsigned line_index);
+    ProgramReader createProgramReader(unsigned line_index) const;
 
 private:
+    struct LineInfo {
+        LineInfo(unsigned offset, unsigned size);
+
+        unsigned offset;
+        unsigned size;
+    };
+
+    std::vector<LineInfo> line_info;
     ProgramCode code;
     Dictionary const_num_dictionary;
 };
@@ -30,6 +41,12 @@ private:
 inline Dictionary &ProgramUnit::constNumDictionary()
 {
     return const_num_dictionary;
+}
+
+inline ProgramUnit::LineInfo::LineInfo(unsigned offset, unsigned size) :
+    offset {offset},
+    size {size}
+{
 }
 
 

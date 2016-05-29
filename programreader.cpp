@@ -9,8 +9,9 @@
 #include "programunit.h"
 
 
-ProgramReader::ProgramReader(ProgramConstIterator begin) :
-    iterator {begin}
+ProgramReader::ProgramReader(ProgramConstIterator begin, unsigned offset, unsigned size) :
+    iterator {begin + offset},
+    end_iterator {iterator + size}
 {
 }
 
@@ -22,4 +23,9 @@ Code *ProgramReader::getInstruction()
 uint16_t ProgramReader::getOperand()
 {
     return (*iterator++).operand();
+}
+
+bool ProgramReader::hasMoreCode() const
+{
+    return iterator != end_iterator;
 }

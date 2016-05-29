@@ -13,7 +13,6 @@
 #include "constnum.h"
 #include "programcode.h"
 #include "programunit.h"
-#include "recreator.h"
 
 
 TEST_CASE("compile simple commands", "[compile]")
@@ -120,8 +119,8 @@ TEST_CASE("compile simple commands", "[compile]")
 
 TEST_CASE("recreate simple commands", "[recreate]")
 {
-    extern ConstNumCode const_int_code;
-    extern ConstNumCode print_int_code;
+    extern ConstNumCode const_dbl_code;
+    extern Code print_dbl_code;
     auto print_code = CommandCode::find("PRINT");
     auto end_code = CommandCode::find("END");
 
@@ -133,19 +132,25 @@ TEST_CASE("recreate simple commands", "[recreate]")
     SECTION("recreate a blank PRINT command")
     {
         compiler.addInstruction(*print_code);
-        program.addCodeLine(code_line);
+        program.appendCodeLine(code_line);
 
-        Recreator recreator {program};
-        recreator.recreateOneCode();
-        REQUIRE(recreator.top() == "PRINT");
+        REQUIRE(program.recreateLine(0) == "PRINT");
     }
     SECTION("recreate an END command")
     {
         compiler.addInstruction(*end_code);
-        program.addCodeLine(code_line);
+        program.appendCodeLine(code_line);
 
-        Recreator recreator {program};
-        recreator.recreateOneCode();
-        REQUIRE(recreator.top() == "END");
+        REQUIRE(program.recreateLine(0) == "END");
+    }
+    SECTION("recreate a PRINT command with an expression (single constant)")
+    {
+        compiler.addConstNumInstruction(const_dbl_code, "-1.23e45");
+        compiler.addInstruction(print_dbl_code);
+        compiler.addInstruction(*print_code);
+        program.appendCodeLine(code_line);
+
+        auto source_line = program.recreateLine(0);
+        REQUIRE(source_line == "PRINT -1.23e45");
     }
 }

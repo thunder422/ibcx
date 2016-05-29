@@ -10,10 +10,18 @@
 #include "recreator.h"
 
 
-Recreator::Recreator(ProgramUnit &program) :
+Recreator::Recreator(ProgramUnit &program, ProgramReader program_reader) :
     program {program},
-    program_reader {program.createProgramReader()}
+    program_reader {program_reader}
 {
+}
+
+std::string Recreator::operator()()
+{
+    while (program_reader.hasMoreCode()) {
+        recreateOneCode();
+    }
+    return top();
 }
 
 void Recreator::recreateOneCode()
@@ -33,7 +41,27 @@ void Recreator::push(const std::string &operand)
     stack.emplace(operand);
 }
 
+bool Recreator::empty() const
+{
+    return stack.empty();
+}
+
 std::string Recreator::top() const
 {
     return stack.top().string;
+}
+
+void Recreator::pop()
+{
+    stack.pop();
+}
+
+void Recreator::topAddSpace()
+{
+    stack.top().string += ' ';
+}
+
+void Recreator::topAdd(const std::string &string)
+{
+    stack.top().string += string;
 }

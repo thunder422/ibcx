@@ -45,5 +45,13 @@ void PrintCode::compile(Compiler &compiler) const
 
 void PrintCode::recreate(Recreator &recreator) const
 {
-    recreator.push(getKeyword());
+    if (recreator.empty()) {
+        recreator.push(getKeyword());
+    } else {
+        auto operand = recreator.top();
+        recreator.pop();
+        recreator.push(getKeyword());
+        recreator.topAddSpace();
+        recreator.topAdd(operand);
+    }
 }

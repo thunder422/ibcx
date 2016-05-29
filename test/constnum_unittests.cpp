@@ -12,7 +12,6 @@
 #include "compileerror.h"
 #include "programcode.h"
 #include "programunit.h"
-#include "recreator.h"
 #include "support.h"
 
 
@@ -439,10 +438,8 @@ TEST_CASE("recreate a constant", "[recreate]")
     {
         extern ConstNumCode const_int_code;
         compiler.addConstNumInstruction(const_int_code, "12345");
-        program.addCodeLine(code_line);
+        program.appendCodeLine(code_line);
 
-        Recreator recreator {program};
-        recreator.recreateOneCode();
-        REQUIRE(recreator.top() == "12345");
+        REQUIRE(program.recreateLine(0) == "12345");
     }
 }

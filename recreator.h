@@ -18,11 +18,15 @@ class ProgramUnit;
 
 class Recreator {
 public:
-    Recreator(ProgramUnit &program);
-    void recreateOneCode();
+    Recreator(ProgramUnit &program, ProgramReader program_reader);
+    std::string operator()();
     std::string getConstNumOperand();
     void push(const std::string &operand);
+    bool empty() const;
     std::string top() const;
+    void pop();
+    void topAddSpace();
+    void topAdd(const std::string &string);
 
 private:
     struct StackItem {
@@ -30,6 +34,8 @@ private:
 
         std::string string;
     };
+
+    void recreateOneCode();
 
     ProgramUnit &program;
     ProgramReader program_reader;

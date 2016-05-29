@@ -15,12 +15,14 @@ class ProgramUnit;
 
 class ProgramReader {
 public:
-    ProgramReader(ProgramConstIterator begin);
+    ProgramReader(ProgramConstIterator begin, unsigned offset, unsigned size);
     Code *getInstruction();
     uint16_t getOperand();
+    bool hasMoreCode() const;
 
 private:
     ProgramConstIterator iterator;
+    ProgramConstIterator end_iterator;
 };
 
 

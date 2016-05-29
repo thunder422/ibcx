@@ -7,17 +7,27 @@
 
 #include "programreader.h"
 #include "programunit.h"
+#include "recreator.h"
+
 
 ProgramUnit::ProgramUnit()
 {
 }
 
-void ProgramUnit::addCodeLine(ProgramCode &code_line)
+void ProgramUnit::appendCodeLine(ProgramCode &code_line)
 {
+    line_info.emplace_back(code.size(), code_line.size());
     code.append(code_line);
 }
 
-ProgramReader ProgramUnit::createProgramReader() const
+std::string ProgramUnit::recreateLine(unsigned line_index)
 {
-    return ProgramReader {code.begin()};
+    Recreator recreate(*this, createProgramReader(line_index));
+    return recreate();
+}
+
+ProgramReader ProgramUnit::createProgramReader(unsigned line_index) const
+{
+    auto &info = line_info[line_index];
+    return ProgramReader {code.begin(), info.offset, info.size};
 }
