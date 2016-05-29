@@ -18,8 +18,8 @@ TEST_CASE("compile simple commands", "[compile]")
 {
     extern Code const_int_code;
     extern Code print_int_code;
-    auto print_code = CommandCode::find("PRINT");
-    auto end_code = CommandCode::find("END");
+    extern CommandCode print_code;
+    extern CommandCode end_code;
 
     ProgramUnit program;
     ProgramCode code_line;
@@ -41,8 +41,7 @@ TEST_CASE("compile simple commands", "[compile]")
         compile_command();
 
         REQUIRE(code_line.size() == 1);
-        REQUIRE(print_code != nullptr);
-        REQUIRE(code_line[0].instructionCode()->getValue() == print_code->getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("compile an END command")
     {
@@ -52,8 +51,7 @@ TEST_CASE("compile simple commands", "[compile]")
         compile_command();
 
         REQUIRE(code_line.size() == 1);
-        REQUIRE(end_code != nullptr);
-        REQUIRE(code_line[0].instructionCode()->getValue() == end_code->getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == end_code.getValue());
     }
     SECTION("allow white space before a command")
     {
@@ -63,7 +61,7 @@ TEST_CASE("compile simple commands", "[compile]")
         compile_command();
 
         REQUIRE(code_line.size() == 1);
-        REQUIRE(code_line[0].instructionCode()->getValue() == print_code->getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("check for an error if non-alphabetic word if first")
     {
@@ -85,7 +83,7 @@ TEST_CASE("compile simple commands", "[compile]")
         auto operand = code_line[1].operand();
         REQUIRE(program.constNumDictionary().get(operand) == "234");
         REQUIRE(code_line[2].instructionCode()->getValue() == print_int_code.getValue());
-        REQUIRE(code_line[3].instructionCode()->getValue() == print_code->getValue());
+        REQUIRE(code_line[3].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("compile a PRINT comamnd with an expression (single constant for now)")
     {
@@ -102,7 +100,7 @@ TEST_CASE("compile simple commands", "[compile]")
         auto operand = code_line[1].operand();
         REQUIRE(program.constNumDictionary().get(operand) == "-5.6e14");
         REQUIRE(code_line[2].instructionCode()->getValue() == print_dbl_code.getValue());
-        REQUIRE(code_line[3].instructionCode()->getValue() == print_code->getValue());
+        REQUIRE(code_line[3].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("compile a lower case PRINT command")
     {
@@ -112,7 +110,7 @@ TEST_CASE("compile simple commands", "[compile]")
         compile_command();
 
         REQUIRE(code_line.size() == 1);
-        REQUIRE(code_line[0].instructionCode()->getValue() == print_code->getValue());
+        REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
 }
 
@@ -120,8 +118,8 @@ TEST_CASE("recreate simple commands", "[recreate]")
 {
     extern Code const_dbl_code;
     extern Code print_dbl_code;
-    auto print_code = CommandCode::find("PRINT");
-    auto end_code = CommandCode::find("END");
+    extern CommandCode print_code;
+    extern CommandCode end_code;
 
     ProgramUnit program;
     ProgramCode code_line;
@@ -130,14 +128,14 @@ TEST_CASE("recreate simple commands", "[recreate]")
 
     SECTION("recreate a blank PRINT command")
     {
-        compiler.addInstruction(*print_code);
+        compiler.addInstruction(print_code);
         program.appendCodeLine(code_line);
 
         REQUIRE(program.recreateLine(0) == "PRINT");
     }
     SECTION("recreate an END command")
     {
-        compiler.addInstruction(*end_code);
+        compiler.addInstruction(end_code);
         program.appendCodeLine(code_line);
 
         REQUIRE(program.recreateLine(0) == "END");
@@ -146,7 +144,7 @@ TEST_CASE("recreate simple commands", "[recreate]")
     {
         compiler.addConstNumInstruction(const_dbl_code, "-1.23e45");
         compiler.addInstruction(print_dbl_code);
-        compiler.addInstruction(*print_code);
+        compiler.addInstruction(print_code);
         program.appendCodeLine(code_line);
 
         auto source_line = program.recreateLine(0);

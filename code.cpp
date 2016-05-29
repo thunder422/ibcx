@@ -11,14 +11,14 @@
 std::vector<Code *> Code::codes;
 std::vector<std::function<void(Recreator &)>> Code::recreate_functions;
 
-uint16_t Code::addCode(Code *code)
+Code::type Code::addCode(Code *code)
 {
-    uint16_t value = codes.size();
+    type value = codes.size();
     codes.emplace_back(code);
     return value;
 }
 
-Code *Code::getCode(uint16_t value)
+Code *Code::getCode(Code::type value)
 {
     return codes[value];
 }

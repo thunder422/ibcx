@@ -23,13 +23,15 @@ class CommandCode : public Code {
 public:
     static CommandCode *find(const ci_string &keyword);
 
-    CommandCode(std::function<void(Recreator &)> recreate_function, const char *keyword);
-    virtual void compile(Compiler &compiler) const = 0;
+    CommandCode(const char *keyword, std::function<void(Compiler &)> compile_function,
+        std::function<void(Recreator &)> recreate_function);
+    void compile(Compiler &compiler) const;
     const char *getKeyword() const;
 
 private:
     static std::map<ci_string, CommandCode *> command_codes;
-    static std::map<uint16_t, const char *> command_names;
+    static std::map<Code::type, const char *> command_names;
+    static std::map<Code::type, std::function<void(Compiler &)>> compile_functions;
 };
 
 

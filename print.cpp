@@ -14,27 +14,16 @@
 #include "recreator.h"
 
 
-class PrintCode : public CommandCode {
-public:
-    PrintCode(std::function<void(Recreator &)> recreate_function);
-    void compile(Compiler &compiler) const override;
-};
-
-PrintCode::PrintCode(std::function<void(Recreator &)> recreate_function) :
-    CommandCode {recreate_function, "PRINT"}
-{
-}
-
-
+void print_compile(Compiler &compiler);
 void print_recreate(Recreator &recreator);
 void print_item_recreate(Recreator &recreator);
 
-PrintCode print_code(print_recreate);
-Code print_dbl_code(print_item_recreate);
-Code print_int_code(print_item_recreate);
+CommandCode print_code {"PRINT", print_compile, print_recreate};
+Code print_dbl_code {print_item_recreate};
+Code print_int_code {print_item_recreate};
 
 
-void PrintCode::compile(Compiler &compiler) const
+void print_compile(Compiler &compiler)
 {
     if (compiler.peekNextChar() != EOF) {
         auto data_type = ExpressionCompiler{compiler}(DataType::Null);

@@ -11,24 +11,13 @@
 #include "recreator.h"
 
 
-class EndCode : public CommandCode {
-public:
-    EndCode(std::function<void(Recreator &)> recreate_function);
-    void compile(Compiler &compiler) const override;
-};
-
-EndCode::EndCode(std::function<void(Recreator &)> recreate_function) :
-    CommandCode {recreate_function, "END"}
-{
-}
-
-
+void end_compile(Compiler &compiler);
 void end_recreate(Recreator &recreator);
 
-EndCode end_code(end_recreate);
+CommandCode end_code {"END", end_compile, end_recreate};
 
 
-void EndCode::compile(Compiler &compiler) const
+void end_compile(Compiler &compiler)
 {
     compiler.addInstruction(end_code);
 }

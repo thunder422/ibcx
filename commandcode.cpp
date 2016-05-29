@@ -9,22 +9,31 @@
 
 
 std::map<ci_string, CommandCode *> CommandCode::command_codes;
-std::map<uint16_t, const char *> CommandCode::command_names;
+std::map<Code::type, const char *> CommandCode::command_names;
+std::map<Code::type, std::function<void(Compiler &)>> CommandCode::compile_functions;
 
 CommandCode *CommandCode::find(const ci_string &keyword)
 {
-    return command_codes.find(keyword)->second;
+    // FIXME need to check if keyword is present (this line will add a null code pointer)
+    return command_codes[keyword];
 }
 
-
-CommandCode::CommandCode(std::function<void(Recreator &)> recreate_function, const char *keyword) :
-    Code {recreate_function}
+void CommandCode::compile(Compiler &compiler) const
 {
-    command_codes.emplace(keyword, this);
-    command_names.emplace(getValue(), keyword);
+    compile_functions[getValue()](compiler);
 }
 
 const char *CommandCode::getKeyword() const
 {
-    return command_names.find(getValue())->second;
+    return command_names[getValue()];
+}
+
+
+CommandCode::CommandCode(const char *keyword, std::function<void (Compiler &)> compile_function,
+        std::function<void (Recreator &)> recreate_function) :
+    Code {recreate_function}
+{
+    command_codes.emplace(keyword, this);
+    command_names.emplace(getValue(), keyword);
+    compile_functions.emplace(getValue(), compile_function);
 }

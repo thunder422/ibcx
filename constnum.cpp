@@ -15,5 +15,5 @@ void const_num_recreate(Recreator &recreator)
     recreator.push(number);
 }
 
-Code const_dbl_code(const_num_recreate);
-Code const_int_code(const_num_recreate);
+Code const_dbl_code {const_num_recreate};
+Code const_int_code {const_num_recreate};
