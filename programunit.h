@@ -19,10 +19,13 @@ class ProgramReader;
 class ProgramUnit {
 public:
     ProgramUnit();
-    Dictionary &constNumDictionary();
+
+    void compileSource(std::istream &is);
     void appendCodeLine(ProgramCode &code_line);
     std::string recreateLine(unsigned line_index);
     ProgramReader createProgramReader(unsigned line_index) const;
+
+    Dictionary &constNumDictionary();
 
 private:
     struct LineInfo {

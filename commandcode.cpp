@@ -33,7 +33,7 @@ CommandCode::CommandCode(const char *keyword, std::function<void (Compiler &)> c
         std::function<void (Recreator &)> recreate_function) :
     Code {recreate_function}
 {
-    command_codes.emplace(keyword, this);
-    command_names.emplace(getValue(), keyword);
-    compile_functions.emplace(getValue(), compile_function);
+    command_codes[keyword] = this;
+    command_names[getValue()] = keyword;
+    compile_functions[getValue()] = compile_function;
 }

@@ -5,6 +5,10 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <sstream>
+
+#include "commandcompiler.h"
+#include "compiler.h"
 #include "programreader.h"
 #include "programunit.h"
 #include "recreator.h"
@@ -12,6 +16,19 @@
 
 ProgramUnit::ProgramUnit()
 {
+}
+
+void ProgramUnit::compileSource(std::istream &is)
+{
+    std::string line;
+    while (std::getline(is, line)) {
+        std::istringstream iss {line};
+        ProgramCode code_line;
+        Compiler compiler {iss, code_line, *this};
+        CommandCompiler compile_command {compiler};
+        compile_command();
+        appendCodeLine(code_line);
+    }
 }
 
 void ProgramUnit::appendCodeLine(ProgramCode &code_line)

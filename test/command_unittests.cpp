@@ -151,3 +151,25 @@ TEST_CASE("recreate simple commands", "[recreate]")
         REQUIRE(source_line == "PRINT -1.23e45");
     }
 }
+
+TEST_CASE("compile mulitple line program", "[program]")
+{
+    ProgramUnit program;
+
+    SECTION("program with END")
+    {
+        std::istringstream iss(
+            "PRINT -2.45\n"
+            "Print\n"
+            "print 123\n"
+            "END\n"
+        );
+
+        program.compileSource(iss);
+
+        REQUIRE(program.recreateLine(0) == "PRINT -2.45");
+        REQUIRE(program.recreateLine(1) == "PRINT");
+        REQUIRE(program.recreateLine(2) == "PRINT 123");
+        REQUIRE(program.recreateLine(3) == "END");
+    }
+}
