@@ -76,6 +76,10 @@ set(IBC_SOURCES
     recreator.cpp
 )
 
+add_library(ibc SHARED
+    ${IBC_SOURCES}
+)
+
 enable_testing()
 
 add_subdirectory(test)
@@ -85,33 +89,29 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(constnum_unittests
     test/constnum_unittests.cpp
     test/support.h
-    ${IBC_SOURCES}
     ${CATCH_SOURCES}
 )
-target_link_libraries(constnum_unittests ${GCOV_LIB})
+target_link_libraries(constnum_unittests ibc ${GCOV_LIB})
 add_test(ConstantNumber_UnitTests constnum_unittests)
 
 add_executable(expression_unittests
     test/expression_unittests.cpp
     test/support.h
-    ${IBC_SOURCES}
     ${CATCH_SOURCES}
 )
-target_link_libraries(expression_unittests ${GCOV_LIB})
+target_link_libraries(expression_unittests ibc ${GCOV_LIB})
 add_test(Expression_UnitTests expression_unittests)
 
 add_executable(command_unittests
     test/command_unittests.cpp
-    ${IBC_SOURCES}
     ${CATCH_SOURCES}
 )
-target_link_libraries(command_unittests ${GCOV_LIB})
+target_link_libraries(command_unittests ibc ${GCOV_LIB})
 add_test(Command_UnitTests command_unittests)
 
 add_executable(cistring_unittests
     test/cistring_unittests.cpp
-    ${IBC_SOURCES}
     ${CATCH_SOURCES}
 )
-target_link_libraries(cistring_unittests ${GCOV_LIB})
+target_link_libraries(cistring_unittests ibc ${GCOV_LIB})
 add_test(CI_String_UnitTests cistring_unittests)
