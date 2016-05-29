@@ -16,19 +16,23 @@
 
 class PrintCode : public CommandCode {
 public:
-    PrintCode();
+    PrintCode(std::function<void(Recreator &)> recreate_function);
     void compile(Compiler &compiler) const override;
-    void recreate(Recreator &recreator) const override;
 };
 
-PrintCode print_code;
-Code print_dbl_code;
-Code print_int_code;
-
-PrintCode::PrintCode() :
-    CommandCode("PRINT")
+PrintCode::PrintCode(std::function<void(Recreator &)> recreate_function) :
+    CommandCode {recreate_function, "PRINT"}
 {
 }
+
+
+void print_recreate(Recreator &recreator);
+void print_item_recreate(Recreator &recreator);
+
+PrintCode print_code(print_recreate);
+Code print_dbl_code(print_item_recreate);
+Code print_int_code(print_item_recreate);
+
 
 void PrintCode::compile(Compiler &compiler) const
 {
@@ -43,15 +47,20 @@ void PrintCode::compile(Compiler &compiler) const
     compiler.addInstruction(print_code);
 }
 
-void PrintCode::recreate(Recreator &recreator) const
+void print_recreate(Recreator &recreator)
 {
     if (recreator.empty()) {
-        recreator.push(getKeyword());
+        recreator.push(print_code.getKeyword());
     } else {
         auto operand = recreator.top();
         recreator.pop();
-        recreator.push(getKeyword());
+        recreator.push(print_code.getKeyword());
         recreator.topAddSpace();
         recreator.topAdd(operand);
     }
+}
+
+void print_item_recreate(Recreator &recreator)
+{
+    (void)recreator;
 }

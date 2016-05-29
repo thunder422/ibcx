@@ -7,7 +7,6 @@
 
 #include "catch.hpp"
 #include "compiler.h"
-#include "constnum.h"
 #include "constnumcompiler.h"
 #include "compileerror.h"
 #include "programcode.h"
@@ -436,7 +435,7 @@ TEST_CASE("recreate a constant", "[recreate]")
 
     SECTION("recreate an integer constant")
     {
-        extern ConstNumCode const_int_code;
+        extern Code const_int_code;
         compiler.addConstNumInstruction(const_int_code, "12345");
         program.appendCodeLine(code_line);
 

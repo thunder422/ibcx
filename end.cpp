@@ -13,24 +13,27 @@
 
 class EndCode : public CommandCode {
 public:
-    EndCode();
+    EndCode(std::function<void(Recreator &)> recreate_function);
     void compile(Compiler &compiler) const override;
-    void recreate(Recreator &recreator) const override;
 };
 
-EndCode end_code;
-
-EndCode::EndCode() :
-    CommandCode("END")
+EndCode::EndCode(std::function<void(Recreator &)> recreate_function) :
+    CommandCode {recreate_function, "END"}
 {
 }
+
+
+void end_recreate(Recreator &recreator);
+
+EndCode end_code(end_recreate);
+
 
 void EndCode::compile(Compiler &compiler) const
 {
     compiler.addInstruction(end_code);
 }
 
-void EndCode::recreate(Recreator &recreator) const
+void end_recreate(Recreator &recreator)
 {
-    recreator.push(getKeyword());
+    recreator.push(end_code.getKeyword());
 }

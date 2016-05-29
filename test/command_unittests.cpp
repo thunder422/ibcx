@@ -10,15 +10,14 @@
 #include "commandcompiler.h"
 #include "compiler.h"
 #include "compileerror.h"
-#include "constnum.h"
 #include "programcode.h"
 #include "programunit.h"
 
 
 TEST_CASE("compile simple commands", "[compile]")
 {
-    extern ConstNumCode const_int_code;
-    extern ConstNumCode print_int_code;
+    extern Code const_int_code;
+    extern Code print_int_code;
     auto print_code = CommandCode::find("PRINT");
     auto end_code = CommandCode::find("END");
 
@@ -90,7 +89,7 @@ TEST_CASE("compile simple commands", "[compile]")
     }
     SECTION("compile a PRINT comamnd with an expression (single constant for now)")
     {
-        extern ConstNumCode const_dbl_code;
+        extern Code const_dbl_code;
         extern Code print_dbl_code;
 
         std::istringstream iss {"PRINT -5.6e14"};
@@ -119,7 +118,7 @@ TEST_CASE("compile simple commands", "[compile]")
 
 TEST_CASE("recreate simple commands", "[recreate]")
 {
-    extern ConstNumCode const_dbl_code;
+    extern Code const_dbl_code;
     extern Code print_dbl_code;
     auto print_code = CommandCode::find("PRINT");
     auto end_code = CommandCode::find("END");

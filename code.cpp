@@ -9,6 +9,7 @@
 
 
 std::vector<Code *> Code::codes;
+std::vector<std::function<void(Recreator &)>> Code::recreate_functions;
 
 uint16_t Code::addCode(Code *code)
 {
@@ -23,12 +24,13 @@ Code *Code::getCode(uint16_t value)
 }
 
 
-Code::Code() :
+Code::Code(std::function<void(Recreator &)> recreate_function) :
     value {addCode(this)}
 {
+    recreate_functions.emplace_back(recreate_function);
 }
 
 void Code::recreate(Recreator &recreator) const
 {
-    (void)recreator;
+    recreate_functions[value](recreator);
 }

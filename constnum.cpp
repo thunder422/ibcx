@@ -5,19 +5,15 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#include "constnum.h"
+#include "code.h"
 #include "recreator.h"
 
 
-ConstNumCode::ConstNumCode()
-{
-}
-
-void ConstNumCode::recreate(Recreator &recreator) const
+void const_num_recreate(Recreator &recreator)
 {
     auto number = recreator.getConstNumOperand();
     recreator.push(number);
 }
 
-ConstNumCode const_dbl_code;
-ConstNumCode const_int_code;
+Code const_dbl_code(const_num_recreate);
+Code const_int_code(const_num_recreate);

@@ -23,7 +23,7 @@ class CommandCode : public Code {
 public:
     static CommandCode *find(const ci_string &keyword);
 
-    CommandCode(const char *keyword);
+    CommandCode(std::function<void(Recreator &)> recreate_function, const char *keyword);
     virtual void compile(Compiler &compiler) const = 0;
     const char *getKeyword() const;
 

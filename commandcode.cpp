@@ -17,7 +17,8 @@ CommandCode *CommandCode::find(const ci_string &keyword)
 }
 
 
-CommandCode::CommandCode(const char *keyword)
+CommandCode::CommandCode(std::function<void(Recreator &)> recreate_function, const char *keyword) :
+    Code {recreate_function}
 {
     command_codes.emplace(keyword, this);
     command_names.emplace(getValue(), keyword);
