@@ -67,6 +67,7 @@ set(IBC_SOURCES
     dictionary.cpp
     datatype.h
     end.cpp
+    executer.cpp
     expressioncompiler.cpp
     print.cpp
     programcode.cpp

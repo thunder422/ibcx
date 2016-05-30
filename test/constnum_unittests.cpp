@@ -9,6 +9,7 @@
 #include "compiler.h"
 #include "constnumcompiler.h"
 #include "compileerror.h"
+#include "executer.h"
 #include "programcode.h"
 #include "programunit.h"
 #include "support.h"
@@ -406,5 +407,24 @@ TEST_CASE("recreate a constant", "[recreate]")
         program.appendCodeLine(code_line);
 
         REQUIRE(program.recreateLine(0) == "12345");
+    }
+}
+
+TEST_CASE("execute a constant code", "[execute]")
+{
+    ProgramUnit program;
+
+    Compiler compiler {"", program};
+
+    SECTION("recreate an integer constant")
+    {
+        extern Code const_int_code;
+        compiler.addConstNumInstruction(const_int_code, "12345");
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        Executer executer;
+        executer.executeOneCode();
+        REQUIRE(executer.top().intValue == 12345);
     }
 }
