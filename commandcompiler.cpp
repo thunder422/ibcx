@@ -18,7 +18,7 @@ class CommandCompiler::Impl {
 public:
     Impl(Compiler &compiler);
 
-    void compile();
+    ProgramCode &&compile();
 
 private:
     Compiler &compiler;
@@ -31,7 +31,7 @@ CommandCompiler::CommandCompiler(Compiler &compiler) :
 {
 }
 
-void CommandCompiler::operator()()
+ProgramCode &&CommandCompiler::operator()()
 {
     return pimpl->compile();
 }
@@ -47,15 +47,15 @@ CommandCompiler::Impl::Impl(Compiler &compiler) :
 {
 }
 
-void CommandCompiler::Impl::compile()
+ProgramCode &&CommandCompiler::Impl::compile()
 {
-    if (compiler.peekNextChar() == EOF) {
-        return;
+    if (compiler.peekNextChar() != EOF) {
+        auto keyword = compiler.getKeyword();
+        if (keyword.empty()) {
+            throw CompileError{"expected command keyword", 0};
+        }
+        auto code = CommandCode::find(keyword);
+        code->compile(compiler);
     }
-    auto keyword = compiler.getKeyword();
-    if (keyword.empty()) {
-        throw CompileError{"expected command keyword", 0};
-    }
-    auto code = CommandCode::find(keyword);
-    code->compile(compiler);
+    return compiler.getCodeLine();
 }

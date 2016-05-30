@@ -13,11 +13,12 @@
 
 
 class Compiler;
+class ProgramCode;
 
 class CommandCompiler {
 public:
     CommandCompiler(Compiler &compiler);
-    void operator()();
+    ProgramCode &&operator()();
     ~CommandCompiler();
 
 private:

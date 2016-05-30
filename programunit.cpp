@@ -24,8 +24,7 @@ void ProgramUnit::compileSource(std::istream &is)
     while (std::getline(is, line)) {
         Compiler compiler {line, *this};
         CommandCompiler compile_command {compiler};
-        compile_command();
-        auto code_line = compiler.getCodeLine();
+        auto code_line = compile_command();
         appendCodeLine(code_line);
     }
 }

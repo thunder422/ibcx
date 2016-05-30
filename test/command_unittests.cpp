@@ -27,8 +27,7 @@ TEST_CASE("compile simple commands", "[compile]")
     {
         Compiler compiler {"", program};
         CommandCompiler compile_command {compiler};
-        compile_command();
-        auto code_line = compiler.getCodeLine();
+        auto code_line = compile_command();
 
         REQUIRE(code_line.empty());
     }
@@ -36,8 +35,7 @@ TEST_CASE("compile simple commands", "[compile]")
     {
         Compiler compiler {"PRINT", program};
         CommandCompiler compile_command {compiler};
-        compile_command();
-        auto code_line = compiler.getCodeLine();
+        auto code_line = compile_command();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
@@ -46,8 +44,7 @@ TEST_CASE("compile simple commands", "[compile]")
     {
         Compiler compiler {"END", program};
         CommandCompiler compile_command {compiler};
-        compile_command();
-        auto code_line = compiler.getCodeLine();
+        auto code_line = compile_command();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == end_code.getValue());
@@ -56,8 +53,7 @@ TEST_CASE("compile simple commands", "[compile]")
     {
         Compiler compiler {"   PRINT", program};
         CommandCompiler compile_command {compiler};
-        compile_command();
-        auto code_line = compiler.getCodeLine();
+        auto code_line = compile_command();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
@@ -73,8 +69,7 @@ TEST_CASE("compile simple commands", "[compile]")
     {
         Compiler compiler {"PRINT 234", program};
         CommandCompiler compile_command {compiler};
-        compile_command();
-        auto code_line = compiler.getCodeLine();
+        auto code_line = compile_command();
 
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
@@ -90,8 +85,7 @@ TEST_CASE("compile simple commands", "[compile]")
 
         Compiler compiler {"PRINT -5.6e14", program};
         CommandCompiler compile_command {compiler};
-        compile_command();
-        auto code_line = compiler.getCodeLine();
+        auto code_line = compile_command();
 
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
@@ -104,8 +98,7 @@ TEST_CASE("compile simple commands", "[compile]")
     {
         Compiler compiler {"print", program};
         CommandCompiler compile_command {compiler};
-        compile_command();
-        auto code_line = compiler.getCodeLine();
+        auto code_line = compile_command();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
