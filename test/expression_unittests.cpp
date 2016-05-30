@@ -17,20 +17,19 @@
 TEST_CASE("compile numeric expressions with constants", "[constant]")
 {
     ProgramUnit program;
-    ProgramCode code_line;
 
     SECTION("compile an expression with an integer constant to the code line")
     {
         extern Code constIntCode;
 
-        Compiler compiler {"1", code_line, program};
+        Compiler compiler {"1", program};
         ExpressionCompiler compile_expression {compiler};
         auto data_type = compile_expression(DataType::Null);
         REQUIRE_OPERAND(DataType::Integer, "1");
     }
     SECTION("verify an error is thrown when nothing is in the input stream")
     {
-        Compiler compiler {"", code_line, program};
+        Compiler compiler {"", program};
         ExpressionCompiler compile_expression {compiler};
 
         SECTION("check that the error is thrown")

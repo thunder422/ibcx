@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include "cistring.h"
+#include "programcode.h"
 
 
 class Code;
@@ -21,20 +22,21 @@ class ProgramUnit;
 
 class Compiler {
 public:
-    Compiler(const std::string &line, ProgramCode &code_line, ProgramUnit &program);
+    Compiler(const std::string &line, ProgramUnit &program);
 
     ci_string getKeyword();
     char peekNextChar();
     char getNextChar();
     char getColumn();
 
-    void addInstruction(Code &code) const;
-    void addConstNumInstruction(Code &code, const std::string &number) const;
+    void addInstruction(Code &code);
+    void addConstNumInstruction(Code &code, const std::string &number);
+    ProgramCode &&getCodeLine();
 
 private:
     std::istringstream iss;
-    ProgramCode &code_line;
     ProgramUnit &program;
+    ProgramCode code_line;
 };
 
 

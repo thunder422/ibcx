@@ -22,10 +22,10 @@ void ProgramUnit::compileSource(std::istream &is)
 {
     std::string line;
     while (std::getline(is, line)) {
-        ProgramCode code_line;
-        Compiler compiler {line, code_line, *this};
+        Compiler compiler {line, *this};
         CommandCompiler compile_command {compiler};
         compile_command();
+        auto code_line = compiler.getCodeLine();
         appendCodeLine(code_line);
     }
 }

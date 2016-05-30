@@ -9,13 +9,11 @@
 #include <string>
 
 #include "compiler.h"
-#include "programcode.h"
 #include "programunit.h"
 
 
-Compiler::Compiler(const std::string &line, ProgramCode &code_line, ProgramUnit &program) :
+Compiler::Compiler(const std::string &line, ProgramUnit &program) :
     iss {line},
-    code_line {code_line},
     program {program}
 {
 }
@@ -46,13 +44,18 @@ char Compiler::getColumn()
     return iss.tellg();
 }
 
-void Compiler::addInstruction(Code &code) const
+void Compiler::addInstruction(Code &code)
 {
     code_line.emplace_back(code);
 }
 
-void Compiler::addConstNumInstruction(Code &code, const std::string &number) const
+void Compiler::addConstNumInstruction(Code &code, const std::string &number)
 {
     code_line.emplace_back(code);
     code_line.emplace_back(program.constNumDictionary().add(number));
+}
+
+ProgramCode &&Compiler::getCodeLine()
+{
+    return std::move(code_line);
 }

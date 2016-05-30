@@ -10,6 +10,7 @@
 
 
 #define REQUIRE_OPERAND(expected_data_type, number) \
+    auto code_line = compiler.getCodeLine(); \
     REQUIRE(data_type == expected_data_type); \
     REQUIRE(code_line.size() == 2); \
     auto operand = code_line[1].operand(); \

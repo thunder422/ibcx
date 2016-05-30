@@ -25,7 +25,7 @@ public:
     bool empty() const;
     std::size_t size() const;
     ProgramReference operator[](std::size_t index);
-    template <typename... Args> void emplace_back(Args&&... args);
+    template <typename... Args> void emplace_back(Args &&... args);
     void append(ProgramCode &more);
     ProgramConstIterator begin() const;
 
@@ -50,7 +50,7 @@ inline ProgramReference ProgramCode::operator[](std::size_t index)
 }
 
 template <typename... Args>
-inline void ProgramCode::emplace_back(Args&&... args)
+inline void ProgramCode::emplace_back(Args &&... args)
 {
     code.emplace_back(std::forward<Args>(args)...);
 }

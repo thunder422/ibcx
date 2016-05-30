@@ -22,55 +22,59 @@ TEST_CASE("compile simple commands", "[compile]")
     extern CommandCode end_code;
 
     ProgramUnit program;
-    ProgramCode code_line;
 
     SECTION("compile an empty command line")
     {
-        Compiler compiler {"", code_line, program};
+        Compiler compiler {"", program};
         CommandCompiler compile_command {compiler};
         compile_command();
+        auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.empty());
     }
     SECTION("compile a simple PRINT command")
     {
-        Compiler compiler {"PRINT", code_line, program};
+        Compiler compiler {"PRINT", program};
         CommandCompiler compile_command {compiler};
         compile_command();
+        auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("compile an END command")
     {
-        Compiler compiler {"END", code_line, program};
+        Compiler compiler {"END", program};
         CommandCompiler compile_command {compiler};
         compile_command();
+        auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == end_code.getValue());
     }
     SECTION("allow white space before a command")
     {
-        Compiler compiler {"   PRINT", code_line, program};
+        Compiler compiler {"   PRINT", program};
         CommandCompiler compile_command {compiler};
         compile_command();
+        auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("check for an error if non-alphabetic word if first")
     {
-        Compiler compiler {"   123", code_line, program};
+        Compiler compiler {"   123", program};
         CommandCompiler compile_command {compiler};
 
         REQUIRE_THROWS_AS(compile_command(), CompileError);
     }
     SECTION("compile a PRINT comamnd with an expression (single constant for now)")
     {
-        Compiler compiler {"PRINT 234", code_line, program};
+        Compiler compiler {"PRINT 234", program};
         CommandCompiler compile_command {compiler};
         compile_command();
+        auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
@@ -84,9 +88,10 @@ TEST_CASE("compile simple commands", "[compile]")
         extern Code const_dbl_code;
         extern Code print_dbl_code;
 
-        Compiler compiler {"PRINT -5.6e14", code_line, program};
+        Compiler compiler {"PRINT -5.6e14", program};
         CommandCompiler compile_command {compiler};
         compile_command();
+        auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
@@ -97,16 +102,17 @@ TEST_CASE("compile simple commands", "[compile]")
     }
     SECTION("compile a lower case PRINT command")
     {
-        Compiler compiler {"print", code_line, program};
+        Compiler compiler {"print", program};
         CommandCompiler compile_command {compiler};
         compile_command();
+        auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("verify error column when constant is not at the beginning of the stream")
     {
-        Compiler compiler {"print 01", code_line, program};
+        Compiler compiler {"print 01", program};
         CommandCompiler compile_command {compiler};
 
         SECTION("check that the error is thrown")
@@ -135,12 +141,12 @@ TEST_CASE("recreate simple commands", "[recreate]")
     extern CommandCode end_code;
 
     ProgramUnit program;
-    ProgramCode code_line;
-    Compiler compiler {"", code_line, program};
+    Compiler compiler {"", program};
 
     SECTION("recreate a blank PRINT command")
     {
         compiler.addInstruction(print_code);
+        auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
         REQUIRE(program.recreateLine(0) == "PRINT");
@@ -148,6 +154,7 @@ TEST_CASE("recreate simple commands", "[recreate]")
     SECTION("recreate an END command")
     {
         compiler.addInstruction(end_code);
+        auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
         REQUIRE(program.recreateLine(0) == "END");
@@ -157,6 +164,7 @@ TEST_CASE("recreate simple commands", "[recreate]")
         compiler.addConstNumInstruction(const_dbl_code, "-1.23e45");
         compiler.addInstruction(print_dbl_code);
         compiler.addInstruction(print_code);
+        auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
         auto source_line = program.recreateLine(0);
