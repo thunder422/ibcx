@@ -39,13 +39,9 @@ void print_compile(Compiler &compiler)
 void print_recreate(Recreator &recreator)
 {
     if (recreator.empty()) {
-        recreator.push(print_code.getKeyword());
+        recreator.pushKeyword(print_code);
     } else {
-        auto operand = recreator.top();
-        recreator.pop();
-        recreator.push(print_code.getKeyword());
-        recreator.topAddSpace();
-        recreator.topAdd(operand);
+        recreator.prependKeyword(print_code);
     }
 }
 

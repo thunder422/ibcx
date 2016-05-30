@@ -24,5 +24,5 @@ void end_compile(Compiler &compiler)
 
 void end_recreate(Recreator &recreator)
 {
-    recreator.push(end_code.getKeyword());
+    recreator.pushKeyword(end_code);
 }

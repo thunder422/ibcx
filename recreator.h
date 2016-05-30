@@ -14,6 +14,7 @@
 #include "programreader.h"
 
 
+class CommandCode;
 class ProgramUnit;
 
 class Recreator {
@@ -21,12 +22,13 @@ public:
     Recreator(ProgramUnit &program, ProgramReader program_reader);
     std::string operator()();
     std::string getConstNumOperand();
+    void pushKeyword(CommandCode command_code);
     void push(const std::string &operand);
     bool empty() const;
     std::string top() const;
-    void pop();
-    void topAddSpace();
-    void topAdd(const std::string &string);
+    void append(char c);
+    void append(const std::string &string);
+    void prependKeyword(CommandCode command_code);
 
 private:
     struct StackItem {

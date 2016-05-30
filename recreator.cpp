@@ -5,6 +5,7 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include "commandcode.h"
 #include "programcode.h"
 #include "programunit.h"
 #include "recreator.h"
@@ -36,6 +37,11 @@ std::string Recreator::getConstNumOperand()
     return program.constNumDictionary().get(operand);
 }
 
+void Recreator::pushKeyword(CommandCode command_code)
+{
+    push(command_code.getKeyword());
+}
+
 void Recreator::push(const std::string &operand)
 {
     stack.emplace(operand);
@@ -51,17 +57,20 @@ std::string Recreator::top() const
     return stack.top().string;
 }
 
-void Recreator::pop()
+void Recreator::prependKeyword(CommandCode command_code)
 {
-    stack.pop();
+    std::string string = command_code.getKeyword();
+    std::swap(string, stack.top().string);
+    append(' ');
+    append(string);
 }
 
-void Recreator::topAddSpace()
+void Recreator::append(char c)
 {
-    stack.top().string += ' ';
+    stack.top().string += c;
 }
 
-void Recreator::topAdd(const std::string &string)
+void Recreator::append(const std::string &string)
 {
     stack.top().string += string;
 }
