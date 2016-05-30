@@ -17,14 +17,14 @@
 
 class ExpressionCompiler::Impl {
 public:
-    Impl(Compiler compiler);
+    Impl(Compiler &compiler);
 
     DataType compileExpression(DataType expected_data_type);
 
 private:
     DataType compileNumOperand();
 
-    Compiler compiler;
+    Compiler &compiler;
 };
 
 ExpressionCompiler::ExpressionCompiler(Compiler &compiler) :
@@ -43,7 +43,7 @@ ExpressionCompiler::~ExpressionCompiler()
 
 // ----------------------------------------
 
-ExpressionCompiler::Impl::Impl(Compiler compiler) :
+ExpressionCompiler::Impl::Impl(Compiler &compiler) :
     compiler {compiler}
 {
 }

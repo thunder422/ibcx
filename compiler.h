@@ -10,6 +10,7 @@
 
 #include <iosfwd>
 #include <string>
+#include <sstream>
 
 #include "cistring.h"
 
@@ -20,18 +21,18 @@ class ProgramUnit;
 
 class Compiler {
 public:
-    Compiler(std::istream &is, ProgramCode &code_line, ProgramUnit &program);
+    Compiler(const std::string &line, ProgramCode &code_line, ProgramUnit &program);
 
-    ci_string getKeyword() const;
-    char peekNextChar() const;
-    char getNextChar() const;
-    char getColumn() const;
+    ci_string getKeyword();
+    char peekNextChar();
+    char getNextChar();
+    char getColumn();
 
     void addInstruction(Code &code) const;
     void addConstNumInstruction(Code &code, const std::string &number) const;
 
 private:
-    std::istream &is;
+    std::istringstream iss;
     ProgramCode &code_line;
     ProgramUnit &program;
 };

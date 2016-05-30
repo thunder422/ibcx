@@ -13,37 +13,37 @@
 #include "programunit.h"
 
 
-Compiler::Compiler(std::istream &is, ProgramCode &code_line, ProgramUnit &program) :
-    is {is},
+Compiler::Compiler(const std::string &line, ProgramCode &code_line, ProgramUnit &program) :
+    iss {line},
     code_line {code_line},
     program {program}
 {
 }
 
-ci_string Compiler::getKeyword() const
+ci_string Compiler::getKeyword()
 {
     ci_string keyword;
-    is >> std::ws;
+    iss >> std::ws;
     while (isalpha(peekNextChar())) {
         keyword += getNextChar();
     }
-    is >> std::ws;
+    iss >> std::ws;
     return keyword;
 }
 
-char Compiler::peekNextChar() const
+char Compiler::peekNextChar()
 {
-    return is.peek();
+    return iss.peek();
 }
 
-char Compiler::getNextChar() const
+char Compiler::getNextChar()
 {
-    return is.get();
+    return iss.get();
 }
 
-char Compiler::getColumn() const
+char Compiler::getColumn()
 {
-    return is.tellg();
+    return iss.tellg();
 }
 
 void Compiler::addInstruction(Code &code) const

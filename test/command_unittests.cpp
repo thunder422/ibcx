@@ -26,8 +26,7 @@ TEST_CASE("compile simple commands", "[compile]")
 
     SECTION("compile an empty command line")
     {
-        std::istringstream iss {""};
-        Compiler compiler {iss, code_line, program};
+        Compiler compiler {"", code_line, program};
         CommandCompiler compile_command {compiler};
         compile_command();
 
@@ -35,8 +34,7 @@ TEST_CASE("compile simple commands", "[compile]")
     }
     SECTION("compile a simple PRINT command")
     {
-        std::istringstream iss {"PRINT"};
-        Compiler compiler {iss, code_line, program};
+        Compiler compiler {"PRINT", code_line, program};
         CommandCompiler compile_command {compiler};
         compile_command();
 
@@ -45,8 +43,7 @@ TEST_CASE("compile simple commands", "[compile]")
     }
     SECTION("compile an END command")
     {
-        std::istringstream iss {"END"};
-        Compiler compiler {iss, code_line, program};
+        Compiler compiler {"END", code_line, program};
         CommandCompiler compile_command {compiler};
         compile_command();
 
@@ -55,8 +52,7 @@ TEST_CASE("compile simple commands", "[compile]")
     }
     SECTION("allow white space before a command")
     {
-        std::istringstream iss {"   PRINT"};
-        Compiler compiler {iss, code_line, program};
+        Compiler compiler {"   PRINT", code_line, program};
         CommandCompiler compile_command {compiler};
         compile_command();
 
@@ -65,16 +61,14 @@ TEST_CASE("compile simple commands", "[compile]")
     }
     SECTION("check for an error if non-alphabetic word if first")
     {
-        std::istringstream iss {"   123"};
-        Compiler compiler {iss, code_line, program};
+        Compiler compiler {"   123", code_line, program};
         CommandCompiler compile_command {compiler};
 
         REQUIRE_THROWS_AS(compile_command(), CompileError);
     }
     SECTION("compile a PRINT comamnd with an expression (single constant for now)")
     {
-        std::istringstream iss {"PRINT 234"};
-        Compiler compiler {iss, code_line, program};
+        Compiler compiler {"PRINT 234", code_line, program};
         CommandCompiler compile_command {compiler};
         compile_command();
 
@@ -90,8 +84,7 @@ TEST_CASE("compile simple commands", "[compile]")
         extern Code const_dbl_code;
         extern Code print_dbl_code;
 
-        std::istringstream iss {"PRINT -5.6e14"};
-        Compiler compiler {iss, code_line, program};
+        Compiler compiler {"PRINT -5.6e14", code_line, program};
         CommandCompiler compile_command {compiler};
         compile_command();
 
@@ -104,13 +97,33 @@ TEST_CASE("compile simple commands", "[compile]")
     }
     SECTION("compile a lower case PRINT command")
     {
-        std::istringstream iss {"print"};
-        Compiler compiler {iss, code_line, program};
+        Compiler compiler {"print", code_line, program};
         CommandCompiler compile_command {compiler};
         compile_command();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
+    }
+    SECTION("verify error column when constant is not at the beginning of the stream")
+    {
+        Compiler compiler {"print 01", code_line, program};
+        CommandCompiler compile_command {compiler};
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(compile_command(), CompileError);
+        }
+        SECTION("check the message and column of the error thrown")
+        {
+            try {
+                compile_command();
+            }
+            catch (const CompileError &error) {
+                std::string expected = "expected decimal point after leading zero";
+                REQUIRE(error.what() == expected);
+                REQUIRE(error.column == 7);
+            }
+        }
     }
 }
 
@@ -123,8 +136,7 @@ TEST_CASE("recreate simple commands", "[recreate]")
 
     ProgramUnit program;
     ProgramCode code_line;
-    std::istringstream not_used_iss;
-    Compiler compiler {not_used_iss, code_line, program};
+    Compiler compiler {"", code_line, program};
 
     SECTION("recreate a blank PRINT command")
     {
