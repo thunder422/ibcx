@@ -25,51 +25,40 @@ TEST_CASE("compile simple commands", "[compile]")
 
     SECTION("compile an empty command line")
     {
-        Compiler compiler {"", program};
-        CommandCompiler compile_command {compiler};
-        auto code_line = compile_command();
+        auto code_line = CommandCompiler{"", program}();
 
         REQUIRE(code_line.empty());
     }
     SECTION("compile a simple PRINT command")
     {
-        Compiler compiler {"PRINT", program};
-        CommandCompiler compile_command {compiler};
-        auto code_line = compile_command();
+        auto code_line = CommandCompiler{"PRINT", program}();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("compile an END command")
     {
-        Compiler compiler {"END", program};
-        CommandCompiler compile_command {compiler};
-        auto code_line = compile_command();
+        auto code_line = CommandCompiler{"END", program}();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == end_code.getValue());
     }
     SECTION("allow white space before a command")
     {
-        Compiler compiler {"   PRINT", program};
-        CommandCompiler compile_command {compiler};
-        auto code_line = compile_command();
+        auto code_line = CommandCompiler{"   PRINT", program}();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("check for an error if non-alphabetic word if first")
     {
-        Compiler compiler {"   123", program};
-        CommandCompiler compile_command {compiler};
+        CommandCompiler compile_command {"   123", program};
 
         REQUIRE_THROWS_AS(compile_command(), CompileError);
     }
     SECTION("compile a PRINT comamnd with an expression (single constant for now)")
     {
-        Compiler compiler {"PRINT 234", program};
-        CommandCompiler compile_command {compiler};
-        auto code_line = compile_command();
+        auto code_line = CommandCompiler{"PRINT 234", program}();
 
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
@@ -83,9 +72,7 @@ TEST_CASE("compile simple commands", "[compile]")
         extern Code const_dbl_code;
         extern Code print_dbl_code;
 
-        Compiler compiler {"PRINT -5.6e14", program};
-        CommandCompiler compile_command {compiler};
-        auto code_line = compile_command();
+        auto code_line = CommandCompiler{"PRINT -5.6e14", program}();
 
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
@@ -96,17 +83,14 @@ TEST_CASE("compile simple commands", "[compile]")
     }
     SECTION("compile a lower case PRINT command")
     {
-        Compiler compiler {"print", program};
-        CommandCompiler compile_command {compiler};
-        auto code_line = compile_command();
+        auto code_line = CommandCompiler{"print", program}();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("verify error column when constant is not at the beginning of the stream")
     {
-        Compiler compiler {"print 01", program};
-        CommandCompiler compile_command {compiler};
+        CommandCompiler compile_command {"print 01", program};
 
         SECTION("check that the error is thrown")
         {

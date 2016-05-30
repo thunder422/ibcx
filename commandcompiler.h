@@ -14,10 +14,11 @@
 
 class Compiler;
 class ProgramCode;
+class ProgramUnit;
 
 class CommandCompiler {
 public:
-    CommandCompiler(Compiler &compiler);
+    CommandCompiler(const std::string &source_line, ProgramUnit &program);
     ProgramCode &&operator()();
     ~CommandCompiler();
 

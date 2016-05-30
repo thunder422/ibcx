@@ -16,18 +16,18 @@
 
 class CommandCompiler::Impl {
 public:
-    Impl(Compiler &compiler);
+    Impl(const std::string &source_line, ProgramUnit &program);
 
     ProgramCode &&compile();
 
 private:
-    Compiler &compiler;
+    Compiler compiler;
 };
 
 // ----------------------------------------
 
-CommandCompiler::CommandCompiler(Compiler &compiler) :
-    pimpl {new Impl(compiler)}
+CommandCompiler::CommandCompiler(const std::string &source_line, ProgramUnit &program) :
+    pimpl {new Impl(source_line, program)}
 {
 }
 
@@ -42,8 +42,8 @@ CommandCompiler::~CommandCompiler()
 
 // ----------------------------------------
 
-CommandCompiler::Impl::Impl(Compiler &compiler) :
-    compiler {compiler}
+CommandCompiler::Impl::Impl(const std::string &source_line, ProgramUnit &program) :
+    compiler {source_line, program}
 {
 }
 
