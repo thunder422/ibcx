@@ -8,34 +8,33 @@
 #ifndef IBC_CODE_H
 #define IBC_CODE_H
 
-#include <cstdint>
 #include <functional>
 #include <vector>
+
+#include "wordtype.h"
 
 
 class Recreator;
 
 class Code {
 public:
-    using type = uint16_t;
-
-    static Code *getCode(type value);
+    static Code *getCode(WordType value);
 
     Code(std::function<void(Recreator &)> recreate_function);
 
-    type getValue() const;
+    WordType getValue() const;
     void recreate(Recreator &recreator) const;
 
 private:
-    static type addCode(Code *code);
+    static WordType addCode(Code *code);
     static std::vector<Code *> codes;
     static std::vector<std::function<void(Recreator &)>> recreate_functions;
 
-    type value;
+    WordType value;
 };
 
 
-inline Code::type Code::getValue() const
+inline WordType Code::getValue() const
 {
     return value;
 }

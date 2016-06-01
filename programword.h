@@ -8,21 +8,20 @@
 #ifndef IBC_PROGRAMWORD_H
 #define IBC_PROGRAMWORD_H
 
-#include <cstdint>
-
 #include "code.h"
+#include "wordtype.h"
 
 
 class ProgramWord {
 public:
     explicit ProgramWord(Code code);
-    explicit ProgramWord(uint16_t word);
+    explicit ProgramWord(WordType word);
 
     Code *instructionCode() const;
-    uint16_t operand() const;
+    WordType operand() const;
 
 private:
-    uint16_t word;
+    WordType word;
 };
 
 
@@ -31,7 +30,7 @@ inline ProgramWord::ProgramWord(Code code) :
 {
 }
 
-inline ProgramWord::ProgramWord(uint16_t word) :
+inline ProgramWord::ProgramWord(WordType word) :
     word {word}
 {
 }
@@ -41,7 +40,7 @@ inline Code *ProgramWord::instructionCode() const
     return Code::getCode(word);
 }
 
-inline uint16_t ProgramWord::operand() const
+inline WordType ProgramWord::operand() const
 {
     return word;
 }

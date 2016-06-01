@@ -75,6 +75,7 @@ set(IBC_SOURCES
     programunit.cpp
     programword.h
     recreator.cpp
+    wordtype.h
 )
 
 add_library(ibc SHARED

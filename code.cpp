@@ -11,14 +11,14 @@
 std::vector<Code *> Code::codes;
 std::vector<std::function<void(Recreator &)>> Code::recreate_functions;
 
-Code::type Code::addCode(Code *code)
+WordType Code::addCode(Code *code)
 {
-    type value = codes.size();
+    WordType value = codes.size();
     codes.emplace_back(code);
     return value;
 }
 
-Code *Code::getCode(Code::type value)
+Code *Code::getCode(WordType value)
 {
     return codes[value];
 }

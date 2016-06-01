@@ -20,7 +20,7 @@ Code *ProgramReader::getInstruction()
     return (*iterator++).instructionCode();
 }
 
-uint16_t ProgramReader::getOperand()
+WordType ProgramReader::getOperand()
 {
     return (*iterator++).operand();
 }

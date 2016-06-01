@@ -17,7 +17,7 @@ class ProgramReader {
 public:
     ProgramReader(ProgramConstIterator begin, unsigned offset, unsigned size);
     Code *getInstruction();
-    uint16_t getOperand();
+    WordType getOperand();
     bool hasMoreCode() const;
 
 private:

@@ -11,7 +11,7 @@ Dictionary::Dictionary()
 {
 }
 
-uint16_t Dictionary::add(const std::string &string)
+WordType Dictionary::add(const std::string &string)
 {
     int index = key_map.size();
     auto iterator_isnew = key_map.emplace(string, index);
@@ -19,7 +19,7 @@ uint16_t Dictionary::add(const std::string &string)
     return index;
 }
 
-std::string Dictionary::get(uint16_t index)
+std::string Dictionary::get(WordType index)
 {
     return iterator[index]->first;
 }

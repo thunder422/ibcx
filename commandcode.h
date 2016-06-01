@@ -30,8 +30,8 @@ public:
 
 private:
     static std::map<ci_string, CommandCode *> command_codes;
-    static std::map<Code::type, const char *> command_names;
-    static std::map<Code::type, std::function<void(Compiler &)>> compile_functions;
+    static std::map<WordType, const char *> command_names;
+    static std::map<WordType, std::function<void(Compiler &)>> compile_functions;
 };
 
 

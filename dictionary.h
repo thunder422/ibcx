@@ -8,22 +8,23 @@
 #ifndef IBC_DICTIONARY_H
 #define IBC_DICTIONARY_H
 
-#include <cstdint>
 #include <unordered_map>
 #include <vector>
+
+#include "wordtype.h"
 
 
 class Dictionary {
 public:
     Dictionary();
-    uint16_t add(const std::string &string);
-    std::string get(uint16_t index);
+    WordType add(const std::string &string);
+    std::string get(WordType index);
 
 private:
     struct EntryValue {
-        EntryValue(uint16_t index);
+        EntryValue(WordType index);
 
-        uint16_t index;
+        WordType index;
     };
 
     using KeyMap = std::unordered_map<std::string, EntryValue>;
@@ -33,7 +34,7 @@ private:
 };
 
 
-inline Dictionary::EntryValue::EntryValue(uint16_t index) :
+inline Dictionary::EntryValue::EntryValue(WordType index) :
     index {index}
 {
 }

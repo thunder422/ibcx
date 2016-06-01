@@ -9,8 +9,8 @@
 
 
 std::map<ci_string, CommandCode *> CommandCode::command_codes;
-std::map<Code::type, const char *> CommandCode::command_names;
-std::map<Code::type, std::function<void(Compiler &)>> CommandCode::compile_functions;
+std::map<WordType, const char *> CommandCode::command_names;
+std::map<WordType, std::function<void(Compiler &)>> CommandCode::compile_functions;
 
 CommandCode *CommandCode::find(const ci_string &keyword)
 {
