@@ -423,7 +423,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        Executer executer;
+        auto executer = program.createExecutor();
         executer.executeOneCode();
         REQUIRE(executer.top().intValue == 12345);
     }

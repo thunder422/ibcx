@@ -14,6 +14,7 @@
 #include "dictionary.h"
 
 
+class Executer;
 class ProgramReader;
 
 class ProgramUnit {
@@ -23,11 +24,13 @@ public:
     void compileSource(std::istream &is);
     void appendCodeLine(ProgramCode &code_line);
     std::string recreateLine(unsigned line_index);
-    ProgramReader createProgramReader(unsigned line_index) const;
+    Executer createExecutor() const;
 
     Dictionary &constNumDictionary();
 
 private:
+    ProgramReader createProgramReader(unsigned line_index) const;
+
     struct LineInfo {
         LineInfo(unsigned offset, unsigned size);
 

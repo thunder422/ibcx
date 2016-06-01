@@ -9,6 +9,7 @@
 
 #include "commandcompiler.h"
 #include "compiler.h"
+#include "executer.h"
 #include "programreader.h"
 #include "programunit.h"
 #include "recreator.h"
@@ -43,4 +44,9 @@ ProgramReader ProgramUnit::createProgramReader(unsigned line_index) const
 {
     auto &info = line_info[line_index];
     return ProgramReader {code.begin(), info.offset, info.size};
+}
+
+Executer ProgramUnit::createExecutor() const
+{
+    return Executer {};
 }
