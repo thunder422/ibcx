@@ -25,6 +25,8 @@ public:
 private:
     const WordType *code;
     const int *const_int_values;
+
+    WordType *program_counter;
 };
 
 
