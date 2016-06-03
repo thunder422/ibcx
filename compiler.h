@@ -13,6 +13,7 @@
 #include <sstream>
 
 #include "cistring.h"
+#include "datatype.h"
 #include "programcode.h"
 
 
@@ -30,7 +31,7 @@ public:
     char getColumn();
 
     void addInstruction(Code &code);
-    void addConstNumInstruction(Code &code, const std::string &number);
+    DataType addConstNumInstruction(bool floating_point, const std::string &number);
     ProgramCode &&getCodeLine();
 
 private:

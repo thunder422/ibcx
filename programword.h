@@ -20,6 +20,8 @@ public:
     Code *instructionCode() const;
     WordType operand() const;
 
+    const WordType *addressOf() const;
+
 private:
     WordType word;
 };
@@ -43,6 +45,11 @@ inline Code *ProgramWord::instructionCode() const
 inline WordType ProgramWord::operand() const
 {
     return word;
+}
+
+inline const WordType *ProgramWord::addressOf() const
+{
+    return &word;
 }
 
 

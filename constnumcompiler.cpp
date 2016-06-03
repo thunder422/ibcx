@@ -146,20 +146,13 @@ ConstNumCompiler::Impl::Impl(Compiler &compiler) :
 {
 }
 
-extern Code const_dbl_code;
-extern Code const_int_code;
-
 DataType ConstNumCompiler::Impl::compile()
 {
     parseInput();
     if (number.empty()) {
         return DataType::Null;
-    } else if (floating_point) {
-        compiler.addConstNumInstruction(const_dbl_code, number);
-        return DataType::Double;
     } else {
-        compiler.addConstNumInstruction(const_int_code, number);
-        return DataType::Integer;
+        return compiler.addConstNumInstruction(floating_point, number);
     }
 }
 

@@ -7,7 +7,9 @@
 
 #include "executer.h"
 
-Executer::Executer()
+Executer::Executer(const WordType *code, const int *const_int_values) :
+    code {code},
+    const_int_values {const_int_values}
 {
 }
 
@@ -18,6 +20,7 @@ void Executer::executeOneCode()
 Executer::StackItem Executer::top()
 {
     StackItem top;
-    top.intValue = 12345;
+    auto operand = code[1];
+    top.int_value = const_int_values[operand];
     return top;
 }

@@ -138,7 +138,7 @@ TEST_CASE("recreate simple commands", "[recreate]")
     }
     SECTION("recreate a PRINT command with an expression (single constant)")
     {
-        compiler.addConstNumInstruction(const_dbl_code, "-1.23e45");
+        compiler.addConstNumInstruction(true, "-1.23e45");
         compiler.addInstruction(print_dbl_code);
         compiler.addInstruction(print_code);
         auto code_line = compiler.getCodeLine();

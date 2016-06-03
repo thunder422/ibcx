@@ -49,10 +49,12 @@ void Compiler::addInstruction(Code &code)
     code_line.emplace_back(code);
 }
 
-void Compiler::addConstNumInstruction(Code &code, const std::string &number)
+DataType Compiler::addConstNumInstruction(bool floating_point, const std::string &number)
 {
-    code_line.emplace_back(code);
-    code_line.emplace_back(program.constNumDictionary().add(number));
+    auto const_num_info = program.constNumDictionary().add(floating_point, number);
+    code_line.emplace_back(const_num_info.code_value);
+    code_line.emplace_back(const_num_info.operand);
+    return const_num_info.data_type;
 }
 
 ProgramCode &&Compiler::getCodeLine()

@@ -401,8 +401,7 @@ TEST_CASE("recreate a constant", "[recreate]")
 
     SECTION("recreate an integer constant")
     {
-        extern Code const_int_code;
-        compiler.addConstNumInstruction(const_int_code, "12345");
+        compiler.addConstNumInstruction(false, "12345");
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -416,15 +415,24 @@ TEST_CASE("execute a constant code", "[execute]")
 
     Compiler compiler {"", program};
 
-    SECTION("recreate an integer constant")
+    SECTION("execute a single integer constant")
     {
-        extern Code const_int_code;
-        compiler.addConstNumInstruction(const_int_code, "12345");
+        compiler.addConstNumInstruction(false, "12345");
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
         auto executer = program.createExecutor();
         executer.executeOneCode();
-        REQUIRE(executer.top().intValue == 12345);
+        REQUIRE(executer.top().int_value == 12345);
+    }
+    SECTION("execute a different integer constant")
+    {
+        compiler.addConstNumInstruction(false, "23456");
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        auto executer = program.createExecutor();
+        executer.executeOneCode();
+        REQUIRE(executer.top().int_value == 23456);
     }
 }

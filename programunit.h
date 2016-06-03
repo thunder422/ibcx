@@ -10,8 +10,8 @@
 
 #include <string>
 
+#include "constnum.h"
 #include "programcode.h"
-#include "dictionary.h"
 
 
 class Executer;
@@ -26,7 +26,7 @@ public:
     std::string recreateLine(unsigned line_index);
     Executer createExecutor() const;
 
-    Dictionary &constNumDictionary();
+    ConstNumDictionary &constNumDictionary();
 
 private:
     ProgramReader createProgramReader(unsigned line_index) const;
@@ -40,11 +40,11 @@ private:
 
     std::vector<LineInfo> line_info;
     ProgramCode code;
-    Dictionary const_num_dictionary;
+    ConstNumDictionary const_num_dictionary;
 };
 
 
-inline Dictionary &ProgramUnit::constNumDictionary()
+inline ConstNumDictionary &ProgramUnit::constNumDictionary()
 {
     return const_num_dictionary;
 }

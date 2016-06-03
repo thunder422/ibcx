@@ -8,16 +8,23 @@
 #ifndef IBC_EXECUTER_H
 #define IBC_EXECUTER_H
 
+#include "wordtype.h"
+
 
 class Executer {
 public:
     union StackItem {
-        int intValue;
+        int int_value;
     };
 
-    Executer();
+    Executer(const WordType *code, const int *const_int_values);
     void executeOneCode();
+
     StackItem top();
+
+private:
+    const WordType *code;
+    const int *const_int_values;
 };
 
 

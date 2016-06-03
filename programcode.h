@@ -28,6 +28,7 @@ public:
     template <typename... Args> void emplace_back(Args &&... args);
     void append(ProgramCode &more);
     ProgramConstIterator begin() const;
+    const WordType *getBeginning() const;
 
 private:
     ProgramVector code;
@@ -58,6 +59,11 @@ inline void ProgramCode::emplace_back(Args &&... args)
 inline ProgramConstIterator ProgramCode::begin() const
 {
     return code.cbegin();
+}
+
+inline const WordType *ProgramCode::getBeginning() const
+{
+    return code[0].addressOf();
 }
 
 
