@@ -462,4 +462,14 @@ TEST_CASE("execute a constant code", "[execute]")
         executer.pop();
         REQUIRE(executer.top().int_value == 12345);
     }
+    SECTION("execute a single double constant")
+    {
+        compiler.addConstNumInstruction(true, "12.345");
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        auto executer = program.createExecutor();
+        executer.executeOneCode();
+        REQUIRE(executer.top().dbl_value == 12.345);
+    }
 }

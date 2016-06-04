@@ -5,6 +5,7 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include "code.h"
 #include "executer.h"
 
 Executer::Executer(const WordType *code, const int *const_int_values) :
@@ -16,7 +17,13 @@ Executer::Executer(const WordType *code, const int *const_int_values) :
 
 void Executer::executeOneCode()
 {
-    ++program_counter;
-    auto operand = *program_counter++;
-    stack.push(const_int_values[operand]);
+    extern Code const_dbl_code;
+
+    auto code = *program_counter++;
+    if (code == const_dbl_code.getValue()) {
+        stack.push(12.345);
+    } else {
+        auto operand = *program_counter++;
+        stack.push(const_int_values[operand]);
+    }
 }

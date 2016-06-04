@@ -16,9 +16,11 @@
 class Executer {
 public:
     struct StackItem {
+        StackItem(double dbl_value);
         StackItem(int int_value);
 
         union {
+            double dbl_value;
             int int_value;
         };
     };
@@ -47,6 +49,11 @@ inline void Executer::pop()
     stack.pop();
 }
 
+
+inline Executer::StackItem::StackItem(double dbl_value) :
+    dbl_value {dbl_value}
+{
+}
 
 inline Executer::StackItem::StackItem(int int_value) :
     int_value {int_value}
