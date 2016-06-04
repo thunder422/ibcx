@@ -17,12 +17,6 @@ Executer::Executer(const WordType *code, const int *const_int_values) :
 void Executer::executeOneCode()
 {
     ++program_counter;
-}
-
-Executer::StackItem Executer::top()
-{
-    StackItem top;
     auto operand = *program_counter++;
-    top.int_value = const_int_values[operand];
-    return top;
+    stack.push(const_int_values[operand]);
 }

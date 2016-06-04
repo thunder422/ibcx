@@ -8,26 +8,50 @@
 #ifndef IBC_EXECUTER_H
 #define IBC_EXECUTER_H
 
+#include <stack>
+
 #include "wordtype.h"
 
 
 class Executer {
 public:
-    union StackItem {
-        int int_value;
+    struct StackItem {
+        StackItem(int int_value);
+
+        union {
+            int int_value;
+        };
     };
 
     Executer(const WordType *code, const int *const_int_values);
     void executeOneCode();
 
-    StackItem top();
+    StackItem &top();
+    void pop();
 
 private:
     const WordType *code;
     const int *const_int_values;
 
     WordType *program_counter;
+    std::stack<StackItem> stack;
 };
+
+inline Executer::StackItem &Executer::top()
+{
+    return stack.top();
+}
+
+inline void Executer::pop()
+{
+    stack.pop();
+}
+
+
+inline Executer::StackItem::StackItem(int int_value) :
+    int_value {int_value}
+{
+}
 
 
 #endif  // IBC_EXECUTER_H

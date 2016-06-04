@@ -448,4 +448,18 @@ TEST_CASE("execute a constant code", "[execute]")
         executer.executeOneCode();
         REQUIRE(executer.top().int_value == 23456);
     }
+    SECTION("execute two consective integer constants and then check evaluation stack")
+    {
+        compiler.addConstNumInstruction(false, "12345");
+        compiler.addConstNumInstruction(false, "23456");
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        auto executer = program.createExecutor();
+        executer.executeOneCode();
+        executer.executeOneCode();
+        REQUIRE(executer.top().int_value == 23456);
+        executer.pop();
+        REQUIRE(executer.top().int_value == 12345);
+    }
 }
