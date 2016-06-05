@@ -31,7 +31,7 @@ const char *CommandCode::getKeyword() const
 
 CommandCode::CommandCode(const char *keyword, std::function<void (Compiler &)> compile_function,
         std::function<void (Recreator &)> recreate_function) :
-    Code {recreate_function}
+    Code {recreate_function, nullptr}
 {
     command_codes[keyword] = this;
     command_names[getValue()] = keyword;

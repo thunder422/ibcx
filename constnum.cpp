@@ -7,6 +7,7 @@
 
 #include "code.h"
 #include "constnum.h"
+#include "executer.h"
 #include "recreator.h"
 
 
@@ -16,8 +17,20 @@ void const_num_recreate(Recreator &recreator)
     recreator.push(number);
 }
 
-Code const_dbl_code {const_num_recreate};
-Code const_int_code {const_num_recreate};
+void const_dbl_execute(Executer &executer)
+{
+    auto operand = executer.getOperand();
+    executer.pushConstDbl(operand);
+}
+
+void const_int_execute(Executer &executer)
+{
+    auto operand = executer.getOperand();
+    executer.pushConstInt(operand);
+}
+
+Code const_dbl_code {const_num_recreate, const_dbl_execute};
+Code const_int_code {const_num_recreate, const_int_execute};
 
 ConstNumInfo ConstNumDictionary::add(bool floating_point, const std::string &number)
 {

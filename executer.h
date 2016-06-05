@@ -28,17 +28,36 @@ public:
     Executer(const WordType *code, const double *const_dbl_values, const int *const_int_values);
     void executeOneCode();
 
+    WordType getOperand();
+    void pushConstDbl(WordType operand);
+    void pushConstInt(WordType operand);
     StackItem &top();
     void pop();
 
 private:
     const WordType *code;
+    const ExecuteFunctionPointer *execute_functions;
     const double *const_dbl_values;
     const int *const_int_values;
 
     WordType *program_counter;
     std::stack<StackItem> stack;
 };
+
+inline WordType Executer::getOperand()
+{
+    return *program_counter++;
+}
+
+inline void Executer::pushConstDbl(WordType operand)
+{
+    stack.emplace(const_dbl_values[operand]);
+}
+
+inline void Executer::pushConstInt(WordType operand)
+{
+    stack.emplace(const_int_values[operand]);
+}
 
 inline Executer::StackItem &Executer::top()
 {

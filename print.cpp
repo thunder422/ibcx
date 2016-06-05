@@ -19,8 +19,8 @@ void print_recreate(Recreator &recreator);
 void print_item_recreate(Recreator &recreator);
 
 CommandCode print_code {"PRINT", print_compile, print_recreate};
-Code print_dbl_code {print_item_recreate};
-Code print_int_code {print_item_recreate};
+Code print_dbl_code {print_item_recreate, nullptr};
+Code print_int_code {print_item_recreate, nullptr};
 
 
 void print_compile(Compiler &compiler)
