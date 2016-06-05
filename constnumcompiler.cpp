@@ -26,7 +26,7 @@ public:
     bool possibleOperator() const noexcept;
 
     void changeState(State &new_state) noexcept;
-    unsigned getColumn() const noexcept;
+    int getColumn() const noexcept;
     void addNextChar();
     void setDouble() noexcept;
     bool isDouble() const noexcept;
@@ -45,7 +45,8 @@ private:
     bool done;
     bool negate_operator;
     bool possible_operator;
-    unsigned column;
+    int first_column;
+    int column;
 };
 
 // ----------------------------------------
@@ -142,7 +143,8 @@ ConstNumCompiler::Impl::Impl(Compiler &compiler) :
     floating_point {false},
     done {false},
     negate_operator {false},
-    possible_operator {false}
+    possible_operator {false},
+    first_column {compiler.getColumn()}
 {
 }
 
@@ -156,7 +158,7 @@ DataType ConstNumCompiler::Impl::compile()
             return compiler.addConstNumInstruction(floating_point, number);
         }
         catch (const std::out_of_range &) {
-            throw CompileError {"floating point constant is out of range", 0};
+            throw CompileError {"floating point constant is out of range", first_column};
         }
     }
 }
@@ -185,7 +187,7 @@ void ConstNumCompiler::Impl::changeState(State &new_state) noexcept
     state = &new_state;
 }
 
-unsigned ConstNumCompiler::Impl::getColumn() const noexcept
+int ConstNumCompiler::Impl::getColumn() const noexcept
 {
     return column;
 }

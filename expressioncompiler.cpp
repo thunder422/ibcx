@@ -57,7 +57,7 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 DataType ExpressionCompiler::Impl::compileNumOperand()
 {
     ConstNumCompiler compile_constant {compiler};
-    unsigned column = compiler.getColumn();
+    auto column = compiler.getColumn();
     auto data_type = compile_constant();
     if (data_type == DataType::Null) {
         throw CompileError {"expected numeric expression", column};

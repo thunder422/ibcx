@@ -12,9 +12,9 @@
 
 
 struct CompileError : public std::runtime_error {
-    CompileError(const char *message, unsigned column) : runtime_error(message), column(column) { }
+    CompileError(const char *message, int column) : runtime_error(message), column(column) { }
 
-    unsigned column;
+    int column;
 };
 
 

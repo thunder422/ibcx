@@ -39,7 +39,7 @@ char Compiler::getNextChar()
     return iss.get();
 }
 
-char Compiler::getColumn()
+int Compiler::getColumn()
 {
     return iss.tellg();
 }

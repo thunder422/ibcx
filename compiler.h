@@ -28,7 +28,7 @@ public:
     ci_string getKeyword();
     char peekNextChar();
     char getNextChar();
-    char getColumn();
+    int getColumn();
 
     void addInstruction(Code &code);
     DataType addConstNumInstruction(bool floating_point, const std::string &number);

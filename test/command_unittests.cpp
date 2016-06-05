@@ -170,3 +170,26 @@ TEST_CASE("compile mulitple line program", "[program]")
         REQUIRE(program.recreateLine(3) == "END");
     }
 }
+
+TEST_CASE("correct error column on large double constant", "[large-constant]")
+{
+    ProgramUnit program;
+
+    CommandCompiler compile_command {"PRINT 1.23e4567", program};
+
+    SECTION("check that error is thrown")
+    {
+        REQUIRE_THROWS_AS(compile_command(), CompileError);
+    }
+    SECTION("check the message and column of the error thrown")
+    {
+        try {
+            compile_command();
+        }
+        catch (const CompileError &error) {
+            std::string expected = "floating point constant is out of range";
+            REQUIRE(error.what() == expected);
+            REQUIRE(error.column == 6);
+        }
+    }
+}
