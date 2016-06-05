@@ -38,11 +38,18 @@ ConstNumInfo ConstNumDictionary::add(bool floating_point, const std::string &num
     double dbl_value;
     int int_value;
     if (!floating_point) {
-        const_num_info.code_value = const_int_code.getValue();
-        const_num_info.data_type = DataType::Integer;
-        int_value = std::stoi(number);
-        dbl_value = int_value;
-    } else {
+        try {
+            int_value = std::stoi(number);
+            const_num_info.code_value = const_int_code.getValue();
+            const_num_info.data_type = DataType::Integer;
+            dbl_value = int_value;
+        }
+        catch (const std::out_of_range &)
+        {
+            floating_point = true;
+        }
+    }
+    if (floating_point) {
         const_num_info.code_value = const_dbl_code.getValue();
         const_num_info.data_type = DataType::Double;
         dbl_value = std::stod(number);

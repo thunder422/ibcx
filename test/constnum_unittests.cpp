@@ -500,3 +500,18 @@ TEST_CASE("execute a constant code", "[execute]")
         REQUIRE(executer.top().int_value == 23456);
     }
 }
+
+TEST_CASE("constant errrors", "[errors")
+{
+    ProgramUnit program;
+
+    SECTION("compile an integer constant too large for an integer value (change to a double)")
+    {
+        extern Code const_dbl_code;
+
+        Compiler compiler {"12345678901", program};
+        auto data_type = ConstNumCompiler{compiler}();
+        REQUIRE_OPERAND(DataType::Double, "12345678901")
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
+    }
+}
