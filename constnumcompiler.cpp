@@ -152,7 +152,12 @@ DataType ConstNumCompiler::Impl::compile()
     if (number.empty()) {
         return DataType::Null;
     } else {
-        return compiler.addConstNumInstruction(floating_point, number);
+        try {
+            return compiler.addConstNumInstruction(floating_point, number);
+        }
+        catch (const std::out_of_range &) {
+            throw CompileError {"floating point constant is out of range", 0};
+        }
     }
 }
 

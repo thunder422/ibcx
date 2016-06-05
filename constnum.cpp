@@ -6,6 +6,7 @@
  */
 
 #include "code.h"
+#include "compileerror.h"
 #include "constnum.h"
 #include "executer.h"
 #include "recreator.h"

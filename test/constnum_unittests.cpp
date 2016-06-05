@@ -514,4 +514,25 @@ TEST_CASE("constant errrors", "[errors")
         REQUIRE_OPERAND(DataType::Double, "12345678901")
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
     }
+    SECTION("compile a double constant too large for a double value (an error)")
+    {
+        extern Code const_dbl_code;
+
+        Compiler compiler {"1.23e4567", program};
+        SECTION("check that error is thrown")
+        {
+            REQUIRE_THROWS_AS(ConstNumCompiler{compiler}(), CompileError);
+        }
+        SECTION("check the message and column of the error thrown")
+        {
+            try {
+                ConstNumCompiler{compiler}();
+            }
+            catch (const CompileError &error) {
+                std::string expected = "floating point constant is out of range";
+                REQUIRE(error.what() == expected);
+                REQUIRE(error.column == 0);
+            }
+        }
+    }
 }
