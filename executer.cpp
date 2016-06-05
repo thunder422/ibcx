@@ -8,8 +8,10 @@
 #include "code.h"
 #include "executer.h"
 
-Executer::Executer(const WordType *code, const int *const_int_values) :
+Executer::Executer(const WordType *code, const double *const_dbl_values,
+        const int *const_int_values) :
     code {code},
+    const_dbl_values {const_dbl_values},
     const_int_values {const_int_values},
     program_counter {const_cast<WordType *>(code)}
 {
@@ -20,10 +22,10 @@ void Executer::executeOneCode()
     extern Code const_dbl_code;
 
     auto code = *program_counter++;
+    auto operand = *program_counter++;
     if (code == const_dbl_code.getValue()) {
-        stack.push(12.345);
+        stack.push(const_dbl_values[operand]);
     } else {
-        auto operand = *program_counter++;
         stack.push(const_int_values[operand]);
     }
 }

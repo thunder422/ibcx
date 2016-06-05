@@ -472,4 +472,14 @@ TEST_CASE("execute a constant code", "[execute]")
         executer.executeOneCode();
         REQUIRE(executer.top().dbl_value == 12.345);
     }
+    SECTION("execute a different double constant")
+    {
+        compiler.addConstNumInstruction(true, "-2.3456");
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        auto executer = program.createExecutor();
+        executer.executeOneCode();
+        REQUIRE(executer.top().dbl_value == -2.3456);
+    }
 }

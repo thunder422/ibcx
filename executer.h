@@ -25,7 +25,7 @@ public:
         };
     };
 
-    Executer(const WordType *code, const int *const_int_values);
+    Executer(const WordType *code, const double *const_dbl_values, const int *const_int_values);
     void executeOneCode();
 
     StackItem &top();
@@ -33,6 +33,7 @@ public:
 
 private:
     const WordType *code;
+    const double *const_dbl_values;
     const int *const_int_values;
 
     WordType *program_counter;

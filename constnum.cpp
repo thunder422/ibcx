@@ -22,15 +22,21 @@ Code const_int_code {const_num_recreate};
 ConstNumInfo ConstNumDictionary::add(bool floating_point, const std::string &number)
 {
     ConstNumInfo const_num_info;
+    double dbl_value;
+    int int_value;
     if (!floating_point) {
-        int int_value = std::stoi(number);
         const_num_info.code_value = const_int_code.getValue();
         const_num_info.data_type = DataType::Integer;
-        int_values.push_back(int_value);
+        int_value = std::stoi(number);
+        dbl_value = int_value;
     } else {
         const_num_info.code_value = const_dbl_code.getValue();
         const_num_info.data_type = DataType::Double;
+        dbl_value = std::stod(number);
+        int_value = dbl_value;
     }
+    dbl_values.push_back(dbl_value);
+    int_values.push_back(int_value);
     const_num_info.operand = Dictionary::add(number);
     return const_num_info;
 }

@@ -48,5 +48,6 @@ ProgramReader ProgramUnit::createProgramReader(unsigned line_index) const
 
 Executer ProgramUnit::createExecutor() const
 {
-    return Executer {code.getBeginning(), const_num_dictionary.getIntArray()};
+    return Executer {code.getBeginning(), const_num_dictionary.getDblValues(),
+        const_num_dictionary.getIntValues()};
 }

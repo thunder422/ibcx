@@ -18,13 +18,20 @@ struct ConstNumInfo;
 class ConstNumDictionary : public Dictionary {
 public:
     ConstNumInfo add(bool floating_point, const std::string &number);
-    const int *getIntArray() const;
+    const double *getDblValues() const;
+    const int *getIntValues() const;
 
 private:
+    std::vector<double> dbl_values;
     std::vector<int> int_values;
 };
 
-inline const int *ConstNumDictionary::getIntArray() const
+inline const double *ConstNumDictionary::getDblValues() const
+{
+    return dbl_values.data();
+}
+
+inline const int *ConstNumDictionary::getIntValues() const
 {
     return int_values.data();
 }
