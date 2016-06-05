@@ -16,8 +16,13 @@
 
 class Dictionary {
 public:
+    struct Entry {
+        WordType operand;
+        bool exists;
+    };
+
     Dictionary();
-    WordType add(const std::string &string);
+    Entry add(const std::string &string);
     std::string get(WordType index);
 
 private:
@@ -28,9 +33,15 @@ private:
     };
 
     using KeyMap = std::unordered_map<std::string, EntryValue>;
+    struct KeyMapEntry {
+        KeyMap::iterator iterator;
+        bool key_exists;
+    };
+    Dictionary::KeyMapEntry addToKeyMap(const std::string &string);
+    Entry addToKeyIteratorVector(const Dictionary::KeyMapEntry &key_map_entry);
 
     KeyMap key_map;
-    std::vector<KeyMap::iterator> iterator;
+    std::vector<KeyMap::iterator> key_iterator;
 };
 
 

@@ -48,8 +48,11 @@ ConstNumInfo ConstNumDictionary::add(bool floating_point, const std::string &num
         dbl_value = std::stod(number);
         int_value = dbl_value;
     }
-    dbl_values.push_back(dbl_value);
-    int_values.push_back(int_value);
-    const_num_info.operand = Dictionary::add(number);
+    Dictionary::Entry entry = Dictionary::add(number);
+    if (!entry.exists) {
+        dbl_values.push_back(dbl_value);
+        int_values.push_back(int_value);
+    }
+    const_num_info.operand = entry.operand;
     return const_num_info;
 }

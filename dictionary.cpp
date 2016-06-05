@@ -11,15 +11,31 @@ Dictionary::Dictionary()
 {
 }
 
-WordType Dictionary::add(const std::string &string)
+Dictionary::Entry Dictionary::add(const std::string &string)
 {
-    int index = key_map.size();
-    auto iterator_isnew = key_map.emplace(string, index);
-    iterator.emplace_back(iterator_isnew.first);
-    return index;
+    auto key_map_entry = addToKeyMap(string);
+    auto entry = addToKeyIteratorVector(key_map_entry);
+    return entry;
+}
+
+Dictionary::KeyMapEntry Dictionary::addToKeyMap(const std::string &string)
+{
+    WordType index = key_map.size();
+    auto emplace_result = key_map.emplace(string, index);
+    return KeyMapEntry {emplace_result.first, !emplace_result.second};
+}
+
+Dictionary::Entry Dictionary::addToKeyIteratorVector(const Dictionary::KeyMapEntry &key_map_entry)
+{
+    if (!key_map_entry.key_exists) {
+        key_iterator.emplace_back(key_map_entry.iterator);
+    }
+    auto entry_value = key_map_entry.iterator->second;
+    auto operand = entry_value.index;
+    return Entry {operand, key_map_entry.key_exists};
 }
 
 std::string Dictionary::get(WordType index)
 {
-    return iterator[index]->first;
+    return key_iterator[index]->first;
 }
