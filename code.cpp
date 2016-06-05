@@ -9,7 +9,7 @@
 
 
 std::vector<Code *> Code::codes;
-std::vector<std::function<void(Recreator &)>> Code::recreate_functions;
+std::vector<RecreateFunctionPointer> Code::recreate_functions;
 std::vector<ExecuteFunctionPointer> Code::execute_functions;
 
 WordType Code::addCode(Code *code)
@@ -25,8 +25,7 @@ Code *Code::getCode(WordType value)
 }
 
 
-Code::Code(std::function<void(Recreator &)> recreate_function,
-        ExecuteFunctionPointer execute_function) :
+Code::Code(RecreateFunctionPointer recreate_function, ExecuteFunctionPointer execute_function) :
     value {addCode(this)}
 {
     recreate_functions.emplace_back(recreate_function);

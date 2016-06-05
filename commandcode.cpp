@@ -10,7 +10,7 @@
 
 std::map<ci_string, CommandCode *> CommandCode::command_codes;
 std::map<WordType, const char *> CommandCode::command_names;
-std::map<WordType, std::function<void(Compiler &)>> CommandCode::compile_functions;
+std::map<WordType, CompilerFunctionPointer> CommandCode::compile_functions;
 
 CommandCode *CommandCode::find(const ci_string &keyword)
 {
@@ -29,8 +29,8 @@ const char *CommandCode::getKeyword() const
 }
 
 
-CommandCode::CommandCode(const char *keyword, std::function<void (Compiler &)> compile_function,
-        std::function<void (Recreator &)> recreate_function) :
+CommandCode::CommandCode(const char *keyword, CompilerFunctionPointer compile_function,
+        RecreateFunctionPointer recreate_function) :
     Code {recreate_function, nullptr}
 {
     command_codes[keyword] = this;

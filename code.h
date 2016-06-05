@@ -8,7 +8,6 @@
 #ifndef IBC_CODE_H
 #define IBC_CODE_H
 
-#include <functional>
 #include <vector>
 
 #include "wordtype.h"
@@ -18,13 +17,13 @@ class Executer;
 using ExecuteFunctionPointer = void(*)(Executer &);
 
 class Recreator;
+using RecreateFunctionPointer = void(*)(Recreator &);
 
 class Code {
 public:
     static Code *getCode(WordType value);
 
-    Code(std::function<void(Recreator &)> recreate_function,
-        ExecuteFunctionPointer execute_function);
+    Code(RecreateFunctionPointer recreate_function, ExecuteFunctionPointer execute_function);
 
     WordType getValue() const;
     void recreate(Recreator &recreator) const;
@@ -33,7 +32,7 @@ public:
 private:
     static WordType addCode(Code *code);
     static std::vector<Code *> codes;
-    static std::vector<std::function<void(Recreator &)>> recreate_functions;
+    static std::vector<RecreateFunctionPointer> recreate_functions;
     static std::vector<ExecuteFunctionPointer> execute_functions;
 
     WordType value;

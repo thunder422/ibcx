@@ -15,6 +15,8 @@
 
 
 class Compiler;
+using CompilerFunctionPointer = void(*)(Compiler &);
+
 class ProgramCode;
 class ProgramUnit;
 
@@ -23,15 +25,15 @@ class CommandCode : public Code {
 public:
     static CommandCode *find(const ci_string &keyword);
 
-    CommandCode(const char *keyword, std::function<void(Compiler &)> compile_function,
-        std::function<void(Recreator &)> recreate_function);
+    CommandCode(const char *keyword, CompilerFunctionPointer compile_function,
+        RecreateFunctionPointer recreate_function);
     void compile(Compiler &compiler) const;
     const char *getKeyword() const;
 
 private:
     static std::map<ci_string, CommandCode *> command_codes;
     static std::map<WordType, const char *> command_names;
-    static std::map<WordType, std::function<void(Compiler &)>> compile_functions;
+    static std::map<WordType, CompilerFunctionPointer> compile_functions;
 };
 
 
