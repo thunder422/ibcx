@@ -13,15 +13,18 @@
 #include "wordtype.h"
 
 
-struct ConstNumInfo;
+struct ConstNumCodeInfo;
+class ConstNumConverter;
 
 class ConstNumDictionary : public Dictionary {
 public:
-    ConstNumInfo add(bool floating_point, const std::string &number);
+    ConstNumCodeInfo add(bool floating_point, const std::string &number);
     const double *getDblValues() const;
     const int *getIntValues() const;
 
 private:
+    WordType addToDictionary(const ConstNumConverter &converter, const std::string &number);
+
     std::vector<double> dbl_values;
     std::vector<int> int_values;
 };
@@ -39,7 +42,7 @@ inline const int *ConstNumDictionary::getIntValues() const
 
 class Code;
 
-struct ConstNumInfo {
+struct ConstNumCodeInfo {
     WordType code_value;
     WordType operand;
     DataType data_type;
