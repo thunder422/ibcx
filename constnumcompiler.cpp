@@ -158,7 +158,8 @@ DataType ConstNumCompiler::Impl::compile()
             return compiler.addConstNumInstruction(floating_point, number);
         }
         catch (const std::out_of_range &) {
-            throw CompileError {"floating point constant is out of range", first_column};
+            throw CompileError {"floating point constant is out of range", first_column,
+                number.length()};
         }
     }
 }

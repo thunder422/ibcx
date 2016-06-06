@@ -139,7 +139,7 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
         {
             REQUIRE_THROWS_AS(compile_constant(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_constant();
@@ -148,6 +148,7 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
                 std::string expected = "expected decimal point after leading zero";
                 REQUIRE(error.what() == expected);
                 REQUIRE(error.column == 1);
+                REQUIRE(error.length == 1);
             }
         }
     }
@@ -174,7 +175,7 @@ TEST_CASE("handle leading period of a constant correctly including errors", "[pe
         {
             REQUIRE_THROWS_AS(compile_constant(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_constant();
@@ -183,6 +184,7 @@ TEST_CASE("handle leading period of a constant correctly including errors", "[pe
                 std::string expected = "expected digit after decimal point";
                 REQUIRE(error.what() == expected);
                 REQUIRE(error.column == 1);
+                REQUIRE(error.length == 1);
             }
         }
     }
@@ -202,7 +204,7 @@ TEST_CASE("check for correct exponent format", "[exponent]")
         {
             REQUIRE_THROWS_AS(compile_constant(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_constant();
@@ -211,6 +213,7 @@ TEST_CASE("check for correct exponent format", "[exponent]")
                 std::string expected = "expected sign or digit for exponent";
                 REQUIRE(error.what() == expected);
                 REQUIRE(error.column == 2);
+                REQUIRE(error.length == 1);
             }
         }
     }
@@ -230,7 +233,7 @@ TEST_CASE("check for correct exponent format", "[exponent]")
         {
             REQUIRE_THROWS_AS(compile_constant(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_constant();
@@ -239,6 +242,7 @@ TEST_CASE("check for correct exponent format", "[exponent]")
                 std::string expected = "expected digit after exponent sign";
                 REQUIRE(error.what() == expected);
                 REQUIRE(error.column == 3);
+                REQUIRE(error.length == 1);
             }
         }
     }
@@ -251,13 +255,14 @@ TEST_CASE("check for correct exponent format", "[exponent]")
         {
             REQUIRE_THROWS_AS(compile_constant(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_constant();
             }
             catch (const CompileError &error) {
                 REQUIRE(error.column == 3);
+                REQUIRE(error.length == 1);
             }
         }
     }
@@ -328,7 +333,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         {
             REQUIRE_THROWS_AS(compile_constant(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_constant();
@@ -337,6 +342,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
                 std::string expected_what = "expected sign or digit for exponent";
                 REQUIRE(error.what() == expected_what);
                 REQUIRE(error.column == 3);
+                REQUIRE(error.length == 1);
             }
         }
     }
@@ -356,6 +362,7 @@ bool test_error_input(const char *input, const std::string &expected_what, unsig
     catch (const CompileError &error) {
         REQUIRE(error.what() == expected_what);
         REQUIRE(error.column == expected_column);
+        REQUIRE(error.length == 1);
         return true;
     }
 }
@@ -523,7 +530,7 @@ TEST_CASE("constant errrors", "[errors")
         {
             REQUIRE_THROWS_AS(ConstNumCompiler{compiler}(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 ConstNumCompiler{compiler}();
@@ -532,6 +539,7 @@ TEST_CASE("constant errrors", "[errors")
                 std::string expected = "floating point constant is out of range";
                 REQUIRE(error.what() == expected);
                 REQUIRE(error.column == 0);
+                REQUIRE(error.length == 9);
             }
         }
     }

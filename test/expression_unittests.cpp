@@ -36,7 +36,7 @@ TEST_CASE("compile numeric expressions with constants", "[constant]")
         {
             REQUIRE_THROWS_AS(compile_expression(DataType::Null), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_expression(DataType::Null);
@@ -44,6 +44,7 @@ TEST_CASE("compile numeric expressions with constants", "[constant]")
             catch (const CompileError &error) {
                 REQUIRE(error.what() == std::string("expected numeric expression"));
                 REQUIRE(error.column == 0);
+                REQUIRE(error.length == 1);
             }
         }
     }

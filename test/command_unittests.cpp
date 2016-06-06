@@ -58,7 +58,7 @@ TEST_CASE("compile simple commands", "[compile]")
         {
             REQUIRE_THROWS_AS(compile_command(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_command();
@@ -67,6 +67,7 @@ TEST_CASE("compile simple commands", "[compile]")
                 std::string expected = "expected command keyword";
                 REQUIRE(error.what() == expected);
                 REQUIRE(error.column == 3);
+                REQUIRE(error.length == 1);
             }
         }
     }
@@ -110,7 +111,7 @@ TEST_CASE("compile simple commands", "[compile]")
         {
             REQUIRE_THROWS_AS(compile_command(), CompileError);
         }
-        SECTION("check the message and column of the error thrown")
+        SECTION("check the message, column and length of the error thrown")
         {
             try {
                 compile_command();
@@ -119,6 +120,7 @@ TEST_CASE("compile simple commands", "[compile]")
                 std::string expected = "expected decimal point after leading zero";
                 REQUIRE(error.what() == expected);
                 REQUIRE(error.column == 7);
+                REQUIRE(error.length == 1);
             }
         }
     }
@@ -195,7 +197,7 @@ TEST_CASE("correct error column on large double constant", "[large-constant]")
     {
         REQUIRE_THROWS_AS(compile_command(), CompileError);
     }
-    SECTION("check the message and column of the error thrown")
+    SECTION("check the message, column and length of the error thrown")
     {
         try {
             compile_command();
@@ -204,6 +206,7 @@ TEST_CASE("correct error column on large double constant", "[large-constant]")
             std::string expected = "floating point constant is out of range";
             REQUIRE(error.what() == expected);
             REQUIRE(error.column == 6);
+            REQUIRE(error.length == 9);
         }
     }
 }
