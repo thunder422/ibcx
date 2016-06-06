@@ -10,6 +10,7 @@
 #include "commandcompiler.h"
 #include "compiler.h"
 #include "compileerror.h"
+#include "executer.h"
 #include "programcode.h"
 #include "programunit.h"
 
@@ -209,4 +210,14 @@ TEST_CASE("correct error column on large double constant", "[large-constant]")
             REQUIRE(error.length == 9);
         }
     }
+}
+
+TEST_CASE("execute an END command", "[END]")
+{
+    std::istringstream iss("END");
+    ProgramUnit program;
+    program.compileSource(iss);
+
+    auto executer = program.createExecutor();
+    REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
 }

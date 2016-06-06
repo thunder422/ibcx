@@ -30,8 +30,8 @@ const char *CommandCode::getKeyword() const
 
 
 CommandCode::CommandCode(const char *keyword, CompilerFunctionPointer compile_function,
-        RecreateFunctionPointer recreate_function) :
-    Code {recreate_function, nullptr}
+        RecreateFunctionPointer recreate_function, ExecuteFunctionPointer execute_function) :
+    Code {recreate_function, execute_function}
 {
     command_codes[keyword] = this;
     command_names[getValue()] = keyword;

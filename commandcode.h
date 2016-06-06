@@ -26,7 +26,7 @@ public:
     static CommandCode *find(const ci_string &keyword);
 
     CommandCode(const char *keyword, CompilerFunctionPointer compile_function,
-        RecreateFunctionPointer recreate_function);
+        RecreateFunctionPointer recreate_function, ExecuteFunctionPointer execute_function);
     void compile(Compiler &compiler) const;
     const char *getKeyword() const;
 

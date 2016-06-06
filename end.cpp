@@ -7,14 +7,16 @@
 
 #include "commandcode.h"
 #include "compiler.h"
+#include "executer.h"
 #include "programcode.h"
 #include "recreator.h"
 
 
 void end_compile(Compiler &compiler);
 void end_recreate(Recreator &recreator);
+void end_execute(Executer &executer);
 
-CommandCode end_code {"END", end_compile, end_recreate};
+CommandCode end_code {"END", end_compile, end_recreate, end_execute};
 
 
 void end_compile(Compiler &compiler)
@@ -25,4 +27,10 @@ void end_compile(Compiler &compiler)
 void end_recreate(Recreator &recreator)
 {
     recreator.pushKeyword(end_code);
+}
+
+void end_execute(Executer &executer)
+{
+    (void)executer;
+    throw EndOfProgram {};
 }

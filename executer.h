@@ -81,4 +81,7 @@ inline Executer::StackItem::StackItem(int int_value) :
 }
 
 
+struct EndOfProgram { };
+
+
 #endif  // IBC_EXECUTER_H
