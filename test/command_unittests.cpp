@@ -185,7 +185,8 @@ TEST_CASE("execute an END command", "[END]")
     std::istringstream iss("END");
     ProgramUnit program;
     program.compileSource(iss);
+    std::ostringstream not_used_oss;
 
-    auto executer = program.createExecutor();
+    auto executer = program.createExecutor(not_used_oss);
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
 }

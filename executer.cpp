@@ -5,16 +5,20 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <iostream>
+
 #include "code.h"
 #include "executer.h"
 
+
 Executer::Executer(const WordType *code, const double *const_dbl_values,
-        const int *const_int_values) :
+        const int *const_int_values, std::ostream &os) :
     code {code},
     execute_functions {Code::getExecuteFunctions()},
     const_dbl_values {const_dbl_values},
     const_int_values {const_int_values},
-    program_counter {const_cast<WordType *>(code)}
+    program_counter {const_cast<WordType *>(code)},
+    os {os}
 {
 }
 
@@ -22,4 +26,9 @@ void Executer::executeOneCode()
 {
     auto code_value = *program_counter++;
     execute_functions[code_value](*this);
+}
+
+std::ostream &Executer::output()
+{
+    return os;
 }

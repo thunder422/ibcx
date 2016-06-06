@@ -9,6 +9,7 @@
 
 #include "commandcode.h"
 #include "compiler.h"
+#include "executer.h"
 #include "expressioncompiler.h"
 #include "programcode.h"
 #include "recreator.h"
@@ -17,8 +18,9 @@
 void print_compile(Compiler &compiler);
 void print_recreate(Recreator &recreator);
 void print_item_recreate(Recreator &recreator);
+void print_execute(Executer &executer);
 
-CommandCode print_code {"PRINT", print_compile, print_recreate, nullptr};
+CommandCode print_code {"PRINT", print_compile, print_recreate, print_execute};
 Code print_dbl_code {print_item_recreate, nullptr};
 Code print_int_code {print_item_recreate, nullptr};
 
@@ -48,4 +50,10 @@ void print_recreate(Recreator &recreator)
 void print_item_recreate(Recreator &recreator)
 {
     (void)recreator;
+}
+
+
+void print_execute(Executer &executer)
+{
+    executer.output() << std::endl;
 }

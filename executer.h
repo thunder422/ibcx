@@ -8,6 +8,7 @@
 #ifndef IBC_EXECUTER_H
 #define IBC_EXECUTER_H
 
+#include <iosfwd>
 #include <stack>
 
 #include "wordtype.h"
@@ -25,7 +26,8 @@ public:
         };
     };
 
-    Executer(const WordType *code, const double *const_dbl_values, const int *const_int_values);
+    Executer(const WordType *code, const double *const_dbl_values, const int *const_int_values,
+        std::ostream &os);
     void executeOneCode();
 
     WordType getOperand();
@@ -33,6 +35,7 @@ public:
     void pushConstInt(WordType operand);
     StackItem &top();
     void pop();
+    std::ostream &output();
 
 private:
     const WordType *code;
@@ -42,6 +45,7 @@ private:
 
     WordType *program_counter;
     std::stack<StackItem> stack;
+    std::ostream &os;
 };
 
 inline WordType Executer::getOperand()

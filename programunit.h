@@ -24,7 +24,7 @@ public:
     void compileSource(std::istream &is);
     void appendCodeLine(ProgramCode &code_line);
     std::string recreateLine(unsigned line_index);
-    Executer createExecutor() const;
+    Executer createExecutor(std::ostream &os) const;
 
     ConstNumDictionary &constNumDictionary();
 

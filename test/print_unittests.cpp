@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "commandcode.h"
 #include "commandcompiler.h"
+#include "executer.h"
 #include "programunit.h"
 
 
@@ -51,5 +52,22 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
+    }
+}
+
+TEST_CASE("execute simple PRINT commands", "[execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a blank PRINT command")
+    {
+        std::istringstream iss("PRINT");
+        program.compileSource(iss);
+        std::ostringstream oss;
+
+        auto executer = program.createExecutor(oss);
+        executer.executeOneCode();
+
+        REQUIRE(oss.str() == "\n");
     }
 }

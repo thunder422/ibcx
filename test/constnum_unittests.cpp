@@ -419,6 +419,7 @@ TEST_CASE("recreate a constant", "[recreate]")
 TEST_CASE("execute a constant code", "[execute]")
 {
     ProgramUnit program;
+    std::ostringstream not_used_oss;
 
     Compiler compiler {"", program};
 
@@ -428,7 +429,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor();
+        auto executer = program.createExecutor(not_used_oss);
         executer.executeOneCode();
         REQUIRE(executer.top().int_value == 12345);
     }
@@ -438,7 +439,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor();
+        auto executer = program.createExecutor(not_used_oss);
         executer.executeOneCode();
         REQUIRE(executer.top().int_value == 23456);
     }
@@ -449,7 +450,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor();
+        auto executer = program.createExecutor(not_used_oss);
         executer.executeOneCode();
         REQUIRE(executer.top().int_value == 12345);
         executer.executeOneCode();
@@ -462,7 +463,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor();
+        auto executer = program.createExecutor(not_used_oss);
         executer.executeOneCode();
         executer.executeOneCode();
         REQUIRE(executer.top().int_value == 23456);
@@ -475,7 +476,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor();
+        auto executer = program.createExecutor(not_used_oss);
         executer.executeOneCode();
         REQUIRE(executer.top().dbl_value == 12.345);
     }
@@ -485,7 +486,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor();
+        auto executer = program.createExecutor(not_used_oss);
         executer.executeOneCode();
         REQUIRE(executer.top().dbl_value == -2.3456);
     }
@@ -498,7 +499,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor();
+        auto executer = program.createExecutor(not_used_oss);
         executer.executeOneCode();
         REQUIRE(executer.top().int_value == 12345);
         executer.executeOneCode();
