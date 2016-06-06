@@ -52,7 +52,7 @@ ProgramCode &&CommandCompiler::Impl::compile()
     if (compiler.peekNextChar() != EOF) {
         auto keyword = compiler.getKeyword();
         if (keyword.empty()) {
-            throw CompileError{"expected command keyword", 0};
+            throw CompileError {"expected command keyword", compiler.getKeywordColumn()};
         }
         auto code = CommandCode::find(keyword);
         code->compile(compiler);

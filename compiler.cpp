@@ -22,11 +22,17 @@ ci_string Compiler::getKeyword()
 {
     ci_string keyword;
     iss >> std::ws;
+    keyword_column = getColumn();
     while (isalpha(peekNextChar())) {
         keyword += getNextChar();
     }
     iss >> std::ws;
     return keyword;
+}
+
+int Compiler::getKeywordColumn() const noexcept
+{
+    return keyword_column;
 }
 
 char Compiler::peekNextChar()

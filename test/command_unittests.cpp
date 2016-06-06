@@ -54,7 +54,21 @@ TEST_CASE("compile simple commands", "[compile]")
     {
         CommandCompiler compile_command {"   123", program};
 
-        REQUIRE_THROWS_AS(compile_command(), CompileError);
+        SECTION("check that error is thrown")
+        {
+            REQUIRE_THROWS_AS(compile_command(), CompileError);
+        }
+        SECTION("check the message and column of the error thrown")
+        {
+            try {
+                compile_command();
+            }
+            catch (const CompileError &error) {
+                std::string expected = "expected command keyword";
+                REQUIRE(error.what() == expected);
+                REQUIRE(error.column == 3);
+            }
+        }
     }
     SECTION("compile a PRINT comamnd with an expression (single constant for now)")
     {

@@ -26,6 +26,7 @@ public:
     Compiler(const std::string &line, ProgramUnit &program);
 
     ci_string getKeyword();
+    int getKeywordColumn() const noexcept;
     char peekNextChar();
     char getNextChar();
     int getColumn();
@@ -38,6 +39,7 @@ private:
     std::istringstream iss;
     ProgramUnit &program;
     ProgramCode code_line;
+    int keyword_column;
 };
 
 
