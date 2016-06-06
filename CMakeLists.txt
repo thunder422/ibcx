@@ -88,32 +88,21 @@ add_subdirectory(test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(constnum_unittests
-    test/constnum_unittests.cpp
-    test/support.h
-    ${CATCH_SOURCES}
-)
-target_link_libraries(constnum_unittests ibc ${GCOV_LIB})
-add_test(ConstantNumber_UnitTests constnum_unittests)
+function(add_unittest name)
+    if (${ARGC} EQUAL 2)
+        set(extra ${ARGV1})
+    endif ()
+    add_executable(${name}_unittests
+        test/${name}_unittests.cpp
+        ${extra}
+        ${CATCH_SOURCES}
+    )
+    target_link_libraries(${name}_unittests ibc ${GCOV_LIB})
+    add_test(${name}_unittests ${name}_unittests)
+endfunction(add_unittest)
 
-add_executable(expression_unittests
-    test/expression_unittests.cpp
-    test/support.h
-    ${CATCH_SOURCES}
-)
-target_link_libraries(expression_unittests ibc ${GCOV_LIB})
-add_test(Expression_UnitTests expression_unittests)
-
-add_executable(command_unittests
-    test/command_unittests.cpp
-    ${CATCH_SOURCES}
-)
-target_link_libraries(command_unittests ibc ${GCOV_LIB})
-add_test(Command_UnitTests command_unittests)
-
-add_executable(cistring_unittests
-    test/cistring_unittests.cpp
-    ${CATCH_SOURCES}
-)
-target_link_libraries(cistring_unittests ibc ${GCOV_LIB})
-add_test(CI_String_UnitTests cistring_unittests)
+add_unittest(constnum test/support.h)
+add_unittest(expression test/support.h)
+add_unittest(command)
+add_unittest(cistring)
+add_unittest(print)
