@@ -7,6 +7,7 @@
 
 #include <sstream>
 
+#include "commandcode.h"
 #include "commandcompiler.h"
 #include "compiler.h"
 #include "executer.h"
@@ -46,14 +47,36 @@ ProgramReader ProgramUnit::createProgramReader(unsigned line_index) const
     return ProgramReader {code.begin(), info.offset, info.size};
 }
 
+class ProgramEndGuard {
+public:
+    ProgramEndGuard(ProgramCode &code);
+    ~ProgramEndGuard();
+
+private:
+    ProgramCode &code;
+};
+
 void ProgramUnit::run(std::ostream &os)
 {
+    ProgramEndGuard end_guard {code};
     auto executer = createExecutor(os);
     try {
         executer.run();
     }
     catch (const EndOfProgram &) {
     }
+}
+
+ProgramEndGuard::ProgramEndGuard(ProgramCode &code) :
+    code {code}
+{
+    extern CommandCode end_code;
+    code.emplace_back(end_code);
+}
+
+ProgramEndGuard::~ProgramEndGuard()
+{
+    code.pop_back();
 }
 
 Executer ProgramUnit::createExecutor(std::ostream &os) const

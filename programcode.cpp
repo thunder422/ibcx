@@ -15,3 +15,8 @@ void ProgramCode::append(ProgramCode &more)
 {
     code.insert(code.end(), more.code.begin(), more.code.end());
 }
+
+void ProgramCode::pop_back()
+{
+    code.pop_back();
+}

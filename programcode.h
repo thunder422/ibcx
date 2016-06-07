@@ -27,6 +27,7 @@ public:
     ProgramReference operator[](std::size_t index);
     template <typename... Args> void emplace_back(Args &&... args);
     void append(ProgramCode &more);
+    void pop_back();
     ProgramConstIterator begin() const;
     const WordType *getBeginning() const;
 

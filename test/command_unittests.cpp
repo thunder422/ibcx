@@ -168,6 +168,25 @@ TEST_CASE("compile mulitple line program", "[program]")
             );
         }
     }
+    SECTION("program with no END")
+    {
+        std::istringstream iss(
+            "print 1.704e+23\n"
+            "print -87654321\n"
+        );
+
+        program.compileSource(iss);
+
+        SECTION("execute program without END")
+        {
+            std::ostringstream oss;
+            program.run(oss);
+            REQUIRE(oss.str() ==
+                "1.704e+23\n"
+                "-87654321\n"
+            );
+        }
+    }
 }
 
 TEST_CASE("correct error column on large double constant", "[large-constant]")
