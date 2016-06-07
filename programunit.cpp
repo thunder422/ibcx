@@ -35,6 +35,13 @@ void ProgramUnit::appendCodeLine(ProgramCode &code_line)
     code.append(code_line);
 }
 
+void ProgramUnit::recreate(std::ostream &os)
+{
+    for (unsigned line_index = 0; line_index < line_info.size(); ++line_index) {
+        os << recreateLine(line_index) << std::endl;
+    }
+}
+
 std::string ProgramUnit::recreateLine(unsigned line_index)
 {
     Recreator recreate(*this, createProgramReader(line_index));

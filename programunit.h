@@ -23,6 +23,7 @@ public:
 
     void compileSource(std::istream &is);
     void appendCodeLine(ProgramCode &code_line);
+    void recreate(std::ostream &os);
     std::string recreateLine(unsigned line_index);
     void run(std::ostream &os);
     Executer createExecutor(std::ostream &os) const;
