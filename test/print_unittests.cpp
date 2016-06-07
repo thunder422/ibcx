@@ -83,4 +83,17 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
 
         REQUIRE(oss.str() == "-1234\n");
     }
+    SECTION("execute a PRINT double constant command")
+    {
+        std::istringstream iss("PRINT 23.4e-8");
+        program.compileSource(iss);
+        std::ostringstream oss;
+
+        auto executer = program.createExecutor(oss);
+        executer.executeOneCode();
+        executer.executeOneCode();
+        executer.executeOneCode();
+
+        REQUIRE(oss.str() == "2.34e-07\n");
+    }
 }

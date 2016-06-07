@@ -20,9 +20,10 @@ void print_recreate(Recreator &recreator);
 void print_item_recreate(Recreator &recreator);
 void print_execute(Executer &executer);
 void print_int_execute(Executer &executer);
+void print_dbl_execute(Executer &executer);
 
 CommandCode print_code {"PRINT", print_compile, print_recreate, print_execute};
-Code print_dbl_code {print_item_recreate, nullptr};
+Code print_dbl_code {print_item_recreate, print_dbl_execute};
 Code print_int_code {print_item_recreate, print_int_execute};
 
 
@@ -62,5 +63,11 @@ void print_execute(Executer &executer)
 void print_int_execute(Executer &executer)
 {
     executer.output() << executer.top().int_value;
+    executer.pop();
+}
+
+void print_dbl_execute(Executer &executer)
+{
+    executer.output() << executer.top().dbl_value;
     executer.pop();
 }
