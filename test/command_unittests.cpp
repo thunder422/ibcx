@@ -149,10 +149,24 @@ TEST_CASE("compile mulitple line program", "[program]")
 
         program.compileSource(iss);
 
-        REQUIRE(program.recreateLine(0) == "PRINT -2.45");
-        REQUIRE(program.recreateLine(1) == "PRINT");
-        REQUIRE(program.recreateLine(2) == "PRINT 123");
-        REQUIRE(program.recreateLine(3) == "END");
+        SECTION("recreate program")
+        {
+            REQUIRE(program.recreateLine(0) == "PRINT -2.45");
+            REQUIRE(program.recreateLine(1) == "PRINT");
+            REQUIRE(program.recreateLine(2) == "PRINT 123");
+            REQUIRE(program.recreateLine(3) == "END");
+        }
+        SECTION("execute program")
+        {
+            std::ostringstream oss;
+
+            program.run(oss);
+            REQUIRE(oss.str() ==
+                "-2.45\n"
+                "\n"
+                "123\n"
+            );
+        }
     }
 }
 

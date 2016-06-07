@@ -17,9 +17,22 @@ Executer::Executer(const WordType *code, const double *const_dbl_values,
     execute_functions {Code::getExecuteFunctions()},
     const_dbl_values {const_dbl_values},
     const_int_values {const_int_values},
-    program_counter {const_cast<WordType *>(code)},
     os {os}
 {
+    reset();
+}
+
+void Executer::run()
+{
+    reset();
+    for (;;) {
+        executeOneCode();
+    }
+}
+
+void Executer::reset()
+{
+    program_counter = const_cast<WordType *>(code);
 }
 
 void Executer::executeOneCode()

@@ -28,6 +28,7 @@ public:
 
     Executer(const WordType *code, const double *const_dbl_values, const int *const_int_values,
         std::ostream &os);
+    void run();
     void executeOneCode();
 
     WordType getOperand();
@@ -38,6 +39,8 @@ public:
     std::ostream &output();
 
 private:
+    void reset();
+
     const WordType *code;
     const ExecuteFunctionPointer *execute_functions;
     const double *const_dbl_values;

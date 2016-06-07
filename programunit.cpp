@@ -46,6 +46,16 @@ ProgramReader ProgramUnit::createProgramReader(unsigned line_index) const
     return ProgramReader {code.begin(), info.offset, info.size};
 }
 
+void ProgramUnit::run(std::ostream &os)
+{
+    auto executer = createExecutor(os);
+    try {
+        executer.run();
+    }
+    catch (const EndOfProgram &) {
+    }
+}
+
 Executer ProgramUnit::createExecutor(std::ostream &os) const
 {
     return Executer {code.getBeginning(), const_num_dictionary.getDblValues(),
