@@ -9,6 +9,7 @@
 
 #include "commandcode.h"
 #include "commandcompiler.h"
+#include "compileerror.h"
 #include "compiler.h"
 #include "executer.h"
 #include "programreader.h"
@@ -20,13 +21,20 @@ ProgramUnit::ProgramUnit()
 {
 }
 
-void ProgramUnit::compileSource(std::istream &is)
+bool ProgramUnit::compileSource(std::istream &is)
 {
+    int error_count = 0;
     std::string line;
     while (std::getline(is, line)) {
-        auto code_line = CommandCompiler{line, *this}();
-        appendCodeLine(code_line);
+        try {
+            auto code_line = CommandCompiler{line, *this}();
+            appendCodeLine(code_line);
+        }
+        catch (const CompileError &error) {
+            ++error_count;
+        }
     }
+    return error_count == 0;
 }
 
 void ProgramUnit::appendCodeLine(ProgramCode &code_line)

@@ -175,7 +175,7 @@ TEST_CASE("compile mulitple line program", "[program]")
             "print -87654321\n"
         );
 
-        program.compileSource(iss);
+        REQUIRE(program.compileSource(iss));
 
         std::ostringstream oss;
         program.run(oss);
@@ -192,6 +192,15 @@ TEST_CASE("compile mulitple line program", "[program]")
             "PRINT 1.704e23\n"
             "PRINT -87654321\n"
         );
+    }
+    SECTION("program with errors")
+    {
+        std::istringstream iss(
+            "print 1.704e%23\n"
+            "print 2.45e3000\n"
+        );
+
+        REQUIRE_FALSE(program.compileSource(iss));
     }
 }
 

@@ -21,7 +21,7 @@ class ProgramUnit {
 public:
     ProgramUnit();
 
-    void compileSource(std::istream &is);
+    bool compileSource(std::istream &is);
     void appendCodeLine(ProgramCode &code_line);
     void recreate(std::ostream &os);
     std::string recreateLine(unsigned line_index);
