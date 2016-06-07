@@ -70,4 +70,17 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
 
         REQUIRE(oss.str() == "\n");
     }
+    SECTION("execute a PRINT integer constant command")
+    {
+        std::istringstream iss("PRINT -1234");
+        program.compileSource(iss);
+        std::ostringstream oss;
+
+        auto executer = program.createExecutor(oss);
+        executer.executeOneCode();
+        executer.executeOneCode();
+        executer.executeOneCode();
+
+        REQUIRE(oss.str() == "-1234\n");
+    }
 }
