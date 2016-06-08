@@ -15,6 +15,7 @@
 #include "programreader.h"
 #include "programunit.h"
 #include "recreator.h"
+#include "runerror.h"
 
 
 ProgramUnit::ProgramUnit()
@@ -104,6 +105,9 @@ void ProgramUnit::run(std::ostream &os)
         executer.run();
     }
     catch (const EndOfProgram &) {
+        if (!executer.stackEmpty()) {
+            throw RunError {""};
+        }
     }
 }
 

@@ -13,6 +13,7 @@
 #include "executer.h"
 #include "programcode.h"
 #include "programunit.h"
+#include "runerror.h"
 
 
 TEST_CASE("compile simple commands", "[compile]")
@@ -213,6 +214,19 @@ TEST_CASE("compile mulitple line program", "[program]")
             "    print 2.45e3000\n"
             "          ^^^^^^^^^\n"
         );
+    }
+    SECTION("program with stack not empty at end bug (simulated for this test)")
+    {
+        Compiler compiler {"", program};
+        compiler.addConstNumInstruction(true, "-1.23e45");
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        std::ostringstream oss;
+        SECTION("check that error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), RunError);
+        }
     }
 }
 

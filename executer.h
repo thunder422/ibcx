@@ -37,6 +37,7 @@ public:
     StackItem &top();
     void pop();
     std::ostream &output();
+    bool stackEmpty() const;
 
 private:
     void reset();

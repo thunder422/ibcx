@@ -45,3 +45,8 @@ std::ostream &Executer::output()
 {
     return os;
 }
+
+bool Executer::stackEmpty() const
+{
+    return stack.empty();
+}
