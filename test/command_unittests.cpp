@@ -146,8 +146,9 @@ TEST_CASE("compile mulitple line program", "[program]")
             "print 123\n"
             "END\n"
         );
+        std::ostringstream unused_oss;
 
-        program.compileSource(iss);
+        program.compileSource(iss, unused_oss);
 
         SECTION("recreate program")
         {
@@ -174,8 +175,9 @@ TEST_CASE("compile mulitple line program", "[program]")
             "print 1.704e23\n"
             "print -87654321\n"
         );
+        std::ostringstream unused_oss;
 
-        REQUIRE(program.compileSource(iss));
+        REQUIRE(program.compileSource(iss, unused_oss));
 
         std::ostringstream oss;
         program.run(oss);
@@ -199,8 +201,18 @@ TEST_CASE("compile mulitple line program", "[program]")
             "print 1.704e%23\n"
             "print 2.45e3000\n"
         );
+        std::ostringstream oss;
 
-        REQUIRE_FALSE(program.compileSource(iss));
+        REQUIRE_FALSE(program.compileSource(iss, oss));
+
+        REQUIRE(oss.str() ==
+            "error on line 1:12: expected sign or digit for exponent\n"
+            "    print 1.704e%23\n"
+            "                ^\n"
+            "error on line 2:6: floating point constant is out of range\n"
+            "    print 2.45e3000\n"
+            "          ^^^^^^^^^\n"
+        );
     }
 }
 
@@ -232,9 +244,9 @@ TEST_CASE("execute an END command", "[END]")
 {
     std::istringstream iss("END");
     ProgramUnit program;
-    program.compileSource(iss);
-    std::ostringstream not_used_oss;
+    std::ostringstream unused_oss;
+    program.compileSource(iss, unused_oss);
 
-    auto executer = program.createExecutor(not_used_oss);
+    auto executer = program.createExecutor(unused_oss);
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
 }

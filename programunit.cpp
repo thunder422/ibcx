@@ -21,7 +21,7 @@ ProgramUnit::ProgramUnit()
 {
 }
 
-bool ProgramUnit::compileSource(std::istream &is)
+bool ProgramUnit::compileSource(std::istream &is, std::ostream &os)
 {
     int error_count = 0;
     std::string line;
@@ -32,9 +32,34 @@ bool ProgramUnit::compileSource(std::istream &is)
         }
         catch (const CompileError &error) {
             ++error_count;
+            handleError(os, line, error);
         }
     }
     return error_count == 0;
+}
+
+void ProgramUnit::handleError(std::ostream &os, const std::string &line, const CompileError &error)
+{
+    appendEmptyCodeLine();
+    auto line_number = line_info.size();
+    outputError(os, line, line_number, error);
+}
+
+void ProgramUnit::appendEmptyCodeLine()
+{
+    ProgramCode empty_line;
+    appendCodeLine(empty_line);
+}
+
+void ProgramUnit::outputError(std::ostream &os, const std::string &line, size_t line_number,
+    const CompileError &error)
+{
+    os << "error on line " << line_number << ':' << error.column << ": " << error.what()
+        << std::endl;
+    os << "    " << line << std::endl;
+    std::string spaces(4 + error.column, ' ');
+    std::string indicator(error.length, '^');
+    os << spaces << indicator << std::endl;
 }
 
 void ProgramUnit::appendCodeLine(ProgramCode &code_line)

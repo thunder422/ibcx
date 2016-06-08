@@ -14,6 +14,7 @@
 #include "programcode.h"
 
 
+struct CompileError;
 class Executer;
 class ProgramReader;
 
@@ -21,7 +22,7 @@ class ProgramUnit {
 public:
     ProgramUnit();
 
-    bool compileSource(std::istream &is);
+    bool compileSource(std::istream &is, std::ostream &os);
     void appendCodeLine(ProgramCode &code_line);
     void recreate(std::ostream &os);
     std::string recreateLine(unsigned line_index);
@@ -31,6 +32,10 @@ public:
     ConstNumDictionary &constNumDictionary();
 
 private:
+    void handleError(std::ostream &os, const std::string &line, const CompileError &error);
+    void appendEmptyCodeLine();
+    void outputError(std::ostream &os, const std::string &line, size_t line_number,
+        const CompileError &error);
     ProgramReader createProgramReader(unsigned line_index) const;
 
     struct LineInfo {
