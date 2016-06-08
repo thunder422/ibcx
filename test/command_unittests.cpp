@@ -227,6 +227,16 @@ TEST_CASE("compile mulitple line program", "[program]")
         {
             REQUIRE_THROWS_AS(program.run(oss), RunError);
         }
+        SECTION("check message of the error thrown")
+        {
+            try {
+                program.run(oss);
+            }
+            catch (const RunError &error) {
+                std::string expected = "BUG: run stack not empty at end of program";
+                REQUIRE(error.what() == expected);
+            }
+        }
     }
 }
 

@@ -106,7 +106,7 @@ void ProgramUnit::run(std::ostream &os)
     }
     catch (const EndOfProgram &) {
         if (!executer.stackEmpty()) {
-            throw RunError {""};
+            throw RunError {"BUG: run stack not empty at end of program"};
         }
     }
 }
