@@ -233,7 +233,7 @@ TEST_CASE("compile mulitple line program", "[program]")
                 program.run(oss);
             }
             catch (const RunError &error) {
-                std::string expected = "BUG: run stack not empty at end of program";
+                std::string expected = "BUG: value stack not empty at end of program";
                 REQUIRE(error.what() == expected);
             }
         }
