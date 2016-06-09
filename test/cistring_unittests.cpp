@@ -42,7 +42,7 @@ TEST_CASE("test case insensitive string class", "[test]")
         REQUIRE_FALSE(string1 < string2);
         REQUIRE_FALSE(string1 > string2);
     }
-    SECTION("comparions with standard strings containing underscores")
+    SECTION("comparisons with standard strings containing underscores")
     {
         ci_string string1_high = "var";
         std::string string2_low = "V_V";

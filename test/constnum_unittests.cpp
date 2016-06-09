@@ -348,25 +348,6 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     }
 }
 
-
-bool test_error_input(const char *input, const std::string &expected_what, unsigned expected_column)
-{
-    ProgramUnit program;
-
-    CAPTURE(input);
-    Compiler compiler {input, program};
-    try {
-        ConstNumCompiler{compiler}();
-        return false;
-    }
-    catch (const CompileError &error) {
-        REQUIRE(error.what() == expected_what);
-        REQUIRE(error.column == expected_column);
-        REQUIRE(error.length == 1);
-        return true;
-    }
-}
-
 TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
 {
     ProgramUnit program;
@@ -375,7 +356,7 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
     {
         struct ErrorTest {
             const char *input;
-            const char *expected_what;
+            const std::string expected_what;
             unsigned expected_column;
         };
 
@@ -387,12 +368,33 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
             {"1e", "expected sign or digit for exponent", 2}
         };
 
-        for (auto &test : error_tests) {
-            CAPTURE(test.input);
-            REQUIRE(test_error_input(test.input, test.expected_what, test.expected_column));
+        SECTION("check that errors are thrown")
+        {
+            for (auto &test : error_tests) {
+                Compiler compiler {test.input, program};
+
+                CAPTURE(test.input);
+                REQUIRE_THROWS_AS(ConstNumCompiler{compiler}(), CompileError);
+            }
+        }
+        SECTION("check the message, column and length of the errors thrown")
+        {
+            for (auto &test : error_tests) {
+                Compiler compiler {test.input, program};
+
+                CAPTURE(test.input);
+                try {
+                    ConstNumCompiler{compiler}();
+                }
+                catch (const CompileError &error) {
+                    REQUIRE(error.what() == test.expected_what);
+                    REQUIRE(error.column == test.expected_column);
+                    REQUIRE(error.length == 1);
+                }
+            }
         }
     }
-    SECTION("miscellenous test")
+    SECTION("miscellaneous test")
     {
         Compiler compiler {"1..", program};
         auto data_type = ConstNumCompiler{compiler}();

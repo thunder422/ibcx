@@ -1,0 +1,10 @@
+#!/bin/bash
+lcov --directory . --zerocounters
+ctest $@
+lcov -c -d . -o ibc_coverage1.info
+dir=$(dirname `pwd`)
+lcov -e ibc_coverage1.info "$dir/*" -o ibc_coverage2.info
+lcov -r ibc_coverage2.info "$dir/test/catch.hpp" -o ibc_coverage.info
+rm -fr Coverage/*
+genhtml --demangle-cpp -o Coverage ibc_coverage.info
+rm -f ibc_coverage*.info

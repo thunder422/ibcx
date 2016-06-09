@@ -21,7 +21,7 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
 
     ProgramUnit program;
 
-    SECTION("compile a PRINT comamnd with an expression (single constant for now)")
+    SECTION("compile a PRINT command with an expression (single constant for now)")
     {
         auto code_line = CommandCompiler{"PRINT 234", program}();
 
@@ -32,7 +32,7 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
         REQUIRE(code_line[2].instructionCode()->getValue() == print_int_code.getValue());
         REQUIRE(code_line[3].instructionCode()->getValue() == print_code.getValue());
     }
-    SECTION("compile a PRINT comamnd with an expression (single constant for now)")
+    SECTION("compile a PRINT command with an expression (single constant for now)")
     {
         extern Code const_dbl_code;
         extern Code print_dbl_code;

@@ -135,7 +135,7 @@ TEST_CASE("recreate simple commands", "[recreate]")
     }
 }
 
-TEST_CASE("compile mulitple line program", "[program]")
+TEST_CASE("compile multiple line program", "[program]")
 {
     ProgramUnit program;
 
@@ -273,4 +273,16 @@ TEST_CASE("execute an END command", "[END]")
 
     auto executer = program.createExecutor(unused_oss);
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
+}
+
+TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")
+{
+    SECTION("cover dynamically allocated compile error class")
+    {
+        std::unique_ptr<CompileError> error {new CompileError {"cover dynamic destructor", 0, 0}};
+    }
+    SECTION("cover dynamically allocated run error class")
+    {
+        std::unique_ptr<RunError> error {new RunError {"cover dynamic destructor"}};
+    }
 }
