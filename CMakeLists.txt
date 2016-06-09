@@ -55,28 +55,30 @@ if (IBC_COVERAGE)
     endif ()
 endif ()
 
+include_directories(basic common compiler program)
+
 set(IBC_SOURCES
-    cistring.h
-    code.cpp
-    commandcode.cpp
-    commandcompiler.cpp
-    compileerror.h
-    compiler.cpp
-    constnum.cpp
-    constnumcompiler.cpp
-    dictionary.cpp
-    datatype.h
-    end.cpp
-    executer.cpp
-    expressioncompiler.cpp
-    print.cpp
-    programcode.cpp
-    programreader.cpp
-    programunit.cpp
-    programword.h
-    recreator.cpp
-    runerror.h
-    wordtype.h
+    basic/code.cpp
+    basic/commandcode.cpp
+    basic/constnum.cpp
+    basic/end.cpp
+    basic/print.cpp
+    common/cistring.h
+    common/compileerror.h
+    common/datatype.h
+    common/dictionary.cpp
+    common/executer.cpp
+    common/recreator.cpp
+    common/runerror.h
+    common/wordtype.h
+    compiler/commandcompiler.cpp
+    compiler/compiler.cpp
+    compiler/constnumcompiler.cpp
+    compiler/expressioncompiler.cpp
+    program/programcode.cpp
+    program/programreader.cpp
+    program/programunit.cpp
+    program/programword.h
 )
 
 add_library(ibc SHARED
