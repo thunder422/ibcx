@@ -25,6 +25,9 @@ int main(int argc, char *argv[])
 
     ProgramUnit program;
 
-    program.compileSource(ifs, std::cerr);
+    if (!program.compileSource(ifs, std::cerr)) {
+        std::cerr << argv[1] << ": contains errros, program not run" << std::endl;
+        return 1;
+    }
     program.run(std::cout);
 }

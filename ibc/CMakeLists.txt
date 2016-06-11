@@ -18,10 +18,12 @@ function(add_ibc_test name args expect)
             -D "TEST_ARGS=${args}"
             -D "TEST_EXPECT=${expect}"
             -D "SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/test"
+            -D "BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/test/runtest.cmake"
     )
 endfunction(add_ibc_test)
 
 add_ibc_test(usage "" 1)
-add_ibc_test(simple ${CMAKE_CURRENT_SOURCE_DIR}/test/simple.bas 0)
+add_ibc_test(simple simple.bas 0)
 add_ibc_test(nofile nofile.bas 1)
+add_ibc_test(errors errors.bas 1)

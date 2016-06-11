@@ -1,0 +1,7 @@
+error on line 1:12: expected sign or digit for exponent
+    print 1.704e%23
+                ^
+error on line 2:6: floating point constant is out of range
+    print 2.45e3000
+          ^^^^^^^^^
+errors.bas: contains errros, program not run

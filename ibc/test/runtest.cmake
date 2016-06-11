@@ -8,9 +8,10 @@ set(out_file ${TEST_NAME}.out)
 set(exp_file ${TEST_NAME}.exp)
 
 execute_process(COMMAND ${TEST_PROGRAM} ${TEST_ARGS}
+    WORKING_DIRECTORY ${SOURCE_DIR}
     RESULT_VARIABLE result
-    OUTPUT_FILE ${out_file}
-    ERROR_FILE ${out_file}
+    OUTPUT_FILE ${BINARY_DIR}/${out_file}
+    ERROR_FILE ${BINARY_DIR}/${out_file}
 )
 
 if (NOT ${result} STREQUAL ${TEST_EXPECT})
@@ -18,7 +19,7 @@ if (NOT ${result} STREQUAL ${TEST_EXPECT})
 endif ()
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E compare_files
-    ${out_file} ${SOURCE_DIR}/${exp_file}
+    ${BINARY_DIR}/${out_file} ${SOURCE_DIR}/${exp_file}
     RESULT_VARIABLE mismatch
 )
 if (mismatch)
