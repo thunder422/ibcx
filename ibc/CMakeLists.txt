@@ -17,5 +17,15 @@ add_test(NAME ibc_usage_test
         -D "TEST_ARGS="
         -D "TEST_EXPECT=1"
         -D "SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/test"
-        -P "${CMAKE_CURRENT_SOURCE_DIR}/test/runTest.cmake"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/test/runtest.cmake"
+)
+
+add_test(NAME ibc_simple_test
+    COMMAND "${CMAKE_COMMAND}"
+        -D "TEST_NAME=simple"
+        -D "TEST_PROGRAM=$<TARGET_FILE:ibc-bin>"
+        -D "TEST_ARGS=${CMAKE_CURRENT_SOURCE_DIR}/test/simple.bas"
+        -D "TEST_EXPECT=0"
+        -D "SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/test"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/test/runtest.cmake"
 )

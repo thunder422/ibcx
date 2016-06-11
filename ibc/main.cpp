@@ -5,11 +5,22 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <fstream>
 #include <iostream>
 
+#include "programunit.h"
 
-int main()
+int main(int argc, char *argv[])
 {
-    std::cerr << "usage: ibcx [-r] <source-file>" << std::endl;
-    return 1;
+    if (argc == 1) {
+        std::cerr << "usage: ibcx [-r] <source-file>" << std::endl;
+        return 1;
+    }
+
+    std::ifstream ifs(argv[1]);
+
+    ProgramUnit program;
+
+    program.compileSource(ifs, std::cerr);
+    program.run(std::cout);
 }

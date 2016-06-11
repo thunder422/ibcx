@@ -23,4 +23,6 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E compare_files
 )
 if (mismatch)
     message(FATAL_ERROR "Test failed: '${out_file}' doesn't match '${exp_file}'")
+else ()
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove ${out_file})
 endif ()
