@@ -87,6 +87,7 @@ add_library(ibc SHARED
 
 enable_testing()
 
+add_subdirectory(ibc)
 add_subdirectory(test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
