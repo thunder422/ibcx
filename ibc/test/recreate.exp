@@ -1,0 +1,9 @@
+Program:
+PRINT -2.45
+PRINT
+PRINT 123
+
+Executing...
+-2.45
+
+123
