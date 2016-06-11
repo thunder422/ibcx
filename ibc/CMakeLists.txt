@@ -10,22 +10,18 @@ add_executable(ibc-bin
 target_link_libraries(ibc-bin ibc gcov)
 set_target_properties(ibc-bin PROPERTIES OUTPUT_NAME ibc)
 
-add_test(NAME ibc_usage_test
-    COMMAND "${CMAKE_COMMAND}"
-        -D "TEST_NAME=usage"
-        -D "TEST_PROGRAM=$<TARGET_FILE:ibc-bin>"
-        -D "TEST_ARGS="
-        -D "TEST_EXPECT=1"
-        -D "SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/test"
-        -P "${CMAKE_CURRENT_SOURCE_DIR}/test/runtest.cmake"
-)
+function(add_ibc_test name args expect)
+    add_test(NAME ibc_${name}_test
+        COMMAND "${CMAKE_COMMAND}"
+            -D "TEST_NAME=${name}"
+            -D "TEST_PROGRAM=$<TARGET_FILE:ibc-bin>"
+            -D "TEST_ARGS=${args}"
+            -D "TEST_EXPECT=${expect}"
+            -D "SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/test"
+            -P "${CMAKE_CURRENT_SOURCE_DIR}/test/runtest.cmake"
+    )
+endfunction(add_ibc_test)
 
-add_test(NAME ibc_simple_test
-    COMMAND "${CMAKE_COMMAND}"
-        -D "TEST_NAME=simple"
-        -D "TEST_PROGRAM=$<TARGET_FILE:ibc-bin>"
-        -D "TEST_ARGS=${CMAKE_CURRENT_SOURCE_DIR}/test/simple.bas"
-        -D "TEST_EXPECT=0"
-        -D "SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/test"
-        -P "${CMAKE_CURRENT_SOURCE_DIR}/test/runtest.cmake"
-)
+add_ibc_test(usage "" 1)
+add_ibc_test(simple ${CMAKE_CURRENT_SOURCE_DIR}/test/simple.bas 0)
+add_ibc_test(nofile nofile.bas 1)

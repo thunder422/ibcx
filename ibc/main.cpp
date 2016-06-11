@@ -18,6 +18,10 @@ int main(int argc, char *argv[])
     }
 
     std::ifstream ifs(argv[1]);
+    if (!ifs.is_open()) {
+        std::cerr << "ibc: " << argv[1] << ": could not open file" << std::endl;
+        return 1;
+    }
 
     ProgramUnit program;
 
