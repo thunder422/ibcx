@@ -89,14 +89,14 @@ add_library(ibc SHARED
 )
 
 add_executable(ibc-bin
-    ibc/main.cpp
+    ibc-bin/main.cpp
 )
 target_link_libraries(ibc-bin ibc gcov)
 set_target_properties(ibc-bin PROPERTIES OUTPUT_NAME ibc)
 
 enable_testing()
 
-add_subdirectory(ibc)
+add_subdirectory(ibc-bin)
 add_subdirectory(test)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
