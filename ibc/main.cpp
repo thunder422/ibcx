@@ -7,30 +7,47 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include "programunit.h"
 
 
+void usage();
+
 int main(int argc, char *argv[])
 {
-    if (argc == 1) {
-        std::cerr << "usage: ibcx [-r] <source-file>" << std::endl;
+    std::vector<std::string> args {argv, argv + argc};
+
+    if (args.size() == 1) {
+        usage();
         return 1;
     }
 
-    const char *file_name = argc == 2 ? argv[1] : argv[2];
-    bool also_recreate = argc == 3;
+
+    std::string file_name = args.size() == 2 ? args[1] : args[2];
+    bool also_recreate;
+    if (args.size() == 3) {
+        if (args[1] != "-r") {
+            std::cerr << "ibc: invalid option -- '" << args[1] << "'" << std::endl;
+            usage();
+            return 1;
+        }
+        also_recreate = true;
+    } else {
+        also_recreate = false;
+    }
 
     std::ifstream ifs(file_name);
     if (!ifs.is_open()) {
-        std::cerr << "ibc: " << argv[1] << ": could not open file" << std::endl;
+        std::cerr << "ibc: " << args[1] << ": could not open file" << std::endl;
         return 1;
     }
 
     ProgramUnit program;
 
     if (!program.compileSource(ifs, std::cerr)) {
-        std::cerr << argv[1] << ": contains errros, program not run" << std::endl;
+        std::cerr << args[1] << ": contains errros, program not run" << std::endl;
         return 1;
     }
     if (also_recreate) {
@@ -39,4 +56,9 @@ int main(int argc, char *argv[])
         std::cout << std::endl << "Executing..." << std::endl;
     }
     program.run(std::cout);
+}
+
+void usage()
+{
+    std::cerr << "usage: ibc [-r] <source-file>" << std::endl;
 }
