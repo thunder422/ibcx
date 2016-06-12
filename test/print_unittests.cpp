@@ -86,7 +86,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
     }
     SECTION("execute a PRINT double constant command")
     {
-        std::istringstream iss("PRINT 23.4e-8");
+        std::istringstream iss("PRINT 23.4e-108");
         program.compileSource(iss, unused_oss);
         std::ostringstream oss;
 
@@ -95,6 +95,6 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
         executer.executeOneCode();
         executer.executeOneCode();
 
-        REQUIRE(oss.str() == "2.34e-07\n");
+        REQUIRE(oss.str() == "2.34e-107\n");
     }
 }

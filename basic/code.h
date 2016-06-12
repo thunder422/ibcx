@@ -31,9 +31,9 @@ public:
 
 private:
     static WordType addCode(Code *code);
-    static std::vector<Code *> codes;
-    static std::vector<RecreateFunctionPointer> recreate_functions;
-    static std::vector<ExecuteFunctionPointer> execute_functions;
+    static std::vector<Code *> &codes();
+    static std::vector<RecreateFunctionPointer> &recreateFunctions();
+    static std::vector<ExecuteFunctionPointer> &executeFunctions();
 
     WordType value;
 };

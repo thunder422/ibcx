@@ -173,7 +173,7 @@ TEST_CASE("compile multiple line program", "[program]")
     SECTION("program with no END")
     {
         std::istringstream iss(
-            "print 1.704e23\n"
+            "print 1.704e123\n"
             "print -87654321\n"
         );
         std::ostringstream unused_oss;
@@ -184,7 +184,7 @@ TEST_CASE("compile multiple line program", "[program]")
         program.run(oss);
 
         REQUIRE(oss.str() ==
-            "1.704e+23\n"
+            "1.704e+123\n"
             "-87654321\n"
         );
 
@@ -192,7 +192,7 @@ TEST_CASE("compile multiple line program", "[program]")
         program.recreate(oss);
 
         REQUIRE(oss.str() ==
-            "PRINT 1.704e23\n"
+            "PRINT 1.704e123\n"
             "PRINT -87654321\n"
         );
     }

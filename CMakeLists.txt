@@ -11,6 +11,9 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -pedantic-errors -std=c++11"
 )
+if (WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__NO_INLINE__")
+endif ()
 
 message(STATUS "Checking for working C++11 compiler: ${CMAKE_CXX_COMPILER}")
 try_compile(CPP11_GOOD
@@ -84,6 +87,12 @@ set(IBC_SOURCES
 add_library(ibc SHARED
     ${IBC_SOURCES}
 )
+
+add_executable(ibc-bin
+    ibc/main.cpp
+)
+target_link_libraries(ibc-bin ibc gcov)
+set_target_properties(ibc-bin PROPERTIES OUTPUT_NAME ibc)
 
 enable_testing()
 

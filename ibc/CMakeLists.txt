@@ -4,12 +4,6 @@
 # Distributed under GNU General Public License Version 3
 # (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
 
-add_executable(ibc-bin
-    main.cpp
-)
-target_link_libraries(ibc-bin ibc gcov)
-set_target_properties(ibc-bin PROPERTIES OUTPUT_NAME ibc)
-
 function(add_ibc_test name args expect)
     add_test(NAME ibc_${name}_test
         COMMAND "${CMAKE_COMMAND}"

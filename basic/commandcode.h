@@ -31,9 +31,9 @@ public:
     const char *getKeyword() const;
 
 private:
-    static std::map<ci_string, CommandCode *> command_codes;
-    static std::map<WordType, const char *> command_names;
-    static std::map<WordType, CompilerFunctionPointer> compile_functions;
+    static std::map<ci_string, CommandCode *> &commandCodes();
+    static std::map<WordType, const char *> &commandNames();
+    static std::map<WordType, CompilerFunctionPointer> &compileFunctions();
 };
 
 
