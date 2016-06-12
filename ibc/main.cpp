@@ -23,7 +23,11 @@ int main(int argc, char *argv[])
         usage();
         return 1;
     }
-
+    if (args.size() > 3) {
+        std::cerr << "ibc: extra operand '" << args[3] << "'" << std::endl;
+        usage();
+        return 1;
+    }
 
     std::string file_name = args.size() == 2 ? args[1] : args[2];
     bool also_recreate;

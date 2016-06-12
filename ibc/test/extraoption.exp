@@ -1,0 +1,2 @@
+ibc: extra operand 'extra'
+usage: ibc [-r] <source-file>
