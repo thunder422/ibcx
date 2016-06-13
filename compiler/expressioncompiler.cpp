@@ -55,9 +55,13 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
     return compileNumOperand();
 }
 
+Code neg_dbl_code {nullptr, nullptr};
+
 DataType ExpressionCompiler::Impl::compileNegation()
 {
-    return compileNumOperand();
+    auto data_type = compileNumOperand();
+    compiler.addInstruction(neg_dbl_code);
+    return data_type;
 }
 
 DataType ExpressionCompiler::Impl::compileNumOperand()

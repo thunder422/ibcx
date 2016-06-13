@@ -9,12 +9,15 @@
 #define SUPPORT_H
 
 
-#define REQUIRE_OPERAND(expected_data_type, number) \
-    auto code_line = compiler.getCodeLine(); \
+#define REQUIRE_CODESIZE_OPERAND(expected_code_size, expected_data_type, number) \
     REQUIRE(data_type == expected_data_type); \
-    REQUIRE(code_line.size() == 2); \
+    auto code_line = compiler.getCodeLine(); \
+    REQUIRE(code_line.size() == expected_code_size); \
     auto operand = code_line[1].operand(); \
     REQUIRE(program.constNumDictionary().get(operand) == number);
+
+#define REQUIRE_OPERAND(expected_data_type, number) \
+    REQUIRE_CODESIZE_OPERAND(2, expected_data_type, number)
 
 
 #endif  // SUPPORT_H

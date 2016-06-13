@@ -53,14 +53,32 @@ TEST_CASE("negate numeric operator", "[negate]")
 
     SECTION("compile a negate operator (in front of a negative integer constant)")
     {
+        extern Code const_int_code;
+
         Compiler compiler {"--2", program};
         auto data_type = compiler.compileExpression(DataType::Null);
         REQUIRE(data_type == DataType::Integer);
+        REQUIRE_CODESIZE_OPERAND(3, DataType::Integer, "-2");
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
     }
     SECTION("compile a negate operator (in front of a negative double constant)")
     {
+        extern Code const_dbl_code;
+
         Compiler compiler {"--2.0", program};
         auto data_type = compiler.compileExpression(DataType::Null);
         REQUIRE(data_type == DataType::Double);
+        REQUIRE_CODESIZE_OPERAND(3, DataType::Double, "-2.0");
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
+    }
+    SECTION("check that an integer negate code is added to the program (after the constant)")
+    {
+        extern Code neg_dbl_code;
+
+        Compiler compiler {"--2.0", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(code_line[2].instructionCode()->getValue() == neg_dbl_code.getValue());
     }
 }
