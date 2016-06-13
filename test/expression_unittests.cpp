@@ -54,11 +54,18 @@ TEST_CASE("negate numeric operator", "[negate]")
 {
     ProgramUnit program;
 
-    SECTION("compile a negate operator (in front of a negative constant)")
+    SECTION("compile a negate operator (in front of a negative integer constant)")
     {
         Compiler compiler {"--2", program};
         ExpressionCompiler compile_expression {compiler};
         auto data_type = compile_expression(DataType::Null);
         REQUIRE(data_type == DataType::Integer);
+    }
+    SECTION("compile a negate operator (in front of a negative double constant)")
+    {
+        Compiler compiler {"--2.0", program};
+        ExpressionCompiler compile_expression {compiler};
+        auto data_type = compile_expression(DataType::Null);
+        REQUIRE(data_type == DataType::Double);
     }
 }

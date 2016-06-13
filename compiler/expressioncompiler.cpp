@@ -57,7 +57,7 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNegation()
 {
-    return DataType::Integer;
+    return compileNumOperand();
 }
 
 DataType ExpressionCompiler::Impl::compileNumOperand()
