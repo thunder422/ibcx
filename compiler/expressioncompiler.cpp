@@ -60,6 +60,9 @@ DataType ExpressionCompiler::Impl::compileNumOperand()
     auto column = compiler.getColumn();
     auto data_type = compile_constant();
     if (data_type == DataType::Null) {
+        if (compile_constant.negateOperator()) {
+            return DataType::Integer;
+        }
         throw CompileError {"expected numeric expression", column};
     }
     return data_type;
