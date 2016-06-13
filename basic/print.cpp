@@ -10,7 +10,6 @@
 #include "commandcode.h"
 #include "compiler.h"
 #include "executer.h"
-#include "expressioncompiler.h"
 #include "programcode.h"
 #include "recreator.h"
 
@@ -30,7 +29,7 @@ Code print_int_code {print_item_recreate, print_int_execute};
 void print_compile(Compiler &compiler)
 {
     if (compiler.peekNextChar() != EOF) {
-        auto data_type = ExpressionCompiler{compiler}(DataType::Null);
+        auto data_type = compiler.compileExpression(DataType::Null);
         if (data_type == DataType::Double) {
             compiler.addInstruction(print_dbl_code);
         } else {

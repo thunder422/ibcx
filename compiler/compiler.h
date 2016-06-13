@@ -24,6 +24,7 @@ class ProgramUnit;
 class Compiler {
 public:
     Compiler(const std::string &line, ProgramUnit &program);
+    DataType compileExpression(DataType expected_data_type);
 
     ci_string getKeyword();
     int getKeywordColumn() const noexcept;

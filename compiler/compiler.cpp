@@ -9,6 +9,7 @@
 #include <string>
 
 #include "compiler.h"
+#include "expressioncompiler.h"
 #include "programunit.h"
 
 
@@ -16,6 +17,11 @@ Compiler::Compiler(const std::string &line, ProgramUnit &program) :
     iss {line},
     program {program}
 {
+}
+
+DataType Compiler::compileExpression(DataType expected_data_type)
+{
+    return ExpressionCompiler{*this}(expected_data_type);
 }
 
 ci_string Compiler::getKeyword()

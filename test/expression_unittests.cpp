@@ -7,7 +7,6 @@
 
 #include "catch.hpp"
 #include "compiler.h"
-#include "expressioncompiler.h"
 #include "compileerror.h"
 #include "programcode.h"
 #include "programunit.h"
@@ -23,23 +22,21 @@ TEST_CASE("compile numeric expressions with constants", "[constant]")
         extern Code constIntCode;
 
         Compiler compiler {"1", program};
-        ExpressionCompiler compile_expression {compiler};
-        auto data_type = compile_expression(DataType::Null);
+        auto data_type = compiler.compileExpression(DataType::Null);
         REQUIRE_OPERAND(DataType::Integer, "1");
     }
     SECTION("verify an error is thrown when nothing is in the input stream")
     {
         Compiler compiler {"", program};
-        ExpressionCompiler compile_expression {compiler};
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_expression(DataType::Null), CompileError);
+            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_expression(DataType::Null);
+                compiler.compileExpression(DataType::Null);
             }
             catch (const CompileError &error) {
                 REQUIRE(error.what() == std::string("expected numeric expression"));
@@ -57,15 +54,13 @@ TEST_CASE("negate numeric operator", "[negate]")
     SECTION("compile a negate operator (in front of a negative integer constant)")
     {
         Compiler compiler {"--2", program};
-        ExpressionCompiler compile_expression {compiler};
-        auto data_type = compile_expression(DataType::Null);
+        auto data_type = compiler.compileExpression(DataType::Null);
         REQUIRE(data_type == DataType::Integer);
     }
     SECTION("compile a negate operator (in front of a negative double constant)")
     {
         Compiler compiler {"--2.0", program};
-        ExpressionCompiler compile_expression {compiler};
-        auto data_type = compile_expression(DataType::Null);
+        auto data_type = compiler.compileExpression(DataType::Null);
         REQUIRE(data_type == DataType::Double);
     }
 }
