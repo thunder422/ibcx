@@ -22,6 +22,7 @@ public:
     DataType compileExpression(DataType expected_data_type);
 
 private:
+    DataType compileNegation();
     DataType compileNumOperand();
 
     Compiler &compiler;
@@ -54,6 +55,11 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
     return compileNumOperand();
 }
 
+DataType ExpressionCompiler::Impl::compileNegation()
+{
+    return DataType::Integer;
+}
+
 DataType ExpressionCompiler::Impl::compileNumOperand()
 {
     ConstNumCompiler compile_constant {compiler};
@@ -61,7 +67,7 @@ DataType ExpressionCompiler::Impl::compileNumOperand()
     auto data_type = compile_constant();
     if (data_type == DataType::Null) {
         if (compile_constant.negateOperator()) {
-            return DataType::Integer;
+            return compileNegation();
         }
         throw CompileError {"expected numeric expression", column};
     }
