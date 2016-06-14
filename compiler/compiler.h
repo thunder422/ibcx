@@ -27,10 +27,9 @@ public:
     DataType compileExpression(DataType expected_data_type);
 
     ci_string getKeyword();
-    int getKeywordColumn() const noexcept;
     char peekNextChar();
     char getNextChar();
-    int getColumn();
+    int getColumn() noexcept;
 
     void addInstruction(Code &code);
     DataType addConstNumInstruction(bool floating_point, const std::string &number);
@@ -40,7 +39,7 @@ private:
     std::istringstream iss;
     ProgramUnit &program;
     ProgramCode code_line;
-    int keyword_column;
+    int column {0};
 };
 
 

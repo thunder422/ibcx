@@ -41,12 +41,11 @@ private:
 
     State *state;
     std::string number;
-    bool floating_point;
-    bool done;
-    bool negate_operator;
-    bool possible_operator;
     int first_column;
-    int column;
+    bool floating_point {false};
+    bool done {false};
+    bool negate_operator {false};
+    bool possible_operator {false};
 };
 
 // ----------------------------------------
@@ -140,10 +139,6 @@ static ExponentDigitsState exponent_digits;
 ConstNumCompiler::Impl::Impl(Compiler &compiler) :
     compiler {compiler},
     state {&start},
-    floating_point {false},
-    done {false},
-    negate_operator {false},
-    possible_operator {false},
     first_column {compiler.getColumn()}
 {
 }
@@ -167,7 +162,6 @@ DataType ConstNumCompiler::Impl::compile()
 void ConstNumCompiler::Impl::parseInput()
 {
     do {
-        column = compiler.getColumn();
         auto next_char = compiler.peekNextChar();
         state->parse(*this, next_char);
     } while (!done);
@@ -190,7 +184,7 @@ void ConstNumCompiler::Impl::changeState(State &new_state) noexcept
 
 int ConstNumCompiler::Impl::getColumn() const noexcept
 {
-    return column;
+    return compiler.getColumn();
 }
 
 void ConstNumCompiler::Impl::addNextChar()

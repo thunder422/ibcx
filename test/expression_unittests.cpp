@@ -91,4 +91,24 @@ TEST_CASE("negate numeric operator", "[negate]")
 
         REQUIRE(code_line[2].instructionCode()->getValue() == neg_int_code.getValue());
     }
+    SECTION("verify an error is thrown when nothing is after the negate operator")
+    {
+        Compiler compiler {"-", program};
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
+        }
+        SECTION("check the message, column and length of the error thrown")
+        {
+            try {
+                compiler.compileExpression(DataType::Null);
+            }
+            catch (const CompileError &error) {
+                REQUIRE(error.what() == std::string("expected numeric expression"));
+                REQUIRE(error.column == 1);
+                REQUIRE(error.length == 1);
+            }
+        }
+    }
 }

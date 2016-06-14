@@ -28,7 +28,6 @@ ci_string Compiler::getKeyword()
 {
     ci_string keyword;
     iss >> std::ws;
-    keyword_column = getColumn();
     while (isalpha(peekNextChar())) {
         keyword += getNextChar();
     }
@@ -36,13 +35,9 @@ ci_string Compiler::getKeyword()
     return keyword;
 }
 
-int Compiler::getKeywordColumn() const noexcept
-{
-    return keyword_column;
-}
-
 char Compiler::peekNextChar()
 {
+    column = iss.tellg();
     return iss.peek();
 }
 
@@ -51,9 +46,9 @@ char Compiler::getNextChar()
     return iss.get();
 }
 
-int Compiler::getColumn()
+int Compiler::getColumn() noexcept
 {
-    return iss.tellg();
+    return column;
 }
 
 void Compiler::addInstruction(Code &code)
