@@ -71,7 +71,7 @@ TEST_CASE("negate numeric operator", "[negate]")
         REQUIRE_CODESIZE_OPERAND(3, DataType::Double, "-2.0");
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
     }
-    SECTION("check that an integer negate code is added to the program (after the constant)")
+    SECTION("check that an double negate code is added to the program (after the constant)")
     {
         extern Code neg_dbl_code;
 
@@ -80,5 +80,15 @@ TEST_CASE("negate numeric operator", "[negate]")
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line[2].instructionCode()->getValue() == neg_dbl_code.getValue());
+    }
+    SECTION("check that an integer negate code is added to the program (after the constant)")
+    {
+        extern Code neg_int_code;
+
+        Compiler compiler {"--2", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(code_line[2].instructionCode()->getValue() == neg_int_code.getValue());
     }
 }
