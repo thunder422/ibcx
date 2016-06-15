@@ -75,7 +75,7 @@ TEST_CASE("test case insensitive string class", "[test]")
     }
     SECTION("input case insensitive string from a stream")
     {
-        std::istringstream iss("Input");
+        std::istringstream iss {"Input"};
 
         ci_string input_string;
         iss >> input_string;

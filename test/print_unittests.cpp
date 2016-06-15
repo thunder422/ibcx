@@ -62,7 +62,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
 
     SECTION("execute a blank PRINT command")
     {
-        std::istringstream iss("PRINT");
+        std::istringstream iss {"PRINT"};
         program.compileSource(iss, unused_oss);
         std::ostringstream oss;
 
@@ -73,7 +73,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
     }
     SECTION("execute a PRINT integer constant command")
     {
-        std::istringstream iss("PRINT -1234");
+        std::istringstream iss {"PRINT -1234"};
         program.compileSource(iss, unused_oss);
         std::ostringstream oss;
 
@@ -86,7 +86,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
     }
     SECTION("execute a PRINT double constant command")
     {
-        std::istringstream iss("PRINT 23.4e-108");
+        std::istringstream iss {"PRINT 23.4e-108"};
         program.compileSource(iss, unused_oss);
         std::ostringstream oss;
 

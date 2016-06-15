@@ -65,6 +65,7 @@ set(IBC_SOURCES
     basic/commandcode.cpp
     basic/constnum.cpp
     basic/end.cpp
+    basic/operators.cpp
     basic/print.cpp
     common/cistring.h
     common/compileerror.h

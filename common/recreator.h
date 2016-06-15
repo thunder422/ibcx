@@ -28,6 +28,7 @@ public:
     std::string top() const;
     void append(char c);
     void append(const std::string &string);
+    void swapTop(std::string &string);
     void prependKeyword(CommandCode command_code);
 
 private:

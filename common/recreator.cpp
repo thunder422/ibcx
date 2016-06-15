@@ -60,7 +60,7 @@ std::string Recreator::top() const
 void Recreator::prependKeyword(CommandCode command_code)
 {
     std::string string = command_code.getKeyword();
-    std::swap(string, stack.top().string);
+    swapTop(string);
     append(' ');
     append(string);
 }
@@ -73,4 +73,9 @@ void Recreator::append(char c)
 void Recreator::append(const std::string &string)
 {
     stack.top().string += string;
+}
+
+void Recreator::swapTop(std::string &string)
+{
+    std::swap(stack.top().string, string);
 }

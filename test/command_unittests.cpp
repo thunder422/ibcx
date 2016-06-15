@@ -141,12 +141,12 @@ TEST_CASE("compile multiple line program", "[program]")
 
     SECTION("program with END")
     {
-        std::istringstream iss(
+        std::istringstream iss {
             "PRINT -2.45\n"
             "Print\n"
             "print 123\n"
             "END\n"
-        );
+        };
         std::ostringstream unused_oss;
 
         program.compileSource(iss, unused_oss);
@@ -172,10 +172,10 @@ TEST_CASE("compile multiple line program", "[program]")
     }
     SECTION("program with no END")
     {
-        std::istringstream iss(
+        std::istringstream iss {
             "print 1.704e123\n"
             "print -87654321\n"
-        );
+        };
         std::ostringstream unused_oss;
 
         REQUIRE(program.compileSource(iss, unused_oss));
@@ -198,10 +198,10 @@ TEST_CASE("compile multiple line program", "[program]")
     }
     SECTION("program with errors")
     {
-        std::istringstream iss(
+        std::istringstream iss {
             "print 1.704e%23\n"
             "print 2.45e3000\n"
-        );
+        };
         std::ostringstream oss;
 
         REQUIRE_FALSE(program.compileSource(iss, oss));
@@ -266,7 +266,7 @@ TEST_CASE("correct error column on large double constant", "[large-constant]")
 
 TEST_CASE("execute an END command", "[END]")
 {
-    std::istringstream iss("END");
+    std::istringstream iss {"END"};
     ProgramUnit program;
     std::ostringstream unused_oss;
     program.compileSource(iss, unused_oss);
