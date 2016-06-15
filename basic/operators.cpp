@@ -11,7 +11,7 @@
 
 void negate_recreate(Recreator &recreator);
 
-Code neg_dbl_code {nullptr, nullptr};
+Code neg_dbl_code {negate_recreate, nullptr};
 Code neg_int_code {negate_recreate, nullptr};
 
 
