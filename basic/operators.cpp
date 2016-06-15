@@ -19,5 +19,8 @@ void negate_recreate(Recreator &recreator)
 {
     std::string string {"-"};
     recreator.swapTop(string);
+    if (isdigit(string.front())) {
+        recreator.append(' ');
+    }
     recreator.append(string);
 }

@@ -121,7 +121,7 @@ TEST_CASE("negate numeric operator", "[negate]")
         REQUIRE_CODESIZE_OPERAND(3, DataType::Integer, "2");
         REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
     }
-    SECTION("recreate a negation of an integer constant")
+    SECTION("recreate a negation of a negative integer constant")
     {
         std::istringstream iss {"PRINT --2"};
         std::ostringstream oss;
@@ -130,5 +130,15 @@ TEST_CASE("negate numeric operator", "[negate]")
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT --2\n");
+    }
+    SECTION("recreate a negation of a positve integer constant")
+    {
+        std::istringstream iss {"PRINT - 2"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT - 2\n");
     }
 }
