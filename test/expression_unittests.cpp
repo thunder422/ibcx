@@ -151,4 +151,14 @@ TEST_CASE("negate numeric operator", "[negate]")
 
         REQUIRE(oss.str() == "PRINT --2.0\n");
     }
+    SECTION("recreate a negation of a positive double constant starting with a decimal point")
+    {
+        std::istringstream iss {"PRINT - .1"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT - .1\n");
+    }
 }
