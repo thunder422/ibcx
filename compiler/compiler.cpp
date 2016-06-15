@@ -27,11 +27,11 @@ DataType Compiler::compileExpression(DataType expected_data_type)
 ci_string Compiler::getKeyword()
 {
     ci_string keyword;
-    iss >> std::ws;
+    skipWhiteSpace();
     while (isalpha(peekNextChar())) {
         keyword += getNextChar();
     }
-    iss >> std::ws;
+    skipWhiteSpace();
     return keyword;
 }
 
@@ -44,6 +44,11 @@ char Compiler::peekNextChar()
 char Compiler::getNextChar()
 {
     return iss.get();
+}
+
+void Compiler::skipWhiteSpace()
+{
+    iss >> std::ws;
 }
 
 int Compiler::getColumn() noexcept

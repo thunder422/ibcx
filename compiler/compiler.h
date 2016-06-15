@@ -29,6 +29,7 @@ public:
     ci_string getKeyword();
     char peekNextChar();
     char getNextChar();
+    void skipWhiteSpace();
     int getColumn() noexcept;
 
     void addInstruction(Code &code);

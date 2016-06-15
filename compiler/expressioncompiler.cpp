@@ -60,6 +60,7 @@ Code neg_int_code {nullptr, nullptr};
 
 DataType ExpressionCompiler::Impl::compileNegation()
 {
+    compiler.skipWhiteSpace();
     auto data_type = compileNumOperand();
     compiler.addInstruction(data_type == DataType::Double ? neg_dbl_code : neg_int_code);
     return data_type;

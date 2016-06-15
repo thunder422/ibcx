@@ -111,4 +111,14 @@ TEST_CASE("negate numeric operator", "[negate]")
             }
         }
     }
+    SECTION("check that white space is allowed after a negate operator")
+    {
+        extern Code const_int_code;
+
+        Compiler compiler {"- 2", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+        REQUIRE(data_type == DataType::Integer);
+        REQUIRE_CODESIZE_OPERAND(3, DataType::Integer, "2");
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
+    }
 }
