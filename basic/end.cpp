@@ -12,24 +12,24 @@
 #include "recreator.h"
 
 
-void end_compile(Compiler &compiler);
-void end_recreate(Recreator &recreator);
-void end_execute(Executer &executer);
+void compileEnd(Compiler &compiler);
+void recreateEnd(Recreator &recreator);
+void executeEnd(Executer &executer);
 
-CommandCode end_code {"END", end_compile, end_recreate, end_execute};
+CommandCode end_code {"END", compileEnd, recreateEnd, executeEnd};
 
 
-void end_compile(Compiler &compiler)
+void compileEnd(Compiler &compiler)
 {
     compiler.addInstruction(end_code);
 }
 
-void end_recreate(Recreator &recreator)
+void recreateEnd(Recreator &recreator)
 {
     recreator.pushKeyword(end_code);
 }
 
-void end_execute(Executer &executer)
+void executeEnd(Executer &executer)
 {
     (void)executer;
     throw EndOfProgram {};

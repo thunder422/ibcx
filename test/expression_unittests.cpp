@@ -161,4 +161,14 @@ TEST_CASE("negate numeric operator", "[negate]")
 
         REQUIRE(oss.str() == "PRINT - .1\n");
     }
+    SECTION("execute a negation of an integer constant")
+    {
+        std::istringstream iss {"PRINT --345"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "345\n");
+    }
 }

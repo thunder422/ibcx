@@ -12,26 +12,26 @@
 #include "recreator.h"
 
 
-void const_num_recreate(Recreator &recreator)
+void recreateConstNum(Recreator &recreator)
 {
     auto number = recreator.getConstNumOperand();
     recreator.push(number);
 }
 
-void const_dbl_execute(Executer &executer)
+void executeConstDbl(Executer &executer)
 {
     auto operand = executer.getOperand();
     executer.pushConstDbl(operand);
 }
 
-void const_int_execute(Executer &executer)
+void executeConstInt(Executer &executer)
 {
     auto operand = executer.getOperand();
     executer.pushConstInt(operand);
 }
 
-Code const_dbl_code {const_num_recreate, const_dbl_execute};
-Code const_int_code {const_num_recreate, const_int_execute};
+Code const_dbl_code {recreateConstNum, executeConstDbl};
+Code const_int_code {recreateConstNum, executeConstInt};
 
 class ConstNumConverter {
 public:

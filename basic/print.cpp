@@ -14,19 +14,19 @@
 #include "recreator.h"
 
 
-void print_compile(Compiler &compiler);
-void print_recreate(Recreator &recreator);
-void print_item_recreate(Recreator &recreator);
-void print_execute(Executer &executer);
-void print_int_execute(Executer &executer);
-void print_dbl_execute(Executer &executer);
+void compilePrint(Compiler &compiler);
+void recreatePrint(Recreator &recreator);
+void recreatePrintItem(Recreator &recreator);
+void executePrint(Executer &executer);
+void executePrintInt(Executer &executer);
+void executePrintDbl(Executer &executer);
 
-CommandCode print_code {"PRINT", print_compile, print_recreate, print_execute};
-Code print_dbl_code {print_item_recreate, print_dbl_execute};
-Code print_int_code {print_item_recreate, print_int_execute};
+CommandCode print_code {"PRINT", compilePrint, recreatePrint, executePrint};
+Code print_dbl_code {recreatePrintItem, executePrintDbl};
+Code print_int_code {recreatePrintItem, executePrintInt};
 
 
-void print_compile(Compiler &compiler)
+void compilePrint(Compiler &compiler)
 {
     if (compiler.peekNextChar() != EOF) {
         auto data_type = compiler.compileExpression(DataType::Null);
@@ -39,7 +39,7 @@ void print_compile(Compiler &compiler)
     compiler.addInstruction(print_code);
 }
 
-void print_recreate(Recreator &recreator)
+void recreatePrint(Recreator &recreator)
 {
     if (recreator.empty()) {
         recreator.pushKeyword(print_code);
@@ -48,24 +48,24 @@ void print_recreate(Recreator &recreator)
     }
 }
 
-void print_item_recreate(Recreator &recreator)
+void recreatePrintItem(Recreator &recreator)
 {
     (void)recreator;
 }
 
 
-void print_execute(Executer &executer)
+void executePrint(Executer &executer)
 {
     executer.output() << std::endl;
 }
 
-void print_int_execute(Executer &executer)
+void executePrintInt(Executer &executer)
 {
     executer.output() << executer.top().int_value;
     executer.pop();
 }
 
-void print_dbl_execute(Executer &executer)
+void executePrintDbl(Executer &executer)
 {
     executer.output() << executer.top().dbl_value;
     executer.pop();

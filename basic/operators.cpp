@@ -6,16 +6,18 @@
  */
 
 #include "code.h"
+#include "executer.h"
 #include "recreator.h"
 
 
-void negate_recreate(Recreator &recreator);
+void recreateNegate(Recreator &recreator);
+void executeNegateInt(Executer &executer);
 
-Code neg_dbl_code {negate_recreate, nullptr};
-Code neg_int_code {negate_recreate, nullptr};
+Code neg_dbl_code {recreateNegate, nullptr};
+Code neg_int_code {recreateNegate, executeNegateInt};
 
 
-void negate_recreate(Recreator &recreator)
+void recreateNegate(Recreator &recreator)
 {
     std::string string {"-"};
     recreator.swapTop(string);
@@ -24,4 +26,9 @@ void negate_recreate(Recreator &recreator)
         recreator.append(' ');
     }
     recreator.append(string);
+}
+
+void executeNegateInt(Executer &executer)
+{
+    executer.top().int_value = -executer.top().int_value;
 }
