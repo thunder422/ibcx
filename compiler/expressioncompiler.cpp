@@ -22,10 +22,12 @@ public:
     DataType compileExpression(DataType expected_data_type);
 
 private:
+    DataType compileNumExpression(DataType expected_data_type);
     DataType compileNegation();
     DataType compileNumOperand();
 
     Compiler &compiler;
+    int column;
 };
 
 ExpressionCompiler::ExpressionCompiler(Compiler &compiler) :
@@ -51,8 +53,16 @@ ExpressionCompiler::Impl::Impl(Compiler &compiler) :
 
 DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type)
 {
-    (void)expected_data_type;
-    return compileNumOperand();
+    return compileNumExpression(expected_data_type);
+}
+
+DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
+{
+    auto data_type = compileNumOperand();
+    if (expected_data_type != DataType::Null && data_type == DataType::Null) {
+        throw CompileError {"expected numeric expression", column};
+    }
+    return data_type;
 }
 
 DataType ExpressionCompiler::Impl::compileNegation()
@@ -61,7 +71,11 @@ DataType ExpressionCompiler::Impl::compileNegation()
     extern Code neg_int_code;
 
     compiler.skipWhiteSpace();
+    column = compiler.getColumn();
     auto data_type = compileNumOperand();
+    if (data_type == DataType::Null) {
+        throw CompileError {"expected numeric expression", column};
+    }
     compiler.addInstruction(data_type == DataType::Double ? neg_dbl_code : neg_int_code);
     return data_type;
 }
@@ -69,13 +83,10 @@ DataType ExpressionCompiler::Impl::compileNegation()
 DataType ExpressionCompiler::Impl::compileNumOperand()
 {
     ConstNumCompiler compile_constant {compiler};
-    auto column = compiler.getColumn();
+    column = compiler.getColumn();
     auto data_type = compile_constant();
-    if (data_type == DataType::Null) {
-        if (compile_constant.negateOperator()) {
-            return compileNegation();
-        }
-        throw CompileError {"expected numeric expression", column};
+    if (data_type == DataType::Null && compile_constant.negateOperator()) {
+        return compileNegation();
     }
     return data_type;
 }
