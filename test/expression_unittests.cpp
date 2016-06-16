@@ -171,4 +171,14 @@ TEST_CASE("negate numeric operator", "[negate]")
 
         REQUIRE(oss.str() == "345\n");
     }
+    SECTION("execute a negation of an double constant")
+    {
+        std::istringstream iss {"PRINT - 1.345e210"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1.345e+210\n");
+    }
 }

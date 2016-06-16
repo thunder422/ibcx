@@ -11,9 +11,10 @@
 
 
 void recreateNegate(Recreator &recreator);
+void executeNegateDbl(Executer &executer);
 void executeNegateInt(Executer &executer);
 
-Code neg_dbl_code {recreateNegate, nullptr};
+Code neg_dbl_code {recreateNegate, executeNegateDbl};
 Code neg_int_code {recreateNegate, executeNegateInt};
 
 
@@ -26,6 +27,11 @@ void recreateNegate(Recreator &recreator)
         recreator.append(' ');
     }
     recreator.append(string);
+}
+
+void executeNegateDbl(Executer &executer)
+{
+    executer.top().dbl_value = -executer.top().dbl_value;
 }
 
 void executeNegateInt(Executer &executer)
