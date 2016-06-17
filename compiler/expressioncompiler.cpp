@@ -69,8 +69,10 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileExponential()
 {
     auto data_type = compileNumOperand();
-    compiler.getNextChar();
-    compileNumOperand();
+    if (compiler.peekNextChar() == '^') {
+        compiler.getNextChar();
+        compileNumOperand();
+    }
     return data_type;
 }
 

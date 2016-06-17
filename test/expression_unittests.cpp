@@ -194,4 +194,11 @@ TEST_CASE("exponention numeric operator expressions", "[exponential]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("make sure the operator is the correct character")
+    {
+        Compiler compiler {"3a2", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == 'a');
+    }
 }
