@@ -62,7 +62,7 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 {
     auto data_type = compileExponential();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
-        throw CompileError {"expected numeric expression", column};
+        throw ExpNumExprError {column};
     }
     return data_type;
 }
@@ -72,7 +72,10 @@ DataType ExpressionCompiler::Impl::compileExponential()
     auto data_type = compileNumOperand();
     if (data_type != DataType::Null) {
         if (isOperatorChar('^')) {
-            compileNumOperand();
+            auto rhs_data_type = compileNumOperand();
+            if (rhs_data_type == DataType::Null) {
+                throw ExpNumExprError {compiler.getColumn()};
+            }
         }
     }
     return data_type;
@@ -98,7 +101,7 @@ DataType ExpressionCompiler::Impl::compileNegation()
     column = compiler.getColumn();
     auto data_type = compileNumOperand();
     if (data_type == DataType::Null) {
-        throw CompileError {"expected numeric expression", column};
+        throw ExpNumExprError {column};
     }
     compiler.addInstruction(data_type == DataType::Double ? neg_dbl_code : neg_int_code);
     return data_type;

@@ -20,4 +20,9 @@ struct CompileError : public std::runtime_error {
 };
 
 
+struct ExpNumExprError : public CompileError {
+    ExpNumExprError(int column) : CompileError {"expected numeric expression", column} { }
+};
+
+
 #endif  // IBC_COMPILEERROR_H

@@ -285,4 +285,8 @@ TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")
     {
         std::unique_ptr<RunError> error {new RunError {"cover dynamic destructor"}};
     }
+    SECTION("cover dynamically allocated expected numeric expression error class")
+    {
+        std::unique_ptr<ExpNumExprError> error {new ExpNumExprError {0}};
+    }
 }

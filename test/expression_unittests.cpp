@@ -222,4 +222,23 @@ TEST_CASE("exponention numeric operator expressions", "[exponential]")
 
         REQUIRE(compiler.peekNextChar() == '^');
     }
+    SECTION("check for an error if there is a problem with the second operand")
+    {
+        Compiler compiler {"3^^", program};
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), ExpNumExprError);
+        }
+        SECTION("check the message, column and length of the error thrown")
+        {
+            try {
+                compiler.compileExpression(DataType::Null);
+            }
+            catch (const ExpNumExprError &error) {
+                REQUIRE(error.column == 2);
+                REQUIRE(error.length == 1);
+            }
+        }
+    }
 }
