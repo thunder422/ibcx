@@ -23,6 +23,7 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileExponential();
     DataType compileNegation();
     DataType compileNumOperand();
 
@@ -58,10 +59,18 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileNumOperand();
+    auto data_type = compileExponential();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw CompileError {"expected numeric expression", column};
     }
+    return data_type;
+}
+
+DataType ExpressionCompiler::Impl::compileExponential()
+{
+    auto data_type = compileNumOperand();
+    compiler.getNextChar();
+    compileNumOperand();
     return data_type;
 }
 

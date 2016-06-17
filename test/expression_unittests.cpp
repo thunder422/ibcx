@@ -182,3 +182,16 @@ TEST_CASE("negate numeric operator", "[negate]")
         REQUIRE(oss.str() == "-1.345e+210\n");
     }
 }
+
+TEST_CASE("exponention numeric operator expressions", "[exponential]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure both operands and operator are parsed")
+    {
+        Compiler compiler {"3^2", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}
