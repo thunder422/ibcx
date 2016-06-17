@@ -215,4 +215,11 @@ TEST_CASE("exponention numeric operator expressions", "[exponential]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("make sure parsing stops if there is no operand")
+    {
+        Compiler compiler {"^2", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == '^');
+    }
 }
