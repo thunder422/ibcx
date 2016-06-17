@@ -24,6 +24,7 @@ public:
 private:
     DataType compileNumExpression(DataType expected_data_type);
     DataType compileExponential();
+    bool isOperatorChar(char operator_char);
     DataType compileNegation();
     DataType compileNumOperand();
 
@@ -69,12 +70,21 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileExponential()
 {
     auto data_type = compileNumOperand();
-    compiler.skipWhiteSpace();
-    if (compiler.peekNextChar() == '^') {
-        compiler.getNextChar();
+    if (isOperatorChar('^')) {
         compileNumOperand();
     }
     return data_type;
+}
+
+bool ExpressionCompiler::Impl::isOperatorChar(char operator_char)
+{
+    compiler.skipWhiteSpace();
+    if (compiler.peekNextChar() == operator_char) {
+        compiler.getNextChar();
+        compiler.skipWhiteSpace();
+        return true;
+    }
+    return false;
 }
 
 DataType ExpressionCompiler::Impl::compileNegation()

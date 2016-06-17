@@ -201,9 +201,16 @@ TEST_CASE("exponention numeric operator expressions", "[exponential]")
 
         REQUIRE(compiler.peekNextChar() == 'a');
     }
-    SECTION("make sure white space is allow before the operator")
+    SECTION("make sure white space is allowed before the operator")
     {
         Compiler compiler {"3 ^2", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("make sure white space is allowed after the operator")
+    {
+        Compiler compiler {"3 ^ 2", program};
         compiler.compileExpression(DataType::Null);
 
         REQUIRE(compiler.peekNextChar() == EOF);
