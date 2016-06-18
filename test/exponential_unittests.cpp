@@ -93,5 +93,17 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_code.getValue());
     }
+    SECTION("check for an right side integer exponential code at end of code line")
+    {
+        extern Code exp_rhs_int_code;
+
+        Compiler compiler {"3.0^2", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(data_type == DataType::Double);
+        REQUIRE(code_line.size() == 5);
+        REQUIRE(code_line[4].instructionCode()->getValue() == exp_rhs_int_code.getValue());
+    }
 }
 
