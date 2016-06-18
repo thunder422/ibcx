@@ -67,6 +67,8 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
     return data_type;
 }
 
+Code exp_int_code {nullptr, nullptr};
+
 DataType ExpressionCompiler::Impl::compileExponential()
 {
     auto data_type = compileNumOperand();
@@ -76,6 +78,7 @@ DataType ExpressionCompiler::Impl::compileExponential()
             if (rhs_data_type == DataType::Null) {
                 throw ExpNumExprError {compiler.getColumn()};
             }
+            compiler.addInstruction(exp_int_code);
         }
     }
     return data_type;
