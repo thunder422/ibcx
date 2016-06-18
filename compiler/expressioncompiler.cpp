@@ -103,6 +103,7 @@ bool ExpressionCompiler::Impl::isOperatorChar(char operator_char)
 }
 
 Code exp_dbl_code {nullptr, nullptr};
+Code exp_lhs_int_code {nullptr, nullptr};
 Code exp_rhs_int_code {nullptr, nullptr};
 Code exp_int_code {nullptr, nullptr};
 
@@ -113,7 +114,9 @@ OperatorInfo ExpressionCompiler::Impl::selectExpCode(DataType lhs_data_type, Dat
             ? OperatorInfo {exp_dbl_code, DataType::Double}
             : OperatorInfo {exp_rhs_int_code, DataType::Double};
     } else {
-        return OperatorInfo {exp_int_code, DataType::Integer};
+        return rhs_data_type == DataType::Double
+            ? OperatorInfo {exp_lhs_int_code, DataType::Double}
+            : OperatorInfo {exp_int_code, DataType::Integer};
     }
 }
 
