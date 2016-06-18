@@ -74,11 +74,24 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
         extern Code exp_int_code;
 
         Compiler compiler {"3^2", program};
-        compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression(DataType::Null);
         auto code_line = compiler.getCodeLine();
 
+        REQUIRE(data_type == DataType::Integer);
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_int_code.getValue());
+    }
+    SECTION("check for an double exponential code at end of code line")
+    {
+        extern Code exp_dbl_code;
+
+        Compiler compiler {"3.0^2.0", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(data_type == DataType::Double);
+        REQUIRE(code_line.size() == 5);
+        REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_code.getValue());
     }
 }
 
