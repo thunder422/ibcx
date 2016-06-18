@@ -7,8 +7,34 @@
 
 #include "code.h"
 #include "executer.h"
+#include "operators.h"
 #include "recreator.h"
 
+
+NumOperatorCodes::NumOperatorCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code,
+        OperatorCode<OpType::IntDbl> &int_dbl_code, OperatorCode<OpType::DblInt> &dbl_int_code,
+        OperatorCode<OpType::IntInt> &int_int_code) :
+    dbl_dbl_code {dbl_dbl_code},
+    int_dbl_code {int_dbl_code},
+    dbl_int_code {dbl_int_code},
+    int_int_code {int_int_code}
+{
+}
+
+OperatorInfo NumOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
+{
+    if (lhs_data_type == DataType::Integer && rhs_data_type == DataType::Integer) {
+        return OperatorInfo {int_int_code, DataType::Integer};
+    } else if (lhs_data_type == DataType::Integer) {
+        return OperatorInfo {int_dbl_code, DataType::Double};
+    } else if (rhs_data_type == DataType::Integer) {
+        return OperatorInfo {dbl_int_code, DataType::Double};
+    } else {
+        return OperatorInfo {dbl_dbl_code, DataType::Double};
+    }
+}
+
+// ----------------------------------------
 
 void recreateNegate(Recreator &recreator);
 void executeNegateDbl(Executer &executer);
@@ -38,3 +64,12 @@ void executeNegateInt(Executer &executer)
 {
     executer.top().int_value = -executer.top().int_value;
 }
+
+// ----------------------------------------
+
+OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::IntDbl> exp_int_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::DblInt> exp_dbl_int_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> exp_int_int_code {nullptr, nullptr};
+
+NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code};

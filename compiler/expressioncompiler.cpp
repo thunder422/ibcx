@@ -7,18 +7,13 @@
 
 #include <iostream>
 
+#include "compileerror.h"
 #include "compiler.h"
 #include "constnumcompiler.h"
 #include "expressioncompiler.h"
-#include "compileerror.h"
+#include "operators.h"
 #include "programcode.h"
 #include "programunit.h"
-
-
-struct OperatorInfo {
-    Code &code;
-    DataType result_data_type;
-};
 
 
 class ExpressionCompiler::Impl {
@@ -31,7 +26,6 @@ private:
     DataType compileNumExpression(DataType expected_data_type);
     DataType compileExponential();
     bool isOperatorChar(char operator_char);
-    OperatorInfo selectExpCode(DataType lhs_data_type, DataType rhs_data_type);
     DataType compileNegation();
     DataType compileNumOperand();
 
@@ -76,6 +70,8 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileExponential()
 {
+    extern NumOperatorCodes exp_codes;
+
     auto lhs_data_type = compileNumOperand();
     if (lhs_data_type != DataType::Null) {
         if (isOperatorChar('^')) {
@@ -83,7 +79,7 @@ DataType ExpressionCompiler::Impl::compileExponential()
             if (rhs_data_type == DataType::Null) {
                 throw ExpNumExprError {compiler.getColumn()};
             }
-            auto info = selectExpCode(lhs_data_type, rhs_data_type);
+            auto info = exp_codes.select(lhs_data_type, rhs_data_type);
             compiler.addInstruction(info.code);
             lhs_data_type = info.result_data_type;
         }
@@ -100,24 +96,6 @@ bool ExpressionCompiler::Impl::isOperatorChar(char operator_char)
         return true;
     }
     return false;
-}
-
-Code exp_dbl_code {nullptr, nullptr};
-Code exp_lhs_int_code {nullptr, nullptr};
-Code exp_rhs_int_code {nullptr, nullptr};
-Code exp_int_code {nullptr, nullptr};
-
-OperatorInfo ExpressionCompiler::Impl::selectExpCode(DataType lhs_data_type, DataType rhs_data_type)
-{
-    if (lhs_data_type == DataType::Double) {
-        return rhs_data_type == DataType::Double
-            ? OperatorInfo {exp_dbl_code, DataType::Double}
-            : OperatorInfo {exp_rhs_int_code, DataType::Double};
-    } else {
-        return rhs_data_type == DataType::Double
-            ? OperatorInfo {exp_lhs_int_code, DataType::Double}
-            : OperatorInfo {exp_int_code, DataType::Integer};
-    }
 }
 
 DataType ExpressionCompiler::Impl::compileNegation()

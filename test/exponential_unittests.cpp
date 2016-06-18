@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "compileerror.h"
 #include "compiler.h"
+#include "operators.h"
 #include "programunit.h"
 
 
@@ -71,7 +72,7 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
     }
     SECTION("check for an integer exponential code at end of code line")
     {
-        extern Code exp_int_code;
+        extern OperatorCode<OpType::IntInt> exp_int_int_code;
 
         Compiler compiler {"3^2", program};
         auto data_type = compiler.compileExpression(DataType::Null);
@@ -79,11 +80,11 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
 
         REQUIRE(data_type == DataType::Integer);
         REQUIRE(code_line.size() == 5);
-        REQUIRE(code_line[4].instructionCode()->getValue() == exp_int_code.getValue());
+        REQUIRE(code_line[4].instructionCode()->getValue() == exp_int_int_code.getValue());
     }
     SECTION("check for an double exponential code at end of code line")
     {
-        extern Code exp_dbl_code;
+        extern OperatorCode<OpType::DblDbl> exp_dbl_dbl_code;
 
         Compiler compiler {"3.0^2.0", program};
         auto data_type = compiler.compileExpression(DataType::Null);
@@ -91,11 +92,11 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
 
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 5);
-        REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_code.getValue());
+        REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_dbl_code.getValue());
     }
     SECTION("check for an right side integer exponential code at end of code line")
     {
-        extern Code exp_rhs_int_code;
+        extern OperatorCode<OpType::DblInt> exp_dbl_int_code;
 
         Compiler compiler {"3.0^2", program};
         auto data_type = compiler.compileExpression(DataType::Null);
@@ -103,11 +104,11 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
 
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 5);
-        REQUIRE(code_line[4].instructionCode()->getValue() == exp_rhs_int_code.getValue());
+        REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_int_code.getValue());
     }
     SECTION("check for an left side integer exponential code at end of code line")
     {
-        extern Code exp_lhs_int_code;
+        extern OperatorCode<OpType::IntDbl> exp_int_dbl_code;
 
         Compiler compiler {"3^2.0", program};
         auto data_type = compiler.compileExpression(DataType::Null);
@@ -115,7 +116,7 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
 
         REQUIRE(data_type == DataType::Double);
         REQUIRE(code_line.size() == 5);
-        REQUIRE(code_line[4].instructionCode()->getValue() == exp_lhs_int_code.getValue());
+        REQUIRE(code_line[4].instructionCode()->getValue() == exp_int_dbl_code.getValue());
     }
 }
 
