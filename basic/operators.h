@@ -13,6 +13,8 @@
 
 
 enum class OpType {
+    Dbl,
+    Int,
     DblDbl,
     IntDbl,
     DblInt,
@@ -34,6 +36,16 @@ struct OperatorInfo {
     DataType result_data_type;
 };
 
+
+class UnaryOperatorCodes {
+public:
+    UnaryOperatorCodes(OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code);
+    Code &select(DataType data_type) const;
+
+private:
+    OperatorCode<OpType::Dbl> &dbl_code;
+    OperatorCode<OpType::Int> &int_code;
+};
 
 class NumOperatorCodes {
 public:

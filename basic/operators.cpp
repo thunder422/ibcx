@@ -11,6 +11,23 @@
 #include "recreator.h"
 
 
+UnaryOperatorCodes::UnaryOperatorCodes(OperatorCode<OpType::Dbl> &dbl_code,
+        OperatorCode<OpType::Int> &int_code) :
+    dbl_code {dbl_code},
+    int_code {int_code}
+{
+}
+
+Code &UnaryOperatorCodes::select(DataType data_type) const
+{
+    if (data_type == DataType::Double) {
+        return dbl_code;
+    } else {
+        return int_code;
+    }
+}
+
+
 NumOperatorCodes::NumOperatorCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code,
         OperatorCode<OpType::IntDbl> &int_dbl_code, OperatorCode<OpType::DblInt> &dbl_int_code,
         OperatorCode<OpType::IntInt> &int_int_code) :
@@ -40,8 +57,10 @@ void recreateNegate(Recreator &recreator);
 void executeNegateDbl(Executer &executer);
 void executeNegateInt(Executer &executer);
 
-Code neg_dbl_code {recreateNegate, executeNegateDbl};
-Code neg_int_code {recreateNegate, executeNegateInt};
+OperatorCode<OpType::Dbl> neg_dbl_code {recreateNegate, executeNegateDbl};
+OperatorCode<OpType::Int> neg_int_code {recreateNegate, executeNegateInt};
+
+UnaryOperatorCodes neg_codes {neg_dbl_code, neg_int_code};
 
 
 void recreateNegate(Recreator &recreator)

@@ -100,8 +100,7 @@ bool ExpressionCompiler::Impl::isOperatorChar(char operator_char)
 
 DataType ExpressionCompiler::Impl::compileNegation()
 {
-    extern Code neg_dbl_code;
-    extern Code neg_int_code;
+    extern UnaryOperatorCodes neg_codes;
 
     compiler.skipWhiteSpace();
     column = compiler.getColumn();
@@ -109,7 +108,7 @@ DataType ExpressionCompiler::Impl::compileNegation()
     if (data_type == DataType::Null) {
         throw ExpNumExprError {column};
     }
-    compiler.addInstruction(data_type == DataType::Double ? neg_dbl_code : neg_int_code);
+    compiler.addInstruction(neg_codes.select(data_type));
     return data_type;
 }
 
