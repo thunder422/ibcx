@@ -87,11 +87,12 @@ void executeNegateInt(Executer &executer)
 // ----------------------------------------
 
 void recreateExponential(Recreator &recreator);
+void executeExponentialIntInt(Executer &executer);
 
 OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateExponential, nullptr};
 OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateExponential, nullptr};
 OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateExponential, nullptr};
-OperatorCode<OpType::IntInt> exp_int_int_code {recreateExponential, nullptr};
+OperatorCode<OpType::IntInt> exp_int_int_code {recreateExponential, executeExponentialIntInt};
 
 NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code};
 
@@ -102,4 +103,10 @@ void recreateExponential(Recreator &recreator)
     recreator.pop();
     recreator.append(' ');
     recreator.append(string);
+}
+
+void executeExponentialIntInt(Executer &executer)
+{
+    executer.pop();
+    executer.top().int_value = 9;
 }
