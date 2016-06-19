@@ -133,7 +133,7 @@ inline PowerIntInt::PowerIntInt(int x, int y) :
 inline int PowerIntInt::operator()()
 {
     if (y < 0) {
-        return 0;
+        return x == 1 ? 1 : 0;
     }
     return calculatePower();
 }
