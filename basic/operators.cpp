@@ -105,15 +105,44 @@ void recreateExponential(Recreator &recreator)
     recreator.append(string);
 }
 
+struct PowerIntInt {
+    PowerIntInt(int x, int y);
+    int operator()();
+
+private:
+    int calculatePower();
+
+    int x;
+    int y;
+};
+
 void executeExponentialIntInt(Executer &executer)
 {
     auto y = executer.top().int_value;
     executer.pop();
     auto x = executer.top().int_value;
+    executer.top().int_value = PowerIntInt{x, y}();
+}
 
+inline PowerIntInt::PowerIntInt(int x, int y) :
+    x {x},
+    y {y}
+{
+}
+
+inline int PowerIntInt::operator()()
+{
+    if (y < 0) {
+        return 0;
+    }
+    return calculatePower();
+}
+
+inline int PowerIntInt::calculatePower()
+{
     int result = 1;
     for (int i = 0; i < y; ++i) {
         result *= x;
     }
-    executer.top().int_value = result;
+    return result;
 }
