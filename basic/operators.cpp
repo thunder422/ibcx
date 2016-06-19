@@ -88,9 +88,9 @@ void executeNegateInt(Executer &executer)
 
 void recreateExponential(Recreator &recreator);
 
-OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> exp_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> exp_dbl_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateExponential, nullptr};
+OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateExponential, nullptr};
+OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateExponential, nullptr};
 OperatorCode<OpType::IntInt> exp_int_int_code {recreateExponential, nullptr};
 
 NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code};

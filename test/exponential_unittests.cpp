@@ -145,4 +145,34 @@ TEST_CASE("recreate exponential operator expression", "[recreate]")
 
         REQUIRE(oss.str() == "PRINT 3 ^ 2\n");
     }
+    SECTION("recreate a exponential with two double constants")
+    {
+        std::istringstream iss {"PRINT 3.0^2.0"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 ^ 2.0\n");
+    }
+    SECTION("recreate a exponential with two double constants")
+    {
+        std::istringstream iss {"PRINT 3^2.0"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 ^ 2.0\n");
+    }
+    SECTION("recreate a exponential with two double constants")
+    {
+        std::istringstream iss {"PRINT 3.0^2"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 ^ 2\n");
+    }
 }
