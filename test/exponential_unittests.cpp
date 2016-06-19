@@ -191,4 +191,14 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
 
         REQUIRE(oss.str() == "9\n");
     }
+    SECTION("execute an exponential of two different integer constants")
+    {
+        std::istringstream iss {"PRINT 2^5"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "32\n");
+    }
 }

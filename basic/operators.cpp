@@ -107,6 +107,13 @@ void recreateExponential(Recreator &recreator)
 
 void executeExponentialIntInt(Executer &executer)
 {
+    auto y = executer.top().int_value;
     executer.pop();
-    executer.top().int_value = 9;
+    auto x = executer.top().int_value;
+
+    int result = 1;
+    for (int i = 0; i < y; ++i) {
+        result *= x;
+    }
+    executer.top().int_value = result;
 }
