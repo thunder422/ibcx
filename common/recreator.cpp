@@ -57,6 +57,11 @@ std::string Recreator::top() const
     return stack.top().string;
 }
 
+void Recreator::pop()
+{
+    stack.pop();
+}
+
 void Recreator::prependKeyword(CommandCode command_code)
 {
     std::string string = command_code.getKeyword();

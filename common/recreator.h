@@ -26,6 +26,7 @@ public:
     void push(const std::string &operand);
     bool empty() const;
     std::string top() const;
+    void pop();
     void append(char c);
     void append(const std::string &string);
     void swapTop(std::string &string);

@@ -131,3 +131,18 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
     }
 }
 
+TEST_CASE("recreate exponential operator expression", "[recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate a exponential with two integer constants")
+    {
+        std::istringstream iss {"PRINT 3^2"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 ^ 2\n");
+    }
+}
