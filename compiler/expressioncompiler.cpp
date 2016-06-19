@@ -74,7 +74,7 @@ DataType ExpressionCompiler::Impl::compileExponential()
 
     auto lhs_data_type = compileNumOperand();
     if (lhs_data_type != DataType::Null) {
-        if (isOperatorChar('^')) {
+        while (isOperatorChar('^')) {
             auto rhs_data_type = compileNumOperand();
             if (rhs_data_type == DataType::Null) {
                 throw ExpNumExprError {compiler.getColumn()};
