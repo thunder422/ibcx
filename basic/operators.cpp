@@ -110,6 +110,7 @@ struct PowerIntInt {
     int operator()();
 
 private:
+    int calculateNegativeExponent();
     int calculatePower();
 
     int x;
@@ -133,9 +134,20 @@ inline PowerIntInt::PowerIntInt(int x, int y) :
 inline int PowerIntInt::operator()()
 {
     if (y < 0) {
-        return x == 1 ? 1 : 0;
+        return calculateNegativeExponent();
     }
     return calculatePower();
+}
+
+inline int PowerIntInt::calculateNegativeExponent()
+{
+    if (x == 1) {
+        return 1;
+    } else if (x == -1) {
+        return -1;
+    } else {
+        return 0;
+    }
 }
 
 inline int PowerIntInt::calculatePower()

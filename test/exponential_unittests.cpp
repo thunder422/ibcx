@@ -221,4 +221,14 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
 
         REQUIRE(oss.str() == "1\n");
     }
+    SECTION("execute an exponential of two integer constants with one to a negative exponent")
+    {
+        std::istringstream iss {"PRINT -1^-5"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n");
+    }
 }
