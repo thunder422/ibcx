@@ -144,7 +144,7 @@ inline int PowerIntInt::calculateNegativeExponent()
     if (x == 1) {
         return 1;
     } else if (x == -1) {
-        return -1;
+        return (y & 1) ? -1 : 1;
     } else {
         return 0;
     }
