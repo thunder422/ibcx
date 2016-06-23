@@ -15,8 +15,6 @@
 #include "programunit.h"
 
 
-class State;
-
 class ConstNumCompiler::Impl {
 public:
     Impl(Compiler &compiler);
@@ -25,21 +23,26 @@ public:
     bool negateOperator() const noexcept;
     bool possibleOperator() const noexcept;
 
-    void changeState(State &new_state) noexcept;
-    int getColumn() const noexcept;
-    void addNextChar();
-    void setDouble() noexcept;
-    bool isDouble() const noexcept;
-    void setDone() noexcept;
-    void setNegateOperator() noexcept;
-    void setPossibleOperator() noexcept;
-
 private:
     void parseInput();
 
+    void parseStartState(int next_char);
+    void parseNegativeState(int next_char);
+    void parseZeroState(int next_char);
+    void parsePeriodState(int next_char);
+    void parseMantissaState(int next_char);
+    void parseExponentState(int next_char);
+    void parseExponentSignState(int next_char);
+    void parseExponentDigitsState(int next_char);
+
+    bool validMantissaChar(int next_char) noexcept;
+    void addNextChar();
+    void setNegateOperator() noexcept;
+    void setPossibleOperator() noexcept;
+
     Compiler &compiler;
 
-    State *state;
+    void (Impl::*parse_state)(int next_char);
     std::string number;
     int first_column;
     bool floating_point {false};
@@ -76,69 +79,9 @@ ConstNumCompiler::~ConstNumCompiler()
 
 // ----------------------------------------
 
-class State {
-public:
-    virtual void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const = 0;
-
-protected:
-    bool validMantissaChar(ConstNumCompiler::Impl &constant_compiler, int next_char) const;
-};
-
-class StartState : public State {
-public:
-    void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const override;
-};
-
-class NegativeState : public State {
-public:
-    void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const override;
-};
-
-class ZeroState : public State {
-public:
-    void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const override;
-};
-
-class PeriodState : public State {
-public:
-    void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const override;
-};
-
-class MantissaState : public State {
-public:
-    void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const override;
-};
-
-class ExponentState : public State {
-public:
-    void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const override;
-};
-
-class ExponentSignState : public State {
-public:
-    void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const override;
-};
-
-class ExponentDigitsState : public State {
-public:
-    void parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const override;
-};
-
-
-static StartState start;
-static ZeroState zero;
-static NegativeState negative;
-static PeriodState period;
-static MantissaState mantissa;
-static ExponentState exponent;
-static ExponentSignState exponent_sign;
-static ExponentDigitsState exponent_digits;
-
-// ----------------------------------------
-
 ConstNumCompiler::Impl::Impl(Compiler &compiler) :
     compiler {compiler},
-    state {&start},
+    parse_state {&Impl::parseStartState},
     first_column {compiler.getColumn()}
 {
 }
@@ -159,14 +102,6 @@ DataType ConstNumCompiler::Impl::compile()
     }
 }
 
-void ConstNumCompiler::Impl::parseInput()
-{
-    do {
-        auto next_char = compiler.peekNextChar();
-        state->parse(*this, next_char);
-    } while (!done);
-}
-
 bool ConstNumCompiler::Impl::negateOperator() const noexcept
 {
     return negate_operator;
@@ -177,151 +112,135 @@ bool ConstNumCompiler::Impl::possibleOperator() const noexcept
     return possible_operator;
 }
 
-void ConstNumCompiler::Impl::changeState(State &new_state) noexcept
+// ----------------------------------------
+
+void ConstNumCompiler::Impl::parseInput()
 {
-    state = &new_state;
+    do {
+        auto next_char = compiler.peekNextChar();
+        (this->*parse_state)(next_char);
+    } while (!done);
 }
 
-int ConstNumCompiler::Impl::getColumn() const noexcept
+void ConstNumCompiler::Impl::parseStartState(int next_char)
 {
-    return compiler.getColumn();
+    if (next_char == '0') {
+        parse_state = &Impl::parseZeroState;
+    } else if (next_char == '-') {
+        parse_state = &Impl::parseNegativeState;
+    } else if (!validMantissaChar(next_char)) {
+        done = true;
+        return;
+    }
+    addNextChar();
 }
+
+void ConstNumCompiler::Impl::parseNegativeState(int next_char)
+{
+    if (validMantissaChar(next_char)) {
+        addNextChar();
+    } else {
+        setNegateOperator();
+    }
+}
+
+void ConstNumCompiler::Impl::parseZeroState(int next_char)
+{
+    if (next_char == '.') {
+        parse_state = &Impl::parseMantissaState;
+    } else if (isdigit(next_char)) {
+        throw CompileError {"expected decimal point after leading zero", compiler.getColumn()};
+    } else {
+        done = true;
+    }
+}
+
+void ConstNumCompiler::Impl::parsePeriodState(int next_char)
+{
+    if (isdigit(next_char)) {
+        parse_state = &Impl::parseMantissaState;
+    } else {
+        throw CompileError {"expected digit after decimal point", compiler.getColumn()};
+    }
+}
+
+void ConstNumCompiler::Impl::parseMantissaState(int next_char)
+{
+    if (next_char == '.' && !floating_point) {
+        floating_point = true;
+    } else if (toupper(next_char) == 'E') {
+        parse_state = &Impl::parseExponentState;
+    } else if (!isdigit(next_char)) {
+        done = true;
+        return;
+    }
+    addNextChar();
+}
+
+void ConstNumCompiler::Impl::parseExponentState(int next_char)
+{
+    if (next_char == '-' || next_char == '+') {
+        parse_state = &Impl::parseExponentSignState;
+    } else if (isdigit(next_char)) {
+        parse_state = &Impl::parseExponentDigitsState;
+    } else if (isalpha(next_char)) {
+        setPossibleOperator();
+        return;
+    } else {
+        throw CompileError {"expected sign or digit for exponent", compiler.getColumn()};
+    }
+    floating_point = true;
+    addNextChar();
+}
+
+void ConstNumCompiler::Impl::parseExponentSignState(int next_char)
+{
+    if (isdigit(next_char)) {
+        parse_state = &Impl::parseExponentDigitsState;
+    } else {
+        throw CompileError {"expected digit after exponent sign", compiler.getColumn()};
+    }
+}
+
+void ConstNumCompiler::Impl::parseExponentDigitsState(int next_char)
+{
+    if (isdigit(next_char)) {
+        addNextChar();
+    } else {
+        done = true;
+    }
+}
+
+// ----------------------------------------
 
 void ConstNumCompiler::Impl::addNextChar()
 {
     number += compiler.getNextChar();
 }
 
-void ConstNumCompiler::Impl::setDouble() noexcept
-{
-    floating_point = true;
-}
-
-bool ConstNumCompiler::Impl::isDouble() const noexcept
-{
-    return floating_point;
-}
-
-void ConstNumCompiler::Impl::setDone() noexcept
-{
-    done = true;
-}
-
-void ConstNumCompiler::Impl::setNegateOperator() noexcept
-{
-    negate_operator = true;
-    number.clear();
-    setDone();
-}
-
-void ConstNumCompiler::Impl::setPossibleOperator() noexcept
-{
-    possible_operator = true;
-    number.pop_back();
-    setDone();
-}
-
-// ----------------------------------------
-
-void StartState::parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const
-{
-    if (next_char == '0') {
-        constant_compiler.changeState(zero);
-    } else if (next_char == '-') {
-        constant_compiler.changeState(negative);
-    } else if (!validMantissaChar(constant_compiler, next_char)) {
-        constant_compiler.setDone();
-        return;
-    }
-    constant_compiler.addNextChar();
-}
-
-void NegativeState::parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const
-{
-    if (validMantissaChar(constant_compiler, next_char)) {
-        constant_compiler.addNextChar();
-    } else {
-        constant_compiler.setNegateOperator();
-    }
-}
-
-bool State::validMantissaChar(ConstNumCompiler::Impl &constant_compiler, int next_char) const
+bool ConstNumCompiler::Impl::validMantissaChar(int next_char) noexcept
 {
     if (next_char == '.') {
-        constant_compiler.setDouble();
-        constant_compiler.changeState(period);
+        floating_point = true;
+        parse_state = &Impl::parsePeriodState;
     } else if (isdigit(next_char)) {
-        constant_compiler.changeState(mantissa);
+        parse_state = &Impl::parseMantissaState;
     } else {
         return false;
     }
     return true;
 }
 
-void ZeroState::parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const
+void ConstNumCompiler::Impl::setNegateOperator() noexcept
 {
-    if (next_char == '.') {
-        constant_compiler.changeState(mantissa);
-    } else if (isdigit(next_char)) {
-        throw CompileError {"expected decimal point after leading zero",
-            constant_compiler.getColumn()};
-    } else {
-        constant_compiler.setDone();
-    }
+    negate_operator = true;
+    number.clear();
+    done = true;
 }
 
-void PeriodState::parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const
+void ConstNumCompiler::Impl::setPossibleOperator() noexcept
 {
-    if (isdigit(next_char)) {
-        constant_compiler.changeState(mantissa);
-    } else {
-        throw CompileError {"expected digit after decimal point", constant_compiler.getColumn()};
-    }
-}
-
-void MantissaState::parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const
-{
-    if (next_char == '.' && !constant_compiler.isDouble()) {
-        constant_compiler.setDouble();
-    } else if (toupper(next_char) == 'E') {
-        constant_compiler.changeState(exponent);
-    } else if (!isdigit(next_char)) {
-        constant_compiler.setDone();
-        return;
-    }
-    constant_compiler.addNextChar();
-}
-
-void ExponentState::parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const
-{
-    if (next_char == '-' || next_char == '+') {
-        constant_compiler.changeState(exponent_sign);
-    } else if (isdigit(next_char)) {
-        constant_compiler.changeState(exponent_digits);
-    } else if (isalpha(next_char)) {
-        constant_compiler.setPossibleOperator();
-        return;
-    } else {
-        throw CompileError {"expected sign or digit for exponent", constant_compiler.getColumn()};
-    }
-    constant_compiler.setDouble();
-    constant_compiler.addNextChar();
-}
-
-void ExponentSignState::parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const
-{
-    if (isdigit(next_char)) {
-        constant_compiler.changeState(exponent_digits);
-    } else {
-        throw CompileError {"expected digit after exponent sign", constant_compiler.getColumn()};
-    }
-}
-
-void ExponentDigitsState::parse(ConstNumCompiler::Impl &constant_compiler, int next_char) const
-{
-    if (isdigit(next_char)) {
-        constant_compiler.addNextChar();
-    } else {
-        constant_compiler.setDone();
-    }
+    possible_operator = true;
+    number.pop_back();
+    done = true;
 }
