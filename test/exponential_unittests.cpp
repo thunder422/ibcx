@@ -10,6 +10,7 @@
 #include "compiler.h"
 #include "operators.h"
 #include "programunit.h"
+#include "runerror.h"
 
 
 TEST_CASE("compile exponential operator expressions", "[compile]")
@@ -240,5 +241,29 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         program.run(oss);
 
         REQUIRE(oss.str() == "1\n");
+    }
+    SECTION("execute an exponential of two integer constants with one to an even negative exponent")
+    {
+        std::istringstream iss {"PRINT 0^-1"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), RunError);
+        }
+        #if 0
+        SECTION("check the message, column and length of the error thrown")
+        {
+            try {
+                compiler.compileExpression(DataType::Null);
+            }
+            catch (const ExpNumExprError &error) {
+                REQUIRE(error.column == 2);
+                REQUIRE(error.length == 1);
+            }
+        }
+        #endif
     }
 }

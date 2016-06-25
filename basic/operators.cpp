@@ -9,6 +9,7 @@
 #include "executer.h"
 #include "operators.h"
 #include "recreator.h"
+#include "runerror.h"
 
 
 UnaryOperatorCodes::UnaryOperatorCodes(OperatorCode<OpType::Dbl> &dbl_code,
@@ -134,6 +135,9 @@ inline PowerIntInt::PowerIntInt(int x, int y) :
 inline int PowerIntInt::operator()()
 {
     if (y < 0) {
+        if (x == 0) {
+            throw RunError {""};
+        }
         return calculateNegativeExponent();
     }
     return calculatePower();
