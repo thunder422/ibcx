@@ -261,7 +261,28 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
             catch (const RunError &error) {
                 std::string expected = "divide by zero";
                 REQUIRE(error.what() == expected);
-                REQUIRE(error.offset == 2);
+                REQUIRE(error.offset == 4);
+            }
+        }
+    }
+    SECTION("check offset of a divide by zero error with a different offset")
+    {
+        std::istringstream iss {"PRINT 0^4^-1"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), RunError);
+        }
+        SECTION("check the offset of the error thrown")
+        {
+            try {
+                program.run(oss);
+            }
+            catch (const RunError &error) {
+                REQUIRE(error.offset == 7);
             }
         }
     }

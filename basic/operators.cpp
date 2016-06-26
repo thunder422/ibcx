@@ -123,7 +123,13 @@ void executeExponentialIntInt(Executer &executer)
     auto y = executer.top().int_value;
     executer.pop();
     auto x = executer.top().int_value;
-    executer.top().int_value = PowerIntInt{x, y}();
+    try {
+        executer.top().int_value = PowerIntInt{x, y}();
+    }
+    catch (RunError &error) {
+        error.offset = executer.currentOffset();
+        throw;
+    }
 }
 
 inline PowerIntInt::PowerIntInt(int x, int y) :
@@ -136,7 +142,7 @@ inline int PowerIntInt::operator()()
 {
     if (y < 0) {
         if (x == 0) {
-            throw RunError {"divide by zero", 2};
+            throw RunError {"divide by zero", 0};
         }
         return calculateNegativeExponent();
     }
