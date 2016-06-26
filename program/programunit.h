@@ -28,6 +28,7 @@ public:
     std::string recreateLine(unsigned line_index);
     void run(std::ostream &os);
     Executer createExecutor(std::ostream &os) const;
+    unsigned lineIndex(unsigned offset) const;
 
     ConstNumDictionary &constNumDictionary();
 

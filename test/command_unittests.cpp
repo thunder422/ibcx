@@ -276,6 +276,37 @@ TEST_CASE("execute an END command", "[END]")
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
 }
 
+TEST_CASE("run error handling", "[runerror]")
+{
+    ProgramUnit program;
+    std::istringstream iss {
+        "PRINT 2^3^4\n"
+        "PRINT 0^4^-1\n"
+    };
+    std::ostringstream oss;
+    program.compileSource(iss, oss);
+
+    SECTION("convert run error offset to a line index")
+    {
+        try {
+            program.run(oss);
+        }
+        catch (const RunError &error) {
+            REQUIRE(program.lineIndex(error.offset) == 1);
+        }
+
+        SECTION("test boundary offsets")
+        {
+            REQUIRE(program.lineIndex(0) == 0);
+            REQUIRE(program.lineIndex(9) == 0);
+            REQUIRE(program.lineIndex(10) == 1);
+            REQUIRE(program.lineIndex(19) == 1);
+            REQUIRE(program.lineIndex(20) == 2);
+            REQUIRE(program.lineIndex(9999) == 2);
+        }
+    }
+}
+
 TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")
 {
     SECTION("cover dynamically allocated compile error class")

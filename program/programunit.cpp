@@ -5,6 +5,7 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <algorithm>
 #include <sstream>
 
 #include "commandcode.h"
@@ -128,4 +129,14 @@ Executer ProgramUnit::createExecutor(std::ostream &os) const
 {
     return Executer {code.getBeginning(), const_num_dictionary.getDblValues(),
         const_num_dictionary.getIntValues(), os};
+}
+
+unsigned ProgramUnit::lineIndex(unsigned offset) const
+{
+    auto find_offset = [offset](LineInfo line_info) {
+        return offset >= line_info.offset && offset < line_info.offset + line_info.size;
+    };
+
+    auto it = std::find_if(line_info.begin(), line_info.end(), find_offset);
+    return std::distance(line_info.cbegin(), it);
 }
