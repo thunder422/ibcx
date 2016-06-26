@@ -235,6 +235,7 @@ TEST_CASE("compile multiple line program", "[program]")
             catch (const RunError &error) {
                 std::string expected = "BUG: value stack not empty at end of program";
                 REQUIRE(error.what() == expected);
+                REQUIRE(error.offset == 2);
             }
         }
     }

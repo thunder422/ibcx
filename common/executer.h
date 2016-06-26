@@ -30,6 +30,7 @@ public:
         std::ostream &os);
     void run();
     void executeOneCode();
+    int currentOffset() const;
 
     WordType getOperand();
     void pushConstDbl(WordType operand);
