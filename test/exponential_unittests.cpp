@@ -253,17 +253,16 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         {
             REQUIRE_THROWS_AS(program.run(oss), RunError);
         }
-        #if 0
-        SECTION("check the message, column and length of the error thrown")
+        SECTION("check the offset of the error thrown")
         {
             try {
-                compiler.compileExpression(DataType::Null);
+                program.run(oss);
             }
-            catch (const ExpNumExprError &error) {
-                REQUIRE(error.column == 2);
-                REQUIRE(error.length == 1);
+            catch (const RunError &error) {
+                std::string expected = "divide by zero";
+                REQUIRE(error.what() == expected);
+                REQUIRE(error.offset == 2);
             }
         }
-        #endif
     }
 }

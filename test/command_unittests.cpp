@@ -283,7 +283,7 @@ TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")
     }
     SECTION("cover dynamically allocated run error class")
     {
-        std::unique_ptr<RunError> error {new RunError {"cover dynamic destructor"}};
+        std::unique_ptr<RunError> error {new RunError {"cover dynamic destructor", 0}};
     }
     SECTION("cover dynamically allocated expected numeric expression error class")
     {

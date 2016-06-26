@@ -136,7 +136,7 @@ inline int PowerIntInt::operator()()
 {
     if (y < 0) {
         if (x == 0) {
-            throw RunError {""};
+            throw RunError {"divide by zero", 2};
         }
         return calculateNegativeExponent();
     }
