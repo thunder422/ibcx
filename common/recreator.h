@@ -19,9 +19,9 @@ class ProgramUnit;
 
 class Recreator {
 public:
-    Recreator(ProgramUnit &program, ProgramReader program_reader);
+    Recreator(const ProgramUnit &program, ProgramReader program_reader, unsigned error_offset);
     std::string operator()();
-    std::string getConstNumOperand();
+    std::string getConstNumOperand() const;
     void pushKeyword(CommandCode command_code);
     void push(const std::string &operand);
     bool empty() const;
@@ -31,6 +31,7 @@ public:
     void append(const std::string &string);
     void swapTop(std::string &string);
     void prependKeyword(CommandCode command_code);
+    void markErrorStart();
 
 private:
     struct StackItem {
@@ -39,11 +40,15 @@ private:
         std::string string;
     };
 
+    void setAtErrorOffset();
     void recreateOneCode();
+    void appendErrorMarker(char error_marker);
 
-    ProgramUnit &program;
-    ProgramReader program_reader;
+    const ProgramUnit &program;
+    mutable ProgramReader program_reader;
+    unsigned error_offset;
     std::stack<StackItem> stack;
+    bool at_error_offset;
 };
 
 inline Recreator::StackItem::StackItem(const std::string &string) :

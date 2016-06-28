@@ -10,6 +10,7 @@
 #include "commandcompiler.h"
 #include "compiler.h"
 #include "compileerror.h"
+#include "errorinfo.h"
 #include "executer.h"
 #include "programcode.h"
 #include "programunit.h"
@@ -303,6 +304,17 @@ TEST_CASE("run error handling", "[runerror]")
             REQUIRE(program.lineIndex(19) == 1);
             REQUIRE(program.lineIndex(20) == 2);
             REQUIRE(program.lineIndex(9999) == 2);
+        }
+    }
+    SECTION("get the column of the run error")
+    {
+        try {
+            program.run(oss);
+        }
+        catch (const RunError &error) {
+            auto line_index = program.lineIndex(error.offset);
+            auto error_info = program.errorInfo(line_index, error.offset);
+            REQUIRE(error_info.column == 12);
         }
     }
 }

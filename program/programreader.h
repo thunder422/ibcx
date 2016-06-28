@@ -18,9 +18,11 @@ public:
     ProgramReader(ProgramConstIterator begin, unsigned offset, unsigned size);
     Code *getInstruction();
     WordType getOperand();
+    unsigned currentOffset() const;
     bool hasMoreCode() const;
 
 private:
+    ProgramConstIterator begin_iterator;
     ProgramConstIterator iterator;
     ProgramConstIterator end_iterator;
 };

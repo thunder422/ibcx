@@ -6,23 +6,32 @@
  */
 
 #include "commandcode.h"
+#include "errorinfo.h"
 #include "programcode.h"
 #include "programunit.h"
 #include "recreator.h"
 
 
-Recreator::Recreator(ProgramUnit &program, ProgramReader program_reader) :
+Recreator::Recreator(const ProgramUnit &program, ProgramReader program_reader,
+        unsigned error_offset) :
     program {program},
-    program_reader {program_reader}
+    program_reader {program_reader},
+    error_offset {error_offset}
 {
 }
 
 std::string Recreator::operator()()
 {
     while (program_reader.hasMoreCode()) {
+        setAtErrorOffset();
         recreateOneCode();
     }
     return top();
+}
+
+void Recreator::setAtErrorOffset()
+{
+    at_error_offset = program_reader.currentOffset() == error_offset;
 }
 
 void Recreator::recreateOneCode()
@@ -31,7 +40,7 @@ void Recreator::recreateOneCode()
     code->recreate(*this);
 }
 
-std::string Recreator::getConstNumOperand()
+std::string Recreator::getConstNumOperand() const
 {
     auto operand = program_reader.getOperand();
     return program.constNumDictionary().get(operand);
@@ -68,6 +77,18 @@ void Recreator::prependKeyword(CommandCode command_code)
     swapTop(string);
     append(' ');
     append(string);
+}
+
+void Recreator::markErrorStart()
+{
+    appendErrorMarker(StartErrorMarker);
+}
+
+void Recreator::appendErrorMarker(char error_marker)
+{
+    if (at_error_offset) {
+        append(error_marker);
+    }
 }
 
 void Recreator::append(char c)

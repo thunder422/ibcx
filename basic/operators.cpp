@@ -99,9 +99,11 @@ NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code
 
 void recreateExponential(Recreator &recreator)
 {
-    std::string string {"^ "};
-    string += recreator.top();
+    std::string string = recreator.top();
     recreator.pop();
+    recreator.append(' ');
+    recreator.markErrorStart();
+    recreator.append('^');
     recreator.append(' ');
     recreator.append(string);
 }

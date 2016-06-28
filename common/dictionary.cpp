@@ -35,7 +35,7 @@ Dictionary::Entry Dictionary::addToKeyIteratorVector(const Dictionary::KeyMapEnt
     return Entry {operand, key_map_entry.key_exists};
 }
 
-std::string Dictionary::get(WordType index)
+std::string Dictionary::get(WordType index) const
 {
     return key_iterator[index]->first;
 }

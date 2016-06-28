@@ -12,6 +12,7 @@
 #include "commandcompiler.h"
 #include "compileerror.h"
 #include "compiler.h"
+#include "errorinfo.h"
 #include "executer.h"
 #include "programreader.h"
 #include "programunit.h"
@@ -77,9 +78,9 @@ void ProgramUnit::recreate(std::ostream &os)
     }
 }
 
-std::string ProgramUnit::recreateLine(unsigned line_index)
+std::string ProgramUnit::recreateLine(unsigned line_index, unsigned error_offset) const
 {
-    Recreator recreate(*this, createProgramReader(line_index));
+    Recreator recreate {*this, createProgramReader(line_index), error_offset};
     return recreate();
 }
 
@@ -139,4 +140,17 @@ unsigned ProgramUnit::lineIndex(unsigned offset) const
 
     auto it = std::find_if(line_info.begin(), line_info.end(), find_offset);
     return std::distance(line_info.cbegin(), it);
+}
+
+ErrorInfo ProgramUnit::errorInfo(unsigned line_index, unsigned error_offset) const
+{
+    auto program_line = recreateLine(line_index, error_offset);
+    return extractErrorInfo(program_line);
+}
+
+ErrorInfo ProgramUnit::extractErrorInfo(const std::string &program_line) const
+{
+    ErrorInfo error_info;
+    error_info.column = program_line.find_first_of(StartErrorMarker);
+    return error_info;
 }

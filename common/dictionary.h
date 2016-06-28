@@ -23,7 +23,7 @@ public:
 
     Dictionary();
     Entry add(const std::string &string);
-    std::string get(WordType index);
+    std::string get(WordType index) const;
 
 private:
     struct EntryValue {

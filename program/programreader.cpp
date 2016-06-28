@@ -10,6 +10,7 @@
 
 
 ProgramReader::ProgramReader(ProgramConstIterator begin, unsigned offset, unsigned size) :
+    begin_iterator {begin},
     iterator {begin + offset},
     end_iterator {iterator + size}
 {
@@ -23,6 +24,11 @@ Code *ProgramReader::getInstruction()
 WordType ProgramReader::getOperand()
 {
     return (*iterator++).operand();
+}
+
+unsigned ProgramReader::currentOffset() const
+{
+    return std::distance(begin_iterator, iterator);
 }
 
 bool ProgramReader::hasMoreCode() const
