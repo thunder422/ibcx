@@ -315,6 +315,7 @@ TEST_CASE("run error handling", "[runerror]")
             auto line_index = program.lineIndex(error.offset);
             auto error_info = program.errorInfo(line_index, error.offset);
             REQUIRE(error_info.column == 12);
+            REQUIRE(error_info.length == 1);
         }
     }
 }

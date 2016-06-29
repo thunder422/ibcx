@@ -152,5 +152,6 @@ ErrorInfo ProgramUnit::extractErrorInfo(const std::string &program_line) const
 {
     ErrorInfo error_info;
     error_info.column = program_line.find_first_of(StartErrorMarker);
+    error_info.length = 1;
     return error_info;
 }

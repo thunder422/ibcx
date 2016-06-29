@@ -13,6 +13,7 @@ constexpr char StartErrorMarker = '\02';
 
 struct ErrorInfo {
     unsigned column;
+    unsigned length;
 };
 
 
