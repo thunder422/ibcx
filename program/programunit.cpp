@@ -145,13 +145,5 @@ unsigned ProgramUnit::lineIndex(unsigned offset) const
 ErrorInfo ProgramUnit::errorInfo(unsigned line_index, unsigned error_offset) const
 {
     auto program_line = recreateLine(line_index, error_offset);
-    return extractErrorInfo(program_line);
-}
-
-ErrorInfo ProgramUnit::extractErrorInfo(const std::string &program_line) const
-{
-    ErrorInfo error_info;
-    error_info.column = program_line.find_first_of(StartErrorMarker);
-    error_info.length = 1;
-    return error_info;
+    return ErrorInfo {program_line};
 }

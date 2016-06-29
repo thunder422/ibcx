@@ -316,6 +316,7 @@ TEST_CASE("run error handling", "[runerror]")
             auto error_info = program.errorInfo(line_index, error.offset);
             REQUIRE(error_info.column == 12);
             REQUIRE(error_info.length == 1);
+            REQUIRE(error_info.line == "PRINT 0 ^ 4 ^ -1");
         }
     }
 }

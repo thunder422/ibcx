@@ -8,12 +8,17 @@
 #ifndef IBC_ERRORINFO_H
 #define IBC_ERRORINFO_H
 
+#include <string>
+
 
 constexpr char StartErrorMarker = '\02';
 
 struct ErrorInfo {
-    unsigned column;
+    ErrorInfo(const std::string &program_line);
+
+    size_t column;
     unsigned length;
+    std::string line;
 };
 
 

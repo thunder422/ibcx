@@ -71,7 +71,7 @@ set(IBC_SOURCES
     common/compileerror.h
     common/datatype.h
     common/dictionary.cpp
-    common/errorinfo.h
+    common/errorinfo.cpp
     common/executer.cpp
     common/recreator.cpp
     common/runerror.h

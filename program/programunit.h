@@ -41,7 +41,6 @@ private:
     void outputError(std::ostream &os, const std::string &line, size_t line_number,
         const CompileError &error);
     ProgramReader createProgramReader(unsigned line_index) const;
-    ErrorInfo extractErrorInfo(const std::string &program_line) const;
 
     struct LineInfo {
         LineInfo(unsigned offset, unsigned size);
