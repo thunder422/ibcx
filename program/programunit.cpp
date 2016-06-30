@@ -12,8 +12,8 @@
 #include "commandcompiler.h"
 #include "compileerror.h"
 #include "compiler.h"
-#include "errorinfo.h"
 #include "executer.h"
+#include "programerror.h"
 #include "programreader.h"
 #include "programunit.h"
 #include "recreator.h"
@@ -101,6 +101,27 @@ private:
 
 void ProgramUnit::run(std::ostream &os)
 {
+    try {
+        execute(os);
+    }
+    catch (const RunError &error) {
+        generateProgramError(error);
+    }
+}
+
+void ProgramUnit::generateProgramError(const RunError &error)
+{
+    if (error.offset >= code.size()) {
+        throw ProgramError {error};
+    } else {
+        auto line_index = lineIndex(error.offset);
+        auto program_line = recreateLine(line_index, error.offset);
+        throw ProgramError {error, line_index + 1, program_line};
+    }
+}
+
+void ProgramUnit::execute(std::ostream &os)
+{
     ProgramEndGuard end_guard {code};
     auto executer = createExecutor(os);
     try {
@@ -140,10 +161,4 @@ unsigned ProgramUnit::lineIndex(unsigned offset) const
 
     auto it = std::find_if(line_info.begin(), line_info.end(), find_offset);
     return std::distance(line_info.cbegin(), it);
-}
-
-ErrorInfo ProgramUnit::errorInfo(unsigned line_index, unsigned error_offset) const
-{
-    auto program_line = recreateLine(line_index, error_offset);
-    return ErrorInfo {program_line};
 }

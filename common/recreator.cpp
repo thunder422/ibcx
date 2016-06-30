@@ -6,8 +6,8 @@
  */
 
 #include "commandcode.h"
-#include "errorinfo.h"
 #include "programcode.h"
+#include "programerror.h"
 #include "programunit.h"
 #include "recreator.h"
 

@@ -41,7 +41,7 @@ void Executer::executeOneCode()
     execute_functions[code_value](*this);
 }
 
-int Executer::currentOffset() const
+unsigned Executer::currentOffset() const
 {
     return program_counter - code - 1;
 }

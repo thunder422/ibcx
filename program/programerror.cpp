@@ -5,10 +5,19 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#include "errorinfo.h"
+#include "programerror.h"
+#include "runerror.h"
 
 
-ErrorInfo::ErrorInfo(const std::string &program_line) :
+ProgramError::ProgramError(const RunError &run_error) :
+    runtime_error {run_error.what()}
+{
+}
+
+ProgramError::ProgramError(const RunError &run_error, unsigned line_number,
+        const std::string &program_line) :
+    runtime_error {run_error.what()},
+    line_number {line_number},
     column {program_line.find_first_of(StartErrorMarker)},
     length {1},
     line {program_line}

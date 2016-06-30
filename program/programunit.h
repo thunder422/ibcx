@@ -15,7 +15,8 @@
 
 
 struct CompileError;
-struct ErrorInfo;
+struct ProgramError;
+struct RunError;
 class Executer;
 class ProgramReader;
 
@@ -29,18 +30,20 @@ public:
     std::string recreateLine(unsigned line_index, unsigned error_offset = -1) const;
     void run(std::ostream &os);
     Executer createExecutor(std::ostream &os) const;
-    unsigned lineIndex(unsigned offset) const;
-    ErrorInfo errorInfo(unsigned line_index, unsigned error_offset) const;
 
     ConstNumDictionary &constNumDictionary();
     const ConstNumDictionary &constNumDictionary() const;
 
 private:
+    bool compileLine(const std::string &line);
     void handleError(std::ostream &os, const std::string &line, const CompileError &error);
     void appendEmptyCodeLine();
     void outputError(std::ostream &os, const std::string &line, size_t line_number,
         const CompileError &error);
     ProgramReader createProgramReader(unsigned line_index) const;
+    void generateProgramError(const RunError &error);
+    void execute(std::ostream &os);
+    unsigned lineIndex(unsigned offset) const;
 
     struct LineInfo {
         LineInfo(unsigned offset, unsigned size);

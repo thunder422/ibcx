@@ -9,8 +9,8 @@
 #include "compileerror.h"
 #include "compiler.h"
 #include "operators.h"
+#include "programerror.h"
 #include "programunit.h"
-#include "runerror.h"
 
 
 TEST_CASE("compile exponential operator expressions", "[compile]")
@@ -244,29 +244,6 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
     }
     SECTION("execute an exponential of two integer constants with one to an even negative exponent")
     {
-        std::istringstream iss {"PRINT 0^-1"};
-        std::ostringstream oss;
-
-        program.compileSource(iss, oss);
-
-        SECTION("check that the error is thrown")
-        {
-            REQUIRE_THROWS_AS(program.run(oss), RunError);
-        }
-        SECTION("check the offset of the error thrown")
-        {
-            try {
-                program.run(oss);
-            }
-            catch (const RunError &error) {
-                std::string expected = "divide by zero";
-                REQUIRE(error.what() == expected);
-                REQUIRE(error.offset == 4);
-            }
-        }
-    }
-    SECTION("check offset of a divide by zero error with a different offset")
-    {
         std::istringstream iss {"PRINT 0^4^-1"};
         std::ostringstream oss;
 
@@ -274,15 +251,20 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(program.run(oss), RunError);
+            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
         }
         SECTION("check the offset of the error thrown")
         {
             try {
                 program.run(oss);
             }
-            catch (const RunError &error) {
-                REQUIRE(error.offset == 7);
+            catch (const ProgramError &error) {
+                std::string expected = "divide by zero";
+                REQUIRE(error.what() == expected);
+                REQUIRE(error.line_number == 1);
+                REQUIRE(error.column == 12);
+                REQUIRE(error.length == 1);
+                REQUIRE(error.line == "PRINT 0 ^ 4 ^ -1");
             }
         }
     }

@@ -71,7 +71,6 @@ set(IBC_SOURCES
     common/compileerror.h
     common/datatype.h
     common/dictionary.cpp
-    common/errorinfo.cpp
     common/executer.cpp
     common/recreator.cpp
     common/runerror.h
@@ -81,6 +80,7 @@ set(IBC_SOURCES
     compiler/constnumcompiler.cpp
     compiler/expressioncompiler.cpp
     program/programcode.cpp
+    program/programerror.cpp
     program/programreader.cpp
     program/programunit.cpp
     program/programword.h

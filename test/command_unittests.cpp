@@ -10,9 +10,9 @@
 #include "commandcompiler.h"
 #include "compiler.h"
 #include "compileerror.h"
-#include "errorinfo.h"
 #include "executer.h"
 #include "programcode.h"
+#include "programerror.h"
 #include "programunit.h"
 #include "runerror.h"
 
@@ -226,17 +226,17 @@ TEST_CASE("compile multiple line program", "[program]")
         std::ostringstream oss;
         SECTION("check that error is thrown")
         {
-            REQUIRE_THROWS_AS(program.run(oss), RunError);
+            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
         }
         SECTION("check message of the error thrown")
         {
             try {
                 program.run(oss);
             }
-            catch (const RunError &error) {
+            catch (const ProgramError &error) {
                 std::string expected = "BUG: value stack not empty at end of program";
                 REQUIRE(error.what() == expected);
-                REQUIRE(error.offset == 2);
+                REQUIRE(error.line.empty());
             }
         }
     }
@@ -277,50 +277,6 @@ TEST_CASE("execute an END command", "[END]")
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
 }
 
-TEST_CASE("run error handling", "[runerror]")
-{
-    ProgramUnit program;
-    std::istringstream iss {
-        "PRINT 2^3^4\n"
-        "PRINT 0^4^-1\n"
-    };
-    std::ostringstream oss;
-    program.compileSource(iss, oss);
-
-    SECTION("convert run error offset to a line index")
-    {
-        try {
-            program.run(oss);
-        }
-        catch (const RunError &error) {
-            REQUIRE(program.lineIndex(error.offset) == 1);
-        }
-
-        SECTION("test boundary offsets")
-        {
-            REQUIRE(program.lineIndex(0) == 0);
-            REQUIRE(program.lineIndex(9) == 0);
-            REQUIRE(program.lineIndex(10) == 1);
-            REQUIRE(program.lineIndex(19) == 1);
-            REQUIRE(program.lineIndex(20) == 2);
-            REQUIRE(program.lineIndex(9999) == 2);
-        }
-    }
-    SECTION("get the column of the run error")
-    {
-        try {
-            program.run(oss);
-        }
-        catch (const RunError &error) {
-            auto line_index = program.lineIndex(error.offset);
-            auto error_info = program.errorInfo(line_index, error.offset);
-            REQUIRE(error_info.column == 12);
-            REQUIRE(error_info.length == 1);
-            REQUIRE(error_info.line == "PRINT 0 ^ 4 ^ -1");
-        }
-    }
-}
-
 TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")
 {
     SECTION("cover dynamically allocated compile error class")
@@ -330,6 +286,11 @@ TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")
     SECTION("cover dynamically allocated run error class")
     {
         std::unique_ptr<RunError> error {new RunError {"cover dynamic destructor", 0}};
+    }
+    SECTION("cover dynamically allocated program error class")
+    {
+        RunError run_error {"cover dynamic destructor", 0};
+        std::unique_ptr<ProgramError> error {new ProgramError {run_error}};
     }
     SECTION("cover dynamically allocated expected numeric expression error class")
     {

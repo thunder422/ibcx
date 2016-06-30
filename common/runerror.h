@@ -12,9 +12,9 @@
 
 
 struct RunError : public std::runtime_error {
-    RunError(const char *message, int offset) : runtime_error {message}, offset {offset} { }
+    RunError(const char *message, unsigned offset) : runtime_error {message}, offset {offset} { }
 
-    int offset;
+    unsigned offset;
 };
 
 
