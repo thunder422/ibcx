@@ -89,13 +89,15 @@ private:
     ProgramCode &code;
 };
 
-void ProgramUnit::runCode(std::ostream &os) noexcept
+bool ProgramUnit::runCode(std::ostream &os) noexcept
 {
     try {
         run(os);
+        return true;
     }
     catch (const ProgramError &error) {
         outputError(os, error);
+        return false;
     }
 }
 

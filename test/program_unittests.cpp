@@ -277,7 +277,7 @@ TEST_CASE("execute an END command", "[END]")
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
 }
 
-TEST_CASE("run error handling", "[runerror]")
+TEST_CASE("run program code", "[execute]")
 {
     ProgramUnit program;
     std::ostringstream oss;
@@ -289,8 +289,8 @@ TEST_CASE("run error handling", "[runerror]")
             "PRINT 0^4^-1\n"
         };
         program.compileSource(iss, oss);
-        program.runCode(oss);
 
+        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "4096\n"
             "run error at line 2:12: divide by zero\n"
@@ -304,9 +304,20 @@ TEST_CASE("run error handling", "[runerror]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        program.runCode(oss);
+        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at end of program: BUG: value stack not empty at end of program\n");
+    }
+    SECTION("successful run of program")
+    {
+        std::istringstream iss {
+            "PRINT 2^3^4\n"
+        };
+        program.compileSource(iss, oss);
+
+        REQUIRE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "4096\n");
     }
 }
 

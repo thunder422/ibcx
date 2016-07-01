@@ -28,7 +28,7 @@ public:
     void appendCodeLine(ProgramCode &code_line);
     void recreate(std::ostream &os);
     std::string recreateLine(unsigned line_index, unsigned error_offset = -1) const;
-    void runCode(std::ostream &os) noexcept;
+    bool runCode(std::ostream &os) noexcept;
     void run(std::ostream &os);
     Executer createExecutor(std::ostream &os) const;
 

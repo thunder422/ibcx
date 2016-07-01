@@ -178,5 +178,7 @@ void IbcProgram::recreate()
 
 void IbcProgram::execute()
 {
-    program.run(std::cout);
+    if (!program.runCode(std::cout)) {
+        throw IbcError {};
+    }
 }
