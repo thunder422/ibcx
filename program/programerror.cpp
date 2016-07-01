@@ -5,6 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <iostream>
+
 #include "compileerror.h"
 #include "programerror.h"
 #include "runerror.h"
@@ -37,6 +39,20 @@ ProgramError::ProgramError(const RunError &run_error, unsigned line_number,
     type {Type::Run}
 {
     line.erase(column, 1);
+}
+
+void ProgramError::output(std::ostream &os) const
+{
+    os << typeString() << ' ';
+    if (line.empty()) {
+        os << "end of program: " << what() << std::endl;
+    } else {
+        os << "line " << line_number << ':' << column << ": " << what() << std::endl;
+        os << "    " << line << std::endl;
+        std::string spaces(4 + column, ' ');
+        std::string indicator(length, '^');
+        os << spaces << indicator << std::endl;
+    }
 }
 
 const char *ProgramError::typeString() const

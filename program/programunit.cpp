@@ -45,8 +45,7 @@ void ProgramUnit::handleError(std::ostream &os, const std::string &line, const C
 {
     appendEmptyCodeLine();
     unsigned line_number = line_info.size();
-    ProgramError program_error {error, line_number, line};
-    outputError(os, program_error);
+    ProgramError{error, line_number, line}.output(os);
 }
 
 void ProgramUnit::appendEmptyCodeLine()
@@ -96,7 +95,7 @@ bool ProgramUnit::runCode(std::ostream &os) noexcept
         return true;
     }
     catch (const ProgramError &error) {
-        outputError(os, error);
+        error.output(os);
         return false;
     }
 }
@@ -134,21 +133,6 @@ void ProgramUnit::execute(std::ostream &os)
             throw RunError {"BUG: value stack not empty at end of program",
                 executer.currentOffset()};
         }
-    }
-}
-
-void ProgramUnit::outputError(std::ostream &os, const ProgramError &error)
-{
-    os << error.typeString() << ' ';
-    if (error.line.empty()) {
-        os << "end of program: " << error.what() << std::endl;
-    } else {
-        os << "line " << error.line_number << ':' << error.column << ": " << error.what()
-            << std::endl;
-        os << "    " << error.line << std::endl;
-        std::string spaces(4 + error.column, ' ');
-        std::string indicator(error.length, '^');
-        os << spaces << indicator << std::endl;
     }
 }
 

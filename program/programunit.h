@@ -42,7 +42,6 @@ private:
     ProgramReader createProgramReader(unsigned line_index) const;
     void generateProgramError(const RunError &error);
     void execute(std::ostream &os);
-    void outputError(std::ostream &os, const ProgramError &error);
     unsigned lineIndex(unsigned offset) const;
 
     struct LineInfo {

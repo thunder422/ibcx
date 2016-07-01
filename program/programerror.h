@@ -8,6 +8,7 @@
 #ifndef IBC_PROGRAMERROR_H
 #define IBC_PROGRAMERROR_H
 
+#include <iosfwd>
 #include <stdexcept>
 #include <string>
 
@@ -22,7 +23,7 @@ struct ProgramError : public std::runtime_error {
     ProgramError(const RunError &run_error);
     ProgramError(const RunError &error, unsigned line_number, const std::string &program_line);
 
-    const char *typeString() const;
+    void output(std::ostream &os) const;
 
     unsigned line_number;
     size_t column;
@@ -30,6 +31,8 @@ struct ProgramError : public std::runtime_error {
     std::string line;
 
 private:
+    const char *typeString() const;
+
     enum Type {Compile, Run} type;
 };
 
