@@ -147,12 +147,16 @@ void ProgramUnit::execute(std::ostream &os)
 
 void ProgramUnit::outputError(std::ostream &os, const ProgramError &error)
 {
-    os << "run error at line " << error.line_number << ':' << error.column << ": " << error.what()
-        << std::endl;
-    os << "    " << error.line << std::endl;
-    std::string spaces(4 + error.column, ' ');
-    std::string indicator(error.length, '^');
-    os << spaces << indicator << std::endl;
+    if (error.line.empty()) {
+        os << "run error at end of program: " << error.what() << std::endl;
+    } else {
+        os << "run error at line " << error.line_number << ':' << error.column << ": "
+            << error.what() << std::endl;
+        os << "    " << error.line << std::endl;
+        std::string spaces(4 + error.column, ' ');
+        std::string indicator(error.length, '^');
+        os << spaces << indicator << std::endl;
+    }
 }
 
 ProgramEndGuard::ProgramEndGuard(ProgramCode &code) :

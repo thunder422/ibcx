@@ -297,6 +297,17 @@ TEST_CASE("run error handling", "[runerror]")
             "    PRINT 0 ^ 4 ^ -1\n"
             "                ^\n");
     }
+    SECTION("contrived program with stack run error (test bug output)")
+    {
+        Compiler compiler {"", program};
+        compiler.addConstNumInstruction(true, "-1.23e45");
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        program.runCode(oss);
+        REQUIRE(oss.str() ==
+            "run error at end of program: BUG: value stack not empty at end of program\n");
+    }
 }
 
 TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")
