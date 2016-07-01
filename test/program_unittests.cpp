@@ -148,9 +148,8 @@ TEST_CASE("compile multiple line program", "[compile]")
             "print 123\n"
             "END\n"
         };
-        std::ostringstream unused_oss;
 
-        program.compileSource(iss, unused_oss);
+        program.compile(iss);
 
         SECTION("recreate program")
         {
@@ -177,9 +176,8 @@ TEST_CASE("compile multiple line program", "[compile]")
             "print 1.704e123\n"
             "print -87654321\n"
         };
-        std::ostringstream unused_oss;
 
-        REQUIRE(program.compileSource(iss, unused_oss));
+        REQUIRE(program.compile(iss).empty());
 
         std::ostringstream oss;
         program.run(oss);
@@ -271,7 +269,7 @@ TEST_CASE("execute an END command", "[END]")
     std::istringstream iss {"END"};
     ProgramUnit program;
     std::ostringstream unused_oss;
-    program.compileSource(iss, unused_oss);
+    program.compile(iss);
 
     auto executer = program.createExecutor(unused_oss);
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
@@ -288,7 +286,7 @@ TEST_CASE("run program code", "[execute]")
             "PRINT 2^3^4\n"
             "PRINT 0^4^-1\n"
         };
-        program.compileSource(iss, oss);
+        program.compile(iss);
 
         REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
@@ -313,7 +311,7 @@ TEST_CASE("run program code", "[execute]")
         std::istringstream iss {
             "PRINT 2^3^4\n"
         };
-        program.compileSource(iss, oss);
+        program.compile(iss);
 
         REQUIRE(program.runCode(oss));
         REQUIRE(oss.str() ==

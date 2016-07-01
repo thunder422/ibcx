@@ -26,7 +26,16 @@ ProgramUnit::ProgramUnit()
 
 bool ProgramUnit::compileSource(std::istream &is, std::ostream &os)
 {
-    int error_count = 0;
+    auto program_errors = compile(is);
+    for (auto &error : program_errors) {
+        error.output(os);
+    }
+    return program_errors.empty();
+}
+
+std::vector<ProgramError> ProgramUnit::compile(std::istream &is)
+{
+    std::vector<ProgramError> errors;
     std::string line;
     while (std::getline(is, line)) {
         try {
@@ -34,18 +43,12 @@ bool ProgramUnit::compileSource(std::istream &is, std::ostream &os)
             appendCodeLine(code_line);
         }
         catch (const CompileError &error) {
-            ++error_count;
-            handleError(os, line, error);
+            appendEmptyCodeLine();
+            unsigned line_number = line_info.size();
+            errors.emplace_back(error, line_number, line);
         }
     }
-    return error_count == 0;
-}
-
-void ProgramUnit::handleError(std::ostream &os, const std::string &line, const CompileError &error)
-{
-    appendEmptyCodeLine();
-    unsigned line_number = line_info.size();
-    ProgramError{error, line_number, line}.output(os);
+    return errors;
 }
 
 void ProgramUnit::appendEmptyCodeLine()

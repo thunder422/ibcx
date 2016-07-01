@@ -25,6 +25,7 @@ public:
     ProgramUnit();
 
     bool compileSource(std::istream &is, std::ostream &os);
+    std::vector<ProgramError> compile(std::istream &is);
     void appendCodeLine(ProgramCode &code_line);
     void recreate(std::ostream &os);
     std::string recreateLine(unsigned line_index, unsigned error_offset = -1) const;
@@ -37,7 +38,6 @@ public:
 
 private:
     bool compileLine(const std::string &line);
-    void handleError(std::ostream &os, const std::string &line, const CompileError &error);
     void appendEmptyCodeLine();
     ProgramReader createProgramReader(unsigned line_index) const;
     void generateProgramError(const RunError &error);

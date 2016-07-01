@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "compileerror.h"
 #include "compiler.h"
+#include "programerror.h"
 #include "programunit.h"
 
 
@@ -86,7 +87,7 @@ TEST_CASE("recreate negate operator expressions", "[recreate]")
         std::istringstream iss {"PRINT --2"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT --2\n");
@@ -96,7 +97,7 @@ TEST_CASE("recreate negate operator expressions", "[recreate]")
         std::istringstream iss {"PRINT - 2"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT - 2\n");
@@ -106,7 +107,7 @@ TEST_CASE("recreate negate operator expressions", "[recreate]")
         std::istringstream iss {"PRINT --2.0"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT --2.0\n");
@@ -116,7 +117,7 @@ TEST_CASE("recreate negate operator expressions", "[recreate]")
         std::istringstream iss {"PRINT - .1"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT - .1\n");
@@ -132,7 +133,7 @@ TEST_CASE("execute negate operator expressions", "[execute]")
         std::istringstream iss {"PRINT --345"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.run(oss);
 
         REQUIRE(oss.str() == "345\n");
@@ -142,7 +143,7 @@ TEST_CASE("execute negate operator expressions", "[execute]")
         std::istringstream iss {"PRINT - 1.345e210"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.run(oss);
 
         REQUIRE(oss.str() == "-1.345e+210\n");

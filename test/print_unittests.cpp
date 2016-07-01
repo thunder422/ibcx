@@ -9,6 +9,7 @@
 #include "commandcode.h"
 #include "commandcompiler.h"
 #include "executer.h"
+#include "programerror.h"
 #include "programunit.h"
 
 
@@ -58,12 +59,11 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
 TEST_CASE("execute simple PRINT commands", "[execute]")
 {
     ProgramUnit program;
-    std::ostringstream unused_oss;
 
     SECTION("execute a blank PRINT command")
     {
         std::istringstream iss {"PRINT"};
-        program.compileSource(iss, unused_oss);
+        program.compile(iss);
         std::ostringstream oss;
 
         auto executer = program.createExecutor(oss);
@@ -74,7 +74,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
     SECTION("execute a PRINT integer constant command")
     {
         std::istringstream iss {"PRINT -1234"};
-        program.compileSource(iss, unused_oss);
+        program.compile(iss);
         std::ostringstream oss;
 
         auto executer = program.createExecutor(oss);
@@ -87,7 +87,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
     SECTION("execute a PRINT double constant command")
     {
         std::istringstream iss {"PRINT 23.4e-108"};
-        program.compileSource(iss, unused_oss);
+        program.compile(iss);
         std::ostringstream oss;
 
         auto executer = program.createExecutor(oss);

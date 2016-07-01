@@ -141,7 +141,7 @@ TEST_CASE("recreate exponential operator expression", "[recreate]")
         std::istringstream iss {"PRINT 3^2"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT 3 ^ 2\n");
@@ -151,7 +151,7 @@ TEST_CASE("recreate exponential operator expression", "[recreate]")
         std::istringstream iss {"PRINT 3.0^2.0"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT 3.0 ^ 2.0\n");
@@ -161,7 +161,7 @@ TEST_CASE("recreate exponential operator expression", "[recreate]")
         std::istringstream iss {"PRINT 3^2.0"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT 3 ^ 2.0\n");
@@ -171,7 +171,7 @@ TEST_CASE("recreate exponential operator expression", "[recreate]")
         std::istringstream iss {"PRINT 3.0^2"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT 3.0 ^ 2\n");
@@ -187,7 +187,7 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         std::istringstream iss {"PRINT 3^2"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.run(oss);
 
         REQUIRE(oss.str() == "9\n");
@@ -197,7 +197,7 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         std::istringstream iss {"PRINT 2^5"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.run(oss);
 
         REQUIRE(oss.str() == "32\n");
@@ -207,7 +207,7 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         std::istringstream iss {"PRINT 2^-5"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.run(oss);
 
         REQUIRE(oss.str() == "0\n");
@@ -217,7 +217,7 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         std::istringstream iss {"PRINT 1^-5"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.run(oss);
 
         REQUIRE(oss.str() == "1\n");
@@ -227,7 +227,7 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         std::istringstream iss {"PRINT -1^-5"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.run(oss);
 
         REQUIRE(oss.str() == "-1\n");
@@ -237,7 +237,7 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         std::istringstream iss {"PRINT -1^-6"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
         program.run(oss);
 
         REQUIRE(oss.str() == "1\n");
@@ -247,7 +247,7 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         std::istringstream iss {"PRINT 0^4^-1"};
         std::ostringstream oss;
 
-        program.compileSource(iss, oss);
+        program.compile(iss);
 
         SECTION("check that the error is thrown")
         {
