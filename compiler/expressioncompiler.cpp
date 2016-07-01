@@ -30,7 +30,7 @@ private:
     DataType compileNumOperand();
 
     Compiler &compiler;
-    int column;
+    unsigned column;
 };
 
 ExpressionCompiler::ExpressionCompiler(Compiler &compiler) :

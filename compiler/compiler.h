@@ -30,7 +30,7 @@ public:
     char peekNextChar();
     char getNextChar();
     void skipWhiteSpace();
-    int getColumn() noexcept;
+    unsigned getColumn() noexcept;
 
     void addInstruction(Code &code);
     DataType addConstNumInstruction(bool floating_point, const std::string &number);
@@ -40,7 +40,7 @@ private:
     std::istringstream iss;
     ProgramUnit &program;
     ProgramCode code_line;
-    int column {0};
+    unsigned column {0};
 };
 
 

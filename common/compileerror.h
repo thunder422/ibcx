@@ -12,16 +12,16 @@
 
 
 struct CompileError : public std::runtime_error {
-    CompileError(const char *message, int column, size_t length = 1) :
+    CompileError(const char *message, unsigned column, unsigned length = 1) :
         runtime_error {message}, column {column}, length {length} { }
 
-    int column;
-    size_t length;
+    unsigned column;
+    unsigned length;
 };
 
 
 struct ExpNumExprError : public CompileError {
-    ExpNumExprError(int column) : CompileError {"expected numeric expression", column} { }
+    ExpNumExprError(unsigned column) : CompileError {"expected numeric expression", column} { }
 };
 
 

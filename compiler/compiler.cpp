@@ -51,7 +51,7 @@ void Compiler::skipWhiteSpace()
     iss >> std::ws;
 }
 
-int Compiler::getColumn() noexcept
+unsigned Compiler::getColumn() noexcept
 {
     return column;
 }

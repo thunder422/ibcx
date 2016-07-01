@@ -44,25 +44,15 @@ bool ProgramUnit::compileSource(std::istream &is, std::ostream &os)
 void ProgramUnit::handleError(std::ostream &os, const std::string &line, const CompileError &error)
 {
     appendEmptyCodeLine();
-    auto line_number = line_info.size();
-    outputError(os, line, line_number, error);
+    unsigned line_number = line_info.size();
+    ProgramError program_error {error, line_number, line};
+    outputError(os, program_error);
 }
 
 void ProgramUnit::appendEmptyCodeLine()
 {
     ProgramCode empty_line;
     appendCodeLine(empty_line);
-}
-
-void ProgramUnit::outputError(std::ostream &os, const std::string &line, size_t line_number,
-    const CompileError &error)
-{
-    os << "error on line " << line_number << ':' << error.column << ": " << error.what()
-        << std::endl;
-    os << "    " << line << std::endl;
-    std::string spaces(4 + error.column, ' ');
-    std::string indicator(error.length, '^');
-    os << spaces << indicator << std::endl;
 }
 
 void ProgramUnit::appendCodeLine(ProgramCode &code_line)
@@ -147,11 +137,12 @@ void ProgramUnit::execute(std::ostream &os)
 
 void ProgramUnit::outputError(std::ostream &os, const ProgramError &error)
 {
+    os << error.typeString() << ' ';
     if (error.line.empty()) {
-        os << "run error at end of program: " << error.what() << std::endl;
+        os << "end of program: " << error.what() << std::endl;
     } else {
-        os << "run error at line " << error.line_number << ':' << error.column << ": "
-            << error.what() << std::endl;
+        os << "line " << error.line_number << ':' << error.column << ": " << error.what()
+            << std::endl;
         os << "    " << error.line << std::endl;
         std::string spaces(4 + error.column, ' ');
         std::string indicator(error.length, '^');

@@ -5,12 +5,25 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include "compileerror.h"
 #include "programerror.h"
 #include "runerror.h"
 
 
+ProgramError::ProgramError(const CompileError &error, unsigned line_number,
+        const std::string &program_line) :
+    runtime_error {error.what()},
+    line_number {line_number},
+    column {error.column},
+    length {error.length},
+    line {program_line},
+    type {Type::Compile}
+{
+}
+
 ProgramError::ProgramError(const RunError &run_error) :
-    runtime_error {run_error.what()}
+    runtime_error {run_error.what()},
+    type {Type::Run}
 {
 }
 
@@ -20,7 +33,13 @@ ProgramError::ProgramError(const RunError &run_error, unsigned line_number,
     line_number {line_number},
     column {program_line.find_first_of(StartErrorMarker)},
     length {1},
-    line {program_line}
+    line {program_line},
+    type {Type::Run}
 {
     line.erase(column, 1);
+}
+
+const char *ProgramError::typeString() const
+{
+    return type == Type::Compile ? "error on" : "run error at";
 }

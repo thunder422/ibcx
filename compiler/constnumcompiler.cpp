@@ -44,7 +44,7 @@ private:
 
     void (Impl::*parse_state)(int next_char);
     std::string number;
-    int first_column;
+    unsigned first_column;
     bool floating_point {false};
     bool done {false};
     bool negate_operator {false};
@@ -96,8 +96,8 @@ DataType ConstNumCompiler::Impl::compile()
             return compiler.addConstNumInstruction(floating_point, number);
         }
         catch (const std::out_of_range &) {
-            throw CompileError {"floating point constant is out of range", first_column,
-                number.length()};
+            unsigned length = number.length();
+            throw CompileError {"floating point constant is out of range", first_column, length};
         }
     }
 }

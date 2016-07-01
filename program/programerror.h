@@ -14,16 +14,23 @@
 
 constexpr char StartErrorMarker = '\02';
 
+struct CompileError;
 struct RunError;
 
 struct ProgramError : public std::runtime_error {
+    ProgramError(const CompileError &error, unsigned line_number, const std::string &program_line);
     ProgramError(const RunError &run_error);
-    ProgramError(const RunError &run_error, unsigned line_number, const std::string &program_line);
+    ProgramError(const RunError &error, unsigned line_number, const std::string &program_line);
+
+    const char *typeString() const;
 
     unsigned line_number;
     size_t column;
     unsigned length;
     std::string line;
+
+private:
+    enum Type {Compile, Run} type;
 };
 
 
