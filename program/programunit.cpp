@@ -99,6 +99,16 @@ private:
     ProgramCode &code;
 };
 
+void ProgramUnit::runCode(std::ostream &os) noexcept
+{
+    try {
+        run(os);
+    }
+    catch (const ProgramError &error) {
+        outputError(os, error);
+    }
+}
+
 void ProgramUnit::run(std::ostream &os)
 {
     try {
@@ -133,6 +143,16 @@ void ProgramUnit::execute(std::ostream &os)
                 executer.currentOffset()};
         }
     }
+}
+
+void ProgramUnit::outputError(std::ostream &os, const ProgramError &error)
+{
+    os << "run error at line " << error.line_number << ':' << error.column << ": " << error.what()
+        << std::endl;
+    os << "    " << error.line << std::endl;
+    std::string spaces(4 + error.column, ' ');
+    std::string indicator(error.length, '^');
+    os << spaces << indicator << std::endl;
 }
 
 ProgramEndGuard::ProgramEndGuard(ProgramCode &code) :

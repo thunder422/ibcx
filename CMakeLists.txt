@@ -118,7 +118,7 @@ endfunction(add_unittest)
 
 add_unittest(constnum test/support.h)
 add_unittest(expression test/support.h)
-add_unittest(command)
+add_unittest(program)
 add_unittest(cistring)
 add_unittest(print)
 add_unittest(negate)

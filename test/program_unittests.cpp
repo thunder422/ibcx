@@ -17,7 +17,7 @@
 #include "runerror.h"
 
 
-TEST_CASE("compile simple commands", "[compile]")
+TEST_CASE("compile simple commands", "[commands]")
 {
     extern Code const_int_code;
     extern Code print_int_code;
@@ -136,7 +136,7 @@ TEST_CASE("recreate simple commands", "[recreate]")
     }
 }
 
-TEST_CASE("compile multiple line program", "[program]")
+TEST_CASE("compile multiple line program", "[compile]")
 {
     ProgramUnit program;
 
@@ -275,6 +275,28 @@ TEST_CASE("execute an END command", "[END]")
 
     auto executer = program.createExecutor(unused_oss);
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
+}
+
+TEST_CASE("run error handling", "[runerror]")
+{
+    ProgramUnit program;
+    std::ostringstream oss;
+
+    SECTION("run error occurring at a line other than the first")
+    {
+        std::istringstream iss {
+            "PRINT 2^3^4\n"
+            "PRINT 0^4^-1\n"
+        };
+        program.compileSource(iss, oss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "4096\n"
+            "run error at line 2:12: divide by zero\n"
+            "    PRINT 0 ^ 4 ^ -1\n"
+            "                ^\n");
+    }
 }
 
 TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")

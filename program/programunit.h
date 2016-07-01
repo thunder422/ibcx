@@ -28,6 +28,7 @@ public:
     void appendCodeLine(ProgramCode &code_line);
     void recreate(std::ostream &os);
     std::string recreateLine(unsigned line_index, unsigned error_offset = -1) const;
+    void runCode(std::ostream &os) noexcept;
     void run(std::ostream &os);
     Executer createExecutor(std::ostream &os) const;
 
@@ -43,6 +44,7 @@ private:
     ProgramReader createProgramReader(unsigned line_index) const;
     void generateProgramError(const RunError &error);
     void execute(std::ostream &os);
+    void outputError(std::ostream &os, const ProgramError &error);
     unsigned lineIndex(unsigned offset) const;
 
     struct LineInfo {
