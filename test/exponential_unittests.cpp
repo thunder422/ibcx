@@ -308,4 +308,24 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
                 "             ^\n");
         }
     }
+    SECTION("execute an exponential of a negative number that causes a positive overflow")
+    {
+        std::istringstream iss {"PRINT -4^16"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
+        }
+        SECTION("check that the correct error information is thrown")
+        {
+            REQUIRE_FALSE(program.runCode(oss));
+            REQUIRE(oss.str() ==
+                "run error at line 1:9: overflow\n"
+                "    PRINT -4 ^ 16\n"
+                "             ^\n");
+        }
+    }
 }

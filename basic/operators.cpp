@@ -188,7 +188,7 @@ inline int PowerIntInt::multipleNegativeX()
     int64_t result = 1;
     for (int i = 0; i < y; ++i) {
         result *= x;
-        if (result < std::numeric_limits<int>::min()) {
+        if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
             throw RunError {"overflow", 0};
         }
     }
