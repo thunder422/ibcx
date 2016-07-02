@@ -178,7 +178,7 @@ TEST_CASE("recreate exponential operator expression", "[recreate]")
     }
 }
 
-TEST_CASE("execute exponential operator expressions", "[execute]")
+TEST_CASE("execute integer-interger exponential operator", "[int-int]")
 {
     ProgramUnit program;
 
@@ -347,6 +347,25 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         program.runCode(oss);
 
         REQUIRE(oss.str() == "524288\n");
+    }
+    SECTION("execute an exponential that causes an overflow with alternate double power")
+    {
+        std::istringstream iss {"PRINT 123^20"};
+        std::ostringstream oss;
 
+        program.compile(iss);
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
+        }
+        SECTION("check that the correct error information is thrown")
+        {
+            REQUIRE_FALSE(program.runCode(oss));
+            REQUIRE(oss.str() ==
+                "run error at line 1:10: overflow\n"
+                "    PRINT 123 ^ 20\n"
+                "              ^\n");
+        }
     }
 }

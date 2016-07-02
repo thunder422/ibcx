@@ -194,6 +194,9 @@ inline int PowerIntInt::multiplyPositiveValue()
 inline int PowerIntInt::useDoublePowerForPositiveValue()
 {
     double result = std::pow(x, y);
+    if (result > std::numeric_limits<int>::max()) {
+        throw RunError {"overflow", 0};
+    }
     return result;
 }
 
