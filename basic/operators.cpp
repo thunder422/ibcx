@@ -5,6 +5,7 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <cmath>
 #include <limits>
 
 #include "code.h"
@@ -116,9 +117,11 @@ struct PowerIntInt {
 
 private:
     int calculateNegativeExponent();
+    int caculateForPositiveValue();
     int calculatePower();
     int multiplyPositiveValue();
     int multiplyNegativeValue();
+    int useDoublePowerForPositiveValue();
 
     int x;
     int y;
@@ -168,7 +171,12 @@ inline int PowerIntInt::calculateNegativeExponent()
 
 inline int PowerIntInt::calculatePower()
 {
-    return x >= 0 ? multiplyPositiveValue() : multiplyNegativeValue();
+    return x >= 0 ? caculateForPositiveValue() : multiplyNegativeValue();
+}
+
+inline int PowerIntInt::caculateForPositiveValue()
+{
+    return y < 19 ? multiplyPositiveValue() : useDoublePowerForPositiveValue();
 }
 
 inline int PowerIntInt::multiplyPositiveValue()
@@ -180,6 +188,12 @@ inline int PowerIntInt::multiplyPositiveValue()
             throw RunError {"overflow", 0};
         }
     }
+    return result;
+}
+
+inline int PowerIntInt::useDoublePowerForPositiveValue()
+{
+    double result = std::pow(x, y);
     return result;
 }
 

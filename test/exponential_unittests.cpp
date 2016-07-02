@@ -270,7 +270,7 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
     }
     SECTION("execute an exponential that causes an overflow")
     {
-        std::istringstream iss {"PRINT 2^31"};
+        std::istringstream iss {"PRINT 16^8"};
         std::ostringstream oss;
 
         program.compile(iss);
@@ -283,9 +283,9 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         {
             REQUIRE_FALSE(program.runCode(oss));
             REQUIRE(oss.str() ==
-                "run error at line 1:8: overflow\n"
-                "    PRINT 2 ^ 31\n"
-                "            ^\n");
+                "run error at line 1:9: overflow\n"
+                "    PRINT 16 ^ 8\n"
+                "             ^\n");
         }
     }
     SECTION("execute an exponential of a negative number that causes a negative overflow")
@@ -337,5 +337,16 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
         program.runCode(oss);
 
         REQUIRE(oss.str() == "-729\n");
+    }
+    SECTION("execute alternate double power for high exponent")
+    {
+        std::istringstream iss {"PRINT 2^19"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "524288\n");
+
     }
 }
