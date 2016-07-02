@@ -114,7 +114,11 @@ void executeExponentialDblDbl(Executer &executer)
     auto y = executer.top().dbl_value;
     executer.pop();
     auto x = executer.top().dbl_value;
-    executer.top().dbl_value = std::pow(x, y);
+    auto result = std::pow(x, y);
+    if (isnan(result)) {
+        throw RunError {"domain error (non-integer exponent)", executer.currentOffset()};
+    }
+    executer.top().dbl_value = result;
 }
 
 void executeExponentialIntInt(Executer &executer)

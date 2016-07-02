@@ -434,4 +434,24 @@ TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
 
         REQUIRE(oss.str() == "9\n");
     }
+    SECTION("check for a domain error for a negative value raised to a non-integer exponent")
+    {
+        std::istringstream iss {"PRINT -3.0^2.5"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
+        }
+        SECTION("check that the correct error information is thrown")
+        {
+            REQUIRE_FALSE(program.runCode(oss));
+            REQUIRE(oss.str() ==
+                "run error at line 1:11: domain error (non-integer exponent)\n"
+                "    PRINT -3.0 ^ 2.5\n"
+                "               ^\n");
+        }
+    }
 }
