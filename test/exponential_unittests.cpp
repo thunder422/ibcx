@@ -268,4 +268,24 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
             }
         }
     }
+    SECTION("execute an exponential that causes an overflow")
+    {
+        std::istringstream iss {"PRINT 2^31"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
+        }
+        SECTION("check that the correct error information is thrown")
+        {
+            REQUIRE_FALSE(program.runCode(oss));
+            REQUIRE(oss.str() ==
+                "run error at line 1:8: overflow\n"
+                "    PRINT 2 ^ 31\n"
+                "            ^\n");
+        }
+    }
 }

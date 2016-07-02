@@ -5,6 +5,8 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <limits>
+
 #include "code.h"
 #include "executer.h"
 #include "operators.h"
@@ -164,9 +166,12 @@ inline int PowerIntInt::calculateNegativeExponent()
 
 inline int PowerIntInt::calculatePower()
 {
-    int result = 1;
+    int64_t result = 1;
     for (int i = 0; i < y; ++i) {
         result *= x;
+        if (result > std::numeric_limits<int>::max()) {
+            throw RunError {"overflow", 0};
+        }
     }
     return result;
 }
