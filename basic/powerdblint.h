@@ -14,6 +14,8 @@ struct PowerDblInt {
     double operator()();
 
 private:
+    double multiplyForPositiveExponent();
+    double divideForNegativeExponent();
 
     double x;
     int y;
@@ -27,9 +29,27 @@ inline PowerDblInt::PowerDblInt(double x, int y) :
 
 inline double PowerDblInt::operator()()
 {
+    if (y > 0) {
+        return multiplyForPositiveExponent();
+    } else {
+        return divideForNegativeExponent();
+    }
+}
+
+inline double PowerDblInt::multiplyForPositiveExponent()
+{
     double result = 1;
     while (--y >= 0) {
         result *= x;
+    }
+    return result;
+}
+
+inline double PowerDblInt::divideForNegativeExponent()
+{
+    double result = 1;
+    while (++y <= 0) {
+        result /= x;
     }
     return result;
 }

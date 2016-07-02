@@ -463,4 +463,14 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
 
         REQUIRE(oss.str() == "-27\n");
     }
+    SECTION("execute an exponential of a double to a negative integer")
+    {
+        std::istringstream iss {"PRINT 2.0^-4"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0.0625\n");
+    }
 }
