@@ -328,4 +328,14 @@ TEST_CASE("execute exponential operator expressions", "[execute]")
                 "             ^\n");
         }
     }
+    SECTION("execute an exponential of a negative number")
+    {
+        std::istringstream iss {"PRINT -9^3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "-729\n");
+    }
 }

@@ -117,8 +117,8 @@ struct PowerIntInt {
 private:
     int calculateNegativeExponent();
     int calculatePower();
-    int multiplePositiveX();
-    int multipleNegativeX();
+    int multiplyPositiveValue();
+    int multiplyNegativeValue();
 
     int x;
     int y;
@@ -168,10 +168,10 @@ inline int PowerIntInt::calculateNegativeExponent()
 
 inline int PowerIntInt::calculatePower()
 {
-    return x >= 0 ? multiplePositiveX() : multipleNegativeX();
+    return x >= 0 ? multiplyPositiveValue() : multiplyNegativeValue();
 }
 
-inline int PowerIntInt::multiplePositiveX()
+inline int PowerIntInt::multiplyPositiveValue()
 {
     int64_t result = 1;
     for (int i = 0; i < y; ++i) {
@@ -183,7 +183,7 @@ inline int PowerIntInt::multiplePositiveX()
     return result;
 }
 
-inline int PowerIntInt::multipleNegativeX()
+inline int PowerIntInt::multiplyNegativeValue()
 {
     int64_t result = 1;
     for (int i = 0; i < y; ++i) {
