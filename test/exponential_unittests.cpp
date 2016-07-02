@@ -405,7 +405,7 @@ TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
             "    PRINT -3.0 ^ 2.5\n"
             "               ^\n");
     }
-    SECTION("check for an overflow error if the result is to large")
+    SECTION("check for an overflow error if the result is too large")
     {
         std::istringstream iss {"PRINT 123.0^456.0"};
         std::ostringstream oss;
@@ -417,5 +417,18 @@ TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
             "run error at line 1:12: overflow\n"
             "    PRINT 123.0 ^ 456.0\n"
             "                ^\n");
+    }
+    SECTION("check for a divide by zero error if the result is infinity")
+    {
+        std::istringstream iss {"PRINT 0.0^-0.5"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:10: divide by zero\n"
+            "    PRINT 0.0 ^ -0.5\n"
+            "              ^\n");
     }
 }

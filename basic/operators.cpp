@@ -109,18 +109,29 @@ void recreateExponential(Recreator &recreator)
     recreator.append(string);
 }
 
+inline void validatePowerResult(double x, double result, Executer &executer);
+
 void executeExponentialDblDbl(Executer &executer)
 {
     auto y = executer.top().dbl_value;
     executer.pop();
     auto x = executer.top().dbl_value;
     auto result = std::pow(x, y);
+    validatePowerResult(x, result, executer);
+    executer.top().dbl_value = result;
+}
+
+inline void validatePowerResult(double x, double result, Executer &executer)
+{
     if (isnan(result)) {
         throw RunError {"domain error (non-integer exponent)", executer.currentOffset()};
     } else if (result == HUGE_VAL) {
-        throw RunError {"overflow", executer.currentOffset()};
+        if (x == 0) {
+            throw RunError {"divide by zero", executer.currentOffset()};
+        } else {
+            throw RunError {"overflow", executer.currentOffset()};
+        }
     }
-    executer.top().dbl_value = result;
 }
 
 void executeExponentialIntInt(Executer &executer)
