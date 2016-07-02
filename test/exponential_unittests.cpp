@@ -275,18 +275,11 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
 
         program.compile(iss);
 
-        SECTION("check that the error is thrown")
-        {
-            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
-        }
-        SECTION("check that the correct error information is thrown")
-        {
-            REQUIRE_FALSE(program.runCode(oss));
-            REQUIRE(oss.str() ==
-                "run error at line 1:9: overflow\n"
-                "    PRINT 16 ^ 8\n"
-                "             ^\n");
-        }
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:9: overflow\n"
+            "    PRINT 16 ^ 8\n"
+            "             ^\n");
     }
     SECTION("execute an exponential of a negative number that causes a negative overflow")
     {
@@ -295,18 +288,11 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
 
         program.compile(iss);
 
-        SECTION("check that the error is thrown")
-        {
-            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
-        }
-        SECTION("check that the correct error information is thrown")
-        {
-            REQUIRE_FALSE(program.runCode(oss));
-            REQUIRE(oss.str() ==
-                "run error at line 1:9: overflow\n"
-                "    PRINT -8 ^ 11\n"
-                "             ^\n");
-        }
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:9: overflow\n"
+            "    PRINT -8 ^ 11\n"
+            "             ^\n");
     }
     SECTION("execute an exponential of a negative number that causes a positive overflow")
     {
@@ -315,18 +301,11 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
 
         program.compile(iss);
 
-        SECTION("check that the error is thrown")
-        {
-            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
-        }
-        SECTION("check that the correct error information is thrown")
-        {
-            REQUIRE_FALSE(program.runCode(oss));
-            REQUIRE(oss.str() ==
-                "run error at line 1:9: overflow\n"
-                "    PRINT -4 ^ 16\n"
-                "             ^\n");
-        }
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:9: overflow\n"
+            "    PRINT -4 ^ 16\n"
+            "             ^\n");
     }
     SECTION("execute an exponential of a negative number")
     {
@@ -355,18 +334,11 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
 
         program.compile(iss);
 
-        SECTION("check that the error is thrown")
-        {
-            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
-        }
-        SECTION("check that the correct error information is thrown")
-        {
-            REQUIRE_FALSE(program.runCode(oss));
-            REQUIRE(oss.str() ==
-                "run error at line 1:10: overflow\n"
-                "    PRINT 123 ^ 20\n"
-                "              ^\n");
-        }
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:10: overflow\n"
+            "    PRINT 123 ^ 20\n"
+            "              ^\n");
     }
     SECTION("execute alternate double power for high exponent with a negative value")
     {
@@ -385,18 +357,11 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
 
         program.compile(iss);
 
-        SECTION("check that the error is thrown")
-        {
-            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
-        }
-        SECTION("check that the correct error information is thrown")
-        {
-            REQUIRE_FALSE(program.runCode(oss));
-            REQUIRE(oss.str() ==
-                "run error at line 1:11: overflow\n"
-                "    PRINT -123 ^ 20\n"
-                "               ^\n");
-        }
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:11: overflow\n"
+            "    PRINT -123 ^ 20\n"
+            "               ^\n");
     }
     SECTION("execute exponential with a negative value that causes an underflow with alternate")
     {
@@ -405,18 +370,11 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
 
         program.compile(iss);
 
-        SECTION("check that the error is thrown")
-        {
-            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
-        }
-        SECTION("check that the correct error information is thrown")
-        {
-            REQUIRE_FALSE(program.runCode(oss));
-            REQUIRE(oss.str() ==
-                "run error at line 1:11: overflow\n"
-                "    PRINT -123 ^ 19\n"
-                "               ^\n");
-        }
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:11: overflow\n"
+            "    PRINT -123 ^ 19\n"
+            "               ^\n");
     }
 }
 
@@ -441,17 +399,23 @@ TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
 
         program.compile(iss);
 
-        SECTION("check that the error is thrown")
-        {
-            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
-        }
-        SECTION("check that the correct error information is thrown")
-        {
-            REQUIRE_FALSE(program.runCode(oss));
-            REQUIRE(oss.str() ==
-                "run error at line 1:11: domain error (non-integer exponent)\n"
-                "    PRINT -3.0 ^ 2.5\n"
-                "               ^\n");
-        }
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:11: domain error (non-integer exponent)\n"
+            "    PRINT -3.0 ^ 2.5\n"
+            "               ^\n");
+    }
+    SECTION("check for an overflow error if the result is to large")
+    {
+        std::istringstream iss {"PRINT 123.0^456.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:12: overflow\n"
+            "    PRINT 123.0 ^ 456.0\n"
+            "                ^\n");
     }
 }

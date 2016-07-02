@@ -117,6 +117,8 @@ void executeExponentialDblDbl(Executer &executer)
     auto result = std::pow(x, y);
     if (isnan(result)) {
         throw RunError {"domain error (non-integer exponent)", executer.currentOffset()};
+    } else if (result == HUGE_VAL) {
+        throw RunError {"overflow", executer.currentOffset()};
     }
     executer.top().dbl_value = result;
 }
