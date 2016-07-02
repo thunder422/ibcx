@@ -419,3 +419,19 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
         }
     }
 }
+
+TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
+{
+    ProgramUnit program;
+
+    SECTION("execute an exponential of two integer constants")
+    {
+        std::istringstream iss {"PRINT -3.0^2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "9\n");
+    }
+}

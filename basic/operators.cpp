@@ -88,9 +88,10 @@ void executeNegateInt(Executer &executer)
 // ----------------------------------------
 
 void recreateExponential(Recreator &recreator);
+void executeExponentialDblDbl(Executer &executer);
 void executeExponentialIntInt(Executer &executer);
 
-OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateExponential, nullptr};
+OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateExponential, executeExponentialDblDbl};
 OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateExponential, nullptr};
 OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateExponential, nullptr};
 OperatorCode<OpType::IntInt> exp_int_int_code {recreateExponential, executeExponentialIntInt};
@@ -106,6 +107,14 @@ void recreateExponential(Recreator &recreator)
     recreator.append('^');
     recreator.append(' ');
     recreator.append(string);
+}
+
+void executeExponentialDblDbl(Executer &executer)
+{
+    auto y = executer.top().dbl_value;
+    executer.pop();
+    auto x = executer.top().dbl_value;
+    executer.top().dbl_value = std::pow(x, y);
 }
 
 void executeExponentialIntInt(Executer &executer)
