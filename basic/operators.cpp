@@ -117,6 +117,8 @@ struct PowerIntInt {
 private:
     int calculateNegativeExponent();
     int calculatePower();
+    int multiplePositiveX();
+    int multipleNegativeX();
 
     int x;
     int y;
@@ -166,10 +168,27 @@ inline int PowerIntInt::calculateNegativeExponent()
 
 inline int PowerIntInt::calculatePower()
 {
+    return x >= 0 ? multiplePositiveX() : multipleNegativeX();
+}
+
+inline int PowerIntInt::multiplePositiveX()
+{
     int64_t result = 1;
     for (int i = 0; i < y; ++i) {
         result *= x;
         if (result > std::numeric_limits<int>::max()) {
+            throw RunError {"overflow", 0};
+        }
+    }
+    return result;
+}
+
+inline int PowerIntInt::multipleNegativeX()
+{
+    int64_t result = 1;
+    for (int i = 0; i < y; ++i) {
+        result *= x;
+        if (result < std::numeric_limits<int>::min()) {
             throw RunError {"overflow", 0};
         }
     }
