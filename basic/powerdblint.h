@@ -8,6 +8,8 @@
 #ifndef IBC_POWERDBLINT_H
 #define IBC_POWERDBLINT_H
 
+#include <cmath>
+
 #include "runerror.h"
 
 
@@ -43,6 +45,9 @@ inline double PowerDblInt::multiplyForPositiveExponent()
     double result = 1;
     while (--y >= 0) {
         result *= x;
+    }
+    if (result == HUGE_VAL) {
+        throw RunError {"overflow", 0};
     }
     return result;
 }

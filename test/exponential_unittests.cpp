@@ -486,4 +486,17 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
             "    PRINT 0.0 ^ -1\n"
             "              ^\n");
     }
+    SECTION("check for an overflow error if the result is too large")
+    {
+        std::istringstream iss {"PRINT 1e307^4"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:12: overflow\n"
+            "    PRINT 1e307 ^ 4\n"
+            "                ^\n");
+    }
 }
