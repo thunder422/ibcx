@@ -156,7 +156,13 @@ void executeExponentialDblInt(Executer &executer)
     auto y = executer.top().int_value;
     executer.pop();
     auto x = executer.top().dbl_value;
-    executer.top().dbl_value = PowerDblInt{x, y}();
+    try {
+        executer.top().dbl_value = PowerDblInt{x, y}();
+    }
+    catch (RunError &error) {
+        error.offset = executer.currentOffset();
+        throw;
+    }
 }
 
 void executeExponentialIntInt(Executer &executer)

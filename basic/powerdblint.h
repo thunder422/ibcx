@@ -8,6 +8,8 @@
 #ifndef IBC_POWERDBLINT_H
 #define IBC_POWERDBLINT_H
 
+#include "runerror.h"
+
 
 struct PowerDblInt {
     PowerDblInt(double x, int y);
@@ -47,6 +49,9 @@ inline double PowerDblInt::multiplyForPositiveExponent()
 
 inline double PowerDblInt::divideForNegativeExponent()
 {
+    if (x == 0) {
+        throw RunError {"divide by zero", 0};
+    }
     double result = 1;
     while (++y <= 0) {
         result /= x;

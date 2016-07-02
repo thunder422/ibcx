@@ -473,4 +473,17 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
 
         REQUIRE(oss.str() == "0.0625\n");
     }
+    SECTION("check for a divide by zero error if the result is infinity")
+    {
+        std::istringstream iss {"PRINT 0.0^-1"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        REQUIRE_FALSE(program.runCode(oss));
+        REQUIRE(oss.str() ==
+            "run error at line 1:10: divide by zero\n"
+            "    PRINT 0.0 ^ -1\n"
+            "              ^\n");
+    }
 }
