@@ -5,14 +5,11 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
-#include <cmath>
-#include <limits>
-
 #include "code.h"
 #include "executer.h"
 #include "operators.h"
+#include "powerintint.h"
 #include "recreator.h"
-#include "runerror.h"
 
 
 UnaryOperatorCodes::UnaryOperatorCodes(OperatorCode<OpType::Dbl> &dbl_code,
@@ -111,24 +108,6 @@ void recreateExponential(Recreator &recreator)
     recreator.append(string);
 }
 
-struct PowerIntInt {
-    PowerIntInt(int x, int y);
-    int operator()();
-
-private:
-    int calculateNegativeExponent();
-    int calculatePower();
-    int caculateForPositiveValue();
-    int multiplyPositiveValue();
-    int useDoublePowerForPositiveValue();
-    int calculateForNegativeValue();
-    int multiplyNegativeValue();
-    int useDoublePowerForNegativeValue();
-
-    int x;
-    int y;
-};
-
 void executeExponentialIntInt(Executer &executer)
 {
     auto y = executer.top().int_value;
@@ -141,89 +120,4 @@ void executeExponentialIntInt(Executer &executer)
         error.offset = executer.currentOffset();
         throw;
     }
-}
-
-inline PowerIntInt::PowerIntInt(int x, int y) :
-    x {x},
-    y {y}
-{
-}
-
-inline int PowerIntInt::operator()()
-{
-    if (y < 0) {
-        if (x == 0) {
-            throw RunError {"divide by zero", 0};
-        }
-        return calculateNegativeExponent();
-    }
-    return calculatePower();
-}
-
-inline int PowerIntInt::calculateNegativeExponent()
-{
-    if (x == 1) {
-        return 1;
-    } else if (x == -1) {
-        return (y & 1) ? -1 : 1;
-    } else {
-        return 0;
-    }
-}
-
-inline int PowerIntInt::calculatePower()
-{
-    return x >= 0 ? caculateForPositiveValue() : calculateForNegativeValue();
-}
-
-inline int PowerIntInt::caculateForPositiveValue()
-{
-    return y < 19 ? multiplyPositiveValue() : useDoublePowerForPositiveValue();
-}
-
-inline int PowerIntInt::multiplyPositiveValue()
-{
-    int64_t result = 1;
-    for (int i = 0; i < y; ++i) {
-        result *= x;
-        if (result > std::numeric_limits<int>::max()) {
-            throw RunError {"overflow", 0};
-        }
-    }
-    return result;
-}
-
-inline int PowerIntInt::useDoublePowerForPositiveValue()
-{
-    double result = std::pow(x, y);
-    if (result > std::numeric_limits<int>::max()) {
-        throw RunError {"overflow", 0};
-    }
-    return result;
-}
-
-inline int PowerIntInt::calculateForNegativeValue()
-{
-    return y < 17 ? multiplyNegativeValue() : useDoublePowerForNegativeValue();
-}
-
-inline int PowerIntInt::multiplyNegativeValue()
-{
-    int64_t result = 1;
-    for (int i = 0; i < y; ++i) {
-        result *= x;
-        if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
-            throw RunError {"overflow", 0};
-        }
-    }
-    return result;
-}
-
-inline int PowerIntInt::useDoublePowerForNegativeValue()
-{
-    double result = std::pow(x, y);
-    if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
-        throw RunError {"overflow", 0};
-    }
-    return result;
 }

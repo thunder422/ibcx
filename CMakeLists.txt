@@ -66,6 +66,7 @@ set(IBC_SOURCES
     basic/constnum.cpp
     basic/end.cpp
     basic/operators.cpp
+    basic/powerintint.h
     basic/print.cpp
     common/cistring.h
     common/compileerror.h
