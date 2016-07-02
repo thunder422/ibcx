@@ -8,6 +8,7 @@
 #include "code.h"
 #include "executer.h"
 #include "operators.h"
+#include "powerdblint.h"
 #include "powerintint.h"
 #include "recreator.h"
 
@@ -90,11 +91,12 @@ void executeNegateInt(Executer &executer)
 void recreateExponential(Recreator &recreator);
 void executeExponentialDblDbl(Executer &executer);
 void executeExponentialIntDbl(Executer &executer);
+void executeExponentialDblInt(Executer &executer);
 void executeExponentialIntInt(Executer &executer);
 
 OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateExponential, executeExponentialDblDbl};
 OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateExponential, executeExponentialIntDbl};
-OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateExponential, nullptr};
+OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateExponential, executeExponentialDblInt};
 OperatorCode<OpType::IntInt> exp_int_int_code {recreateExponential, executeExponentialIntInt};
 
 NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code};
@@ -147,6 +149,14 @@ inline void validatePowerResult(double x, double result, Executer &executer)
             throw RunError {"overflow", executer.currentOffset()};
         }
     }
+}
+
+void executeExponentialDblInt(Executer &executer)
+{
+    auto y = executer.top().int_value;
+    executer.pop();
+    auto x = executer.top().dbl_value;
+    executer.top().dbl_value = PowerDblInt{x, y}();
 }
 
 void executeExponentialIntInt(Executer &executer)

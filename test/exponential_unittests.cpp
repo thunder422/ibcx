@@ -382,7 +382,7 @@ TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
 {
     ProgramUnit program;
 
-    SECTION("execute an exponential of two integer constants")
+    SECTION("execute an exponential of two double constants")
     {
         std::istringstream iss {"PRINT -3.0^2.0"};
         std::ostringstream oss;
@@ -437,9 +437,25 @@ TEST_CASE("execute integer-double exponential operator", "[int-dbl]")
 {
     ProgramUnit program;
 
-    SECTION("execute an exponential of two integer constants")
+    SECTION("execute an exponential of an integer to a double")
     {
         std::istringstream iss {"PRINT -3^3.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-27\n");
+    }
+}
+
+TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
+{
+    ProgramUnit program;
+
+    SECTION("execute an exponential of a double to an integer")
+    {
+        std::istringstream iss {"PRINT -3.0^3"};
         std::ostringstream oss;
 
         program.compile(iss);
