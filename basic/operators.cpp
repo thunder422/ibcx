@@ -89,10 +89,11 @@ void executeNegateInt(Executer &executer)
 
 void recreateExponential(Recreator &recreator);
 void executeExponentialDblDbl(Executer &executer);
+void executeExponentialIntDbl(Executer &executer);
 void executeExponentialIntInt(Executer &executer);
 
 OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateExponential, executeExponentialDblDbl};
-OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateExponential, nullptr};
+OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateExponential, executeExponentialIntDbl};
 OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateExponential, nullptr};
 OperatorCode<OpType::IntInt> exp_int_int_code {recreateExponential, executeExponentialIntInt};
 
@@ -110,12 +111,26 @@ void recreateExponential(Recreator &recreator)
 }
 
 inline void validatePowerResult(double x, double result, Executer &executer);
+inline void calculatePowerDblDbl(Executer &executer, double x, double y);
 
 void executeExponentialDblDbl(Executer &executer)
 {
     auto y = executer.top().dbl_value;
     executer.pop();
     auto x = executer.top().dbl_value;
+    calculatePowerDblDbl(executer, x, y);
+}
+
+void executeExponentialIntDbl(Executer &executer)
+{
+    auto y = executer.top().dbl_value;
+    executer.pop();
+    auto x = executer.top().int_value;
+    calculatePowerDblDbl(executer, x, y);
+}
+
+inline void calculatePowerDblDbl(Executer &executer, double x, double y)
+{
     auto result = std::pow(x, y);
     validatePowerResult(x, result, executer);
     executer.top().dbl_value = result;
