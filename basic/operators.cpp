@@ -117,11 +117,13 @@ struct PowerIntInt {
 
 private:
     int calculateNegativeExponent();
-    int caculateForPositiveValue();
     int calculatePower();
+    int caculateForPositiveValue();
     int multiplyPositiveValue();
-    int multiplyNegativeValue();
     int useDoublePowerForPositiveValue();
+    int calculateForNegativeValue();
+    int multiplyNegativeValue();
+    int useDoublePowerForNegativeValue();
 
     int x;
     int y;
@@ -171,7 +173,7 @@ inline int PowerIntInt::calculateNegativeExponent()
 
 inline int PowerIntInt::calculatePower()
 {
-    return x >= 0 ? caculateForPositiveValue() : multiplyNegativeValue();
+    return x >= 0 ? caculateForPositiveValue() : calculateForNegativeValue();
 }
 
 inline int PowerIntInt::caculateForPositiveValue()
@@ -200,6 +202,11 @@ inline int PowerIntInt::useDoublePowerForPositiveValue()
     return result;
 }
 
+inline int PowerIntInt::calculateForNegativeValue()
+{
+    return y < 17 ? multiplyNegativeValue() : useDoublePowerForNegativeValue();
+}
+
 inline int PowerIntInt::multiplyNegativeValue()
 {
     int64_t result = 1;
@@ -209,5 +216,11 @@ inline int PowerIntInt::multiplyNegativeValue()
             throw RunError {"overflow", 0};
         }
     }
+    return result;
+}
+
+inline int PowerIntInt::useDoublePowerForNegativeValue()
+{
+    double result = std::pow(x, y);
     return result;
 }

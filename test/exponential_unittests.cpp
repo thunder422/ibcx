@@ -368,4 +368,14 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
                 "              ^\n");
         }
     }
+    SECTION("execute alternate double power for high exponent with a negative value")
+    {
+        std::istringstream iss {"PRINT -2^19"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "-524288\n");
+    }
 }
