@@ -378,7 +378,7 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
 
         REQUIRE(oss.str() == "-524288\n");
     }
-    SECTION("execute an exponential that causes an overflow with alternate double power")
+    SECTION("execute exponential with a negative value that causes an overflow with alternate")
     {
         std::istringstream iss {"PRINT -123^20"};
         std::ostringstream oss;
@@ -395,6 +395,26 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
             REQUIRE(oss.str() ==
                 "run error at line 1:11: overflow\n"
                 "    PRINT -123 ^ 20\n"
+                "               ^\n");
+        }
+    }
+    SECTION("execute exponential with a negative value that causes an underflow with alternate")
+    {
+        std::istringstream iss {"PRINT -123^19"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
+        }
+        SECTION("check that the correct error information is thrown")
+        {
+            REQUIRE_FALSE(program.runCode(oss));
+            REQUIRE(oss.str() ==
+                "run error at line 1:11: overflow\n"
+                "    PRINT -123 ^ 19\n"
                 "               ^\n");
         }
     }
