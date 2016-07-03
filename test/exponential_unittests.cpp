@@ -522,4 +522,14 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
             "    PRINT 123.0 ^ 456\n"
             "                ^\n");
     }
+    SECTION("execute alternate power for high negative exponents")
+    {
+        std::istringstream iss {"PRINT 2.0e6^-17"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "7.62939e-108\n");
+    }
 }

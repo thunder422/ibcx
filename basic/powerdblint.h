@@ -21,6 +21,7 @@ private:
     double multiplyForPositiveExponent();
     double useDoublePowerForPositiveExponent();
     double divideForNegativeExponent();
+    double useDoublePowerForNegativeExponent();
 
     double x;
     int y;
@@ -41,7 +42,11 @@ inline double PowerDblInt::operator()()
             return useDoublePowerForPositiveExponent();
         }
     } else {
-        return divideForNegativeExponent();
+        if (y > -17) {
+            return divideForNegativeExponent();
+        } else {
+            return useDoublePowerForNegativeExponent();
+        }
     }
 }
 
@@ -75,6 +80,12 @@ inline double PowerDblInt::divideForNegativeExponent()
     while (++y <= 0) {
         result /= x;
     }
+    return result;
+}
+
+inline double PowerDblInt::useDoublePowerForNegativeExponent()
+{
+    double result = std::pow(x, y);
     return result;
 }
 

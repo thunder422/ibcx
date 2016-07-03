@@ -140,7 +140,7 @@ inline void calculatePowerDblDbl(Executer &executer, double x, double y)
 
 inline void validatePowerResult(double x, double result, Executer &executer)
 {
-    if (isnan(result)) {
+    if (std::isnan(result)) {
         throw RunError {"domain error (non-integer exponent)", executer.currentOffset()};
     } else if (result == HUGE_VAL) {
         if (x == 0) {
