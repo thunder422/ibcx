@@ -499,4 +499,14 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
             "    PRINT 1e307 ^ 4\n"
             "                ^\n");
     }
+    SECTION("execute alternate power for high exponents")
+    {
+        std::istringstream iss {"PRINT -2.0^19"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "-524288\n");
+    }
 }
