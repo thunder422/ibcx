@@ -19,9 +19,9 @@ struct PowerDblInt {
 
 private:
     double multiplyForPositiveExponent();
-    double useDoublePowerForPositiveExponent();
     double divideForNegativeExponent();
-    double useDoublePowerForNegativeExponent();
+    double useDoublePower();
+    void checkForOverflow(double result);
 
     double x;
     int y;
@@ -36,17 +36,9 @@ inline PowerDblInt::PowerDblInt(double x, int y) :
 inline double PowerDblInt::operator()()
 {
     if (y > 0) {
-        if (y < 19) {
-            return multiplyForPositiveExponent();
-        } else {
-            return useDoublePowerForPositiveExponent();
-        }
+        return y < 19 ? multiplyForPositiveExponent() : useDoublePower();
     } else {
-        if (y > -17) {
-            return divideForNegativeExponent();
-        } else {
-            return useDoublePowerForNegativeExponent();
-        }
+        return y > -17 ? divideForNegativeExponent() : useDoublePower();
     }
 }
 
@@ -56,18 +48,7 @@ inline double PowerDblInt::multiplyForPositiveExponent()
     while (--y >= 0) {
         result *= x;
     }
-    if (result == HUGE_VAL) {
-        throw RunError {"overflow", 0};
-    }
-    return result;
-}
-
-inline double PowerDblInt::useDoublePowerForPositiveExponent()
-{
-    double result = std::pow(x, y);
-    if (result == HUGE_VAL) {
-        throw RunError {"overflow", 0};
-    }
+    checkForOverflow(result);
     return result;
 }
 
@@ -83,10 +64,18 @@ inline double PowerDblInt::divideForNegativeExponent()
     return result;
 }
 
-inline double PowerDblInt::useDoublePowerForNegativeExponent()
+inline double PowerDblInt::useDoublePower()
 {
     double result = std::pow(x, y);
+    checkForOverflow(result);
     return result;
+}
+
+inline void PowerDblInt::checkForOverflow(double result)
+{
+    if (result == HUGE_VAL) {
+        throw RunError {"overflow", 0};
+    }
 }
 
 

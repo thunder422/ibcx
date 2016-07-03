@@ -509,7 +509,7 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
 
         REQUIRE(oss.str() == "-524288\n");
     }
-    SECTION("check for an overflow error if the result is too large in the altenate power")
+    SECTION("overflow error if the result is too large with altenate power")
     {
         std::istringstream iss {"PRINT 123.0^456"};
         std::ostringstream oss;
@@ -531,5 +531,18 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() == "7.62939e-108\n");
+    }
+    SECTION("overflow error if result is too large with alternate power and negative exponents")
+    {
+        std::istringstream iss {"PRINT 2.0e-300^-17"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:15: overflow\n"
+            "    PRINT 2.0e-300 ^ -17\n"
+            "                   ^\n");
     }
 }
