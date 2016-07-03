@@ -274,8 +274,8 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:9: overflow\n"
             "    PRINT 16 ^ 8\n"
@@ -287,8 +287,8 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:9: overflow\n"
             "    PRINT -8 ^ 11\n"
@@ -300,8 +300,8 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:9: overflow\n"
             "    PRINT -4 ^ 16\n"
@@ -333,8 +333,8 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:10: overflow\n"
             "    PRINT 123 ^ 20\n"
@@ -356,8 +356,8 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:11: overflow\n"
             "    PRINT -123 ^ 20\n"
@@ -369,8 +369,8 @@ TEST_CASE("execute integer-interger exponential operator", "[int-int]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:11: overflow\n"
             "    PRINT -123 ^ 19\n"
@@ -398,8 +398,8 @@ TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:11: domain error (non-integer exponent)\n"
             "    PRINT -3.0 ^ 2.5\n"
@@ -411,8 +411,8 @@ TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:12: overflow\n"
             "    PRINT 123.0 ^ 456.0\n"
@@ -424,8 +424,8 @@ TEST_CASE("execute double-double exponential operator", "[dbl-dbl]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:10: divide by zero\n"
             "    PRINT 0.0 ^ -0.5\n"
@@ -479,8 +479,8 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:10: divide by zero\n"
             "    PRINT 0.0 ^ -1\n"
@@ -492,8 +492,8 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
         std::ostringstream oss;
 
         program.compile(iss);
+        program.runCode(oss);
 
-        REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "run error at line 1:12: overflow\n"
             "    PRINT 1e307 ^ 4\n"
@@ -508,5 +508,18 @@ TEST_CASE("execute double-integer exponential operator", "[dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() == "-524288\n");
+    }
+    SECTION("check for an overflow error if the result is too large in the altenate power")
+    {
+        std::istringstream iss {"PRINT 123.0^456"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:12: overflow\n"
+            "    PRINT 123.0 ^ 456\n"
+            "                ^\n");
     }
 }
