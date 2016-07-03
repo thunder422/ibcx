@@ -50,12 +50,16 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
 {
     ProgramUnit program;
 
-   Compiler compiler {"4^(3^2)", program};
+    Compiler compiler {"4^(3^2)", program};
+    compiler.compileExpression(DataType::Null);
 
    SECTION("verify that opening paretheses is accepted")
    {
-        compiler.compileExpression(DataType::Null);
-
         REQUIRE(compiler.peekNextChar() != '(');
+   }
+   SECTION("verify that the expression inside the parentheses is compiled")
+   {
+       auto code_line = compiler.getCodeLine();
+       REQUIRE(code_line.size() == 8);
    }
 }
