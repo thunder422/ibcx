@@ -119,6 +119,7 @@ DataType ExpressionCompiler::Impl::compileNumOperand()
     if (compiler.peekNextChar() == '(') {
         compiler.getNextChar();
         auto data_type = compileNumExpression(DataType::Double);
+        compiler.getNextChar();
         return data_type;
     }
     return compileNumConstant();
