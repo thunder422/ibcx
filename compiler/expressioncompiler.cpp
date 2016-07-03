@@ -28,6 +28,7 @@ private:
     bool isOperatorChar(char operator_char);
     DataType compileNegation();
     DataType compileNumOperand();
+    DataType compileNumConstant();
 
     Compiler &compiler;
     unsigned column;
@@ -114,8 +115,17 @@ DataType ExpressionCompiler::Impl::compileNegation()
 
 DataType ExpressionCompiler::Impl::compileNumOperand()
 {
-    ConstNumCompiler compile_constant {compiler};
     column = compiler.getColumn();
+    if (compiler.peekNextChar() == '(') {
+        compiler.getNextChar();
+        return DataType::Double;
+    }
+    return compileNumConstant();
+}
+
+DataType ExpressionCompiler::Impl::compileNumConstant()
+{
+    ConstNumCompiler compile_constant {compiler};
     auto data_type = compile_constant();
     if (data_type == DataType::Null && compile_constant.negateOperator()) {
         return compileNegation();

@@ -45,3 +45,17 @@ TEST_CASE("compile numeric expressions with constants", "[constant]")
         }
     }
 }
+
+TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
+{
+    ProgramUnit program;
+
+   Compiler compiler {"4^(3^2)", program};
+
+   SECTION("verify that opening paretheses is accepted")
+   {
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() != '(');
+   }
+}
