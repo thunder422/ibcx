@@ -50,20 +50,33 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
 {
     ProgramUnit program;
 
-    Compiler compiler {"4^(3^2)", program};
-    compiler.compileExpression(DataType::Null);
+    SECTION("verify that a parenthetical expression is compiled")
+    {
+        Compiler compiler {"4^(3^2)", program};
+        compiler.compileExpression(DataType::Null);
 
-    SECTION("verify that opening paretheses is accepted")
-    {
-        REQUIRE(compiler.peekNextChar() != '(');
+        SECTION("verify that opening paretheses is accepted")
+        {
+            REQUIRE(compiler.peekNextChar() != '(');
+        }
+        SECTION("verify that the expression inside the parentheses is compiled")
+        {
+            auto code_line = compiler.getCodeLine();
+            REQUIRE(code_line.size() == 8);
+        }
+        SECTION("verify that the closing parenses is accepted")
+        {
+            REQUIRE(compiler.peekNextChar() == EOF);
+        }
     }
-    SECTION("verify that the expression inside the parentheses is compiled")
+    SECTION("verify that white space is allowed after the opening parenthesis")
     {
-        auto code_line = compiler.getCodeLine();
-        REQUIRE(code_line.size() == 8);
-    }
-    SECTION("verify that the closing parenses is accepted")
-    {
-        REQUIRE(compiler.peekNextChar() == EOF);
+        Compiler compiler {"4^( 3^2)", program};
+        compiler.compileExpression(DataType::Null);
+
+        SECTION("verify that opening paretheses is accepted")
+        {
+            REQUIRE(compiler.peekNextChar() != '(');
+        }
     }
 }

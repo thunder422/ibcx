@@ -118,6 +118,7 @@ DataType ExpressionCompiler::Impl::compileNumOperand()
     column = compiler.getColumn();
     if (compiler.peekNextChar() == '(') {
         compiler.getNextChar();
+        compiler.skipWhiteSpace();
         auto data_type = compileNumExpression(DataType::Double);
         compiler.getNextChar();
         return data_type;
