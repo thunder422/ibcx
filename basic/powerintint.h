@@ -69,46 +69,48 @@ inline int PowerIntInt::calculatePower()
 
 inline int PowerIntInt::caculateForPositiveValue()
 {
-    return y < 19 ? multiplyPositiveValue() : useDoublePowerForPositiveValue();
+    constexpr int MaximumPowerExponent = 19;
+    return y < MaximumPowerExponent ? multiplyPositiveValue() : useDoublePowerForPositiveValue();
 }
 
 inline int PowerIntInt::multiplyPositiveValue()
 {
-    int64_t result = 1;
+    auto result = 1ll;
     for (int i = 0; i < y; ++i) {
         result *= x;
         checkPostiveOverflow(result);
     }
-    return result;
+    return static_cast<int>(result);
 }
 
 inline int PowerIntInt::useDoublePowerForPositiveValue()
 {
-    double result = std::pow(x, y);
+    auto result = std::pow(x, y);
     checkPostiveOverflow(result);
-    return result;
+    return static_cast<int>(result);
 }
 
 inline int PowerIntInt::calculateForNegativeValue()
 {
-    return y < 17 ? multiplyNegativeValue() : useDoublePowerForNegativeValue();
+    constexpr int MaximumPowerExponent = 17;
+    return y < MaximumPowerExponent ? multiplyNegativeValue() : useDoublePowerForNegativeValue();
 }
 
 inline int PowerIntInt::multiplyNegativeValue()
 {
-    int64_t result = 1;
+    auto result = 1ll;
     for (int i = 0; i < y; ++i) {
         result *= x;
         checkAnyOverflow(result);
     }
-    return result;
+    return static_cast<int>(result);
 }
 
 inline int PowerIntInt::useDoublePowerForNegativeValue()
 {
-    double result = std::pow(x, y);
+    auto result = std::pow(x, y);
     checkAnyOverflow(result);
-    return result;
+    return static_cast<int>(result);
 }
 
 template <typename T>

@@ -20,7 +20,7 @@ Dictionary::Entry Dictionary::add(const std::string &string)
 
 Dictionary::KeyMapEntry Dictionary::addToKeyMap(const std::string &string)
 {
-    WordType index = key_map.size();
+    auto index = static_cast<WordType>(key_map.size());
     auto emplace_result = key_map.emplace(string, index);
     return KeyMapEntry {emplace_result.first, !emplace_result.second};
 }

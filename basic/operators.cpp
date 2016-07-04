@@ -103,7 +103,7 @@ NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code
 
 void recreateExponential(Recreator &recreator)
 {
-    std::string string = recreator.top();
+    auto string = recreator.top();
     recreator.pop();
     recreator.append(' ');
     recreator.markErrorStart();
@@ -127,7 +127,7 @@ void executeExponentialIntDbl(Executer &executer)
 {
     auto y = executer.top().dbl_value;
     executer.pop();
-    auto x = executer.top().int_value;
+    auto x = static_cast<double>(executer.top().int_value);
     calculatePowerDblDbl(executer, x, y);
 }
 

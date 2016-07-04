@@ -74,9 +74,6 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
         Compiler compiler {"4^( 3^2)", program};
         compiler.compileExpression(DataType::Null);
 
-        SECTION("verify that opening paretheses is accepted")
-        {
-            REQUIRE(compiler.peekNextChar() != '(');
-        }
+        REQUIRE(compiler.peekNextChar() == EOF);
     }
 }

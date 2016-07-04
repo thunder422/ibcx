@@ -36,15 +36,17 @@ inline PowerDblInt::PowerDblInt(double x, int y) :
 inline double PowerDblInt::operator()()
 {
     if (y > 0) {
-        return y < 19 ? multiplyForPositiveExponent() : useDoublePower();
+        constexpr int MaximumPowerExponent = 19;
+        return y < MaximumPowerExponent ? multiplyForPositiveExponent() : useDoublePower();
     } else {
-        return y > -17 ? divideForNegativeExponent() : useDoublePower();
+        constexpr int MinimumPowerExponent = -17;
+        return y > MinimumPowerExponent ? divideForNegativeExponent() : useDoublePower();
     }
 }
 
 inline double PowerDblInt::multiplyForPositiveExponent()
 {
-    double result = 1;
+    auto result = 1.0;
     while (--y >= 0) {
         result *= x;
     }
@@ -57,7 +59,7 @@ inline double PowerDblInt::divideForNegativeExponent()
     if (x == 0) {
         throw RunError {"divide by zero", 0};
     }
-    double result = 1;
+    auto result = 1.0;
     while (++y <= 0) {
         result /= x;
     }
@@ -66,7 +68,7 @@ inline double PowerDblInt::divideForNegativeExponent()
 
 inline double PowerDblInt::useDoublePower()
 {
-    double result = std::pow(x, y);
+    auto result = std::pow(x, y);
     checkForOverflow(result);
     return result;
 }

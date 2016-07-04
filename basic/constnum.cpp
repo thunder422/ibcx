@@ -64,7 +64,7 @@ ConstNumCodeInfo ConstNumDictionary::add(bool floating_point, const std::string 
 WordType ConstNumDictionary::addToDictionary(const ConstNumConverter &converter,
     const std::string &number)
 {
-    Dictionary::Entry entry = Dictionary::add(number);
+    auto entry = Dictionary::add(number);
     if (!entry.exists) {
         dbl_values.push_back(converter.getDblValue());
         int_values.push_back(converter.getIntValue());
