@@ -76,4 +76,13 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("detect missing closing parenthesis")
+    {
+        Compiler compiler {"4^(3^2", program};
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
+        }
+    }
 }

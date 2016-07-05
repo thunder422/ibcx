@@ -128,6 +128,9 @@ DataType ExpressionCompiler::Impl::compileParentheses()
     compiler.getNextChar();
     compiler.skipWhiteSpace();
     auto data_type = compileNumExpression(DataType::Double);
+    if (compiler.peekNextChar() != ')') {
+        throw CompileError {"", 0};
+    }
     compiler.getNextChar();
     return data_type;
 }
