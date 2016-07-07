@@ -37,18 +37,25 @@ ci_string Compiler::getKeyword()
 
 char Compiler::peekNextChar()
 {
-    column = iss.tellg();
-    return iss.peek();
+    if (!peek_char) {
+        column = iss.tellg();
+        peek_char = iss.peek();
+    }
+    return peek_char;
 }
 
 char Compiler::getNextChar()
 {
+    peek_char = 0;
     return iss.get();
 }
 
 void Compiler::skipWhiteSpace()
 {
-    iss >> std::ws;
+    if (peek_char != EOF) {
+        peek_char = 0;
+        iss >> std::ws;
+    }
 }
 
 unsigned Compiler::getColumn() noexcept

@@ -32,7 +32,6 @@ private:
     DataType compileNumConstant();
 
     Compiler &compiler;
-    unsigned column;
 };
 
 ExpressionCompiler::ExpressionCompiler(Compiler &compiler) :
@@ -65,7 +64,7 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 {
     auto data_type = compileExponential();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
-        throw ExpNumExprError {column};
+        throw ExpNumExprError {compiler.getColumn()};
     }
     return data_type;
 }
@@ -92,7 +91,6 @@ DataType ExpressionCompiler::Impl::compileExponential()
 bool ExpressionCompiler::Impl::isOperatorChar(char operator_char)
 {
     compiler.skipWhiteSpace();
-    column = compiler.getColumn();
     if (compiler.peekNextChar() == operator_char) {
         compiler.getNextChar();
         compiler.skipWhiteSpace();
@@ -106,10 +104,9 @@ DataType ExpressionCompiler::Impl::compileNegation()
     extern UnaryOperatorCodes neg_codes;
 
     compiler.skipWhiteSpace();
-    column = compiler.getColumn();
     auto data_type = compileNumOperand();
     if (data_type == DataType::Null) {
-        throw ExpNumExprError {column};
+        throw ExpNumExprError {compiler.getColumn()};
     }
     compiler.addInstruction(neg_codes.select(data_type));
     return data_type;
@@ -117,7 +114,6 @@ DataType ExpressionCompiler::Impl::compileNegation()
 
 DataType ExpressionCompiler::Impl::compileNumOperand()
 {
-    column = compiler.getColumn();
     if (compiler.peekNextChar() == '(') {
         return compileParentheses();
     }
@@ -130,7 +126,7 @@ DataType ExpressionCompiler::Impl::compileParentheses()
     compiler.skipWhiteSpace();
     auto data_type = compileNumExpression(DataType::Double);
     if (compiler.peekNextChar() != ')') {
-        throw CompileError {"expected closing parentheses", column};
+        throw CompileError {"expected closing parentheses", compiler.getColumn()};
     }
     compiler.getNextChar();
     return data_type;

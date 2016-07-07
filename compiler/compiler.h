@@ -40,6 +40,7 @@ private:
     std::istringstream iss;
     ProgramUnit &program;
     ProgramCode code_line;
+    char peek_char {0};
     unsigned column {0};
 };
 
