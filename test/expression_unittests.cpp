@@ -84,5 +84,16 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
         {
             REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
         }
+        SECTION("check the message, column and length of the error thrown")
+        {
+            try {
+                compiler.compileExpression(DataType::Double);
+            }
+            catch (const CompileError &error) {
+                REQUIRE(error.what() == std::string("expected closing parentheses"));
+                REQUIRE(error.column == 6);
+                REQUIRE(error.length == 1);
+            }
+        }
     }
 }

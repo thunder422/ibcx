@@ -92,6 +92,7 @@ DataType ExpressionCompiler::Impl::compileExponential()
 bool ExpressionCompiler::Impl::isOperatorChar(char operator_char)
 {
     compiler.skipWhiteSpace();
+    column = compiler.getColumn();
     if (compiler.peekNextChar() == operator_char) {
         compiler.getNextChar();
         compiler.skipWhiteSpace();
@@ -129,7 +130,7 @@ DataType ExpressionCompiler::Impl::compileParentheses()
     compiler.skipWhiteSpace();
     auto data_type = compileNumExpression(DataType::Double);
     if (compiler.peekNextChar() != ')') {
-        throw CompileError {"", 0};
+        throw CompileError {"expected closing parentheses", column};
     }
     compiler.getNextChar();
     return data_type;
