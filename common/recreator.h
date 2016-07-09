@@ -33,6 +33,9 @@ public:
     void prependKeyword(CommandCode command_code);
     void markErrorStart();
 
+    void recreateUnaryOperator(const std::string &keyword);
+    void recreateBinaryOperator(const std::string &keyword);
+
 private:
     struct StackItem {
         StackItem(const std::string &string);

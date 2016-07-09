@@ -67,13 +67,7 @@ UnaryOperatorCodes neg_codes {neg_dbl_code, neg_int_code};
 
 void recreateNegate(Recreator &recreator)
 {
-    std::string string {"-"};
-    recreator.swapTop(string);
-    char c = string.front();
-    if (isdigit(c) || c == '.') {
-        recreator.append(' ');
-    }
-    recreator.append(string);
+    recreator.recreateUnaryOperator("-");
 }
 
 void executeNegateDbl(Executer &executer)
@@ -103,13 +97,7 @@ NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code
 
 void recreateExponential(Recreator &recreator)
 {
-    auto string = recreator.top();
-    recreator.pop();
-    recreator.append(' ');
-    recreator.markErrorStart();
-    recreator.append('^');
-    recreator.append(' ');
-    recreator.append(string);
+    recreator.recreateBinaryOperator("^");
 }
 
 inline void validatePowerResult(double x, double result, Executer &executer);

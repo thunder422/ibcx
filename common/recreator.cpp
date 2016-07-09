@@ -105,3 +105,25 @@ void Recreator::swapTop(std::string &string)
 {
     std::swap(stack.top().string, string);
 }
+
+void Recreator::recreateUnaryOperator(const std::string &keyword)
+{
+    std::string string = keyword;
+    swapTop(string);
+    char c = string.front();
+    if (isdigit(c) || c == '.') {
+        append(' ');
+    }
+    append(string);
+}
+
+void Recreator::recreateBinaryOperator(const std::string &keyword)
+{
+    auto string = top();
+    pop();
+    append(' ');
+    markErrorStart();
+    append(keyword);
+    append(' ');
+    append(string);
+}
