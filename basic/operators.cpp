@@ -29,6 +29,11 @@ Code &UnaryOperatorCodes::select(DataType data_type) const
     }
 }
 
+std::vector<WordType> UnaryOperatorCodes::codeValues() const
+{
+    return std::vector<WordType> {dbl_code.getValue(), int_code.getValue()};
+}
+
 
 NumOperatorCodes::NumOperatorCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code,
         OperatorCode<OpType::IntDbl> &int_dbl_code, OperatorCode<OpType::DblInt> &dbl_int_code,
@@ -53,6 +58,14 @@ OperatorInfo NumOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_
     }
 }
 
+std::vector<WordType> NumOperatorCodes::codeValues() const
+{
+    return std::vector<WordType> {
+        dbl_dbl_code.getValue(), int_dbl_code.getValue(),
+        dbl_int_code.getValue(), int_int_code.getValue()
+    };
+}
+
 // ----------------------------------------
 
 void recreateNegate(Recreator &recreator);
@@ -67,7 +80,8 @@ UnaryOperatorCodes neg_codes {neg_dbl_code, neg_int_code};
 
 void recreateNegate(Recreator &recreator)
 {
-    recreator.recreateUnaryOperator("-");
+    auto keyword = recreator.getOperatorKeyword();
+    recreator.recreateUnaryOperator(keyword);
 }
 
 void executeNegateDbl(Executer &executer)
@@ -97,7 +111,8 @@ NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code
 
 void recreateExponential(Recreator &recreator)
 {
-    recreator.recreateBinaryOperator("^");
+    auto keyword = recreator.getOperatorKeyword();
+    recreator.recreateBinaryOperator(keyword);
 }
 
 inline void validatePowerResult(double x, double result, Executer &executer);

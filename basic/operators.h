@@ -37,22 +37,29 @@ struct OperatorInfo {
 };
 
 
-class UnaryOperatorCodes {
+class OperatorCodes {
+public:
+    virtual std::vector<WordType> codeValues() const = 0;
+};
+
+class UnaryOperatorCodes : public OperatorCodes {
 public:
     UnaryOperatorCodes(OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code);
     Code &select(DataType data_type) const;
+    std::vector<WordType> codeValues() const override;
 
 private:
     OperatorCode<OpType::Dbl> &dbl_code;
     OperatorCode<OpType::Int> &int_code;
 };
 
-class NumOperatorCodes {
+class NumOperatorCodes : public OperatorCodes {
 public:
     NumOperatorCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code,
             OperatorCode<OpType::IntDbl> &int_dbl_code, OperatorCode<OpType::DblInt> &dbl_int_code,
             OperatorCode<OpType::IntInt> &int_int_code);
     OperatorInfo select(DataType lhs_data_type, DataType rhs_data_type) const;
+    std::vector<WordType> codeValues() const override;
 
 private:
     OperatorCode<OpType::DblDbl> &dbl_dbl_code;

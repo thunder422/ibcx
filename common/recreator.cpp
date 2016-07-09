@@ -6,6 +6,7 @@
  */
 
 #include "commandcode.h"
+#include "precedence.h"
 #include "programcode.h"
 #include "programerror.h"
 #include "programunit.h"
@@ -37,6 +38,7 @@ void Recreator::setAtErrorOffset()
 void Recreator::recreateOneCode()
 {
     auto code = program_reader.getInstruction();
+    code_value = code->getValue();
     code->recreate(*this);
 }
 
@@ -79,18 +81,6 @@ void Recreator::prependKeyword(CommandCode command_code)
     append(string);
 }
 
-void Recreator::markErrorStart()
-{
-    appendErrorMarker(StartErrorMarker);
-}
-
-void Recreator::appendErrorMarker(char error_marker)
-{
-    if (at_error_offset) {
-        append(error_marker);
-    }
-}
-
 void Recreator::append(char c)
 {
     stack.top().string += c;
@@ -104,6 +94,23 @@ void Recreator::append(const std::string &string)
 void Recreator::swapTop(std::string &string)
 {
     std::swap(stack.top().string, string);
+}
+
+void Recreator::markErrorStart()
+{
+    appendErrorMarker(StartErrorMarker);
+}
+
+void Recreator::appendErrorMarker(char error_marker)
+{
+    if (at_error_offset) {
+        append(error_marker);
+    }
+}
+
+const char *Recreator::getOperatorKeyword() const
+{
+    return Precedence::getKeyword(code_value);
 }
 
 void Recreator::recreateUnaryOperator(const std::string &keyword)

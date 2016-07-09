@@ -27,12 +27,13 @@ public:
     bool empty() const;
     std::string top() const;
     void pop();
+    void prependKeyword(CommandCode command_code);
     void append(char c);
     void append(const std::string &string);
     void swapTop(std::string &string);
-    void prependKeyword(CommandCode command_code);
     void markErrorStart();
 
+    const char *getOperatorKeyword() const;
     void recreateUnaryOperator(const std::string &keyword);
     void recreateBinaryOperator(const std::string &keyword);
 
@@ -49,6 +50,7 @@ private:
 
     const ProgramUnit &program;
     mutable ProgramReader program_reader;
+    WordType code_value;
     unsigned error_offset;
     std::stack<StackItem> stack;
     bool at_error_offset;

@@ -68,6 +68,7 @@ set(IBC_SOURCES
     basic/operators.cpp
     basic/powerdblint.h
     basic/powerintint.h
+    basic/precedence.cpp
     basic/print.cpp
     common/cistring.h
     common/compileerror.h
