@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "compileerror.h"
 #include "compiler.h"
+#include "programerror.h"
 #include "programunit.h"
 #include "support.h"
 
@@ -95,5 +96,15 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
                 REQUIRE(error.length == 1);
             }
         }
+    }
+    SECTION("recreate parentheses around the negate operator (left side operand)")
+    {
+        std::istringstream iss {"PRINT (- 3)^2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT (- 3) ^ 2\n");
     }
 }

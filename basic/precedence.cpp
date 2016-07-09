@@ -14,6 +14,7 @@
 class PrecedenceInfo {
 public:
     static PrecedenceInfo &getInstance();
+    unsigned getPrecedence(WordType code_value) const;
     const char *getKeyword(WordType code_value) const;
 
 private:
@@ -25,6 +26,8 @@ private:
     PrecedenceInfo();
     void initializeOperatorData(const OperatorData &operator_data);
 
+    unsigned current_precedence;
+    std::unordered_map<WordType, int> precedences;
     std::unordered_map<WordType, const char *> keywords;
 };
 
@@ -35,12 +38,22 @@ const char *Precedence::getKeyword(WordType code_value)
     return PrecedenceInfo::getInstance().getKeyword(code_value);
 }
 
+unsigned Precedence::getPrecedence(WordType code_value)
+{
+    return PrecedenceInfo::getInstance().getPrecedence(code_value);
+}
+
 // ------------------------------------------------------------
 
 PrecedenceInfo &PrecedenceInfo::getInstance()
 {
     static PrecedenceInfo precedence_info;
     return precedence_info;
+}
+
+unsigned PrecedenceInfo::getPrecedence(WordType code_value) const
+{
+    return precedences.at(code_value);
 }
 
 const char *PrecedenceInfo::getKeyword(WordType code_value) const
@@ -50,7 +63,8 @@ const char *PrecedenceInfo::getKeyword(WordType code_value) const
 
 // --------------------
 
-PrecedenceInfo::PrecedenceInfo()
+PrecedenceInfo::PrecedenceInfo() :
+    current_precedence {1}
 {
     extern NumOperatorCodes exp_codes;
     extern UnaryOperatorCodes neg_codes;
@@ -67,7 +81,9 @@ PrecedenceInfo::PrecedenceInfo()
 
 void PrecedenceInfo::initializeOperatorData(const OperatorData &operator_data)
 {
+    auto precedence = current_precedence++;
     for (auto code_value : operator_data.codes.codeValues()) {
+        precedences[code_value] = precedence;
         keywords[code_value] = operator_data.keyword;
     }
 }

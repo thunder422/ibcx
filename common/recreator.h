@@ -25,12 +25,14 @@ public:
     void pushKeyword(CommandCode command_code);
     void push(const std::string &operand);
     bool empty() const;
-    std::string top() const;
+    std::string topString() const;
+    unsigned topPrecedence() const;
     void pop();
     void prependKeyword(CommandCode command_code);
     void append(char c);
     void append(const std::string &string);
     void swapTop(std::string &string);
+    void setTopPrecedence(unsigned precedence);
     void markErrorStart();
 
     void recreateUnaryOperator();
@@ -38,15 +40,17 @@ public:
 
 private:
     struct StackItem {
-        StackItem(const std::string &string);
+        StackItem(const std::string &string, unsigned precedence);
 
         std::string string;
+        unsigned precedence;
     };
 
     void setAtErrorOffset();
     void recreateOneCode();
     void appendErrorMarker(char error_marker);
     const char *getOperatorKeyword() const;
+    unsigned getOperatorPrecedence() const;
 
     const ProgramUnit &program;
     mutable ProgramReader program_reader;
@@ -56,8 +60,9 @@ private:
     bool at_error_offset;
 };
 
-inline Recreator::StackItem::StackItem(const std::string &string) :
-    string {string}
+inline Recreator::StackItem::StackItem(const std::string &string, unsigned precedence) :
+    string {string},
+    precedence {precedence}
 {
 }
 

@@ -27,7 +27,7 @@ std::string Recreator::operator()()
         setAtErrorOffset();
         recreateOneCode();
     }
-    return top();
+    return topString();
 }
 
 void Recreator::setAtErrorOffset()
@@ -55,7 +55,7 @@ void Recreator::pushKeyword(CommandCode command_code)
 
 void Recreator::push(const std::string &operand)
 {
-    stack.emplace(operand);
+    stack.emplace(operand, 0);
 }
 
 bool Recreator::empty() const
@@ -63,9 +63,14 @@ bool Recreator::empty() const
     return stack.empty();
 }
 
-std::string Recreator::top() const
+std::string Recreator::topString() const
 {
     return stack.top().string;
+}
+
+unsigned Recreator::topPrecedence() const
+{
+    return stack.top().precedence;
 }
 
 void Recreator::pop()
@@ -96,6 +101,11 @@ void Recreator::swapTop(std::string &string)
     std::swap(stack.top().string, string);
 }
 
+void Recreator::setTopPrecedence(unsigned precedence)
+{
+    stack.top().precedence = precedence;
+}
+
 void Recreator::markErrorStart()
 {
     appendErrorMarker(StartErrorMarker);
@@ -117,22 +127,38 @@ void Recreator::recreateUnaryOperator()
         append(' ');
     }
     append(string);
+    setTopPrecedence(getOperatorPrecedence());
 }
 
 void Recreator::recreateBinaryOperator()
 {
-    auto string = top();
+    auto right_operand = topString();
     pop();
+
+    auto left_precedence = topPrecedence();
+    auto operator_precedence = getOperatorPrecedence();
+    if (left_precedence > operator_precedence) {
+        std::string left_operand = "(";
+        left_operand += topString();
+        left_operand += ')';
+        swapTop(left_operand);
+    }
     append(' ');
     markErrorStart();
     append(getOperatorKeyword());
     append(' ');
-    append(string);
+    append(right_operand);
+
 }
 
 const char *Recreator::getOperatorKeyword() const
 {
     return Precedence::getKeyword(code_value);
+}
+
+unsigned Recreator::getOperatorPrecedence() const
+{
+    return Precedence::getPrecedence(code_value);
 }
 
 // ------------------------------------------------------------

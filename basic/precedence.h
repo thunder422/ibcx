@@ -13,6 +13,7 @@
 
 struct Precedence {
     static const char *getKeyword(WordType code_value);
+    static unsigned getPrecedence(WordType code_value);
 };
 
 
