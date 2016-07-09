@@ -68,21 +68,14 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
 
 // ----------------------------------------
 
-void recreateNegate(Recreator &recreator);
 void executeNegateDbl(Executer &executer);
 void executeNegateInt(Executer &executer);
 
-OperatorCode<OpType::Dbl> neg_dbl_code {recreateNegate, executeNegateDbl};
-OperatorCode<OpType::Int> neg_int_code {recreateNegate, executeNegateInt};
+OperatorCode<OpType::Dbl> neg_dbl_code {recreateUnaryOperator, executeNegateDbl};
+OperatorCode<OpType::Int> neg_int_code {recreateUnaryOperator, executeNegateInt};
 
 UnaryOperatorCodes neg_codes {neg_dbl_code, neg_int_code};
 
-
-void recreateNegate(Recreator &recreator)
-{
-    auto keyword = recreator.getOperatorKeyword();
-    recreator.recreateUnaryOperator(keyword);
-}
 
 void executeNegateDbl(Executer &executer)
 {
@@ -96,24 +89,17 @@ void executeNegateInt(Executer &executer)
 
 // ----------------------------------------
 
-void recreateExponential(Recreator &recreator);
 void executeExponentialDblDbl(Executer &executer);
 void executeExponentialIntDbl(Executer &executer);
 void executeExponentialDblInt(Executer &executer);
 void executeExponentialIntInt(Executer &executer);
 
-OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateExponential, executeExponentialDblDbl};
-OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateExponential, executeExponentialIntDbl};
-OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateExponential, executeExponentialDblInt};
-OperatorCode<OpType::IntInt> exp_int_int_code {recreateExponential, executeExponentialIntInt};
+OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateBinaryOperator, executeExponentialDblDbl};
+OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateBinaryOperator, executeExponentialIntDbl};
+OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateBinaryOperator, executeExponentialDblInt};
+OperatorCode<OpType::IntInt> exp_int_int_code {recreateBinaryOperator, executeExponentialIntInt};
 
 NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code};
-
-void recreateExponential(Recreator &recreator)
-{
-    auto keyword = recreator.getOperatorKeyword();
-    recreator.recreateBinaryOperator(keyword);
-}
 
 inline void validatePowerResult(double x, double result, Executer &executer);
 inline void calculatePowerDblDbl(Executer &executer, double x, double y);

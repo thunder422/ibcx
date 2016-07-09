@@ -33,9 +33,8 @@ public:
     void swapTop(std::string &string);
     void markErrorStart();
 
-    const char *getOperatorKeyword() const;
-    void recreateUnaryOperator(const std::string &keyword);
-    void recreateBinaryOperator(const std::string &keyword);
+    void recreateUnaryOperator();
+    void recreateBinaryOperator();
 
 private:
     struct StackItem {
@@ -47,6 +46,7 @@ private:
     void setAtErrorOffset();
     void recreateOneCode();
     void appendErrorMarker(char error_marker);
+    const char *getOperatorKeyword() const;
 
     const ProgramUnit &program;
     mutable ProgramReader program_reader;
@@ -60,6 +60,10 @@ inline Recreator::StackItem::StackItem(const std::string &string) :
     string {string}
 {
 }
+
+
+void recreateUnaryOperator(Recreator &recreator);
+void recreateBinaryOperator(Recreator &recreator);
 
 
 #endif  // IBC_RECREATOR_H

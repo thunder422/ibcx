@@ -108,14 +108,9 @@ void Recreator::appendErrorMarker(char error_marker)
     }
 }
 
-const char *Recreator::getOperatorKeyword() const
+void Recreator::recreateUnaryOperator()
 {
-    return Precedence::getKeyword(code_value);
-}
-
-void Recreator::recreateUnaryOperator(const std::string &keyword)
-{
-    std::string string = keyword;
+    std::string string = getOperatorKeyword();
     swapTop(string);
     char c = string.front();
     if (isdigit(c) || c == '.') {
@@ -124,13 +119,30 @@ void Recreator::recreateUnaryOperator(const std::string &keyword)
     append(string);
 }
 
-void Recreator::recreateBinaryOperator(const std::string &keyword)
+void Recreator::recreateBinaryOperator()
 {
     auto string = top();
     pop();
     append(' ');
     markErrorStart();
-    append(keyword);
+    append(getOperatorKeyword());
     append(' ');
     append(string);
+}
+
+const char *Recreator::getOperatorKeyword() const
+{
+    return Precedence::getKeyword(code_value);
+}
+
+// ------------------------------------------------------------
+
+void recreateUnaryOperator(Recreator &recreator)
+{
+    recreator.recreateUnaryOperator();
+}
+
+void recreateBinaryOperator(Recreator &recreator)
+{
+    recreator.recreateBinaryOperator();
 }
