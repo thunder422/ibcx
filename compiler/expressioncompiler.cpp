@@ -104,7 +104,7 @@ DataType ExpressionCompiler::Impl::compileNegation()
     extern UnaryOperatorCodes neg_codes;
 
     compiler.skipWhiteSpace();
-    auto data_type = compileNumOperand();
+    auto data_type = compileExponential();
     if (data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }

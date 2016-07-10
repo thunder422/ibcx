@@ -148,5 +148,15 @@ TEST_CASE("execute negate operator expressions", "[execute]")
 
         REQUIRE(oss.str() == "-1.345e+210\n");
     }
+    SECTION("check that exponential is higher precedence than negation")
+    {
+        std::istringstream iss {"PRINT 2.0^- 2^3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0.00390625\n");
+    }
 }
 
