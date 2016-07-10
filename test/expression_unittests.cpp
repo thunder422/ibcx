@@ -117,7 +117,7 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
 
         REQUIRE(oss.str() == "PRINT 4 ^ (3 ^ 2)\n");
     }
-    SECTION("make sure parentheses are not added unnecessarily around the right side operand")
+    SECTION("don't recreate parentheses around right side if there is a unary operator")
     {
         std::istringstream iss {"PRINT 3^- 1^2"};
         std::ostringstream oss;
@@ -126,5 +126,15 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT 3 ^ - 1 ^ 2\n");
+    }
+    SECTION("recreate parentheses around left side containing a unary operator")
+    {
+        std::istringstream iss {"PRINT (3^- 1)^2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT (3 ^ - 1) ^ 2\n");
     }
 }

@@ -149,13 +149,15 @@ void Recreator::recreateBinaryOperator()
     pop();
 
     auto left_precedence = topPrecedence();
+    auto left_unary_precedence = topUnaryOperator();
     auto operator_precedence = getOperatorPrecedence();
-    if (left_precedence > operator_precedence) {
+    if (left_precedence > operator_precedence || left_unary_precedence) {
         std::string left_operand = "(";
         left_operand += topString();
         left_operand += ')';
         swapTop(left_operand);
     }
+
     append(' ');
     markErrorStart();
     append(getOperatorKeyword());
@@ -169,6 +171,9 @@ void Recreator::recreateBinaryOperator()
         append(')');
     }
     setTopPrecedence(operator_precedence);
+    if (right_unary_operator) {
+        setTopUnaryOperator();
+    }
 }
 
 const char *Recreator::getOperatorKeyword() const
