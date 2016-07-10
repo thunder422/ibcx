@@ -111,9 +111,9 @@ void Recreator::setTopPrecedence(unsigned precedence)
     stack.top().precedence = precedence;
 }
 
-void Recreator::setTopUnaryOperator()
+void Recreator::setTopUnaryOperator(bool unary_operator)
 {
-    stack.top().unary_operator = true;
+    stack.top().unary_operator = unary_operator;
 }
 
 void Recreator::markErrorStart()
@@ -138,7 +138,7 @@ void Recreator::recreateUnaryOperator()
     }
     append(string);
     setTopPrecedence(getOperatorPrecedence());
-    setTopUnaryOperator();
+    setTopUnaryOperator(true);
 }
 
 void Recreator::recreateBinaryOperator()
@@ -171,9 +171,7 @@ void Recreator::recreateBinaryOperator()
         append(')');
     }
     setTopPrecedence(operator_precedence);
-    if (right_unary_operator) {
-        setTopUnaryOperator();
-    }
+    setTopUnaryOperator(right_unary_operator);
 }
 
 const char *Recreator::getOperatorKeyword() const

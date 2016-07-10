@@ -34,7 +34,7 @@ public:
     void append(const std::string &string);
     void swapTop(std::string &string);
     void setTopPrecedence(unsigned precedence);
-    void setTopUnaryOperator();
+    void setTopUnaryOperator(bool unary_operator);
     void markErrorStart();
 
     void recreateUnaryOperator();
