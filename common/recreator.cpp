@@ -73,6 +73,11 @@ unsigned Recreator::topPrecedence() const
     return stack.top().precedence;
 }
 
+bool Recreator::topUnaryOperator() const
+{
+    return stack.top().unary_operator;
+}
+
 void Recreator::pop()
 {
     stack.pop();
@@ -106,6 +111,11 @@ void Recreator::setTopPrecedence(unsigned precedence)
     stack.top().precedence = precedence;
 }
 
+void Recreator::setTopUnaryOperator()
+{
+    stack.top().unary_operator = true;
+}
+
 void Recreator::markErrorStart()
 {
     appendErrorMarker(StartErrorMarker);
@@ -128,12 +138,14 @@ void Recreator::recreateUnaryOperator()
     }
     append(string);
     setTopPrecedence(getOperatorPrecedence());
+    setTopUnaryOperator();
 }
 
 void Recreator::recreateBinaryOperator()
 {
     auto right_operand = topString();
     auto right_precedence = topPrecedence();
+    auto right_unary_operator = topUnaryOperator();
     pop();
 
     auto left_precedence = topPrecedence();
@@ -148,11 +160,12 @@ void Recreator::recreateBinaryOperator()
     markErrorStart();
     append(getOperatorKeyword());
     append(' ');
-    if (right_precedence >= operator_precedence) {
+    auto lower_precedence = right_precedence >= operator_precedence && !right_unary_operator;
+    if (lower_precedence) {
         append('(');
     }
     append(right_operand);
-    if (right_precedence >= operator_precedence) {
+    if (lower_precedence) {
         append(')');
     }
     setTopPrecedence(operator_precedence);

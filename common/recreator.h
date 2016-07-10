@@ -27,12 +27,14 @@ public:
     bool empty() const;
     std::string topString() const;
     unsigned topPrecedence() const;
+    bool topUnaryOperator() const;
     void pop();
     void prependKeyword(CommandCode command_code);
     void append(char c);
     void append(const std::string &string);
     void swapTop(std::string &string);
     void setTopPrecedence(unsigned precedence);
+    void setTopUnaryOperator();
     void markErrorStart();
 
     void recreateUnaryOperator();
@@ -44,6 +46,7 @@ private:
 
         std::string string;
         unsigned precedence;
+        bool unary_operator;
     };
 
     void setAtErrorOffset();
@@ -62,7 +65,8 @@ private:
 
 inline Recreator::StackItem::StackItem(const std::string &string, unsigned precedence) :
     string {string},
-    precedence {precedence}
+    precedence {precedence},
+    unary_operator {false}
 {
 }
 
