@@ -133,6 +133,7 @@ void Recreator::recreateUnaryOperator()
 void Recreator::recreateBinaryOperator()
 {
     auto right_operand = topString();
+    auto right_precedence = topPrecedence();
     pop();
 
     auto left_precedence = topPrecedence();
@@ -147,8 +148,14 @@ void Recreator::recreateBinaryOperator()
     markErrorStart();
     append(getOperatorKeyword());
     append(' ');
+    if (right_precedence >= operator_precedence) {
+        append('(');
+    }
     append(right_operand);
-
+    if (right_precedence >= operator_precedence) {
+        append(')');
+    }
+    setTopPrecedence(operator_precedence);
 }
 
 const char *Recreator::getOperatorKeyword() const
