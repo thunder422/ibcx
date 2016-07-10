@@ -7,6 +7,7 @@
 
 #include "catch.hpp"
 #include "compiler.h"
+#include "operators.h"
 #include "programunit.h"
 
 TEST_CASE("compile multiply operator expressions", "[compile]")
@@ -19,5 +20,17 @@ TEST_CASE("compile multiply operator expressions", "[compile]")
         compiler.compileExpression(DataType::Null);
 
         REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("check for an integer multiply code at end of code line")
+    {
+        extern OperatorCode<OpType::IntInt> mul_int_int_code;
+
+        Compiler compiler {"3*2", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(code_line.size() == 5);
+        REQUIRE(code_line[4].instructionCode()->getValue() == mul_int_int_code.getValue());
     }
 }

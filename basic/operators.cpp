@@ -167,3 +167,7 @@ void executeExponentialIntInt(Executer &executer)
         throw;
     }
 }
+
+// ----------------------------------------
+
+OperatorCode<OpType::IntInt> mul_int_int_code {nullptr, nullptr};

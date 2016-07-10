@@ -75,6 +75,8 @@ DataType ExpressionCompiler::Impl::compileProduct()
     auto lhs_data_type = compileExponential();
     if (isOperatorChar('*')) {
         compileExponential();
+        extern OperatorCode<OpType::IntInt> mul_int_int_code;
+        compiler.addInstruction(mul_int_int_code);
     }
     return lhs_data_type;
 }
