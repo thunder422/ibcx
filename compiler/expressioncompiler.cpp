@@ -75,7 +75,7 @@ DataType ExpressionCompiler::Impl::compileProduct()
     extern NumOperatorCodes mul_codes;
 
     auto lhs_data_type = compileExponential();
-    if (isOperatorChar('*')) {
+    while (isOperatorChar('*')) {
         auto rhs_data_type = compileExponential();
         auto info = mul_codes.select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);

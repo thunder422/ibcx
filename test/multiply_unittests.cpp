@@ -69,4 +69,15 @@ TEST_CASE("compile multiply operator expressions", "[compile]")
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == mul_int_dbl_code.getValue());
     }
+    SECTION("check that multiple multiply operators are compiled")
+    {
+        extern OperatorCode<OpType::IntDbl> mul_int_dbl_code;
+        extern OperatorCode<OpType::DblInt> mul_dbl_int_code;
+
+        Compiler compiler {"3*2.0*4", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }
