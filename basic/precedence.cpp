@@ -68,10 +68,12 @@ PrecedenceInfo::PrecedenceInfo() :
 {
     extern NumOperatorCodes exp_codes;
     extern UnaryOperatorCodes neg_codes;
+    extern NumOperatorCodes mul_codes;
 
     std::initializer_list<OperatorData> operator_data_list = {
         {exp_codes, "^"},
-        {neg_codes, "-"}
+        {neg_codes, "-"},
+        {mul_codes, "*"}
     };
 
     for (auto &operator_data : operator_data_list) {

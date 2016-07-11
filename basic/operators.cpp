@@ -173,6 +173,6 @@ void executeExponentialIntInt(Executer &executer)
 OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {nullptr, nullptr};
 OperatorCode<OpType::IntDbl> mul_int_dbl_code {nullptr, nullptr};
 OperatorCode<OpType::DblInt> mul_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> mul_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> mul_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes mul_codes {mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code, mul_int_int_code};

@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "compiler.h"
 #include "operators.h"
+#include "programerror.h"
 #include "programunit.h"
 
 TEST_CASE("compile multiply operator expressions", "[compile]")
@@ -79,5 +80,21 @@ TEST_CASE("compile multiply operator expressions", "[compile]")
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}
+
+TEST_CASE("recreate nultiply operator expression", "[recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate a exponential with two integer constants")
+    {
+        std::istringstream iss {"PRINT 3*2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 * 2\n");
     }
 }
