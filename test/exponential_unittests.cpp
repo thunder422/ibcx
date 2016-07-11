@@ -71,7 +71,7 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
             }
         }
     }
-    SECTION("check for an integer exponential code at end of code line")
+    SECTION("check for an integer exponential code after the operands")
     {
         extern OperatorCode<OpType::IntInt> exp_int_int_code;
 
@@ -83,7 +83,7 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_int_int_code.getValue());
     }
-    SECTION("check for an double exponential code at end of code line")
+    SECTION("check for an double exponential code after the operands")
     {
         extern OperatorCode<OpType::DblDbl> exp_dbl_dbl_code;
 
@@ -95,7 +95,7 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_dbl_code.getValue());
     }
-    SECTION("check for an right side integer exponential code at end of code line")
+    SECTION("check for an right side integer exponential code after the operands")
     {
         extern OperatorCode<OpType::DblInt> exp_dbl_int_code;
 
@@ -107,7 +107,7 @@ TEST_CASE("compile exponential operator expressions", "[compile]")
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_int_code.getValue());
     }
-    SECTION("check for an left side integer exponential code at end of code line")
+    SECTION("check for an left side integer exponential code after the operands")
     {
         extern OperatorCode<OpType::IntDbl> exp_int_dbl_code;
 
