@@ -132,11 +132,21 @@ void Recreator::recreateUnaryOperator()
 {
     std::string string = getOperatorKeyword();
     swapTop(string);
-    char c = string.front();
-    if (isdigit(c) || c == '.') {
-        append(' ');
+    auto operand_precedence = topPrecedence();
+    auto operator_precedence = getOperatorPrecedence();
+    auto lower_precedence = operand_precedence > operator_precedence;
+    if (lower_precedence) {
+        append('(');
+    } else {
+        char c = string.front();
+        if (isdigit(c) || c == '.') {
+            append(' ');
+        }
     }
     append(string);
+    if (lower_precedence) {
+        append(')');
+    }
     setTopPrecedence(getOperatorPrecedence());
     setTopUnaryOperator(true);
 }

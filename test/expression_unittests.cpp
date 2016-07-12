@@ -163,4 +163,14 @@ TEST_CASE("compile expressions with the multiply operator", "[multiply]")
 
         REQUIRE(oss.str() == "PRINT 3 * - 2 * 4\n");
     }
+    SECTION("recreate parentheses with multiply that is lower precedence than negate operator")
+    {
+        std::istringstream iss {"PRINT -(2*4)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT -(2 * 4)\n");
+    }
 }
