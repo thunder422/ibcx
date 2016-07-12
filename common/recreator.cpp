@@ -21,7 +21,7 @@ Recreator::Recreator(const ProgramUnit &program, ProgramReader program_reader,
 {
 }
 
-std::string Recreator::operator()()
+std::string &&Recreator::operator()()
 {
     while (program_reader.hasMoreCode()) {
         setAtErrorOffset();
@@ -63,9 +63,9 @@ bool Recreator::empty() const
     return stack.empty();
 }
 
-std::string Recreator::topString() const
+std::string &&Recreator::topString()
 {
-    return stack.top().string;
+    return std::move(stack.top().string);
 }
 
 unsigned Recreator::topPrecedence() const
@@ -130,58 +130,84 @@ void Recreator::appendErrorMarker(char error_marker)
 
 void Recreator::recreateUnaryOperator()
 {
-    std::string string = getOperatorKeyword();
-    swapTop(string);
-    auto operand_precedence = topPrecedence();
+    auto operand = topString();
+
+    append(getOperatorKeyword());
     auto operator_precedence = getOperatorPrecedence();
+
+    appendUnaryOperand(std::move(operand), operator_precedence);
+
+    setTopPrecedence(operator_precedence);
+    setTopUnaryOperator(true);
+}
+
+void Recreator::appendUnaryOperand(std::string &&operand, unsigned operator_precedence)
+{
+    auto operand_precedence = topPrecedence();
     auto lower_precedence = operand_precedence > operator_precedence;
     if (lower_precedence) {
-        append('(');
+        appendWithParens(operand);
     } else {
-        char c = string.front();
-        if (isdigit(c) || c == '.') {
-            append(' ');
-        }
+        appendSpaceForConstant(operand.front());
+        append(operand);
     }
-    append(string);
-    if (lower_precedence) {
-        append(')');
+}
+
+void Recreator::appendSpaceForConstant(char first_char)
+{
+    if (isdigit(first_char) || first_char == '.') {
+        append(' ');
     }
-    setTopPrecedence(getOperatorPrecedence());
-    setTopUnaryOperator(true);
 }
 
 void Recreator::recreateBinaryOperator()
 {
-    auto right_operand = topString();
-    auto right_precedence = topPrecedence();
-    auto right_unary_operator = topUnaryOperator();
+    StackItem rhs = stack.top();
     pop();
 
-    auto left_precedence = topPrecedence();
-    auto left_unary_precedence = topUnaryOperator();
     auto operator_precedence = getOperatorPrecedence();
-    if (left_precedence > operator_precedence || left_unary_precedence) {
-        std::string left_operand = "(";
-        left_operand += topString();
-        left_operand += ')';
-        swapTop(left_operand);
-    }
 
+    appendLeftOperand(operator_precedence);
+    appendBinaryOperator();
+    appendRightOperand(rhs, operator_precedence);
+
+    setTopPrecedence(operator_precedence);
+    setTopUnaryOperator(rhs.precedence > operator_precedence && rhs.unary_operator);
+}
+
+void Recreator::appendLeftOperand(unsigned operator_precedence)
+{
+    auto lhs_precedence = topPrecedence();
+    auto lhs_unary_operator = topUnaryOperator();
+    if (lhs_precedence > operator_precedence || lhs_unary_operator) {
+        auto left_operand = topString();
+        appendWithParens(left_operand);
+    }
+}
+
+void Recreator::appendBinaryOperator()
+{
     append(' ');
     markErrorStart();
     append(getOperatorKeyword());
     append(' ');
-    auto lower_precedence = right_precedence >= operator_precedence && !right_unary_operator;
+}
+
+void Recreator::appendRightOperand(const StackItem &rhs, unsigned operator_precedence)
+{
+    auto lower_precedence = rhs.precedence >= operator_precedence && !rhs.unary_operator;
     if (lower_precedence) {
-        append('(');
+        appendWithParens(rhs.string);
+    } else {
+        append(rhs.string);
     }
-    append(right_operand);
-    if (lower_precedence) {
-        append(')');
-    }
-    setTopPrecedence(operator_precedence);
-    setTopUnaryOperator(right_precedence > operator_precedence && right_unary_operator);
+}
+
+void Recreator::appendWithParens(const std::string &string)
+{
+    append('(');
+    append(string);
+    append(')');
 }
 
 const char *Recreator::getOperatorKeyword() const

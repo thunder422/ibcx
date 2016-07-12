@@ -20,12 +20,11 @@ class ProgramUnit;
 class Recreator {
 public:
     Recreator(const ProgramUnit &program, ProgramReader program_reader, unsigned error_offset);
-    std::string operator()();
+    std::string &&operator()();
     std::string getConstNumOperand() const;
     void pushKeyword(CommandCode command_code);
     void push(const std::string &operand);
     bool empty() const;
-    std::string topString() const;
     unsigned topPrecedence() const;
     bool topUnaryOperator() const;
     void pop();
@@ -51,7 +50,14 @@ private:
 
     void setAtErrorOffset();
     void recreateOneCode();
+    std::string &&topString();
     void appendErrorMarker(char error_marker);
+    void appendUnaryOperand(std::string &&operand, unsigned operator_precedence);
+    void appendSpaceForConstant(char first_char);
+    void appendLeftOperand(unsigned operator_precedence);
+    void appendBinaryOperator();
+    void appendRightOperand(const StackItem &rhs, unsigned operator_precedence);
+    void appendWithParens(const std::string &string);
     const char *getOperatorKeyword() const;
     unsigned getOperatorPrecedence() const;
 
