@@ -170,9 +170,19 @@ void executeExponentialIntInt(Executer &executer)
 
 // ----------------------------------------
 
+void executeMultiplyIntInt(Executer &executer);
+
 OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::IntDbl> mul_int_dbl_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::DblInt> mul_dbl_int_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntInt> mul_int_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> mul_int_int_code {recreateBinaryOperator, executeMultiplyIntInt};
 
 NumOperatorCodes mul_codes {mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code, mul_int_int_code};
+
+void executeMultiplyIntInt(Executer &executer)
+{
+    auto rhs = executer.top().int_value;
+    executer.pop();
+    auto result = executer.top().int_value * rhs;
+    executer.top().int_value = result;
+}

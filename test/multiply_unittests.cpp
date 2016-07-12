@@ -83,7 +83,7 @@ TEST_CASE("compile multiply operator expressions", "[compile]")
     }
 }
 
-TEST_CASE("recreate nultiply operator expression", "[recreate]")
+TEST_CASE("recreate multiply operator expressions", "[recreate]")
 {
     ProgramUnit program;
 
@@ -126,5 +126,21 @@ TEST_CASE("recreate nultiply operator expression", "[recreate]")
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT 3.0 * 2\n");
+    }
+}
+
+TEST_CASE("execute integer-integer multiply operator", "[int-int]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a multiply of two integers")
+    {
+        std::istringstream iss {"PRINT 3*2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "6\n");
     }
 }
