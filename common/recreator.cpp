@@ -171,7 +171,7 @@ void Recreator::recreateBinaryOperator()
         append(')');
     }
     setTopPrecedence(operator_precedence);
-    setTopUnaryOperator(right_unary_operator);
+    setTopUnaryOperator(right_precedence > operator_precedence && right_unary_operator);
 }
 
 const char *Recreator::getOperatorKeyword() const

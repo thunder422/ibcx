@@ -148,3 +148,19 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
         REQUIRE(oss.str() == "PRINT (- 3) ^ 1 ^ 2\n");
     }
 }
+
+TEST_CASE("compile expressions with the multiply operator", "[multiply]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate lower precedence multiply without parentheses with negate operator")
+    {
+        std::istringstream iss {"PRINT 3*- 2*4"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 * - 2 * 4\n");
+    }
+}
