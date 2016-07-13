@@ -173,6 +173,7 @@ void executeExponentialIntInt(Executer &executer)
 void executeMultiplyDblDbl(Executer &executer);
 void executeMultiplyDblInt(Executer &executer);
 void executeMultiplyIntInt(Executer &executer);
+inline void doDoubleMultiply(Executer &executer, double rhs);
 
 OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {recreateBinaryOperator, executeMultiplyDblDbl};
 OperatorCode<OpType::IntDbl> mul_int_dbl_code {recreateBinaryOperator, nullptr};
@@ -184,21 +185,23 @@ NumOperatorCodes mul_codes {mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code
 void executeMultiplyDblDbl(Executer &executer)
 {
     auto rhs = executer.top().dbl_value;
+    doDoubleMultiply(executer, rhs);
+}
+
+void executeMultiplyDblInt(Executer &executer)
+{
+    auto rhs = static_cast<double>(executer.top().int_value);
+    doDoubleMultiply(executer, rhs);
+}
+
+inline void doDoubleMultiply(Executer &executer, double rhs)
+{
     executer.pop();
     auto result = executer.top().dbl_value;
     result *= rhs;
     if (result > std::numeric_limits<double>::max()) {
         throw RunError {"overflow", executer.currentOffset()};
     }
-    executer.top().dbl_value = result;
-}
-
-void executeMultiplyDblInt(Executer &executer)
-{
-    auto rhs = executer.top().int_value;
-    executer.pop();
-    auto result = executer.top().dbl_value;
-    result *= rhs;
     executer.top().dbl_value = result;
 }
 
