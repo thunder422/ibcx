@@ -156,4 +156,17 @@ TEST_CASE("execute integer-integer multiply operator", "[int-int]")
             "    PRINT 2000000000 * 3\n"
             "                     ^\n");
     }
+    SECTION("execute a multiply that causes an underflow")
+    {
+        std::istringstream iss {"PRINT 2000000000 * -3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:17: overflow\n"
+            "    PRINT 2000000000 * -3\n"
+            "                     ^\n");
+    }
 }

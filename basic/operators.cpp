@@ -185,7 +185,7 @@ void executeMultiplyIntInt(Executer &executer)
     executer.pop();
     int64_t result = executer.top().int_value;
     result *= rhs;
-    if (result > std::numeric_limits<int>::max()) {
+    if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
         throw RunError {"overflow", executer.currentOffset()};
     }
     executer.top().int_value = result;
