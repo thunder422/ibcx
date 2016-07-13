@@ -12,8 +12,15 @@
 
 
 struct Precedence {
+    enum Level {
+        Operand,
+        Exponential,
+        Negate,
+        Product
+    };
+
     static const char *getKeyword(WordType code_value);
-    static unsigned getPrecedence(WordType code_value);
+    static Precedence::Level getPrecedence(WordType code_value);
 };
 
 

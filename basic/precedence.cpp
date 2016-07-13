@@ -14,11 +14,12 @@
 class PrecedenceInfo {
 public:
     static PrecedenceInfo &getInstance();
-    unsigned getPrecedence(WordType code_value) const;
+    Precedence::Level getPrecedence(WordType code_value) const;
     const char *getKeyword(WordType code_value) const;
 
 private:
     struct OperatorData {
+        Precedence::Level precedence;
         OperatorCodes &codes;
         const char *keyword;
     };
@@ -26,8 +27,7 @@ private:
     PrecedenceInfo();
     void initializeOperatorData(const OperatorData &operator_data);
 
-    unsigned current_precedence;
-    std::unordered_map<WordType, int> precedences;
+    std::unordered_map<WordType, Precedence::Level> precedences;
     std::unordered_map<WordType, const char *> keywords;
 };
 
@@ -38,7 +38,7 @@ const char *Precedence::getKeyword(WordType code_value)
     return PrecedenceInfo::getInstance().getKeyword(code_value);
 }
 
-unsigned Precedence::getPrecedence(WordType code_value)
+Precedence::Level Precedence::getPrecedence(WordType code_value)
 {
     return PrecedenceInfo::getInstance().getPrecedence(code_value);
 }
@@ -51,7 +51,7 @@ PrecedenceInfo &PrecedenceInfo::getInstance()
     return precedence_info;
 }
 
-unsigned PrecedenceInfo::getPrecedence(WordType code_value) const
+Precedence::Level PrecedenceInfo::getPrecedence(WordType code_value) const
 {
     return precedences.at(code_value);
 }
@@ -63,17 +63,16 @@ const char *PrecedenceInfo::getKeyword(WordType code_value) const
 
 // --------------------
 
-PrecedenceInfo::PrecedenceInfo() :
-    current_precedence {1}
+PrecedenceInfo::PrecedenceInfo()
 {
     extern NumOperatorCodes exp_codes;
     extern UnaryOperatorCodes neg_codes;
     extern NumOperatorCodes mul_codes;
 
     std::initializer_list<OperatorData> operator_data_list = {
-        {exp_codes, "^"},
-        {neg_codes, "-"},
-        {mul_codes, "*"}
+        {Precedence::Exponential, exp_codes, "^"},
+        {Precedence::Negate, neg_codes, "-"},
+        {Precedence::Product, mul_codes, "*"}
     };
 
     for (auto &operator_data : operator_data_list) {
@@ -83,7 +82,7 @@ PrecedenceInfo::PrecedenceInfo() :
 
 void PrecedenceInfo::initializeOperatorData(const OperatorData &operator_data)
 {
-    auto precedence = current_precedence++;
+    auto precedence = operator_data.precedence;
     for (auto code_value : operator_data.codes.codeValues()) {
         precedences[code_value] = precedence;
         keywords[code_value] = operator_data.keyword;

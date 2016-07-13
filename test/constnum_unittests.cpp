@@ -511,7 +511,7 @@ TEST_CASE("execute a constant code", "[execute]")
     }
 }
 
-TEST_CASE("constant errrors", "[errors")
+TEST_CASE("constant errrors", "[errors]")
 {
     ProgramUnit program;
 

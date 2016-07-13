@@ -55,7 +55,7 @@ void Recreator::pushKeyword(CommandCode command_code)
 
 void Recreator::push(const std::string &operand)
 {
-    stack.emplace(operand, 0);
+    stack.emplace(operand, Precedence::Operand);
 }
 
 bool Recreator::empty() const
@@ -68,7 +68,7 @@ std::string &&Recreator::topString()
     return std::move(stack.top().string);
 }
 
-unsigned Recreator::topPrecedence() const
+Precedence::Level Recreator::topPrecedence() const
 {
     return stack.top().precedence;
 }
@@ -106,7 +106,7 @@ void Recreator::swapTop(std::string &string)
     std::swap(stack.top().string, string);
 }
 
-void Recreator::setTopPrecedence(unsigned precedence)
+void Recreator::setTopPrecedence(Precedence::Level precedence)
 {
     stack.top().precedence = precedence;
 }
@@ -141,7 +141,7 @@ void Recreator::recreateUnaryOperator()
     setTopUnaryOperator(true);
 }
 
-void Recreator::appendUnaryOperand(std::string &&operand, unsigned operator_precedence)
+void Recreator::appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence)
 {
     auto operand_precedence = topPrecedence();
     auto lower_precedence = operand_precedence > operator_precedence;
@@ -175,7 +175,7 @@ void Recreator::recreateBinaryOperator()
     setTopUnaryOperator(rhs.precedence > operator_precedence && rhs.unary_operator);
 }
 
-void Recreator::appendLeftOperand(unsigned operator_precedence)
+void Recreator::appendLeftOperand(Precedence::Level operator_precedence)
 {
     auto lhs_precedence = topPrecedence();
     auto lhs_unary_operator = topUnaryOperator();
@@ -193,7 +193,7 @@ void Recreator::appendBinaryOperator()
     append(' ');
 }
 
-void Recreator::appendRightOperand(const StackItem &rhs, unsigned operator_precedence)
+void Recreator::appendRightOperand(const StackItem &rhs, Precedence::Level operator_precedence)
 {
     auto lower_precedence = rhs.precedence >= operator_precedence && !rhs.unary_operator;
     if (lower_precedence) {
@@ -215,7 +215,7 @@ const char *Recreator::getOperatorKeyword() const
     return Precedence::getKeyword(code_value);
 }
 
-unsigned Recreator::getOperatorPrecedence() const
+Precedence::Level Recreator::getOperatorPrecedence() const
 {
     return Precedence::getPrecedence(code_value);
 }
