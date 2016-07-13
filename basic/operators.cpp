@@ -186,6 +186,9 @@ void executeMultiplyDblDbl(Executer &executer)
     executer.pop();
     auto result = executer.top().dbl_value;
     result *= rhs;
+    if (result > std::numeric_limits<double>::max()) {
+        throw RunError {"overflow", executer.currentOffset()};
+    }
     executer.top().dbl_value = result;
 }
 
