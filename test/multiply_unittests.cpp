@@ -243,4 +243,17 @@ TEST_CASE("execute integer-double multiply operator", "[int-dbl]")
 
         REQUIRE(oss.str() == "6\n");
     }
+    SECTION("execute a multiply that causes an overflow")
+    {
+        std::istringstream iss {"PRINT 20000000 * 3e307"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:15: overflow\n"
+            "    PRINT 20000000 * 3e307\n"
+            "                   ^\n");
+    }
 }

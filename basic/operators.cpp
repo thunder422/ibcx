@@ -175,6 +175,7 @@ void executeMultiplyIntDbl(Executer &executer);
 void executeMultiplyDblInt(Executer &executer);
 void executeMultiplyIntInt(Executer &executer);
 inline void doDoubleMultiply(Executer &executer, double rhs);
+inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs);
 
 OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {recreateBinaryOperator, executeMultiplyDblDbl};
 OperatorCode<OpType::IntDbl> mul_int_dbl_code {recreateBinaryOperator, executeMultiplyIntDbl};
@@ -193,9 +194,8 @@ void executeMultiplyIntDbl(Executer &executer)
 {
     auto rhs = executer.top().dbl_value;
     executer.pop();
-    auto result = static_cast<double>(executer.top().int_value);
-    result *= rhs;
-    executer.top().dbl_value = result;
+    auto lhs = static_cast<double>(executer.top().int_value);
+    multiplyAndCheckResult(executer, lhs, rhs);
 }
 
 void executeMultiplyDblInt(Executer &executer)
@@ -207,8 +207,13 @@ void executeMultiplyDblInt(Executer &executer)
 inline void doDoubleMultiply(Executer &executer, double rhs)
 {
     executer.pop();
-    auto result = executer.top().dbl_value;
-    result *= rhs;
+    auto lhs = executer.top().dbl_value;
+    multiplyAndCheckResult(executer, lhs, rhs);
+}
+
+inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs)
+{
+    auto result = lhs * rhs;
     if (result > std::numeric_limits<double>::max()) {
         throw RunError {"overflow", executer.currentOffset()};
     }
