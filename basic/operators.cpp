@@ -171,12 +171,13 @@ void executeExponentialIntInt(Executer &executer)
 // ----------------------------------------
 
 void executeMultiplyDblDbl(Executer &executer);
+void executeMultiplyIntDbl(Executer &executer);
 void executeMultiplyDblInt(Executer &executer);
 void executeMultiplyIntInt(Executer &executer);
 inline void doDoubleMultiply(Executer &executer, double rhs);
 
 OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {recreateBinaryOperator, executeMultiplyDblDbl};
-OperatorCode<OpType::IntDbl> mul_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> mul_int_dbl_code {recreateBinaryOperator, executeMultiplyIntDbl};
 OperatorCode<OpType::DblInt> mul_dbl_int_code {recreateBinaryOperator, executeMultiplyDblInt};
 OperatorCode<OpType::IntInt> mul_int_int_code {recreateBinaryOperator, executeMultiplyIntInt};
 
@@ -186,6 +187,15 @@ void executeMultiplyDblDbl(Executer &executer)
 {
     auto rhs = executer.top().dbl_value;
     doDoubleMultiply(executer, rhs);
+}
+
+void executeMultiplyIntDbl(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    executer.pop();
+    auto result = static_cast<double>(executer.top().int_value);
+    result *= rhs;
+    executer.top().dbl_value = result;
 }
 
 void executeMultiplyDblInt(Executer &executer)

@@ -228,3 +228,19 @@ TEST_CASE("execute double-integer multiply operator", "[dbl-int]")
             "                ^\n");
     }
 }
+
+TEST_CASE("execute integer-double multiply operator", "[int-dbl]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a multiply of an integer and a double")
+    {
+        std::istringstream iss {"PRINT 3*2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "6\n");
+    }
+}
