@@ -32,7 +32,7 @@ private:
 
     std::unordered_map<WordType, Precedence::Level> precedences;
     std::unordered_map<WordType, const char *> keywords;
-    std::map<Precedence::Level, const OperatorData *> operator_data_map;
+    std::multimap<Precedence::Level, const OperatorData *> operator_data_map;
 };
 
 // ------------------------------------------------------------
@@ -85,9 +85,11 @@ OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence)
 OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, char operator_char)
 {
     auto iterators = operator_data_map.equal_range(precedence);
-    auto operator_data = iterators.first->second;
-    if (operator_char == operator_data->keyword[0]) {
-        return &operator_data->codes;
+    for (auto iterator = iterators.first; iterator != iterators.second; ++iterator) {
+        auto *operator_data = iterator->second;
+        if (operator_char == operator_data->keyword[0]) {
+            return &operator_data->codes;
+        }
     }
     return nullptr;
 }
@@ -99,11 +101,13 @@ PrecedenceInfo::PrecedenceInfo()
     extern NumOperatorCodes exp_codes;
     extern UnaryOperatorCodes neg_codes;
     extern NumOperatorCodes mul_codes;
+    extern NumOperatorCodes div_codes;
 
     static std::initializer_list<OperatorData> operator_data_list = {
         {Precedence::Exponential, exp_codes, "^"},
         {Precedence::Negate, neg_codes, "-"},
-        {Precedence::Product, mul_codes, "*"}
+        {Precedence::Product, mul_codes, "*"},
+        {Precedence::Product, div_codes, "/"}
     };
 
     for (auto &operator_data : operator_data_list) {
@@ -114,7 +118,7 @@ PrecedenceInfo::PrecedenceInfo()
 void PrecedenceInfo::initializeOperatorData(const OperatorData &operator_data)
 {
     auto precedence = operator_data.precedence;
-    operator_data_map[precedence] = &operator_data;
+    operator_data_map.emplace(precedence, &operator_data);
     for (auto code_value : operator_data.codes.codeValues()) {
         precedences[code_value] = precedence;
         keywords[code_value] = operator_data.keyword;
