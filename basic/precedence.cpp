@@ -5,6 +5,7 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <map>
 #include <unordered_map>
 
 #include "operators.h"
@@ -16,6 +17,8 @@ public:
     static PrecedenceInfo &getInstance();
     Precedence::Level getPrecedence(WordType code_value) const;
     const char *getKeyword(WordType code_value) const;
+    OperatorCodes *operatorCodes(Precedence::Level precedence);
+    OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
 
 private:
     struct OperatorData {
@@ -29,6 +32,7 @@ private:
 
     std::unordered_map<WordType, Precedence::Level> precedences;
     std::unordered_map<WordType, const char *> keywords;
+    std::map<Precedence::Level, const OperatorData *> operator_data_map;
 };
 
 // ------------------------------------------------------------
@@ -41,6 +45,16 @@ const char *Precedence::getKeyword(WordType code_value)
 Precedence::Level Precedence::getPrecedence(WordType code_value)
 {
     return PrecedenceInfo::getInstance().getPrecedence(code_value);
+}
+
+OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence)
+{
+    return PrecedenceInfo::getInstance().operatorCodes(precedence);
+}
+
+OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence, char operator_char)
+{
+    return PrecedenceInfo::getInstance().operatorCodes(precedence, operator_char);
 }
 
 // ------------------------------------------------------------
@@ -61,6 +75,23 @@ const char *PrecedenceInfo::getKeyword(WordType code_value) const
     return keywords.at(code_value);
 }
 
+OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence)
+{
+    auto iterators = operator_data_map.equal_range(precedence);
+    auto operator_data = iterators.first->second;
+    return &operator_data->codes;
+}
+
+OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, char operator_char)
+{
+    auto iterators = operator_data_map.equal_range(precedence);
+    auto operator_data = iterators.first->second;
+    if (operator_char == operator_data->keyword[0]) {
+        return &operator_data->codes;
+    }
+    return nullptr;
+}
+
 // --------------------
 
 PrecedenceInfo::PrecedenceInfo()
@@ -69,7 +100,7 @@ PrecedenceInfo::PrecedenceInfo()
     extern UnaryOperatorCodes neg_codes;
     extern NumOperatorCodes mul_codes;
 
-    std::initializer_list<OperatorData> operator_data_list = {
+    static std::initializer_list<OperatorData> operator_data_list = {
         {Precedence::Exponential, exp_codes, "^"},
         {Precedence::Negate, neg_codes, "-"},
         {Precedence::Product, mul_codes, "*"}
@@ -83,6 +114,7 @@ PrecedenceInfo::PrecedenceInfo()
 void PrecedenceInfo::initializeOperatorData(const OperatorData &operator_data)
 {
     auto precedence = operator_data.precedence;
+    operator_data_map[precedence] = &operator_data;
     for (auto code_value : operator_data.codes.codeValues()) {
         precedences[code_value] = precedence;
         keywords[code_value] = operator_data.keyword;

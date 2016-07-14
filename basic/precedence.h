@@ -11,6 +11,8 @@
 #include "wordtype.h"
 
 
+class OperatorCodes;
+
 struct Precedence {
     enum Level {
         Operand,
@@ -21,6 +23,8 @@ struct Precedence {
 
     static const char *getKeyword(WordType code_value);
     static Precedence::Level getPrecedence(WordType code_value);
+    static OperatorCodes *operatorCodes(Precedence::Level precedence);
+    static OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
 };
 
 

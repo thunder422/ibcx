@@ -12,6 +12,7 @@
 #include "constnumcompiler.h"
 #include "expressioncompiler.h"
 #include "operators.h"
+#include "precedence.h"
 #include "programcode.h"
 #include "programunit.h"
 
@@ -26,7 +27,7 @@ private:
     DataType compileNumExpression(DataType expected_data_type);
     DataType compileProduct();
     DataType compileExponential();
-    bool isOperatorChar(char operator_char);
+    OperatorCodes *operatorCodes(Precedence::Level precedence);
     DataType compileNegation();
     DataType compileNumOperand();
     DataType compileParentheses();
@@ -72,12 +73,10 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileProduct()
 {
-    extern NumOperatorCodes mul_codes;
-
     auto lhs_data_type = compileExponential();
-    while (isOperatorChar('*')) {
+    while (auto codes = operatorCodes(Precedence::Product)) {
         auto rhs_data_type = compileExponential();
-        auto info = mul_codes.select(lhs_data_type, rhs_data_type);
+        auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
         lhs_data_type = info.result_data_type;
     }
@@ -86,16 +85,14 @@ DataType ExpressionCompiler::Impl::compileProduct()
 
 DataType ExpressionCompiler::Impl::compileExponential()
 {
-    extern NumOperatorCodes exp_codes;
-
     auto lhs_data_type = compileNumOperand();
     if (lhs_data_type != DataType::Null) {
-        while (isOperatorChar('^')) {
+        while (auto codes = operatorCodes(Precedence::Exponential)) {
             auto rhs_data_type = compileNumOperand();
             if (rhs_data_type == DataType::Null) {
                 throw ExpNumExprError {compiler.getColumn()};
             }
-            auto info = exp_codes.select(lhs_data_type, rhs_data_type);
+            auto info = codes->select(lhs_data_type, rhs_data_type);
             compiler.addInstruction(info.code);
             lhs_data_type = info.result_data_type;
         }
@@ -103,27 +100,26 @@ DataType ExpressionCompiler::Impl::compileExponential()
     return lhs_data_type;
 }
 
-bool ExpressionCompiler::Impl::isOperatorChar(char operator_char)
+OperatorCodes *ExpressionCompiler::Impl::operatorCodes(Precedence::Level precedence)
 {
     compiler.skipWhiteSpace();
-    if (compiler.peekNextChar() == operator_char) {
+    if (auto codes = Precedence::operatorCodes(precedence, compiler.peekNextChar())) {
         compiler.getNextChar();
         compiler.skipWhiteSpace();
-        return true;
+        return codes;
     }
-    return false;
+    return nullptr;
 }
 
 DataType ExpressionCompiler::Impl::compileNegation()
 {
-    extern UnaryOperatorCodes neg_codes;
-
     compiler.skipWhiteSpace();
     auto data_type = compileExponential();
     if (data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }
-    compiler.addInstruction(neg_codes.select(data_type));
+    auto codes = Precedence::operatorCodes(Precedence::Negate);
+    compiler.addInstruction(codes->select(data_type).code);
     return data_type;
 }
 

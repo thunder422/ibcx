@@ -20,12 +20,13 @@ UnaryOperatorCodes::UnaryOperatorCodes(OperatorCode<OpType::Dbl> &dbl_code,
 {
 }
 
-Code &UnaryOperatorCodes::select(DataType data_type) const
+OperatorInfo UnaryOperatorCodes::select(DataType data_type, DataType unused_data_type) const
 {
+    (void)unused_data_type;
     if (data_type == DataType::Double) {
-        return dbl_code;
+        return OperatorInfo {dbl_code, DataType::Double};
     } else {
-        return int_code;
+        return OperatorInfo {int_code, DataType::Integer};
     }
 }
 
