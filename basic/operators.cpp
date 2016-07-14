@@ -235,9 +235,9 @@ void executeMultiplyIntInt(Executer &executer)
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> div_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> div_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> div_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> div_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> div_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> div_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> div_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> div_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes div_codes {div_dbl_dbl_code, div_int_dbl_code, div_dbl_int_code, div_int_int_code};

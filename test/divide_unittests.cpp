@@ -23,3 +23,49 @@ TEST_CASE("compile divide operator expressions", "[compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate divide operator expressions", "[recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate a divide with two integer constants")
+    {
+        std::istringstream iss {"PRINT 3/2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 / 2\n");
+    }
+    SECTION("recreate a divide with two double constants")
+    {
+        std::istringstream iss {"PRINT 3.0/2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 / 2.0\n");
+    }
+    SECTION("recreate a divide with one integer and one double constant")
+    {
+        std::istringstream iss {"PRINT 3/2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 / 2.0\n");
+    }
+    SECTION("recreate a divide with one double and one integer constant")
+    {
+        std::istringstream iss {"PRINT 3.0/2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 / 2\n");
+    }
+}
