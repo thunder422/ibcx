@@ -215,11 +215,11 @@ void checkDivideByZero(Executer &executer, T rhs)
     }
 }
 
+inline double popDoubleDivisor(Executer &executer);
+
 void executeDivideDblDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
-    checkDivideByZero(executer, rhs);
-    executer.pop();
+    auto rhs = popDoubleDivisor(executer);
     auto lhs = executer.top().dbl_value;
     auto result = lhs / rhs;
     checkOverflow(executer, result);
@@ -228,11 +228,18 @@ void executeDivideDblDbl(Executer &executer)
 
 void executeDivideIntDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
-    executer.pop();
+    auto rhs = popDoubleDivisor(executer);
     auto lhs = executer.top().int_value;
     auto result = lhs / rhs;
     executer.top().dbl_value = result;
+}
+
+inline double popDoubleDivisor(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    checkDivideByZero(executer, rhs);
+    executer.pop();
+    return rhs;
 }
 
 void executeDivideIntInt(Executer &executer)
