@@ -158,7 +158,7 @@ TEST_CASE("execute integer-double divide operator", "[int-dbl]")
 {
     ProgramUnit program;
 
-    SECTION("execute a divide of two doubles")
+    SECTION("execute a divide of an integer by a double")
     {
         std::istringstream iss {"PRINT 3/2.0"};
         std::ostringstream oss;
@@ -193,5 +193,21 @@ TEST_CASE("execute integer-double divide operator", "[int-dbl]")
             "run error at line 1:10: overflow\n"
             "    PRINT 200 / 3e-307\n"
             "              ^\n");
+    }
+}
+
+TEST_CASE("execute double-integer divide operator", "[dbl-int]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a divide of a double by an integer")
+    {
+        std::istringstream iss {"PRINT 3.0/2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "1.5\n");
     }
 }
