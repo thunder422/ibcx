@@ -231,6 +231,9 @@ void executeDivideDblDbl(Executer &executer)
     executer.pop();
     auto lhs = executer.top().dbl_value;
     auto result = lhs / rhs;
+    if (result > std::numeric_limits<double>::max()) {
+        throw RunError {"overflow", executer.currentOffset()};
+    }
     executer.top().dbl_value = result;
 }
 
