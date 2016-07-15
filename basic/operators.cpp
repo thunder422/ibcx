@@ -131,13 +131,7 @@ void executeExponentialDblInt(Executer &executer)
     auto y = executer.top().int_value;
     executer.pop();
     auto x = executer.top().dbl_value;
-    try {
-        executer.top().dbl_value = PowerDblInt{x, y}();
-    }
-    catch (RunError &error) {
-        error.offset = executer.currentOffset();
-        throw;
-    }
+    executer.top().dbl_value = PowerDblInt{executer, x, y}();
 }
 
 void executeExponentialIntInt(Executer &executer)
@@ -145,13 +139,7 @@ void executeExponentialIntInt(Executer &executer)
     auto y = executer.top().int_value;
     executer.pop();
     auto x = executer.top().int_value;
-    try {
-        executer.top().int_value = PowerIntInt{x, y}();
-    }
-    catch (RunError &error) {
-        error.offset = executer.currentOffset();
-        throw;
-    }
+    executer.top().int_value = PowerIntInt{executer, x, y}();
 }
 
 OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateBinaryOperator, executeExponentialDblDbl};

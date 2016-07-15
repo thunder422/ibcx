@@ -10,11 +10,12 @@
 
 #include <cmath>
 
+#include "executer.h"
 #include "runerror.h"
 
 
 struct PowerDblInt {
-    PowerDblInt(double x, int y);
+    PowerDblInt(Executer &executer, double x, int y);
     double operator()();
 
 private:
@@ -23,11 +24,13 @@ private:
     double useDoublePower();
     void checkForOverflow(double result);
 
+    Executer &executer;
     double x;
     int y;
 };
 
-inline PowerDblInt::PowerDblInt(double x, int y) :
+inline PowerDblInt::PowerDblInt(Executer &executer, double x, int y) :
+    executer {executer},
     x {x},
     y {y}
 {
@@ -57,7 +60,7 @@ inline double PowerDblInt::multiplyForPositiveExponent()
 inline double PowerDblInt::divideForNegativeExponent()
 {
     if (x == 0) {
-        throw RunError {"divide by zero", 0};
+        throw RunError {"divide by zero", executer.currentOffset()};
     }
     auto result = 1.0;
     while (++y <= 0) {
@@ -76,7 +79,7 @@ inline double PowerDblInt::useDoublePower()
 inline void PowerDblInt::checkForOverflow(double result)
 {
     if (result == HUGE_VAL) {
-        throw RunError {"overflow", 0};
+        throw RunError {"overflow", executer.currentOffset()};
     }
 }
 

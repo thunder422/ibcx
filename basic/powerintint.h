@@ -11,11 +11,12 @@
 #include <cmath>
 #include <limits>
 
+#include "executer.h"
 #include "runerror.h"
 
 
 struct PowerIntInt {
-    PowerIntInt(int x, int y);
+    PowerIntInt(Executer &executer, int x, int y);
     int operator()();
 
 private:
@@ -30,11 +31,13 @@ private:
     template <typename T> void checkPostiveOverflow(T result);
     template <typename T> void checkAnyOverflow(T result);
 
+    Executer &executer;
     int x;
     int y;
 };
 
-inline PowerIntInt::PowerIntInt(int x, int y) :
+inline PowerIntInt::PowerIntInt(Executer &executer, int x, int y) :
+    executer {executer},
     x {x},
     y {y}
 {
@@ -44,7 +47,7 @@ inline int PowerIntInt::operator()()
 {
     if (y < 0) {
         if (x == 0) {
-            throw RunError {"divide by zero", 0};
+            throw RunError {"divide by zero", executer.currentOffset()};
         }
         return calculateNegativeExponent();
     }
@@ -117,7 +120,7 @@ template <typename T>
 inline void PowerIntInt::checkPostiveOverflow(T result)
 {
     if (result > std::numeric_limits<int>::max()) {
-        throw RunError {"overflow", 0};
+        throw RunError {"overflow", executer.currentOffset()};
     }
 }
 
@@ -125,7 +128,7 @@ template <typename T>
 inline void PowerIntInt::checkAnyOverflow(T result)
 {
     if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
-        throw RunError {"overflow", 0};
+        throw RunError {"overflow", executer.currentOffset()};
     }
 }
 
