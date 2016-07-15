@@ -98,3 +98,19 @@ TEST_CASE("execute integer-integer divide operator", "[int-int]")
             "            ^\n");
     }
 }
+
+TEST_CASE("execute double-double divide operator", "[dbl-dbl]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a divide of two doubles")
+    {
+        std::istringstream iss {"PRINT 3.0/2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "1.5\n");
+    }
+}
