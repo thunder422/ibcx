@@ -226,6 +226,15 @@ void executeDivideDblDbl(Executer &executer)
     executer.top().dbl_value = result;
 }
 
+void executeDivideIntDbl(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    executer.pop();
+    auto lhs = executer.top().int_value;
+    auto result = lhs / rhs;
+    executer.top().dbl_value = result;
+}
+
 void executeDivideIntInt(Executer &executer)
 {
     auto rhs = executer.top().int_value;
@@ -235,7 +244,7 @@ void executeDivideIntInt(Executer &executer)
 }
 
 OperatorCode<OpType::DblDbl> div_dbl_dbl_code {recreateBinaryOperator, executeDivideDblDbl};
-OperatorCode<OpType::IntDbl> div_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> div_int_dbl_code {recreateBinaryOperator, executeDivideIntDbl};
 OperatorCode<OpType::DblInt> div_dbl_int_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::IntInt> div_int_int_code {recreateBinaryOperator, executeDivideIntInt};
 
