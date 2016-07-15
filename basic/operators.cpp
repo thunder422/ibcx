@@ -69,15 +69,6 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
 
 // ----------------------------------------
 
-void executeNegateDbl(Executer &executer);
-void executeNegateInt(Executer &executer);
-
-OperatorCode<OpType::Dbl> neg_dbl_code {recreateUnaryOperator, executeNegateDbl};
-OperatorCode<OpType::Int> neg_int_code {recreateUnaryOperator, executeNegateInt};
-
-UnaryOperatorCodes neg_codes {neg_dbl_code, neg_int_code};
-
-
 void executeNegateDbl(Executer &executer)
 {
     executer.top().dbl_value = -executer.top().dbl_value;
@@ -88,19 +79,12 @@ void executeNegateInt(Executer &executer)
     executer.top().int_value = -executer.top().int_value;
 }
 
+OperatorCode<OpType::Dbl> neg_dbl_code {recreateUnaryOperator, executeNegateDbl};
+OperatorCode<OpType::Int> neg_int_code {recreateUnaryOperator, executeNegateInt};
+
+UnaryOperatorCodes neg_codes {neg_dbl_code, neg_int_code};
+
 // ----------------------------------------
-
-void executeExponentialDblDbl(Executer &executer);
-void executeExponentialIntDbl(Executer &executer);
-void executeExponentialDblInt(Executer &executer);
-void executeExponentialIntInt(Executer &executer);
-
-OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateBinaryOperator, executeExponentialDblDbl};
-OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateBinaryOperator, executeExponentialIntDbl};
-OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateBinaryOperator, executeExponentialDblInt};
-OperatorCode<OpType::IntInt> exp_int_int_code {recreateBinaryOperator, executeExponentialIntInt};
-
-NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code};
 
 inline void validatePowerResult(double x, double result, Executer &executer);
 inline void calculatePowerDblDbl(Executer &executer, double x, double y);
@@ -169,21 +153,17 @@ void executeExponentialIntInt(Executer &executer)
     }
 }
 
+OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateBinaryOperator, executeExponentialDblDbl};
+OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateBinaryOperator, executeExponentialIntDbl};
+OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateBinaryOperator, executeExponentialDblInt};
+OperatorCode<OpType::IntInt> exp_int_int_code {recreateBinaryOperator, executeExponentialIntInt};
+
+NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code};
+
 // ----------------------------------------
 
-void executeMultiplyDblDbl(Executer &executer);
-void executeMultiplyIntDbl(Executer &executer);
-void executeMultiplyDblInt(Executer &executer);
-void executeMultiplyIntInt(Executer &executer);
 inline void doDoubleMultiply(Executer &executer, double rhs);
 inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs);
-
-OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {recreateBinaryOperator, executeMultiplyDblDbl};
-OperatorCode<OpType::IntDbl> mul_int_dbl_code {recreateBinaryOperator, executeMultiplyIntDbl};
-OperatorCode<OpType::DblInt> mul_dbl_int_code {recreateBinaryOperator, executeMultiplyDblInt};
-OperatorCode<OpType::IntInt> mul_int_int_code {recreateBinaryOperator, executeMultiplyIntInt};
-
-NumOperatorCodes mul_codes {mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code, mul_int_int_code};
 
 void executeMultiplyDblDbl(Executer &executer)
 {
@@ -233,11 +213,25 @@ void executeMultiplyIntInt(Executer &executer)
     executer.top().int_value = result;
 }
 
+OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {recreateBinaryOperator, executeMultiplyDblDbl};
+OperatorCode<OpType::IntDbl> mul_int_dbl_code {recreateBinaryOperator, executeMultiplyIntDbl};
+OperatorCode<OpType::DblInt> mul_dbl_int_code {recreateBinaryOperator, executeMultiplyDblInt};
+OperatorCode<OpType::IntInt> mul_int_int_code {recreateBinaryOperator, executeMultiplyIntInt};
+
+NumOperatorCodes mul_codes {mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code, mul_int_int_code};
+
 // ----------------------------------------
+
+void executeDivideIntInt(Executer &executer)
+{
+    auto rhs = executer.top().int_value;
+    executer.pop();
+    executer.top().int_value = executer.top().int_value / rhs;
+}
 
 OperatorCode<OpType::DblDbl> div_dbl_dbl_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::IntDbl> div_int_dbl_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::DblInt> div_dbl_int_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntInt> div_int_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> div_int_int_code {recreateBinaryOperator, executeDivideIntInt};
 
 NumOperatorCodes div_codes {div_dbl_dbl_code, div_int_dbl_code, div_dbl_int_code, div_int_int_code};
