@@ -195,7 +195,8 @@ inline void doDoubleMultiply(Executer &executer, double rhs)
 inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs)
 {
     auto result = lhs * rhs;
-    if (result > std::numeric_limits<double>::max()) {
+    if (result > std::numeric_limits<double>::max()
+            || result < std::numeric_limits<double>::min()) {
         throw RunError {"overflow", executer.currentOffset()};
     }
     executer.top().dbl_value = result;

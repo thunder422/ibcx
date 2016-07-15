@@ -198,6 +198,19 @@ TEST_CASE("execute double-double multiply operator", "[dbl-dbl]")
             "    PRINT 2e300 * 3e20\n"
             "                ^\n");
     }
+    SECTION("execute a multiply that causes an underflow")
+    {
+        std::istringstream iss {"PRINT -2e300 * 3e20"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:13: overflow\n"
+            "    PRINT -2e300 * 3e20\n"
+            "                 ^\n");
+    }
 }
 
 TEST_CASE("execute double-integer multiply operator", "[dbl-int]")
