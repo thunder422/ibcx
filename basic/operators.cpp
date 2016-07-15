@@ -225,6 +225,9 @@ NumOperatorCodes mul_codes {mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code
 void executeDivideIntInt(Executer &executer)
 {
     auto rhs = executer.top().int_value;
+    if (rhs == 0) {
+        throw RunError {"divide by zero", executer.currentOffset()};
+    }
     executer.pop();
     executer.top().int_value = executer.top().int_value / rhs;
 }
