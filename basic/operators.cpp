@@ -8,6 +8,7 @@
 #include "code.h"
 #include "executer.h"
 #include "operators.h"
+#include "overflow.h"
 #include "powerdblint.h"
 #include "powerintint.h"
 #include "recreator.h"
@@ -195,10 +196,7 @@ inline void doDoubleMultiply(Executer &executer, double rhs)
 inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs)
 {
     auto result = lhs * rhs;
-    if (result > std::numeric_limits<double>::max()
-            || result < std::numeric_limits<double>::min()) {
-        throw RunError {"overflow", executer.currentOffset()};
-    }
+    checkOverflow(executer, result);
     executer.top().dbl_value = result;
 }
 
@@ -208,9 +206,7 @@ void executeMultiplyIntInt(Executer &executer)
     executer.pop();
     int64_t result = executer.top().int_value;
     result *= rhs;
-    if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
-        throw RunError {"overflow", executer.currentOffset()};
-    }
+    checkOverflow(executer, result);
     executer.top().int_value = result;
 }
 
@@ -223,27 +219,29 @@ NumOperatorCodes mul_codes {mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code
 
 // ----------------------------------------
 
-void executeDivideDblDbl(Executer &executer)
+template <typename T>
+void checkDivideByZero(Executer &executer, T rhs)
 {
-    auto rhs = executer.top().dbl_value;
     if (rhs == 0) {
         throw RunError {"divide by zero", executer.currentOffset()};
     }
+}
+
+void executeDivideDblDbl(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    checkDivideByZero(executer, rhs);
     executer.pop();
     auto lhs = executer.top().dbl_value;
     auto result = lhs / rhs;
-    if (result > std::numeric_limits<double>::max()) {
-        throw RunError {"overflow", executer.currentOffset()};
-    }
+    checkOverflow(executer, result);
     executer.top().dbl_value = result;
 }
 
 void executeDivideIntInt(Executer &executer)
 {
     auto rhs = executer.top().int_value;
-    if (rhs == 0) {
-        throw RunError {"divide by zero", executer.currentOffset()};
-    }
+    checkDivideByZero(executer, rhs);
     executer.pop();
     executer.top().int_value = executer.top().int_value / rhs;
 }
