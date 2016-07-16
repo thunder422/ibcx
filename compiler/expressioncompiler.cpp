@@ -75,8 +75,10 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
     auto lhs_data_type = compileProduct();
-    if (operatorCodes(Precedence::IntDivide)) {
-        compileProduct();
+    if (auto codes = operatorCodes(Precedence::IntDivide)) {
+        auto rhs_data_type = compileProduct();
+        auto info = codes->select(lhs_data_type, rhs_data_type);
+        compiler.addInstruction(info.code);
     }
     return lhs_data_type;
 }
