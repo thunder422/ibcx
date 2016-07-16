@@ -35,3 +35,19 @@ TEST_CASE("compile integer divide operator expressions", "[compile]")
         REQUIRE(data_type == DataType::Integer);
     }
 }
+
+TEST_CASE("recreate integer divide operator expressions", "[recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate a divide with two integer constants")
+    {
+        std::istringstream iss {"PRINT 3.0\\2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 \\ 2.0\n");
+    }
+}

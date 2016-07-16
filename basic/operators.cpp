@@ -297,6 +297,6 @@ NumOperatorCodes div_codes {div_dbl_dbl_code, div_int_dbl_code, div_dbl_int_code
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> int_div_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> int_div_code {recreateBinaryOperator, nullptr};
 
 IntDivOperatorCode int_div_codes {int_div_code};
