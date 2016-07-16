@@ -216,6 +216,7 @@ void checkDivideByZero(Executer &executer, T rhs)
 }
 
 inline double popDoubleDivisor(Executer &executer);
+inline double popIntegerDivisor(Executer &executer);
 inline void divideAndCheckResult(Executer &executer, double lhs, double rhs);
 
 void executeDivideDblDbl(Executer &executer)
@@ -242,8 +243,7 @@ inline double popDoubleDivisor(Executer &executer)
 
 void executeDivideDblInt(Executer &executer)
 {
-    auto rhs = static_cast<double>(executer.top().int_value);
-    executer.pop();
+    auto rhs = static_cast<double>(popIntegerDivisor(executer));
     auto lhs = executer.top().dbl_value;
     auto result = lhs / rhs;
     executer.top().dbl_value = result;
@@ -258,10 +258,16 @@ inline void divideAndCheckResult(Executer &executer, double lhs, double rhs)
 
 void executeDivideIntInt(Executer &executer)
 {
+    auto rhs = popIntegerDivisor(executer);
+    executer.top().int_value = executer.top().int_value / rhs;
+}
+
+inline double popIntegerDivisor(Executer &executer)
+{
     auto rhs = executer.top().int_value;
     checkDivideByZero(executer, rhs);
     executer.pop();
-    executer.top().int_value = executer.top().int_value / rhs;
+    return rhs;
 }
 
 OperatorCode<OpType::DblDbl> div_dbl_dbl_code {recreateBinaryOperator, executeDivideDblDbl};
