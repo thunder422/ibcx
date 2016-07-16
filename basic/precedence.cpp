@@ -102,12 +102,14 @@ PrecedenceInfo::PrecedenceInfo()
     extern UnaryOperatorCodes neg_codes;
     extern NumOperatorCodes mul_codes;
     extern NumOperatorCodes div_codes;
+    extern IntDivOperatorCode int_div_codes;
 
     static std::initializer_list<OperatorData> operator_data_list = {
         {Precedence::Exponential, exp_codes, "^"},
         {Precedence::Negate, neg_codes, "-"},
         {Precedence::Product, mul_codes, "*"},
-        {Precedence::Product, div_codes, "/"}
+        {Precedence::Product, div_codes, "/"},
+        {Precedence::IntDivide, int_div_codes, "\\"}
     };
 
     for (auto &operator_data : operator_data_list) {

@@ -70,5 +70,15 @@ private:
     OperatorCode<OpType::IntInt> &int_int_code;
 };
 
+class IntDivOperatorCode : public OperatorCodes {
+public:
+    IntDivOperatorCode(OperatorCode<OpType::DblDbl> &code);
+    OperatorInfo select(DataType lhs_data_type, DataType rhs_data_type) const override;
+    std::vector<WordType> codeValues() const override;
+
+private:
+    OperatorCode<OpType::DblDbl> &code;
+};
+
 
 #endif  // IBC_OPERATORS_H

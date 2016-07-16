@@ -25,6 +25,7 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileIntegerDivision();
     DataType compileProduct();
     DataType compileExponential();
     OperatorCodes *operatorCodes(Precedence::Level precedence);
@@ -64,11 +65,20 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileProduct();
+    auto data_type = compileIntegerDivision();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }
     return data_type;
+}
+
+DataType ExpressionCompiler::Impl::compileIntegerDivision()
+{
+    auto lhs_data_type = compileProduct();
+    if (operatorCodes(Precedence::IntDivide)) {
+        compileProduct();
+    }
+    return lhs_data_type;
 }
 
 DataType ExpressionCompiler::Impl::compileProduct()

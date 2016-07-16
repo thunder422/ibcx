@@ -68,6 +68,24 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
     };
 }
 
+
+IntDivOperatorCode::IntDivOperatorCode(OperatorCode<OpType::DblDbl> &code) :
+    code {code}
+{
+}
+
+OperatorInfo IntDivOperatorCode::select(DataType lhs_data_type, DataType rhs_data_type) const
+{
+    (void)lhs_data_type;
+    (void)rhs_data_type;
+    return OperatorInfo {code, DataType::Integer};
+}
+
+std::vector<WordType> IntDivOperatorCode::codeValues() const
+{
+    return std::vector<WordType> {code.getValue()};
+}
+
 // ----------------------------------------
 
 void executeNegateDbl(Executer &executer)
@@ -276,3 +294,9 @@ OperatorCode<OpType::DblInt> div_dbl_int_code {recreateBinaryOperator, executeDi
 OperatorCode<OpType::IntInt> div_int_int_code {recreateBinaryOperator, executeDivideIntInt};
 
 NumOperatorCodes div_codes {div_dbl_dbl_code, div_int_dbl_code, div_dbl_int_code, div_int_int_code};
+
+// ----------------------------------------
+
+OperatorCode<OpType::DblDbl> int_div_code {nullptr, nullptr};
+
+IntDivOperatorCode int_div_codes {int_div_code};

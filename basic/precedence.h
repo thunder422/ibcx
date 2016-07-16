@@ -18,7 +18,8 @@ struct Precedence {
         Operand,
         Exponential,
         Negate,
-        Product
+        Product,
+        IntDivide
     };
 
     static const char *getKeyword(WordType code_value);
