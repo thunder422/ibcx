@@ -79,6 +79,7 @@ DataType ExpressionCompiler::Impl::compileIntegerDivision()
         auto rhs_data_type = compileProduct();
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
+        lhs_data_type = info.result_data_type;
     }
     return lhs_data_type;
 }

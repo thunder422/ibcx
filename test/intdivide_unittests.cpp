@@ -27,10 +27,11 @@ TEST_CASE("compile integer divide operator expressions", "[compile]")
         extern OperatorCode<OpType::DblDbl> int_div_code;
 
         Compiler compiler {"3.0\\2.0", program};
-        compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression(DataType::Null);
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == int_div_code.getValue());
+        REQUIRE(data_type == DataType::Integer);
     }
 }
