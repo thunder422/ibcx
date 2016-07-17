@@ -65,25 +65,31 @@ unsigned Compiler::getColumn() noexcept
 
 void Compiler::addInstruction(Code &code)
 {
-    last_constant_data_type = DataType::Null;
+    last_operand_was_constant = false;
     code_line.emplace_back(code);
 }
 
 DataType Compiler::addNumConstInstruction(bool floating_point, const std::string &number)
 {
     auto const_num_info = program.constNumDictionary().add(floating_point, number);
-    last_constant_data_type = const_num_info.data_type;
+    last_operand_was_constant = true;
     code_line.emplace_back(const_num_info.code_value);
     code_line.emplace_back(const_num_info.operand);
     return const_num_info.data_type;
 }
 
-void Compiler::convertToDouble()
+void Compiler::convertToDouble(DataType operand_data_type)
 {
     extern Code const_dbl_code;
-    if (last_constant_data_type == DataType::Integer) {
-        auto last_constant_offset = code_line.size() - 2;
-        code_line[last_constant_offset] = ProgramWord {const_dbl_code};
+    extern Code cvtdbl_code;
+
+    if (operand_data_type == DataType::Integer) {
+        if (last_operand_was_constant) {
+            auto last_constant_offset = code_line.size() - 2;
+            code_line[last_constant_offset] = ProgramWord {const_dbl_code};
+        } else {
+            addInstruction(cvtdbl_code);
+        }
     }
 }
 

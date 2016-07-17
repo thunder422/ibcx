@@ -76,9 +76,9 @@ DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
     auto lhs_data_type = compileProduct();
     if (auto codes = operatorCodes(Precedence::IntDivide)) {
-        compiler.convertToDouble();
+        compiler.convertToDouble(lhs_data_type);
         auto rhs_data_type = compileProduct();
-        compiler.convertToDouble();
+        compiler.convertToDouble(rhs_data_type);
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
         lhs_data_type = info.result_data_type;

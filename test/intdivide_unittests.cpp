@@ -141,4 +141,18 @@ TEST_CASE("apply necessary conversions to integer divide operator", "[conversion
 
         REQUIRE(oss.str() == "1\n");
     }
+    SECTION("add a convert to double code if last operand returns an integer")
+    {
+        SECTION("check that the convert to double code is added to the code")
+        {
+            extern Code cvtdbl_code;
+
+            Compiler compiler {"3.0\\1*2", program};
+            compiler.compileExpression(DataType::Null);
+            auto code_line = compiler.getCodeLine();
+
+            REQUIRE(code_line.size() == 9);
+            REQUIRE(code_line[7].instructionCode()->getValue() == cvtdbl_code.getValue());
+        }
+    }
 }

@@ -34,7 +34,7 @@ public:
 
     void addInstruction(Code &code);
     DataType addNumConstInstruction(bool floating_point, const std::string &number);
-    void convertToDouble();
+    void convertToDouble(DataType operand_data_type);
     ProgramCode &&getCodeLine();
 
 private:
@@ -43,7 +43,7 @@ private:
     ProgramCode code_line;
     char peek_char {0};
     unsigned column {0};
-    DataType last_constant_data_type;
+    bool last_operand_was_constant;
 };
 
 

@@ -309,3 +309,7 @@ void executeIntegerDivide(Executer &executer)
 OperatorCode<OpType::DblDbl> int_div_code {recreateBinaryOperator, executeIntegerDivide};
 
 IntDivOperatorCode int_div_codes {int_div_code};
+
+// ----------------------------------------
+
+Code cvtdbl_code {nullptr, nullptr};
