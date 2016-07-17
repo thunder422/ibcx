@@ -312,4 +312,4 @@ IntDivOperatorCode int_div_codes {int_div_code};
 
 // ----------------------------------------
 
-Code cvtdbl_code {nullptr, nullptr};
+Code cvtdbl_code {recreateNothing, nullptr};

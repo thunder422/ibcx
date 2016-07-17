@@ -80,6 +80,7 @@ inline Recreator::StackItem::StackItem(const std::string &string, Precedence::Le
 
 void recreateUnaryOperator(Recreator &recreator);
 void recreateBinaryOperator(Recreator &recreator);
+void recreateNothing(Recreator &recreator);
 
 
 #endif  // IBC_RECREATOR_H

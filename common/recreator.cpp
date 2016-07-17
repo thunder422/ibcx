@@ -231,3 +231,8 @@ void recreateBinaryOperator(Recreator &recreator)
 {
     recreator.recreateBinaryOperator();
 }
+
+void recreateNothing(Recreator &recreator)
+{
+    (void)recreator;
+}
