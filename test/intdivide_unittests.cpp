@@ -106,3 +106,19 @@ TEST_CASE("execute integer divide operator", "[execute]")
             "               ^\n");
     }
 }
+
+TEST_CASE("apply necessary conversions to integer divide operator", "[conversion]")
+{
+    ProgramUnit program;
+
+    SECTION("change a left side integer constant to a double constant")
+    {
+        std::istringstream iss {"PRINT 3\\2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "1\n");
+    }
+}

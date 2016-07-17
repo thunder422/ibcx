@@ -76,6 +76,13 @@ DataType Compiler::addConstNumInstruction(bool floating_point, const std::string
     return const_num_info.data_type;
 }
 
+void Compiler::convertToDouble()
+{
+    extern Code const_dbl_code;
+    auto last_constant_offset = code_line.size() - 2;
+    code_line[last_constant_offset] = ProgramWord {const_dbl_code};
+}
+
 ProgramCode &&Compiler::getCodeLine()
 {
     return std::move(code_line);
