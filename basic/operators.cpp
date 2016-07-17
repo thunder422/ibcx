@@ -297,6 +297,15 @@ NumOperatorCodes div_codes {div_dbl_dbl_code, div_int_dbl_code, div_dbl_int_code
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> int_div_code {recreateBinaryOperator, nullptr};
+void executeIntegerDivide(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    executer.pop();
+    auto lhs = executer.top().dbl_value;
+    auto result = lhs / rhs;
+    executer.top().int_value = static_cast<int>(result);
+}
+
+OperatorCode<OpType::DblDbl> int_div_code {recreateBinaryOperator, executeIntegerDivide};
 
 IntDivOperatorCode int_div_codes {int_div_code};

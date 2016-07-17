@@ -51,3 +51,19 @@ TEST_CASE("recreate integer divide operator expressions", "[recreate]")
         REQUIRE(oss.str() == "PRINT 3.0 \\ 2.0\n");
     }
 }
+
+TEST_CASE("execute integer divide operator", "[execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a divide of two integers")
+    {
+        std::istringstream iss {"PRINT 3.0\\2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "1\n");
+    }
+}
