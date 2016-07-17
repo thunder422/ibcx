@@ -165,5 +165,11 @@ TEST_CASE("apply necessary conversions to integer divide operator", "[conversion
 
             REQUIRE(oss.str() == "PRINT 3.0 \\ 1 * 2\n");
         }
+        SECTION("execute the convert to double code for a non-constant integer operand")
+        {
+            program.run(oss);
+
+            REQUIRE(oss.str() == "1\n");
+        }
     }
 }

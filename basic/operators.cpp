@@ -312,4 +312,9 @@ IntDivOperatorCode int_div_codes {int_div_code};
 
 // ----------------------------------------
 
-Code cvtdbl_code {recreateNothing, nullptr};
+void executeCvtDbl(Executer &executer)
+{
+    executer.top().dbl_value = static_cast<double>(executer.top().int_value);
+}
+
+Code cvtdbl_code {recreateNothing, executeCvtDbl};
