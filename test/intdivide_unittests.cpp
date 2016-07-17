@@ -79,4 +79,17 @@ TEST_CASE("execute integer divide operator", "[execute]")
             "    PRINT 3.0 \\ 0.0\n"
             "              ^\n");
     }
+    SECTION("execute a divide that causes an overflow")
+    {
+        std::istringstream iss {"PRINT 2e20 \\ 2e10"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:11: overflow\n"
+            "    PRINT 2e20 \\ 2e10\n"
+            "               ^\n");
+    }
 }

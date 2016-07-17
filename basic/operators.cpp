@@ -302,6 +302,9 @@ void executeIntegerDivide(Executer &executer)
     auto rhs = popDoubleDivisor(executer);
     auto lhs = executer.top().dbl_value;
     auto result = lhs / rhs;
+    if (result > std::numeric_limits<int>::max()) {
+        throw RunError {"overflow", executer.currentOffset()};
+    }
     executer.top().int_value = static_cast<int>(result);
 }
 
