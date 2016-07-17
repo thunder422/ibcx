@@ -202,7 +202,7 @@ inline void doDoubleMultiply(Executer &executer, double rhs)
 inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs)
 {
     auto result = lhs * rhs;
-    checkOverflow(executer, result);
+    checkDoubleOverflow(executer, result);
     executer.top().dbl_value = result;
 }
 
@@ -212,7 +212,7 @@ void executeMultiplyIntInt(Executer &executer)
     executer.pop();
     int64_t result = executer.top().int_value;
     result *= rhs;
-    checkOverflow(executer, result);
+    checkIntegerOverflow(executer, result);
     executer.top().int_value = result;
 }
 
@@ -270,7 +270,7 @@ void executeDivideDblInt(Executer &executer)
 inline void divideAndCheckResult(Executer &executer, double lhs, double rhs)
 {
     auto result = lhs / rhs;
-    checkOverflow(executer, result);
+    checkDoubleOverflow(executer, result);
     executer.top().dbl_value = result;
 }
 
@@ -302,9 +302,7 @@ void executeIntegerDivide(Executer &executer)
     auto rhs = popDoubleDivisor(executer);
     auto lhs = executer.top().dbl_value;
     auto result = lhs / rhs;
-    if (result > std::numeric_limits<int>::max()) {
-        throw RunError {"overflow", executer.currentOffset()};
-    }
+    checkIntegerOverflow(executer, result);
     executer.top().int_value = static_cast<int>(result);
 }
 

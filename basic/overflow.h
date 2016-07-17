@@ -14,14 +14,15 @@
 #include "runerror.h"
 
 
-inline void checkOverflow(Executer &executer, int64_t result)
+template <typename T>
+inline void checkIntegerOverflow(Executer &executer, T result)
 {
     if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
         throw RunError {"overflow", executer.currentOffset()};
     }
 }
 
-inline void checkOverflow(Executer &executer, double result)
+inline void checkDoubleOverflow(Executer &executer, double result)
 {
     if (result > std::numeric_limits<double>::max()
             || result < std::numeric_limits<double>::min()) {
