@@ -32,12 +32,20 @@ ci_string Compiler::getKeyword()
         keyword += getNextChar();
     }
     skipWhiteSpace();
+    word = keyword;
     return keyword;
+}
+
+void Compiler::clearWord()
+{
+    word.clear();
 }
 
 char Compiler::peekNextChar()
 {
-    if (!peek_char) {
+    if (!word.empty()) {
+        return word.front();
+    } else if (!peek_char) {
         column = iss.tellg();
         peek_char = iss.peek();
     }

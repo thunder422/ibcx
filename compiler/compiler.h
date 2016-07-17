@@ -27,6 +27,7 @@ public:
     DataType compileExpression(DataType expected_data_type);
 
     ci_string getKeyword();
+    void clearWord();
     char peekNextChar();
     char getNextChar();
     void skipWhiteSpace();
@@ -44,6 +45,7 @@ private:
     char peek_char {0};
     unsigned column {0};
     bool last_operand_was_constant;
+    ci_string word;
 };
 
 

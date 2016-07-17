@@ -25,14 +25,16 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileModulo();
     DataType compileIntegerDivision();
     DataType compileProduct();
     DataType compileExponential();
-    OperatorCodes *operatorCodes(Precedence::Level precedence);
     DataType compileNegation();
     DataType compileNumOperand();
     DataType compileParentheses();
     DataType compileNumConstant();
+    bool wordOperatorCodes();
+    OperatorCodes *symbolOperatorCodes(Precedence::Level precedence);
 
     Compiler &compiler;
 };
@@ -65,17 +67,26 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileIntegerDivision();
+    auto data_type = compileModulo();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }
     return data_type;
 }
 
+DataType ExpressionCompiler::Impl::compileModulo()
+{
+    auto lhs_data_type = compileIntegerDivision();
+    if (wordOperatorCodes()) {
+        compileIntegerDivision();
+    }
+    return lhs_data_type;
+}
+
 DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
     auto lhs_data_type = compileProduct();
-    while (auto codes = operatorCodes(Precedence::IntDivide)) {
+    while (auto codes = symbolOperatorCodes(Precedence::IntDivide)) {
         compiler.convertToDouble(lhs_data_type);
         auto rhs_data_type = compileProduct();
         compiler.convertToDouble(rhs_data_type);
@@ -89,7 +100,7 @@ DataType ExpressionCompiler::Impl::compileIntegerDivision()
 DataType ExpressionCompiler::Impl::compileProduct()
 {
     auto lhs_data_type = compileExponential();
-    while (auto codes = operatorCodes(Precedence::Product)) {
+    while (auto codes = symbolOperatorCodes(Precedence::Product)) {
         auto rhs_data_type = compileExponential();
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
@@ -102,7 +113,7 @@ DataType ExpressionCompiler::Impl::compileExponential()
 {
     auto lhs_data_type = compileNumOperand();
     if (lhs_data_type != DataType::Null) {
-        while (auto codes = operatorCodes(Precedence::Exponential)) {
+        while (auto codes = symbolOperatorCodes(Precedence::Exponential)) {
             auto rhs_data_type = compileNumOperand();
             if (rhs_data_type == DataType::Null) {
                 throw ExpNumExprError {compiler.getColumn()};
@@ -113,17 +124,6 @@ DataType ExpressionCompiler::Impl::compileExponential()
         }
     }
     return lhs_data_type;
-}
-
-OperatorCodes *ExpressionCompiler::Impl::operatorCodes(Precedence::Level precedence)
-{
-    compiler.skipWhiteSpace();
-    if (auto codes = Precedence::operatorCodes(precedence, compiler.peekNextChar())) {
-        compiler.getNextChar();
-        compiler.skipWhiteSpace();
-        return codes;
-    }
-    return nullptr;
 }
 
 DataType ExpressionCompiler::Impl::compileNegation()
@@ -166,4 +166,24 @@ DataType ExpressionCompiler::Impl::compileNumConstant()
         return compileNegation();
     }
     return data_type;
+}
+
+bool ExpressionCompiler::Impl::wordOperatorCodes()
+{
+    if (compiler.getKeyword() == "MOD") {
+        compiler.clearWord();
+        return true;
+    }
+    return false;
+}
+
+OperatorCodes *ExpressionCompiler::Impl::symbolOperatorCodes(Precedence::Level precedence)
+{
+    compiler.skipWhiteSpace();
+    if (auto codes = Precedence::operatorCodes(precedence, compiler.peekNextChar())) {
+        compiler.getNextChar();
+        compiler.skipWhiteSpace();
+        return codes;
+    }
+    return nullptr;
 }

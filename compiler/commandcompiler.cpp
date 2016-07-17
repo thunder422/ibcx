@@ -55,6 +55,7 @@ ProgramCode &&CommandCompiler::Impl::compile()
             throw CompileError {"expected command keyword", compiler.getColumn()};
         }
         auto code = CommandCode::find(keyword);
+        compiler.clearWord();
         code->compile(compiler);
     }
     return compiler.getCodeLine();
