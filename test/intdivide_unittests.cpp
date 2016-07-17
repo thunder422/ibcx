@@ -34,6 +34,13 @@ TEST_CASE("compile integer divide operator expressions", "[compile]")
         REQUIRE(code_line[4].instructionCode()->getValue() == int_div_code.getValue());
         REQUIRE(data_type == DataType::Integer);
     }
+    SECTION("make sure multiple integer divide operators are compiled")
+    {
+        Compiler compiler {"3.0\\2.0\\1.0", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }
 
 TEST_CASE("recreate integer divide operator expressions", "[recreate]")

@@ -75,7 +75,7 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
     auto lhs_data_type = compileProduct();
-    if (auto codes = operatorCodes(Precedence::IntDivide)) {
+    while (auto codes = operatorCodes(Precedence::IntDivide)) {
         compiler.convertToDouble(lhs_data_type);
         auto rhs_data_type = compileProduct();
         compiler.convertToDouble(rhs_data_type);
