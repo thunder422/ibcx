@@ -131,4 +131,14 @@ TEST_CASE("apply necessary conversions to integer divide operator", "[conversion
 
         REQUIRE(oss.str() == "1\n");
     }
+    SECTION("don't change to double constant if last operand was not a constant")
+    {
+        std::istringstream iss {"PRINT 9.0 / 3.0\\2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "1\n");
+    }
 }

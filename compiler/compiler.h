@@ -33,7 +33,7 @@ public:
     unsigned getColumn() noexcept;
 
     void addInstruction(Code &code);
-    DataType addConstNumInstruction(bool floating_point, const std::string &number);
+    DataType addNumConstInstruction(bool floating_point, const std::string &number);
     void convertToDouble();
     ProgramCode &&getCodeLine();
 
@@ -43,6 +43,7 @@ private:
     ProgramCode code_line;
     char peek_char {0};
     unsigned column {0};
+    DataType last_constant_data_type;
 };
 
 

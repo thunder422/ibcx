@@ -125,7 +125,7 @@ TEST_CASE("recreate simple commands", "[recreate]")
     }
     SECTION("recreate a PRINT command with an expression (single constant)")
     {
-        compiler.addConstNumInstruction(true, "-1.23e45");
+        compiler.addNumConstInstruction(true, "-1.23e45");
         compiler.addInstruction(print_dbl_code);
         compiler.addInstruction(print_code);
         auto code_line = compiler.getCodeLine();
@@ -217,7 +217,7 @@ TEST_CASE("compile multiple line program", "[compile]")
     SECTION("program with stack not empty at end bug (simulated for this test)")
     {
         Compiler compiler {"", program};
-        compiler.addConstNumInstruction(true, "-1.23e45");
+        compiler.addNumConstInstruction(true, "-1.23e45");
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -298,7 +298,7 @@ TEST_CASE("run program code", "[execute]")
     SECTION("contrived program with stack run error (test bug output)")
     {
         Compiler compiler {"", program};
-        compiler.addConstNumInstruction(true, "-1.23e45");
+        compiler.addNumConstInstruction(true, "-1.23e45");
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
