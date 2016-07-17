@@ -66,4 +66,17 @@ TEST_CASE("execute integer divide operator", "[execute]")
 
         REQUIRE(oss.str() == "1\n");
     }
+    SECTION("check for a divide by zero error")
+    {
+        std::istringstream iss {"PRINT 3.0\\0.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:10: divide by zero\n"
+            "    PRINT 3.0 \\ 0.0\n"
+            "              ^\n");
+    }
 }
