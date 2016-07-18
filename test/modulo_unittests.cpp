@@ -41,3 +41,49 @@ TEST_CASE("compile mod operator expressions", "[compile]")
         REQUIRE(code_line[13].instructionCode()->getValue() == mod_dbl_dbl_code.getValue());
     }
 }
+
+TEST_CASE("recreate mod operator expressions", "[recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate a mod with two double constants")
+    {
+        std::istringstream iss {"PRINT 3.0MOD 2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 MOD 2.0\n");
+    }
+    SECTION("recreate a mod with one integer and one double constant")
+    {
+        std::istringstream iss {"PRINT 3 Mod2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 MOD 2.0\n");
+    }
+    SECTION("recreate a mod with one double and one integer constant")
+    {
+        std::istringstream iss {"PRINT 3.0mod2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 MOD 2\n");
+    }
+    SECTION("recreate a mod with two integer constants")
+    {
+        std::istringstream iss {"PRINT 3MOD2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 MOD 2\n");
+    }
+}

@@ -321,9 +321,9 @@ Code cvtdbl_code {recreateNothing, executeCvtDbl};
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> mod_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> mod_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> mod_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> mod_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> mod_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> mod_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> mod_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> mod_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes mod_codes {mod_dbl_dbl_code, mod_int_dbl_code, mod_dbl_int_code, mod_int_int_code};
