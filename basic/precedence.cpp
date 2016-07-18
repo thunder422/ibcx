@@ -8,6 +8,7 @@
 #include <map>
 #include <unordered_map>
 
+#include "cistring.h"
 #include "operators.h"
 #include "precedence.h"
 
@@ -19,6 +20,7 @@ public:
     const char *getKeyword(WordType code_value) const;
     OperatorCodes *operatorCodes(Precedence::Level precedence);
     OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
+    OperatorCodes *operatorCodes(Precedence::Level precedence, const ci_string &word);
 
 private:
     struct OperatorData {
@@ -55,6 +57,11 @@ OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence)
 OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence, char operator_char)
 {
     return PrecedenceInfo::getInstance().operatorCodes(precedence, operator_char);
+}
+
+OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence, const ci_string &word)
+{
+    return PrecedenceInfo::getInstance().operatorCodes(precedence, word);
 }
 
 // ------------------------------------------------------------
@@ -94,6 +101,18 @@ OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, char 
     return nullptr;
 }
 
+OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, const ci_string &word)
+{
+    auto iterators = operator_data_map.equal_range(precedence);
+    for (auto iterator = iterators.first; iterator != iterators.second; ++iterator) {
+        auto *operator_data = iterator->second;
+        if (word == operator_data->keyword) {
+            return &operator_data->codes;
+        }
+    }
+    return nullptr;
+}
+
 // --------------------
 
 PrecedenceInfo::PrecedenceInfo()
@@ -103,13 +122,15 @@ PrecedenceInfo::PrecedenceInfo()
     extern NumOperatorCodes mul_codes;
     extern NumOperatorCodes div_codes;
     extern IntDivOperatorCode int_div_codes;
+    extern NumOperatorCodes mod_codes;
 
     static std::initializer_list<OperatorData> operator_data_list = {
         {Precedence::Exponential, exp_codes, "^"},
         {Precedence::Negate, neg_codes, "-"},
         {Precedence::Product, mul_codes, "*"},
         {Precedence::Product, div_codes, "/"},
-        {Precedence::IntDivide, int_div_codes, "\\"}
+        {Precedence::IntDivide, int_div_codes, "\\"},
+        {Precedence::Modulo, mod_codes, "MOD"}
     };
 
     for (auto &operator_data : operator_data_list) {

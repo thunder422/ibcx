@@ -8,6 +8,7 @@
 #ifndef IBC_PRECEDENCE_H
 #define IBC_PRECEDENCE_H
 
+#include "cistring.h"
 #include "wordtype.h"
 
 
@@ -19,13 +20,15 @@ struct Precedence {
         Exponential,
         Negate,
         Product,
-        IntDivide
+        IntDivide,
+        Modulo
     };
 
     static const char *getKeyword(WordType code_value);
     static Precedence::Level getPrecedence(WordType code_value);
     static OperatorCodes *operatorCodes(Precedence::Level precedence);
     static OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
+    static OperatorCodes *operatorCodes(Precedence::Level precedence, const ci_string &word);
 };
 
 

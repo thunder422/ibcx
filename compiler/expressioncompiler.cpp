@@ -33,7 +33,7 @@ private:
     DataType compileNumOperand();
     DataType compileParentheses();
     DataType compileNumConstant();
-    bool wordOperatorCodes();
+    OperatorCodes *wordOperatorCodes(Precedence::Level precedence);
     OperatorCodes *symbolOperatorCodes(Precedence::Level precedence);
 
     Compiler &compiler;
@@ -77,8 +77,11 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileModulo()
 {
     auto lhs_data_type = compileIntegerDivision();
-    if (wordOperatorCodes()) {
-        compileIntegerDivision();
+    while (auto codes = wordOperatorCodes(Precedence::Modulo)) {
+        auto rhs_data_type = compileIntegerDivision();
+        auto info = codes->select(lhs_data_type, rhs_data_type);
+        compiler.addInstruction(info.code);
+        lhs_data_type = info.result_data_type;
     }
     return lhs_data_type;
 }
@@ -168,13 +171,13 @@ DataType ExpressionCompiler::Impl::compileNumConstant()
     return data_type;
 }
 
-bool ExpressionCompiler::Impl::wordOperatorCodes()
+OperatorCodes *ExpressionCompiler::Impl::wordOperatorCodes(Precedence::Level precedence)
 {
-    if (compiler.getKeyword() == "MOD") {
+    if (auto codes = Precedence::operatorCodes(precedence, compiler.getKeyword())) {
         compiler.clearWord();
-        return true;
+        return codes;
     }
-    return false;
+    return nullptr;
 }
 
 OperatorCodes *ExpressionCompiler::Impl::symbolOperatorCodes(Precedence::Level precedence)
