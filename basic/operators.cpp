@@ -328,6 +328,14 @@ void executeModuloDblDbl(Executer &executer)
     executer.top().dbl_value = std::fmod(lhs, rhs);
 }
 
+void executeModuloIntDbl(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    executer.pop();
+    auto lhs = static_cast<double>(executer.top().int_value);
+    executer.top().dbl_value = std::fmod(lhs, rhs);
+}
+
 void executeModuloIntInt(Executer &executer)
 {
     auto rhs = popIntegerDivisor(executer);
@@ -335,7 +343,7 @@ void executeModuloIntInt(Executer &executer)
 }
 
 OperatorCode<OpType::DblDbl> mod_dbl_dbl_code {recreateBinaryOperator, executeModuloDblDbl};
-OperatorCode<OpType::IntDbl> mod_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> mod_int_dbl_code {recreateBinaryOperator, executeModuloIntDbl};
 OperatorCode<OpType::DblInt> mod_dbl_int_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::IntInt> mod_int_int_code {recreateBinaryOperator, executeModuloIntInt};
 
