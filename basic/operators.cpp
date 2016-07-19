@@ -323,8 +323,7 @@ Code cvtdbl_code {recreateNothing, executeCvtDbl};
 
 void executeModuloDblDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
-    executer.pop();
+    auto rhs = popDoubleDivisor(executer);
     auto lhs = executer.top().dbl_value;
     executer.top().dbl_value = std::fmod(lhs, rhs);
 }

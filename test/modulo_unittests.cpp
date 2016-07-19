@@ -102,7 +102,7 @@ TEST_CASE("execute integer-integer mod operator", "[int-int]")
 
         REQUIRE(oss.str() == "2\n");
     }
-    SECTION("check for a mod by zero error")
+    SECTION("check for a divide by zero error")
     {
         std::istringstream iss {"PRINT 5 MOD 0"};
         std::ostringstream oss;
@@ -138,5 +138,18 @@ TEST_CASE("execute double-double mod operator", "[dbl-dbl]")
         program.run(oss);
 
         REQUIRE(oss.str() == "2.2\n");
+    }
+    SECTION("check for a divide by zero error")
+    {
+        std::istringstream iss {"PRINT 5.3 mod 0.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:10: divide by zero\n"
+            "    PRINT 5.3 MOD 0.0\n"
+            "              ^^^\n");
     }
 }
