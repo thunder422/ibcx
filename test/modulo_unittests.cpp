@@ -102,4 +102,16 @@ TEST_CASE("execute integer-integer mod operator", "[int-int]")
 
         REQUIRE(oss.str() == "2\n");
     }
+    SECTION("check for a mod by zero error")
+    {
+        std::istringstream iss {"PRINT 5 MOD 0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+
+        SECTION("check that error is thrown")
+        {
+            REQUIRE_THROWS_AS(program.run(oss), ProgramError);
+        }
+    }
 }

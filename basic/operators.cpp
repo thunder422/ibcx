@@ -234,7 +234,7 @@ void checkDivideByZero(Executer &executer, T rhs)
 }
 
 inline double popDoubleDivisor(Executer &executer);
-inline double popIntegerDivisor(Executer &executer);
+inline int popIntegerDivisor(Executer &executer);
 inline void divideAndCheckResult(Executer &executer, double lhs, double rhs);
 
 void executeDivideDblDbl(Executer &executer)
@@ -280,7 +280,7 @@ void executeDivideIntInt(Executer &executer)
     executer.top().int_value = executer.top().int_value / rhs;
 }
 
-inline double popIntegerDivisor(Executer &executer)
+inline int popIntegerDivisor(Executer &executer)
 {
     auto rhs = executer.top().int_value;
     checkDivideByZero(executer, rhs);
@@ -323,8 +323,7 @@ Code cvtdbl_code {recreateNothing, executeCvtDbl};
 
 void executeModuloIntInt(Executer &executer)
 {
-    auto rhs = executer.top().int_value;
-    executer.pop();
+    auto rhs = popIntegerDivisor(executer);
     executer.top().int_value = executer.top().int_value % rhs;
 }
 
