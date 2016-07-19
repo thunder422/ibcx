@@ -34,11 +34,12 @@ ProgramError::ProgramError(const RunError &run_error, unsigned line_number,
     runtime_error {run_error.what()},
     line_number {line_number},
     column {program_line.find_first_of(StartErrorMarker)},
-    length {1},
+    length {program_line.find_first_of(EndErrorMarker) - column - 1},
     line {program_line},
     type {Type::Run}
 {
     line.erase(column, 1);
+    line.erase(column + length, 1);
 }
 
 void ProgramError::output(std::ostream &os) const

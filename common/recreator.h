@@ -36,6 +36,7 @@ public:
     void setTopPrecedence(Precedence::Level precedence);
     void setTopUnaryOperator(bool unary_operator);
     void markErrorStart();
+    void markErrorEnd();
 
     void recreateUnaryOperator();
     void recreateBinaryOperator();

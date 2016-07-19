@@ -121,6 +121,11 @@ void Recreator::markErrorStart()
     appendErrorMarker(StartErrorMarker);
 }
 
+void Recreator::markErrorEnd()
+{
+    appendErrorMarker(EndErrorMarker);
+}
+
 void Recreator::appendErrorMarker(char error_marker)
 {
     if (at_error_offset) {
@@ -190,6 +195,7 @@ void Recreator::appendBinaryOperator()
     append(' ');
     markErrorStart();
     append(getOperatorKeyword());
+    markErrorEnd();
     append(' ');
 }
 

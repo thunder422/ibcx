@@ -113,5 +113,14 @@ TEST_CASE("execute integer-integer mod operator", "[int-int]")
         {
             REQUIRE_THROWS_AS(program.run(oss), ProgramError);
         }
+        SECTION("check for the correct error message, column and length")
+        {
+            program.runCode(oss);
+
+            REQUIRE(oss.str() ==
+                "run error at line 1:8: divide by zero\n"
+                "    PRINT 5 MOD 0\n"
+                "            ^^^\n");
+        }
     }
 }

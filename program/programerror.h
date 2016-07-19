@@ -14,6 +14,7 @@
 
 
 constexpr char StartErrorMarker = '\02';
+constexpr char EndErrorMarker = '\03';
 
 struct CompileError;
 struct RunError;
@@ -27,7 +28,7 @@ struct ProgramError : public std::runtime_error {
 
     unsigned line_number;
     size_t column;
-    unsigned length;
+    size_t length;
     std::string line;
 
 private:
