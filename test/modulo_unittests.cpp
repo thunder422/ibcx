@@ -182,3 +182,19 @@ TEST_CASE("execute integer-double mod operator", "[int-dbl]")
             "            ^^^\n");
     }
 }
+
+TEST_CASE("execute double-integer mod operator", "[dbl-int]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a mod of a double by an integer")
+    {
+        std::istringstream iss {"PRINT 5.3 mod 3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2.3\n");
+    }
+}
