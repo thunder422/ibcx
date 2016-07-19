@@ -330,8 +330,7 @@ void executeModuloDblDbl(Executer &executer)
 
 void executeModuloIntDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
-    executer.pop();
+    auto rhs = popDoubleDivisor(executer);
     auto lhs = static_cast<double>(executer.top().int_value);
     executer.top().dbl_value = std::fmod(lhs, rhs);
 }
