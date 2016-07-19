@@ -120,7 +120,7 @@ void executeExponentialIntDbl(Executer &executer)
 {
     auto y = executer.top().dbl_value;
     executer.pop();
-    auto x = static_cast<double>(executer.top().int_value);
+    auto x = executer.topIntAsDbl();
     calculatePowerDblDbl(executer, x, y);
 }
 
@@ -182,13 +182,13 @@ void executeMultiplyIntDbl(Executer &executer)
 {
     auto rhs = executer.top().dbl_value;
     executer.pop();
-    auto lhs = static_cast<double>(executer.top().int_value);
+    auto lhs = executer.topIntAsDbl();
     multiplyAndCheckResult(executer, lhs, rhs);
 }
 
 void executeMultiplyDblInt(Executer &executer)
 {
-    auto rhs = static_cast<double>(executer.top().int_value);
+    auto rhs = executer.topIntAsDbl();
     doDoubleMultiply(executer, rhs);
 }
 
@@ -247,7 +247,7 @@ void executeDivideDblDbl(Executer &executer)
 void executeDivideIntDbl(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
-    auto lhs = static_cast<double>(executer.top().int_value);
+    auto lhs = executer.topIntAsDbl();
     divideAndCheckResult(executer, lhs, rhs);
 }
 
@@ -314,7 +314,7 @@ IntDivOperatorCode int_div_codes {int_div_code};
 
 void executeCvtDbl(Executer &executer)
 {
-    executer.top().dbl_value = static_cast<double>(executer.top().int_value);
+    executer.top().dbl_value = executer.topIntAsDbl();
 }
 
 Code cvtdbl_code {recreateNothing, executeCvtDbl};
@@ -331,14 +331,13 @@ void executeModuloDblDbl(Executer &executer)
 void executeModuloIntDbl(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
-    auto lhs = static_cast<double>(executer.top().int_value);
+    auto lhs = executer.topIntAsDbl();
     executer.top().dbl_value = std::fmod(lhs, rhs);
 }
 
 void executeModuloDblInt(Executer &executer)
 {
-    auto rhs = executer.top().int_value;
-    executer.pop();
+    auto rhs = static_cast<double>(popIntegerDivisor(executer));
     auto lhs = executer.top().dbl_value;
     executer.top().dbl_value = std::fmod(lhs, rhs);
 }

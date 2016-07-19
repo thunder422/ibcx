@@ -36,6 +36,7 @@ public:
     void pushConstDbl(WordType operand);
     void pushConstInt(WordType operand);
     StackItem &top();
+    double topIntAsDbl();
     void pop();
     std::ostream &output();
     bool stackEmpty() const;
@@ -71,6 +72,11 @@ inline void Executer::pushConstInt(WordType operand)
 inline Executer::StackItem &Executer::top()
 {
     return stack.top();
+}
+
+inline double Executer::topIntAsDbl()
+{
+    return static_cast<double>(stack.top().int_value);
 }
 
 inline void Executer::pop()

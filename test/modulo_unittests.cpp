@@ -197,4 +197,17 @@ TEST_CASE("execute double-integer mod operator", "[dbl-int]")
 
         REQUIRE(oss.str() == "2.3\n");
     }
+    SECTION("check for a divide by zero error")
+    {
+        std::istringstream iss {"PRINT 5.3 mod 0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:10: divide by zero\n"
+            "    PRINT 5.3 MOD 0\n"
+            "              ^^^\n");
+    }
 }
