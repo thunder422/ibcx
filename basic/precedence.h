@@ -21,7 +21,8 @@ struct Precedence {
         Negate,
         Product,
         IntDivide,
-        Modulo
+        Modulo,
+        Summation
     };
 
     static const char *getKeyword(WordType code_value);

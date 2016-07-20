@@ -123,6 +123,7 @@ PrecedenceInfo::PrecedenceInfo()
     extern NumOperatorCodes div_codes;
     extern IntDivOperatorCode int_div_codes;
     extern NumOperatorCodes mod_codes;
+    extern NumOperatorCodes add_codes;
 
     static std::initializer_list<OperatorData> operator_data_list = {
         {Precedence::Exponential, exp_codes, "^"},
@@ -130,7 +131,8 @@ PrecedenceInfo::PrecedenceInfo()
         {Precedence::Product, mul_codes, "*"},
         {Precedence::Product, div_codes, "/"},
         {Precedence::IntDivide, int_div_codes, "\\"},
-        {Precedence::Modulo, mod_codes, "MOD"}
+        {Precedence::Modulo, mod_codes, "MOD"},
+        {Precedence::Summation, add_codes, "+"}
     };
 
     for (auto &operator_data : operator_data_list) {

@@ -25,6 +25,7 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileSummation();
     DataType compileModulo();
     DataType compileIntegerDivision();
     DataType compileProduct();
@@ -67,9 +68,18 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileModulo();
+    auto data_type = compileSummation();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
+    }
+    return data_type;
+}
+
+DataType ExpressionCompiler::Impl::compileSummation()
+{
+    auto data_type = compileModulo();
+    if (symbolOperatorCodes(Precedence::Summation)) {
+        compileModulo();
     }
     return data_type;
 }
