@@ -357,9 +357,9 @@ NumOperatorCodes mod_codes {mod_dbl_dbl_code, mod_int_dbl_code, mod_dbl_int_code
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> add_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> add_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> add_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> add_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes add_codes {add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code, add_int_int_code};
