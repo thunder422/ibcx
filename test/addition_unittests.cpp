@@ -22,4 +22,21 @@ TEST_CASE("compile add operator expressions", "[compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check for all of the add codes in the compiled code")
+    {
+        extern OperatorCode<OpType::DblDbl> add_dbl_dbl_code;
+        extern OperatorCode<OpType::IntDbl> add_int_dbl_code;
+        extern OperatorCode<OpType::DblInt> add_dbl_int_code;
+        extern OperatorCode<OpType::IntInt> add_int_int_code;
+
+        Compiler compiler {"100 + 2 + 1.5 + (5.0 + 4)", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(code_line.size() == 14);
+        REQUIRE(code_line[4].instructionCode()->getValue() == add_int_int_code.getValue());
+        REQUIRE(code_line[7].instructionCode()->getValue() == add_int_dbl_code.getValue());
+        REQUIRE(code_line[12].instructionCode()->getValue() == add_dbl_int_code.getValue());
+        REQUIRE(code_line[13].instructionCode()->getValue() == add_dbl_dbl_code.getValue());
+    }
 }

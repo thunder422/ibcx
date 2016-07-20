@@ -77,11 +77,14 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileSummation()
 {
-    auto data_type = compileModulo();
-    if (symbolOperatorCodes(Precedence::Summation)) {
-        compileModulo();
+    auto lhs_data_type = compileModulo();
+    while (auto codes = symbolOperatorCodes(Precedence::Summation)) {
+        auto rhs_data_type = compileModulo();
+        auto info = codes->select(lhs_data_type, rhs_data_type);
+        compiler.addInstruction(info.code);
+        lhs_data_type = info.result_data_type;
     }
-    return data_type;
+    return lhs_data_type;
 }
 
 DataType ExpressionCompiler::Impl::compileModulo()
