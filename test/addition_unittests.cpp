@@ -86,3 +86,19 @@ TEST_CASE("recreate add operator expressions", "[recreate]")
         REQUIRE(oss.str() == "PRINT 3 + 2\n");
     }
 }
+
+TEST_CASE("execute integer-integer add operator", "[int-int]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a mod of two integers")
+    {
+        std::istringstream iss {"PRINT 5 + 3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "8\n");
+    }
+}
