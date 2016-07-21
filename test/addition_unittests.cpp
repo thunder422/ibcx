@@ -101,4 +101,17 @@ TEST_CASE("execute integer-integer add operator", "[int-int]")
 
         REQUIRE(oss.str() == "8\n");
     }
+    SECTION("execute an add that causes an overflow")
+    {
+        std::istringstream iss {"PRINT 2000000000 + 2000000000"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:17: overflow\n"
+            "    PRINT 2000000000 + 2000000000\n"
+            "                     ^\n");
+    }
 }
