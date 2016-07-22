@@ -54,6 +54,7 @@ private:
     void recreateOneCode();
     std::string &&topString();
     void appendErrorMarker(char error_marker);
+    void appendUnaryOperator();
     void appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence);
     void appendSpaceForConstant(char first_char);
     void appendLeftOperand(Precedence::Level operator_precedence);

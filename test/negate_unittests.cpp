@@ -158,5 +158,18 @@ TEST_CASE("execute negate operator expressions", "[execute]")
 
         REQUIRE(oss.str() == "0.00390625\n");
     }
+    SECTION("execute a negation that causes an overflow")
+    {
+        std::istringstream iss {"PRINT --2147483648"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:6: overflow\n"
+            "    PRINT --2147483648\n"
+            "          ^\n");
+    }
 }
 

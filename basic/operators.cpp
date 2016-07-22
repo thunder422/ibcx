@@ -95,7 +95,11 @@ void executeNegateDbl(Executer &executer)
 
 void executeNegateInt(Executer &executer)
 {
-    executer.top().int_value = -executer.top().int_value;
+    auto operand = executer.top().int_value;
+    if (operand == std::numeric_limits<int>::min()) {
+        throw RunError {"overflow", executer.currentOffset()};
+    }
+    executer.top().int_value = -operand;
 }
 
 OperatorCode<OpType::Dbl> neg_dbl_code {recreateUnaryOperator, executeNegateDbl};

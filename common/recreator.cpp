@@ -137,13 +137,20 @@ void Recreator::recreateUnaryOperator()
 {
     auto operand = topString();
 
-    append(getOperatorKeyword());
+    appendUnaryOperator();
     auto operator_precedence = getOperatorPrecedence();
 
     appendUnaryOperand(std::move(operand), operator_precedence);
 
     setTopPrecedence(operator_precedence);
     setTopUnaryOperator(true);
+}
+
+void Recreator::appendUnaryOperator()
+{
+    markErrorStart();
+    append(getOperatorKeyword());
+    markErrorEnd();
 }
 
 void Recreator::appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence)
