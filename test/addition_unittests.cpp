@@ -143,4 +143,17 @@ TEST_CASE("execute double-double add operator", "[dbl-dbl]")
 
         REQUIRE(oss.str() == "5\n");
     }
+    SECTION("execute an add that causes an overflow")
+    {
+        std::istringstream iss {"PRINT 1e308 + 1e308"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:12: overflow\n"
+            "    PRINT 1e308 + 1e308\n"
+            "                ^\n");
+    }
 }
