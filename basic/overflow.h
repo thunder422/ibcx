@@ -8,6 +8,7 @@
 #ifndef IBC_OVERFLOW_H
 #define IBC_OVERFLOW_H
 
+#include <cmath>
 #include <limits>
 
 #include "executer.h"
@@ -24,8 +25,7 @@ inline void checkIntegerOverflow(Executer &executer, T result)
 
 inline void checkDoubleOverflow(Executer &executer, double result)
 {
-    if (result > std::numeric_limits<double>::max()
-            || result < std::numeric_limits<double>::min()) {
+    if (std::fabs(result) > std::numeric_limits<double>::max()) {
         throw RunError {"overflow", executer.currentOffset()};
     }
 }

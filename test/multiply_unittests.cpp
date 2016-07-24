@@ -211,6 +211,16 @@ TEST_CASE("execute double-double multiply operator", "[dbl-dbl]")
             "    PRINT -2e300 * 3e20\n"
             "                 ^\n");
     }
+    SECTION("check multiplication that results in a negative number")
+    {
+        std::istringstream iss {"PRINT -2.0 * 3.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "-6\n");
+    }
 }
 
 TEST_CASE("execute double-integer multiply operator", "[dbl-int]")
