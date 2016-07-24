@@ -370,6 +370,13 @@ void executeAddDblDbl(Executer &executer)
     executer.top().dbl_value = result;
 }
 
+void executeAddIntDbl(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    executer.pop();
+    executer.top().dbl_value = executer.topIntAsDbl() + rhs;
+}
+
 void executeAddIntInt(Executer &executer)
 {
     auto rhs = executer.top().int_value;
@@ -381,7 +388,7 @@ void executeAddIntInt(Executer &executer)
 }
 
 OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, executeAddDblDbl};
-OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, executeAddIntDbl};
 OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
 

@@ -171,3 +171,19 @@ TEST_CASE("execute double-double add operator", "[dbl-dbl]")
 
     }
 }
+
+TEST_CASE("execute integer-double add operator", "[int-dbl]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a add of an integer and a doubles")
+    {
+        std::istringstream iss {"PRINT 3+2.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "5\n");
+    }
+}
