@@ -97,4 +97,17 @@ TEST_CASE("execute integer-integer subtract operator", "[int-int]")
             "    PRINT 2000000000 - -1000000000\n"
             "                     ^\n");
     }
+    SECTION("execute an subtract that causes an underflow")
+    {
+        std::istringstream iss {"PRINT -2000000000 - 1000000000"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:18: overflow\n"
+            "    PRINT -2000000000 - 1000000000\n"
+            "                      ^\n");
+    }
 }

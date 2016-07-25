@@ -409,9 +409,7 @@ void executeSubtractIntInt(Executer &executer)
     executer.pop();
     int64_t result = executer.top().int_value;
     result -= rhs;
-    if (result > std::numeric_limits<int>::max()) {
-        throw RunError {"overflow", executer.currentOffset()};
-    }
+    checkIntegerOverflow(executer, result);
     executer.top().int_value = result;
 }
 
