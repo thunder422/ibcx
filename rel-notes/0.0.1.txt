@@ -1,0 +1,25 @@
+IBCX v0.0.1 Release Notes
+=========================
+
+This is the second release of the IBCX, which consists of a
+core library for compiling, recreating and executing BASIC programs.
+The library is intended to be used by applications, for example, the
+included IBC executable, a standalone compiler that will also execute
+the BASIC program once compiled if there are not errors.
+
+New Features
+------------
+
+ * Run errors are now reported when they occur.
+
+ * Tested on Linux Mint 13, Windows 10 and Windows XP (see wiki for
+   more details).
+
+
+New Language Features
+---------------------
+
+ * Math operators (exponential, negate, multiply, divide, integer
+   divide, modulo, add, and subtract) with correct precedence handling.
+
+ * Parentheses in expressions.
