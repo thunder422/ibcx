@@ -400,3 +400,12 @@ OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAd
 OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
 
 NumOperatorCodes add_codes {add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code, add_int_int_code};
+
+// ----------------------------------------
+
+OperatorCode<OpType::DblDbl> sub_dbl_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::IntDbl> sub_int_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::DblInt> sub_dbl_int_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> sub_int_int_code {nullptr, nullptr};
+
+NumOperatorCodes sub_codes {sub_dbl_dbl_code, sub_int_dbl_code, sub_dbl_int_code, sub_int_int_code};
