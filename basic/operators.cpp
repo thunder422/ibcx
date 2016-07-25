@@ -403,9 +403,9 @@ NumOperatorCodes add_codes {add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> sub_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> sub_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> sub_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> sub_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> sub_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> sub_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> sub_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> sub_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes sub_codes {sub_dbl_dbl_code, sub_int_dbl_code, sub_dbl_int_code, sub_int_int_code};
