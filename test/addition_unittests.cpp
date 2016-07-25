@@ -91,7 +91,7 @@ TEST_CASE("execute integer-integer add operator", "[int-int]")
 {
     ProgramUnit program;
 
-    SECTION("execute a mod of two integers")
+    SECTION("execute a add of two integers")
     {
         std::istringstream iss {"PRINT 5 + 3"};
         std::ostringstream oss;

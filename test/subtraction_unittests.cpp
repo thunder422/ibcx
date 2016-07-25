@@ -69,3 +69,19 @@ TEST_CASE("recreate subtract operator expressions", "[recreate]")
         REQUIRE(oss.str() == "PRINT 3.0 - 2\n");
     }
 }
+
+TEST_CASE("execute integer-integer subtract operator", "[int-int]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a subtract of two integers")
+    {
+        std::istringstream iss {"PRINT 5 - 3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2\n");
+    }
+}
