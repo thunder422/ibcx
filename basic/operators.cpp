@@ -412,6 +412,13 @@ void executeSubtractDblDbl(Executer &executer)
     executer.top().dbl_value = result;
 }
 
+void executeSubtractIntDbl(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    executer.pop();
+    executer.top().dbl_value = executer.topIntAsDbl() - rhs;
+}
+
 void executeSubtractIntInt(Executer &executer)
 {
     auto rhs = executer.top().int_value;
@@ -423,7 +430,7 @@ void executeSubtractIntInt(Executer &executer)
 }
 
 OperatorCode<OpType::DblDbl> sub_dbl_dbl_code {recreateBinaryOperator, executeSubtractDblDbl};
-OperatorCode<OpType::IntDbl> sub_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> sub_int_dbl_code {recreateBinaryOperator, executeSubtractIntDbl};
 OperatorCode<OpType::DblInt> sub_dbl_int_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::IntInt> sub_int_int_code {recreateBinaryOperator, executeSubtractIntInt};
 

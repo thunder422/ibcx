@@ -153,3 +153,19 @@ TEST_CASE("execute double-double subtract operator", "[dbl-dbl]")
             "                 ^\n");
     }
 }
+
+TEST_CASE("execute integer-double subtract operator", "[int-dbl]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a subtract of an integer and a double")
+    {
+        std::istringstream iss {"PRINT 5-2.1"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2.9\n");
+    }
+}
