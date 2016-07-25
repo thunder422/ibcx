@@ -403,6 +403,14 @@ NumOperatorCodes add_codes {add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code
 
 // ----------------------------------------
 
+void executeSubtractDblDbl(Executer &executer)
+{
+    auto rhs = executer.top().dbl_value;
+    executer.pop();
+    auto result = executer.top().dbl_value - rhs;
+    executer.top().dbl_value = result;
+}
+
 void executeSubtractIntInt(Executer &executer)
 {
     auto rhs = executer.top().int_value;
@@ -413,7 +421,7 @@ void executeSubtractIntInt(Executer &executer)
     executer.top().int_value = result;
 }
 
-OperatorCode<OpType::DblDbl> sub_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblDbl> sub_dbl_dbl_code {recreateBinaryOperator, executeSubtractDblDbl};
 OperatorCode<OpType::IntDbl> sub_int_dbl_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::DblInt> sub_dbl_int_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::IntInt> sub_int_int_code {recreateBinaryOperator, executeSubtractIntInt};
