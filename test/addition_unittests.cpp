@@ -168,7 +168,6 @@ TEST_CASE("execute double-double add operator", "[dbl-dbl]")
             "run error at line 1:13: overflow\n"
             "    PRINT -1e308 + -1e308\n"
             "                 ^\n");
-
     }
 }
 

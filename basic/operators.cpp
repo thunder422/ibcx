@@ -408,9 +408,7 @@ void executeSubtractDblDbl(Executer &executer)
     auto rhs = executer.top().dbl_value;
     executer.pop();
     auto result = executer.top().dbl_value - rhs;
-    if (result > std::numeric_limits<double>::max()) {
-        throw RunError {"overflow", executer.currentOffset()};
-    }
+    checkDoubleOverflow(executer, result);
     executer.top().dbl_value = result;
 }
 
