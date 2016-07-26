@@ -10,6 +10,7 @@
 
 #include "compiler.h"
 #include "expressioncompiler.h"
+#include "operators.h"
 #include "programunit.h"
 
 
@@ -22,6 +23,26 @@ Compiler::Compiler(const std::string &line, ProgramUnit &program) :
 DataType Compiler::compileExpression(DataType expected_data_type)
 {
     return ExpressionCompiler{*this}(expected_data_type);
+}
+
+OperatorCodes *Compiler::getSymbolOperatorCodes(Precedence::Level precedence)
+{
+    skipWhiteSpace();
+    if (auto codes = Precedence::operatorCodes(precedence, peekNextChar())) {
+        getNextChar();
+        skipWhiteSpace();
+        return codes;
+    }
+    return nullptr;
+}
+
+OperatorCodes *Compiler::getWordOperatorCodes(Precedence::Level precedence)
+{
+    if (auto codes = Precedence::operatorCodes(precedence, getKeyword())) {
+        clearWord();
+        return codes;
+    }
+    return nullptr;
 }
 
 ci_string Compiler::getKeyword()

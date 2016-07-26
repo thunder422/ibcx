@@ -14,17 +14,21 @@
 
 #include "cistring.h"
 #include "datatype.h"
+#include "precedence.h"
 #include "programcode.h"
 
 
 class Code;
 class ProgramCode;
 class ProgramUnit;
+class OperatorCodes;
 
 class Compiler {
 public:
     Compiler(const std::string &line, ProgramUnit &program);
     DataType compileExpression(DataType expected_data_type);
+    OperatorCodes *getSymbolOperatorCodes(Precedence::Level precedence);
+    OperatorCodes *getWordOperatorCodes(Precedence::Level precedence);
 
     ci_string getKeyword();
     void clearWord();

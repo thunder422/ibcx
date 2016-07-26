@@ -34,8 +34,6 @@ private:
     DataType compileNumOperand();
     DataType compileParentheses();
     DataType compileNumConstant();
-    OperatorCodes *wordOperatorCodes(Precedence::Level precedence);
-    OperatorCodes *symbolOperatorCodes(Precedence::Level precedence);
 
     Compiler &compiler;
 };
@@ -78,7 +76,7 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileSummation()
 {
     auto lhs_data_type = compileModulo();
-    while (auto codes = symbolOperatorCodes(Precedence::Summation)) {
+    while (auto codes = compiler.getSymbolOperatorCodes(Precedence::Summation)) {
         auto rhs_data_type = compileModulo();
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
@@ -90,7 +88,7 @@ DataType ExpressionCompiler::Impl::compileSummation()
 DataType ExpressionCompiler::Impl::compileModulo()
 {
     auto lhs_data_type = compileIntegerDivision();
-    while (auto codes = wordOperatorCodes(Precedence::Modulo)) {
+    while (auto codes = compiler.getWordOperatorCodes(Precedence::Modulo)) {
         auto rhs_data_type = compileIntegerDivision();
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
@@ -102,7 +100,7 @@ DataType ExpressionCompiler::Impl::compileModulo()
 DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
     auto lhs_data_type = compileProduct();
-    while (auto codes = symbolOperatorCodes(Precedence::IntDivide)) {
+    while (auto codes = compiler.getSymbolOperatorCodes(Precedence::IntDivide)) {
         compiler.convertToDouble(lhs_data_type);
         auto rhs_data_type = compileProduct();
         compiler.convertToDouble(rhs_data_type);
@@ -116,7 +114,7 @@ DataType ExpressionCompiler::Impl::compileIntegerDivision()
 DataType ExpressionCompiler::Impl::compileProduct()
 {
     auto lhs_data_type = compileExponential();
-    while (auto codes = symbolOperatorCodes(Precedence::Product)) {
+    while (auto codes = compiler.getSymbolOperatorCodes(Precedence::Product)) {
         auto rhs_data_type = compileExponential();
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
@@ -129,7 +127,7 @@ DataType ExpressionCompiler::Impl::compileExponential()
 {
     auto lhs_data_type = compileNumOperand();
     if (lhs_data_type != DataType::Null) {
-        while (auto codes = symbolOperatorCodes(Precedence::Exponential)) {
+        while (auto codes = compiler.getSymbolOperatorCodes(Precedence::Exponential)) {
             auto rhs_data_type = compileNumOperand();
             if (rhs_data_type == DataType::Null) {
                 throw ExpNumExprError {compiler.getColumn()};
@@ -182,24 +180,4 @@ DataType ExpressionCompiler::Impl::compileNumConstant()
         return compileNegation();
     }
     return data_type;
-}
-
-OperatorCodes *ExpressionCompiler::Impl::wordOperatorCodes(Precedence::Level precedence)
-{
-    if (auto codes = Precedence::operatorCodes(precedence, compiler.getKeyword())) {
-        compiler.clearWord();
-        return codes;
-    }
-    return nullptr;
-}
-
-OperatorCodes *ExpressionCompiler::Impl::symbolOperatorCodes(Precedence::Level precedence)
-{
-    compiler.skipWhiteSpace();
-    if (auto codes = Precedence::operatorCodes(precedence, compiler.peekNextChar())) {
-        compiler.getNextChar();
-        compiler.skipWhiteSpace();
-        return codes;
-    }
-    return nullptr;
 }
