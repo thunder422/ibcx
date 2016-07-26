@@ -25,6 +25,8 @@ struct Precedence {
         Summation
     };
 
+    static void addOperatorCodes(Precedence::Level precedence, OperatorCodes &codes,
+        const char *keyword);
     static const char *getKeyword(WordType code_value);
     static Precedence::Level getPrecedence(WordType code_value);
     static OperatorCodes *operatorCodes(Precedence::Level precedence);

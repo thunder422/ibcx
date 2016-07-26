@@ -10,6 +10,7 @@
 
 #include "code.h"
 #include "datatype.h"
+#include "precedence.h"
 
 
 enum class OpType {
@@ -46,7 +47,7 @@ public:
 
 class UnaryOperatorCodes : public OperatorCodes {
 public:
-    UnaryOperatorCodes(OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code);
+    UnaryOperatorCodes(Precedence::Level precedence, const char *keyword, OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code);
     OperatorInfo select(DataType data_type, DataType unused_data_type) const override;
     std::vector<WordType> codeValues() const override;
 
@@ -57,9 +58,9 @@ private:
 
 class NumOperatorCodes : public OperatorCodes {
 public:
-    NumOperatorCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code,
-        OperatorCode<OpType::IntDbl> &int_dbl_code, OperatorCode<OpType::DblInt> &dbl_int_code,
-        OperatorCode<OpType::IntInt> &int_int_code);
+    NumOperatorCodes(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
+        OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code);
     OperatorInfo select(DataType lhs_data_type, DataType rhs_data_type) const override;
     std::vector<WordType> codeValues() const override;
 
@@ -72,7 +73,7 @@ private:
 
 class IntDivOperatorCode : public OperatorCodes {
 public:
-    IntDivOperatorCode(OperatorCode<OpType::DblDbl> &code);
+    IntDivOperatorCode(Precedence::Level precedence, const char *keyword, OperatorCode<OpType::DblDbl> &code);
     OperatorInfo select(DataType lhs_data_type, DataType rhs_data_type) const override;
     std::vector<WordType> codeValues() const override;
 

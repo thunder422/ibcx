@@ -14,11 +14,12 @@
 #include "recreator.h"
 
 
-UnaryOperatorCodes::UnaryOperatorCodes(OperatorCode<OpType::Dbl> &dbl_code,
-        OperatorCode<OpType::Int> &int_code) :
+UnaryOperatorCodes::UnaryOperatorCodes(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code) :
     dbl_code {dbl_code},
     int_code {int_code}
 {
+    Precedence::addOperatorCodes(precedence, *this, keyword);
 }
 
 OperatorInfo UnaryOperatorCodes::select(DataType data_type, DataType unused_data_type) const
@@ -37,14 +38,15 @@ std::vector<WordType> UnaryOperatorCodes::codeValues() const
 }
 
 
-NumOperatorCodes::NumOperatorCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code,
-        OperatorCode<OpType::IntDbl> &int_dbl_code, OperatorCode<OpType::DblInt> &dbl_int_code,
-        OperatorCode<OpType::IntInt> &int_int_code) :
+NumOperatorCodes::NumOperatorCodes(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
+        OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code) :
     dbl_dbl_code {dbl_dbl_code},
     int_dbl_code {int_dbl_code},
     dbl_int_code {dbl_int_code},
     int_int_code {int_int_code}
 {
+    Precedence::addOperatorCodes(precedence, *this, keyword);
 }
 
 OperatorInfo NumOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
@@ -69,9 +71,11 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
 }
 
 
-IntDivOperatorCode::IntDivOperatorCode(OperatorCode<OpType::DblDbl> &code) :
+IntDivOperatorCode::IntDivOperatorCode(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::DblDbl> &code) :
     code {code}
 {
+    Precedence::addOperatorCodes(precedence, *this, keyword);
 }
 
 OperatorInfo IntDivOperatorCode::select(DataType lhs_data_type, DataType rhs_data_type) const
@@ -105,7 +109,7 @@ void executeNegateInt(Executer &executer)
 OperatorCode<OpType::Dbl> neg_dbl_code {recreateUnaryOperator, executeNegateDbl};
 OperatorCode<OpType::Int> neg_int_code {recreateUnaryOperator, executeNegateInt};
 
-UnaryOperatorCodes neg_codes {neg_dbl_code, neg_int_code};
+UnaryOperatorCodes neg_codes {Precedence::Negate, "-", neg_dbl_code, neg_int_code};
 
 // ----------------------------------------
 
@@ -169,7 +173,10 @@ OperatorCode<OpType::IntDbl> exp_int_dbl_code {recreateBinaryOperator, executeEx
 OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateBinaryOperator, executeExponentialDblInt};
 OperatorCode<OpType::IntInt> exp_int_int_code {recreateBinaryOperator, executeExponentialIntInt};
 
-NumOperatorCodes exp_codes {exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code};
+NumOperatorCodes exp_codes {
+    Precedence::Exponential, "^",
+    exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code
+};
 
 // ----------------------------------------
 
@@ -225,7 +232,10 @@ OperatorCode<OpType::IntDbl> mul_int_dbl_code {recreateBinaryOperator, executeMu
 OperatorCode<OpType::DblInt> mul_dbl_int_code {recreateBinaryOperator, executeMultiplyDblInt};
 OperatorCode<OpType::IntInt> mul_int_int_code {recreateBinaryOperator, executeMultiplyIntInt};
 
-NumOperatorCodes mul_codes {mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code, mul_int_int_code};
+NumOperatorCodes mul_codes {
+    Precedence::Product, "*",
+    mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code, mul_int_int_code
+};
 
 // ----------------------------------------
 
@@ -297,7 +307,10 @@ OperatorCode<OpType::IntDbl> div_int_dbl_code {recreateBinaryOperator, executeDi
 OperatorCode<OpType::DblInt> div_dbl_int_code {recreateBinaryOperator, executeDivideDblInt};
 OperatorCode<OpType::IntInt> div_int_int_code {recreateBinaryOperator, executeDivideIntInt};
 
-NumOperatorCodes div_codes {div_dbl_dbl_code, div_int_dbl_code, div_dbl_int_code, div_int_int_code};
+NumOperatorCodes div_codes {
+    Precedence::Product, "/",
+    div_dbl_dbl_code, div_int_dbl_code, div_dbl_int_code, div_int_int_code
+};
 
 // ----------------------------------------
 
@@ -312,7 +325,7 @@ void executeIntegerDivide(Executer &executer)
 
 OperatorCode<OpType::DblDbl> int_div_code {recreateBinaryOperator, executeIntegerDivide};
 
-IntDivOperatorCode int_div_codes {int_div_code};
+IntDivOperatorCode int_div_codes {Precedence::IntDivide, "\\", int_div_code};
 
 // ----------------------------------------
 
@@ -357,7 +370,10 @@ OperatorCode<OpType::IntDbl> mod_int_dbl_code {recreateBinaryOperator, executeMo
 OperatorCode<OpType::DblInt> mod_dbl_int_code {recreateBinaryOperator, executeModuloDblInt};
 OperatorCode<OpType::IntInt> mod_int_int_code {recreateBinaryOperator, executeModuloIntInt};
 
-NumOperatorCodes mod_codes {mod_dbl_dbl_code, mod_int_dbl_code, mod_dbl_int_code, mod_int_int_code};
+NumOperatorCodes mod_codes {
+    Precedence::Modulo, "MOD",
+    mod_dbl_dbl_code, mod_int_dbl_code, mod_dbl_int_code, mod_int_int_code
+};
 
 // ----------------------------------------
 
@@ -399,7 +415,10 @@ OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, executeAd
 OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAddDblInt};
 OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
 
-NumOperatorCodes add_codes {add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code, add_int_int_code};
+NumOperatorCodes add_codes {
+    Precedence::Summation, "+",
+    add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code, add_int_int_code
+};
 
 // ----------------------------------------
 
@@ -441,4 +460,7 @@ OperatorCode<OpType::IntDbl> sub_int_dbl_code {recreateBinaryOperator, executeSu
 OperatorCode<OpType::DblInt> sub_dbl_int_code {recreateBinaryOperator, executeSubtractDblInt};
 OperatorCode<OpType::IntInt> sub_int_int_code {recreateBinaryOperator, executeSubtractIntInt};
 
-NumOperatorCodes sub_codes {sub_dbl_dbl_code, sub_int_dbl_code, sub_dbl_int_code, sub_int_int_code};
+NumOperatorCodes sub_codes {
+    Precedence::Summation, "-",
+    sub_dbl_dbl_code, sub_int_dbl_code, sub_dbl_int_code, sub_int_int_code
+};
