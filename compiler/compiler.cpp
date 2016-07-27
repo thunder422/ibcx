@@ -45,6 +45,18 @@ OperatorCodes *Compiler::getWordOperatorCodes(Precedence::Level precedence)
     return nullptr;
 }
 
+OperatorCodes *Compiler::getComparisonOperatorCodes()
+{
+    skipWhiteSpace();
+    std::string keyword;
+    keyword += peekNextChar();
+    auto operator_codes = Precedence::comparisonOperatorData(keyword);
+    if (operator_codes) {
+        getNextChar();
+    }
+    return operator_codes;
+}
+
 ci_string Compiler::getKeyword()
 {
     ci_string keyword;

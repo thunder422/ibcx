@@ -22,7 +22,8 @@ struct Precedence {
         Product,
         IntDivide,
         Modulo,
-        Summation
+        Summation,
+        Relation
     };
 
     static void addOperatorCodes(Precedence::Level precedence, OperatorCodes &codes,
@@ -32,6 +33,7 @@ struct Precedence {
     static OperatorCodes *operatorCodes(Precedence::Level precedence);
     static OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
     static OperatorCodes *operatorCodes(Precedence::Level precedence, const ci_string &word);
+    static OperatorCodes *comparisonOperatorData(const std::string &keyword);
 };
 
 

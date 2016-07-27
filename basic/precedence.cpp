@@ -23,6 +23,7 @@ public:
     OperatorCodes *operatorCodes(Precedence::Level precedence);
     OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
     OperatorCodes *operatorCodes(Precedence::Level precedence, const ci_string &word);
+    OperatorCodes *comparisonOperatorData(const std::string &keyword);
 
 private:
     struct OperatorData {
@@ -34,7 +35,8 @@ private:
 
     std::unordered_map<WordType, Precedence::Level> precedences;
     std::unordered_map<WordType, const char *> keywords;
-    std::multimap<Precedence::Level, OperatorData> operator_data_map;
+    std::multimap<Precedence::Level, OperatorData> operator_data;
+    std::map<std::string, OperatorCodes *> comparison_operator_data;
 };
 
 // ------------------------------------------------------------
@@ -70,6 +72,11 @@ OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence, const ci_
     return PrecedenceInfo::getInstance().operatorCodes(precedence, word);
 }
 
+OperatorCodes *Precedence::comparisonOperatorData(const std::string &keyword)
+{
+    return PrecedenceInfo::getInstance().comparisonOperatorData(keyword);
+}
+
 // ------------------------------------------------------------
 
 PrecedenceInfo &PrecedenceInfo::getInstance()
@@ -90,14 +97,14 @@ const char *PrecedenceInfo::getKeyword(WordType code_value) const
 
 OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence)
 {
-    auto iterators = operator_data_map.equal_range(precedence);
+    auto iterators = operator_data.equal_range(precedence);
     auto &operator_data = iterators.first->second;
     return &operator_data.codes;
 }
 
 OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, char operator_char)
 {
-    auto iterators = operator_data_map.equal_range(precedence);
+    auto iterators = operator_data.equal_range(precedence);
     for (auto iterator = iterators.first; iterator != iterators.second; ++iterator) {
         auto &operator_data = iterator->second;
         if (operator_char == operator_data.keyword[0]) {
@@ -109,7 +116,7 @@ OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, char 
 
 OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, const ci_string &word)
 {
-    auto iterators = operator_data_map.equal_range(precedence);
+    auto iterators = operator_data.equal_range(precedence);
     for (auto iterator = iterators.first; iterator != iterators.second; ++iterator) {
         auto &operator_data = iterator->second;
         if (word == operator_data.keyword) {
@@ -119,14 +126,27 @@ OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, const
     return nullptr;
 }
 
+OperatorCodes *PrecedenceInfo::comparisonOperatorData(const std::string &keyword)
+{
+    auto iterator = comparison_operator_data.find(keyword);
+    if (iterator == comparison_operator_data.end()) {
+        return nullptr;
+    } else {
+        return iterator->second;
+    }
+}
+
 // --------------------
 
 void PrecedenceInfo::addOperatorData(Precedence::Level precedence, OperatorCodes &codes,
     const char *keyword)
 {
-    operator_data_map.emplace(precedence, OperatorData{codes, keyword});
+    operator_data.emplace(precedence, OperatorData{codes, keyword});
     for (auto code_value : codes.codeValues()) {
         precedences[code_value] = precedence;
         keywords[code_value] = keyword;
+    }
+    if (precedence == Precedence::Relation) {
+        comparison_operator_data.emplace(keyword, &codes);
     }
 }

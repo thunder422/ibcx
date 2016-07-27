@@ -63,6 +63,7 @@ include_directories(basic common compiler program)
 set(IBC_SOURCES
     basic/code.cpp
     basic/commandcode.cpp
+    basic/comparisonoperators.cpp
     basic/constnum.cpp
     basic/end.cpp
     basic/operators.cpp
@@ -132,3 +133,4 @@ add_unittest(intdivide)
 add_unittest(modulo)
 add_unittest(addition)
 add_unittest(subtraction)
+add_unittest(comparison)

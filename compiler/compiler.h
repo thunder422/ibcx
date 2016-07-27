@@ -29,6 +29,7 @@ public:
     DataType compileExpression(DataType expected_data_type);
     OperatorCodes *getSymbolOperatorCodes(Precedence::Level precedence);
     OperatorCodes *getWordOperatorCodes(Precedence::Level precedence);
+    OperatorCodes *getComparisonOperatorCodes();
 
     ci_string getKeyword();
     void clearWord();

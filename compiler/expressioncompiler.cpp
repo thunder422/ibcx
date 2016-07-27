@@ -25,6 +25,7 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileRelation();
     DataType compileSummation();
     DataType compileModulo();
     DataType compileIntegerDivision();
@@ -66,9 +67,18 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileSummation();
+    auto data_type = compileRelation();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
+    }
+    return data_type;
+}
+
+DataType ExpressionCompiler::Impl::compileRelation()
+{
+    auto data_type = compileSummation();
+    if (compiler.getComparisonOperatorCodes()) {
+        compileSummation();
     }
     return data_type;
 }
