@@ -66,6 +66,7 @@ set(IBC_SOURCES
     basic/comparisonoperators.cpp
     basic/constnum.cpp
     basic/end.cpp
+    basic/mathoperators.cpp
     basic/operators.cpp
     basic/powerdblint.h
     basic/powerintint.h
@@ -125,12 +126,5 @@ add_unittest(expression test/support.h)
 add_unittest(program)
 add_unittest(cistring)
 add_unittest(print)
-add_unittest(negate)
-add_unittest(exponential)
-add_unittest(multiply)
-add_unittest(divide)
-add_unittest(intdivide)
-add_unittest(modulo)
-add_unittest(addition)
-add_unittest(subtraction)
-add_unittest(comparison)
+add_unittest(mathoperators)
+add_unittest(comparisonoperators)

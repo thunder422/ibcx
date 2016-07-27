@@ -11,6 +11,7 @@
 #include <iosfwd>
 #include <stack>
 
+#include "code.h"
 #include "wordtype.h"
 
 
