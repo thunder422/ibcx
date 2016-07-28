@@ -6,12 +6,13 @@
  */
 
 #include "operators.h"
+#include "recreator.h"
 
 
-OperatorCode<OpType::DblDbl> lt_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> lt_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> lt_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> lt_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> lt_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> lt_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> lt_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> lt_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes lt_codes {
     Precedence::Relation, "<",

@@ -56,3 +56,45 @@ TEST_CASE("compile less than operator expressions", "[lt][compile]")
     }
 }
 
+TEST_CASE("recreate less than operator expressions", "[lt][recreate]")
+{
+    ProgramUnit program;
+    std::ostringstream oss;
+
+    SECTION("recreate a less than with two double constants")
+    {
+        std::istringstream iss {"PRINT 3.0<2.0"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 < 2.0\n");
+    }
+    SECTION("recreate a less than with one integer and one double constant")
+    {
+        std::istringstream iss {"PRINT 3 <2.0"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 < 2.0\n");
+    }
+    SECTION("recreate a less than with one double and one integer constant")
+    {
+        std::istringstream iss {"PRINT 3.0< 2"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 < 2\n");
+    }
+    SECTION("recreate a less than with two integer constants")
+    {
+        std::istringstream iss {"PRINT 3 < 2"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 < 2\n");
+    }
+}
