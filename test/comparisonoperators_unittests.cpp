@@ -22,5 +22,16 @@ TEST_CASE("compile less than operator expressions", "[compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check for an less than code after the operands")
+    {
+        extern OperatorCode<OpType::IntInt> lt_dbl_dbl_code;
+
+        Compiler compiler {"3.0<2.0", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(code_line.size() == 5);
+        REQUIRE(code_line[4].instructionCode()->getValue() == lt_dbl_dbl_code.getValue());
+    }
 }
 

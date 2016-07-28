@@ -76,11 +76,13 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileRelation()
 {
-    auto data_type = compileSummation();
-    if (compiler.getComparisonOperatorCodes()) {
-        compileSummation();
+    auto lhs_data_type = compileSummation();
+    if (auto codes = compiler.getComparisonOperatorCodes()) {
+        auto rhs_data_type = compileSummation();
+        auto info = codes->select(lhs_data_type, rhs_data_type);
+        compiler.addInstruction(info.code);
     }
-    return data_type;
+    return lhs_data_type;
 }
 
 DataType ExpressionCompiler::Impl::compileSummation()
