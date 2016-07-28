@@ -53,6 +53,7 @@ OperatorCodes *Compiler::getComparisonOperatorCodes()
     auto operator_codes = Precedence::comparisonOperatorData(keyword);
     if (operator_codes) {
         getNextChar();
+        skipWhiteSpace();
     }
     return operator_codes;
 }

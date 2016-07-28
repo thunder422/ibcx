@@ -11,7 +11,7 @@
 #include "programerror.h"
 #include "programunit.h"
 
-TEST_CASE("compile less than operator expressions", "[compile]")
+TEST_CASE("compile less than operator expressions", "[lt][compile]")
 {
     ProgramUnit program;
 
@@ -43,6 +43,13 @@ TEST_CASE("compile less than operator expressions", "[compile]")
     SECTION("check that multiple operators are parsed")
     {
         Compiler compiler {"3<2<1", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("check that white space is allowed after the operator")
+    {
+        Compiler compiler {"3< 2", program};
         compiler.compileExpression(DataType::Null);
 
         REQUIRE(compiler.peekNextChar() == EOF);
