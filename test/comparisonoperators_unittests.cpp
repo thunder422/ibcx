@@ -40,5 +40,12 @@ TEST_CASE("compile less than operator expressions", "[compile]")
 
         REQUIRE(data_type == DataType::Integer);
     }
+    SECTION("check that multiple operators are parsed")
+    {
+        Compiler compiler {"3<2<1", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }
 
