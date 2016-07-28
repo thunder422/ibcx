@@ -33,5 +33,12 @@ TEST_CASE("compile less than operator expressions", "[compile]")
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == lt_dbl_dbl_code.getValue());
     }
+    SECTION("check for an integer return type for a less than code")
+    {
+        Compiler compiler {"3.0<2.0", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+
+        REQUIRE(data_type == DataType::Integer);
+    }
 }
 
