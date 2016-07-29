@@ -45,28 +45,63 @@ OperatorCodes *Compiler::getWordOperatorCodes(Precedence::Level precedence)
     return nullptr;
 }
 
+class CheckForComparisonOperatorCodes {
+public:
+    CheckForComparisonOperatorCodes(Compiler &compiler) : compiler {compiler} { }
+    OperatorCodes *operator()();
+
+private:
+    OperatorCodes *codesWithNextPeekChar();
+
+    Compiler &compiler;
+    std::string keyword;
+};
+
 OperatorCodes *Compiler::getComparisonOperatorCodes()
 {
     skipWhiteSpace();
-    std::string keyword;
-    keyword += peekNextChar();
-    auto operator_codes = Precedence::comparisonOperatorData(keyword);
-    if (operator_codes) {
-        getNextChar();
+    if (auto codes = CheckForComparisonOperatorCodes(*this)()) {
         skipWhiteSpace();
+        return codes;
     }
-    return operator_codes;
+    return nullptr;
+}
+
+OperatorCodes *CheckForComparisonOperatorCodes::operator()()
+{
+    if (auto one_char_codes = codesWithNextPeekChar()) {
+        if (auto two_char_codes = codesWithNextPeekChar()) {
+            return two_char_codes;
+        }
+        return one_char_codes;
+    }
+    return nullptr;
+}
+
+OperatorCodes *CheckForComparisonOperatorCodes::codesWithNextPeekChar()
+{
+    keyword += compiler.peekNextChar();
+    if (auto codes = Precedence::comparisonOperatorData(keyword)) {
+        compiler.getNextChar();
+        return codes;
+    }
+    return nullptr;
 }
 
 ci_string Compiler::getKeyword()
 {
-    ci_string keyword;
     skipWhiteSpace();
+    word = getAlphaOnlyWord();
+    skipWhiteSpace();
+    return word;
+}
+
+ci_string Compiler::getAlphaOnlyWord()
+{
+    ci_string keyword;
     while (isalpha(peekNextChar())) {
         keyword += getNextChar();
     }
-    skipWhiteSpace();
-    word = keyword;
     return keyword;
 }
 

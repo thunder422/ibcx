@@ -247,3 +247,17 @@ TEST_CASE("execute greater than operator", "[gt][execute]")
         REQUIRE(oss.str() == "-1\n0\n0\n");
     }
 }
+
+
+TEST_CASE("compile less than or equal operator expressions", "[le][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure both operands and operator are parsed")
+    {
+        Compiler compiler {"3<=2", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

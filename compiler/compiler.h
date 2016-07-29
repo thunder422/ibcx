@@ -44,6 +44,8 @@ public:
     ProgramCode &&getCodeLine();
 
 private:
+    ci_string getAlphaOnlyWord();
+
     std::istringstream iss;
     ProgramUnit &program;
     ProgramCode code_line;

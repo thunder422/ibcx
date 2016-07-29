@@ -87,3 +87,15 @@ NumOperatorCodes gt_codes {
     Precedence::Relation, ">",
     gt_dbl_dbl_code, gt_int_dbl_code, gt_dbl_int_code, gt_int_int_code
 };
+
+// ----------------------------------------
+
+OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, executeGtDblDbl};
+OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, executeGtIntDbl};
+OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeGtDblInt};
+OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeGtIntInt};
+
+NumOperatorCodes le_codes {
+    Precedence::Relation, "<=",
+    le_dbl_dbl_code, le_int_dbl_code, le_dbl_int_code, le_int_int_code
+};
