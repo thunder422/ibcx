@@ -90,10 +90,10 @@ NumOperatorCodes gt_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, executeGtDblDbl};
-OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, executeGtIntDbl};
-OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeGtDblInt};
-OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeGtIntInt};
+OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes le_codes {
     Precedence::Relation, "<=",
