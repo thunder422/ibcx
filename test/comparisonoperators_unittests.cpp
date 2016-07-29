@@ -157,3 +157,46 @@ TEST_CASE("compile greater than operator expressions", "[gt][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate greater than operator expressions", "[gt][recreate]")
+{
+    ProgramUnit program;
+    std::ostringstream oss;
+
+    SECTION("recreate a greater than with two double constants")
+    {
+        std::istringstream iss {"PRINT 3.0>2.0"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 > 2.0\n");
+    }
+    SECTION("recreate a greater than with one integer and one double constant")
+    {
+        std::istringstream iss {"PRINT 3 >2.0"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 > 2.0\n");
+    }
+    SECTION("recreate a greater than with one double and one integer constant")
+    {
+        std::istringstream iss {"PRINT 3.0> 2"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 > 2\n");
+    }
+    SECTION("recreate a greater than with two integer constants")
+    {
+        std::istringstream iss {"PRINT 3 > 2"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 > 2\n");
+    }
+}

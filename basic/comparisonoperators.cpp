@@ -50,10 +50,10 @@ NumOperatorCodes lt_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> gt_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> gt_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> gt_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> gt_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes gt_codes {
     Precedence::Relation, ">",
