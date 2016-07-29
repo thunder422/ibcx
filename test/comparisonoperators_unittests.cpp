@@ -113,4 +113,34 @@ TEST_CASE("execute less than operator", "[lt][execute]")
 
         REQUIRE(oss.str() == "0\n-1\n0\n");
     }
+    SECTION("execute a integer-double less than operator")
+    {
+        std::istringstream iss {"PRINT 4<3.0\nPRINT 3<4.0\nPRINT 3<3.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n-1\n0\n");
+    }
+    SECTION("execute a double-integer less than operator")
+    {
+        std::istringstream iss {"PRINT 4.0<3\nPRINT 3.0<4\nPRINT 3.0<3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n-1\n0\n");
+    }
+    SECTION("execute a integer-integer less than operator")
+    {
+        std::istringstream iss {"PRINT 4<3\nPRINT 3<4\nPRINT 3<3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n-1\n0\n");
+    }
 }
