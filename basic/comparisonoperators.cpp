@@ -47,3 +47,15 @@ NumOperatorCodes lt_codes {
     Precedence::Relation, "<",
     lt_dbl_dbl_code, lt_int_dbl_code, lt_dbl_int_code, lt_int_int_code
 };
+
+// ----------------------------------------
+
+OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::IntDbl> gt_int_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::DblInt> gt_dbl_int_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> gt_int_int_code {nullptr, nullptr};
+
+NumOperatorCodes gt_codes {
+    Precedence::Relation, ">",
+    gt_dbl_dbl_code, gt_int_dbl_code, gt_dbl_int_code, gt_int_int_code
+};
