@@ -50,10 +50,38 @@ NumOperatorCodes lt_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntDbl> gt_int_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, nullptr};
+void executeGtDblDbl(Executer &executer)
+{
+    auto rhs = executer.topDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topDbl() > rhs);
+}
+
+void executeGtIntDbl(Executer &executer)
+{
+    auto rhs = executer.topDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topIntAsDbl() > rhs);
+}
+
+void executeGtDblInt(Executer &executer)
+{
+    auto rhs = executer.topIntAsDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topDbl() > rhs);
+}
+
+void executeGtIntInt(Executer &executer)
+{
+    auto rhs = executer.topInt();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topInt() > rhs);
+}
+
+OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {recreateBinaryOperator, executeGtDblDbl};
+OperatorCode<OpType::IntDbl> gt_int_dbl_code {recreateBinaryOperator, executeGtIntDbl};
+OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, executeGtDblInt};
+OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, executeGtIntInt};
 
 NumOperatorCodes gt_codes {
     Precedence::Relation, ">",
