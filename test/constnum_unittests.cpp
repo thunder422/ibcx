@@ -433,7 +433,7 @@ TEST_CASE("execute a constant code", "[execute]")
 
         auto executer = program.createExecutor(unused_oss);
         executer.executeOneCode();
-        REQUIRE(executer.top().int_value == 12345);
+        REQUIRE(executer.topInt() == 12345);
     }
     SECTION("execute a different integer constant")
     {
@@ -443,7 +443,7 @@ TEST_CASE("execute a constant code", "[execute]")
 
         auto executer = program.createExecutor(unused_oss);
         executer.executeOneCode();
-        REQUIRE(executer.top().int_value == 23456);
+        REQUIRE(executer.topInt() == 23456);
     }
     SECTION("execute two consecutive integer constants")
     {
@@ -454,9 +454,9 @@ TEST_CASE("execute a constant code", "[execute]")
 
         auto executer = program.createExecutor(unused_oss);
         executer.executeOneCode();
-        REQUIRE(executer.top().int_value == 12345);
+        REQUIRE(executer.topInt() == 12345);
         executer.executeOneCode();
-        REQUIRE(executer.top().int_value == 23456);
+        REQUIRE(executer.topInt() == 23456);
     }
     SECTION("execute two consective integer constants and then check evaluation stack")
     {
@@ -468,9 +468,9 @@ TEST_CASE("execute a constant code", "[execute]")
         auto executer = program.createExecutor(unused_oss);
         executer.executeOneCode();
         executer.executeOneCode();
-        REQUIRE(executer.top().int_value == 23456);
+        REQUIRE(executer.topInt() == 23456);
         executer.pop();
-        REQUIRE(executer.top().int_value == 12345);
+        REQUIRE(executer.topInt() == 12345);
     }
     SECTION("execute a single double constant")
     {
@@ -480,7 +480,7 @@ TEST_CASE("execute a constant code", "[execute]")
 
         auto executer = program.createExecutor(unused_oss);
         executer.executeOneCode();
-        REQUIRE(executer.top().dbl_value == 12.345);
+        REQUIRE(executer.topDbl() == 12.345);
     }
     SECTION("execute a different double constant")
     {
@@ -490,7 +490,7 @@ TEST_CASE("execute a constant code", "[execute]")
 
         auto executer = program.createExecutor(unused_oss);
         executer.executeOneCode();
-        REQUIRE(executer.top().dbl_value == -2.3456);
+        REQUIRE(executer.topDbl() == -2.3456);
     }
     SECTION("check that same constant reuses existing entry in dictionary")
     {
@@ -503,11 +503,11 @@ TEST_CASE("execute a constant code", "[execute]")
 
         auto executer = program.createExecutor(unused_oss);
         executer.executeOneCode();
-        REQUIRE(executer.top().int_value == 12345);
+        REQUIRE(executer.topInt() == 12345);
         executer.executeOneCode();
-        REQUIRE(executer.top().int_value == 12345);
+        REQUIRE(executer.topInt() == 12345);
         executer.executeOneCode();
-        REQUIRE(executer.top().int_value == 23456);
+        REQUIRE(executer.topInt() == 23456);
     }
 }
 

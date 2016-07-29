@@ -15,16 +15,16 @@
 
 void executeNegateDbl(Executer &executer)
 {
-    executer.top().dbl_value = -executer.top().dbl_value;
+    executer.setTopDbl(-executer.topDbl());
 }
 
 void executeNegateInt(Executer &executer)
 {
-    auto operand = executer.top().int_value;
+    auto operand = executer.topInt();
     if (operand == std::numeric_limits<int>::min()) {
         throw RunError {"overflow", executer.currentOffset()};
     }
-    executer.top().int_value = -operand;
+    executer.setTopInt(-operand);
 }
 
 OperatorCode<OpType::Dbl> neg_dbl_code {recreateUnaryOperator, executeNegateDbl};
@@ -39,15 +39,15 @@ inline void calculatePowerDblDbl(Executer &executer, double x, double y);
 
 void executeExponentialDblDbl(Executer &executer)
 {
-    auto y = executer.top().dbl_value;
+    auto y = executer.topDbl();
     executer.pop();
-    auto x = executer.top().dbl_value;
+    auto x = executer.topDbl();
     calculatePowerDblDbl(executer, x, y);
 }
 
 void executeExponentialIntDbl(Executer &executer)
 {
-    auto y = executer.top().dbl_value;
+    auto y = executer.topDbl();
     executer.pop();
     auto x = executer.topIntAsDbl();
     calculatePowerDblDbl(executer, x, y);
@@ -57,7 +57,7 @@ inline void calculatePowerDblDbl(Executer &executer, double x, double y)
 {
     auto result = std::pow(x, y);
     validatePowerResult(x, result, executer);
-    executer.top().dbl_value = result;
+    executer.setTopDbl(result);
 }
 
 inline void validatePowerResult(double x, double result, Executer &executer)
@@ -75,18 +75,18 @@ inline void validatePowerResult(double x, double result, Executer &executer)
 
 void executeExponentialDblInt(Executer &executer)
 {
-    auto y = executer.top().int_value;
+    auto y = executer.topInt();
     executer.pop();
-    auto x = executer.top().dbl_value;
-    executer.top().dbl_value = PowerDblInt{executer, x, y}();
+    auto x = executer.topDbl();
+    executer.setTopDbl(PowerDblInt{executer, x, y}());
 }
 
 void executeExponentialIntInt(Executer &executer)
 {
-    auto y = executer.top().int_value;
+    auto y = executer.topInt();
     executer.pop();
-    auto x = executer.top().int_value;
-    executer.top().int_value = PowerIntInt{executer, x, y}();
+    auto x = executer.topInt();
+    executer.setTopInt(PowerIntInt{executer, x, y}());
 }
 
 OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateBinaryOperator, executeExponentialDblDbl};
@@ -106,13 +106,13 @@ inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs);
 
 void executeMultiplyDblDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
+    auto rhs = executer.topDbl();
     doDoubleMultiply(executer, rhs);
 }
 
 void executeMultiplyIntDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
+    auto rhs = executer.topDbl();
     executer.pop();
     auto lhs = executer.topIntAsDbl();
     multiplyAndCheckResult(executer, lhs, rhs);
@@ -127,7 +127,7 @@ void executeMultiplyDblInt(Executer &executer)
 inline void doDoubleMultiply(Executer &executer, double rhs)
 {
     executer.pop();
-    auto lhs = executer.top().dbl_value;
+    auto lhs = executer.topDbl();
     multiplyAndCheckResult(executer, lhs, rhs);
 }
 
@@ -135,17 +135,17 @@ inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs)
 {
     auto result = lhs * rhs;
     checkDoubleOverflow(executer, result);
-    executer.top().dbl_value = result;
+    executer.setTopDbl(result);
 }
 
 void executeMultiplyIntInt(Executer &executer)
 {
-    auto rhs = executer.top().int_value;
+    auto rhs = executer.topInt();
     executer.pop();
-    int64_t result = executer.top().int_value;
+    int64_t result = executer.topInt();
     result *= rhs;
     checkIntegerOverflow(executer, result);
-    executer.top().int_value = result;
+    executer.setTopInt(result);
 }
 
 OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {recreateBinaryOperator, executeMultiplyDblDbl};
@@ -175,7 +175,7 @@ inline void divideAndCheckResult(Executer &executer, double lhs, double rhs);
 void executeDivideDblDbl(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
-    auto lhs = executer.top().dbl_value;
+    auto lhs = executer.topDbl();
     divideAndCheckResult(executer, lhs, rhs);
 }
 
@@ -188,7 +188,7 @@ void executeDivideIntDbl(Executer &executer)
 
 inline double popDoubleDivisor(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
+    auto rhs = executer.topDbl();
     checkDivideByZero(executer, rhs);
     executer.pop();
     return rhs;
@@ -197,27 +197,27 @@ inline double popDoubleDivisor(Executer &executer)
 void executeDivideDblInt(Executer &executer)
 {
     auto rhs = static_cast<double>(popIntegerDivisor(executer));
-    auto lhs = executer.top().dbl_value;
+    auto lhs = executer.topDbl();
     auto result = lhs / rhs;
-    executer.top().dbl_value = result;
+    executer.setTopDbl(result);
 }
 
 inline void divideAndCheckResult(Executer &executer, double lhs, double rhs)
 {
     auto result = lhs / rhs;
     checkDoubleOverflow(executer, result);
-    executer.top().dbl_value = result;
+    executer.setTopDbl(result);
 }
 
 void executeDivideIntInt(Executer &executer)
 {
     auto rhs = popIntegerDivisor(executer);
-    executer.top().int_value = executer.top().int_value / rhs;
+    executer.setTopInt(executer.topInt() / rhs);
 }
 
 inline int popIntegerDivisor(Executer &executer)
 {
-    auto rhs = executer.top().int_value;
+    auto rhs = executer.topInt();
     checkDivideByZero(executer, rhs);
     executer.pop();
     return rhs;
@@ -238,10 +238,10 @@ NumOperatorCodes div_codes {
 void executeIntegerDivide(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
-    auto lhs = executer.top().dbl_value;
+    auto lhs = executer.topDbl();
     auto result = lhs / rhs;
     checkIntegerOverflow(executer, result);
-    executer.top().int_value = static_cast<int>(result);
+    executer.setTopInt(static_cast<int>(result));
 }
 
 OperatorCode<OpType::DblDbl> int_div_code {recreateBinaryOperator, executeIntegerDivide};
@@ -252,7 +252,7 @@ IntDivOperatorCode int_div_codes {Precedence::IntDivide, "\\", int_div_code};
 
 void executeCvtDbl(Executer &executer)
 {
-    executer.top().dbl_value = executer.topIntAsDbl();
+    executer.setTopDbl(executer.topIntAsDbl());
 }
 
 Code cvtdbl_code {recreateNothing, executeCvtDbl};
@@ -262,28 +262,28 @@ Code cvtdbl_code {recreateNothing, executeCvtDbl};
 void executeModuloDblDbl(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
-    auto lhs = executer.top().dbl_value;
-    executer.top().dbl_value = std::fmod(lhs, rhs);
+    auto lhs = executer.topDbl();
+    executer.setTopDbl(std::fmod(lhs, rhs));
 }
 
 void executeModuloIntDbl(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
     auto lhs = executer.topIntAsDbl();
-    executer.top().dbl_value = std::fmod(lhs, rhs);
+    executer.setTopDbl(std::fmod(lhs, rhs));
 }
 
 void executeModuloDblInt(Executer &executer)
 {
     auto rhs = static_cast<double>(popIntegerDivisor(executer));
-    auto lhs = executer.top().dbl_value;
-    executer.top().dbl_value = std::fmod(lhs, rhs);
+    auto lhs = executer.topDbl();
+    executer.setTopDbl(std::fmod(lhs, rhs));
 }
 
 void executeModuloIntInt(Executer &executer)
 {
     auto rhs = popIntegerDivisor(executer);
-    executer.top().int_value = executer.top().int_value % rhs;
+    executer.setTopInt(executer.topInt() % rhs);
 }
 
 OperatorCode<OpType::DblDbl> mod_dbl_dbl_code {recreateBinaryOperator, executeModuloDblDbl};
@@ -300,35 +300,35 @@ NumOperatorCodes mod_codes {
 
 void executeAddDblDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
+    auto rhs = executer.topDbl();
     executer.pop();
-    auto result = executer.top().dbl_value + rhs;
+    auto result = executer.topDbl() + rhs;
     checkDoubleOverflow(executer, result);
-    executer.top().dbl_value = result;
+    executer.setTopDbl(result);
 }
 
 void executeAddIntDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
+    auto rhs = executer.topDbl();
     executer.pop();
-    executer.top().dbl_value = executer.topIntAsDbl() + rhs;
+    executer.setTopDbl(executer.topIntAsDbl() + rhs);
 }
 
 void executeAddDblInt(Executer &executer)
 {
     auto rhs = executer.topIntAsDbl();
     executer.pop();
-    executer.top().dbl_value = executer.top().dbl_value + rhs;
+    executer.setTopDbl(executer.topDbl() + rhs);
 }
 
 void executeAddIntInt(Executer &executer)
 {
-    auto rhs = executer.top().int_value;
+    auto rhs = executer.topInt();
     executer.pop();
-    int64_t result = executer.top().int_value;
+    int64_t result = executer.topInt();
     result += rhs;
     checkIntegerOverflow(executer, result);
-    executer.top().int_value = result;
+    executer.setTopInt(result);
 }
 
 OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, executeAddDblDbl};
@@ -345,35 +345,35 @@ NumOperatorCodes add_codes {
 
 void executeSubtractDblDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
+    auto rhs = executer.topDbl();
     executer.pop();
-    auto result = executer.top().dbl_value - rhs;
+    auto result = executer.topDbl() - rhs;
     checkDoubleOverflow(executer, result);
-    executer.top().dbl_value = result;
+    executer.setTopDbl(result);
 }
 
 void executeSubtractIntDbl(Executer &executer)
 {
-    auto rhs = executer.top().dbl_value;
+    auto rhs = executer.topDbl();
     executer.pop();
-    executer.top().dbl_value = executer.topIntAsDbl() - rhs;
+    executer.setTopDbl(executer.topIntAsDbl() - rhs);
 }
 
 void executeSubtractDblInt(Executer &executer)
 {
     auto rhs = executer.topIntAsDbl();
     executer.pop();
-    executer.top().dbl_value = executer.top().dbl_value - rhs;
+    executer.setTopDbl(executer.topDbl() - rhs);
 }
 
 void executeSubtractIntInt(Executer &executer)
 {
-    auto rhs = executer.top().int_value;
+    auto rhs = executer.topInt();
     executer.pop();
-    int64_t result = executer.top().int_value;
+    int64_t result = executer.topInt();
     result -= rhs;
     checkIntegerOverflow(executer, result);
-    executer.top().int_value = result;
+    executer.setTopInt(result);
 }
 
 OperatorCode<OpType::DblDbl> sub_dbl_dbl_code {recreateBinaryOperator, executeSubtractDblDbl};

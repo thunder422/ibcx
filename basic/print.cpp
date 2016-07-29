@@ -61,12 +61,12 @@ void executePrint(Executer &executer)
 
 void executePrintInt(Executer &executer)
 {
-    executer.output() << executer.top().int_value;
+    executer.output() << executer.topInt();
     executer.pop();
 }
 
 void executePrintDbl(Executer &executer)
 {
-    executer.output() << executer.top().dbl_value;
+    executer.output() << executer.topDbl();
     executer.pop();
 }

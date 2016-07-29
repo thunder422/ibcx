@@ -98,3 +98,19 @@ TEST_CASE("recreate less than operator expressions", "[lt][recreate]")
         REQUIRE(oss.str() == "PRINT 3 < 2\n");
     }
 }
+
+TEST_CASE("execute less than operator", "[lt][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a double-double less than operator")
+    {
+        std::istringstream iss {"PRINT 4.0<3.0\nPRINT 3.0<4.0\nPRINT 3.0<3.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n-1\n0\n");
+    }
+}

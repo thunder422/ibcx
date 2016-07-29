@@ -36,9 +36,13 @@ public:
     WordType getOperand();
     void pushConstDbl(WordType operand);
     void pushConstInt(WordType operand);
-    StackItem &top();
-    double topIntAsDbl();
+    double topDbl() const;
+    int topInt() const;
+    double topIntAsDbl() const;
     void pop();
+    void setTopDbl(double value);
+    void setTopInt(int value);
+    void setTopIntFromBool(bool value);
     std::ostream &output();
     bool stackEmpty() const;
 
@@ -70,19 +74,39 @@ inline void Executer::pushConstInt(WordType operand)
     stack.emplace(const_int_values[operand]);
 }
 
-inline Executer::StackItem &Executer::top()
+inline double Executer::topDbl() const
 {
-    return stack.top();
+    return stack.top().dbl_value;
 }
 
-inline double Executer::topIntAsDbl()
+inline int Executer::topInt() const
 {
-    return static_cast<double>(stack.top().int_value);
+    return stack.top().int_value;
+}
+
+inline double Executer::topIntAsDbl() const
+{
+    return static_cast<double>(topInt());
 }
 
 inline void Executer::pop()
 {
     stack.pop();
+}
+
+inline void Executer::setTopDbl(double value)
+{
+    stack.top().dbl_value = value;
+}
+
+inline void Executer::setTopInt(int value)
+{
+    stack.top().int_value = value;
+}
+
+inline void Executer::setTopIntFromBool(bool value)
+{
+    stack.top().int_value = value ? -1 : 0;
 }
 
 
