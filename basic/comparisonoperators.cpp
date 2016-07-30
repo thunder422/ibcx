@@ -90,10 +90,38 @@ NumOperatorCodes gt_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, nullptr};
+void executeLeDblDbl(Executer &executer)
+{
+    auto rhs = executer.topDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topDbl() <= rhs);
+}
+
+void executeLeIntDbl(Executer &executer)
+{
+    auto rhs = executer.topDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topIntAsDbl() <= rhs);
+}
+
+void executeLeDblInt(Executer &executer)
+{
+    auto rhs = executer.topIntAsDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topDbl() <= rhs);
+}
+
+void executeLeIntInt(Executer &executer)
+{
+    auto rhs = executer.topInt();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topInt() <= rhs);
+}
+
+OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, executeLeDblDbl};
+OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, executeLeIntDbl};
+OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeLeDblInt};
+OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeLeIntInt};
 
 NumOperatorCodes le_codes {
     Precedence::Relation, "<=",
