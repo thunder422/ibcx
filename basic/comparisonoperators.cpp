@@ -130,10 +130,37 @@ NumOperatorCodes le_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, nullptr};
+void executeGeDblDbl(Executer &executer)
+{
+    auto rhs = executer.topDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topDbl() >= rhs);
+}
+
+void executeGeIntDbl(Executer &executer)
+{
+    auto rhs = executer.topDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topIntAsDbl() >= rhs);
+}
+
+void executeGeDblInt(Executer &executer)
+{
+    auto rhs = executer.topIntAsDbl();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topDbl() >= rhs);
+}
+
+void executeGeIntInt(Executer &executer)
+{
+    auto rhs = executer.topInt();
+    executer.pop();
+    executer.setTopIntFromBool(executer.topInt() >= rhs);
+}
+OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {recreateBinaryOperator, executeGeDblDbl};
+OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, executeGeIntDbl};
+OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, executeGeDblInt};
+OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, executeGeIntInt};
 
 NumOperatorCodes ge_codes {
     Precedence::Relation, ">=",

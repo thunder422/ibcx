@@ -407,3 +407,49 @@ TEST_CASE("recreate greater than or equal operator expressions", "[le][recreate]
         REQUIRE(oss.str() == "PRINT 3 >= 2\n");
     }
 }
+
+TEST_CASE("execute greater than or equal operator", "[gt][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a double-double greater than or equal operator")
+    {
+        std::istringstream iss {"PRINT 4.0>=3.0\nPRINT 3.0>=4.0\nPRINT 3.0>=3.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n-1\n");
+    }
+    SECTION("execute a integer-double greater than or equal operator")
+    {
+        std::istringstream iss {"PRINT 4>=3.0\nPRINT 3>=4.0\nPRINT 3>=3.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n-1\n");
+    }
+    SECTION("execute a double-integer greater than or equal operator")
+    {
+        std::istringstream iss {"PRINT 4.0>=3\nPRINT 3.0>=4\nPRINT 3.0>=3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n-1\n");
+    }
+    SECTION("execute a integer-integer greater than or equal operator")
+    {
+        std::istringstream iss {"PRINT 4>=3\nPRINT 3>=4\nPRINT 3>=3"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n-1\n");
+    }
+}
