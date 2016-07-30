@@ -127,3 +127,15 @@ NumOperatorCodes le_codes {
     Precedence::Relation, "<=",
     le_dbl_dbl_code, le_int_dbl_code, le_dbl_int_code, le_int_int_code
 };
+
+// ----------------------------------------
+
+OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::IntDbl> ge_int_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::DblInt> ge_dbl_int_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> ge_int_int_code {nullptr, nullptr};
+
+NumOperatorCodes ge_codes {
+    Precedence::Relation, ">=",
+    ge_dbl_dbl_code, ge_int_dbl_code, ge_dbl_int_code, ge_int_int_code
+};
