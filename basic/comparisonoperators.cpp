@@ -130,10 +130,10 @@ NumOperatorCodes le_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> ge_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> ge_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> ge_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes ge_codes {
     Precedence::Relation, ">=",
