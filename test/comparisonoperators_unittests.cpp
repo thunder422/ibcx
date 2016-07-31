@@ -501,3 +501,46 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate equal to operator expressions", "[eq][recreate]")
+{
+    ProgramUnit program;
+    std::ostringstream oss;
+
+    SECTION("recreate a equal to with two double constants")
+    {
+        std::istringstream iss {"PRINT 3.0=2.0"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 = 2.0\n");
+    }
+    SECTION("recreate a equal to with one integer and one double constant")
+    {
+        std::istringstream iss {"PRINT 3 =2.0"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 = 2.0\n");
+    }
+    SECTION("recreate a equal to with one double and one integer constant")
+    {
+        std::istringstream iss {"PRINT 3.0= 2"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3.0 = 2\n");
+    }
+    SECTION("recreate a equal to with two integer constants")
+    {
+        std::istringstream iss {"PRINT 3 = 2"};
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 3 = 2\n");
+    }
+}

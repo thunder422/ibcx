@@ -134,10 +134,10 @@ NumOperatorCodes ge_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> eq_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> eq_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> eq_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> eq_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> eq_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> eq_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> eq_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> eq_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes eq_codes {
     Precedence::Equality, "=",
