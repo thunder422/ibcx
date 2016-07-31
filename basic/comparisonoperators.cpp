@@ -9,39 +9,57 @@
 #include "operators.h"
 #include "recreator.h"
 
+using DblCompareFunction = bool(*)(double, double);
+using IntCompareFunction = bool(*)(int, int);
 
-void executeLtDblDbl(Executer &executer)
+template <DblCompareFunction compare>
+void executeCompareDblDbl(Executer &executer)
 {
     auto rhs = executer.topDbl();
     executer.pop();
-    executer.setTopIntFromBool(executer.topDbl() < rhs);
+    executer.setTopIntFromBool(compare(executer.topDbl(), rhs));
 }
 
-void executeLtIntDbl(Executer &executer)
+template <DblCompareFunction compare>
+void executeCompareIntDbl(Executer &executer)
 {
     auto rhs = executer.topDbl();
     executer.pop();
-    executer.setTopIntFromBool(executer.topIntAsDbl() < rhs);
+    executer.setTopIntFromBool(compare(executer.topIntAsDbl(), rhs));
 }
 
-void executeLtDblInt(Executer &executer)
+template <DblCompareFunction compare>
+void executeCompareDblInt(Executer &executer)
 {
     auto rhs = executer.topIntAsDbl();
     executer.pop();
-    executer.setTopIntFromBool(executer.topDbl() < rhs);
+    executer.setTopIntFromBool(compare(executer.topDbl(), rhs));
 }
 
-void executeLtIntInt(Executer &executer)
+template <IntCompareFunction compare>
+void executeCompareIntInt(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopIntFromBool(executer.topInt() < rhs);
+    executer.setTopIntFromBool(compare(executer.topInt(), rhs));
 }
 
-OperatorCode<OpType::DblDbl> lt_dbl_dbl_code {recreateBinaryOperator, executeLtDblDbl};
-OperatorCode<OpType::IntDbl> lt_int_dbl_code {recreateBinaryOperator, executeLtIntDbl};
-OperatorCode<OpType::DblInt> lt_dbl_int_code {recreateBinaryOperator, executeLtDblInt};
-OperatorCode<OpType::IntInt> lt_int_int_code {recreateBinaryOperator, executeLtIntInt};
+// ----------------------------------------
+
+bool lt(double lhs, double rhs)
+{
+    return lhs < rhs;
+}
+
+bool lt(int lhs, int rhs)
+{
+    return lhs < rhs;
+}
+
+OperatorCode<OpType::DblDbl> lt_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<lt>};
+OperatorCode<OpType::IntDbl> lt_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<lt>};
+OperatorCode<OpType::DblInt> lt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<lt>};
+OperatorCode<OpType::IntInt> lt_int_int_code {recreateBinaryOperator, executeCompareIntInt<lt>};
 
 NumOperatorCodes lt_codes {
     Precedence::Relation, "<",
@@ -50,38 +68,20 @@ NumOperatorCodes lt_codes {
 
 // ----------------------------------------
 
-void executeGtDblDbl(Executer &executer)
+bool gt(double lhs, double rhs)
 {
-    auto rhs = executer.topDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topDbl() > rhs);
+    return lhs > rhs;
 }
 
-void executeGtIntDbl(Executer &executer)
+bool gt(int lhs, int rhs)
 {
-    auto rhs = executer.topDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topIntAsDbl() > rhs);
+    return lhs > rhs;
 }
 
-void executeGtDblInt(Executer &executer)
-{
-    auto rhs = executer.topIntAsDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topDbl() > rhs);
-}
-
-void executeGtIntInt(Executer &executer)
-{
-    auto rhs = executer.topInt();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topInt() > rhs);
-}
-
-OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {recreateBinaryOperator, executeGtDblDbl};
-OperatorCode<OpType::IntDbl> gt_int_dbl_code {recreateBinaryOperator, executeGtIntDbl};
-OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, executeGtDblInt};
-OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, executeGtIntInt};
+OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<gt>};
+OperatorCode<OpType::IntDbl> gt_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<gt>};
+OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<gt>};
+OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, executeCompareIntInt<gt>};
 
 NumOperatorCodes gt_codes {
     Precedence::Relation, ">",
@@ -90,38 +90,20 @@ NumOperatorCodes gt_codes {
 
 // ----------------------------------------
 
-void executeLeDblDbl(Executer &executer)
+bool le(double lhs, double rhs)
 {
-    auto rhs = executer.topDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topDbl() <= rhs);
+    return lhs <= rhs;
 }
 
-void executeLeIntDbl(Executer &executer)
+bool le(int lhs, int rhs)
 {
-    auto rhs = executer.topDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topIntAsDbl() <= rhs);
+    return lhs <= rhs;
 }
 
-void executeLeDblInt(Executer &executer)
-{
-    auto rhs = executer.topIntAsDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topDbl() <= rhs);
-}
-
-void executeLeIntInt(Executer &executer)
-{
-    auto rhs = executer.topInt();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topInt() <= rhs);
-}
-
-OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, executeLeDblDbl};
-OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, executeLeIntDbl};
-OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeLeDblInt};
-OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeLeIntInt};
+OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<le>};
+OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<le>};
+OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<le>};
+OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeCompareIntInt<le>};
 
 NumOperatorCodes le_codes {
     Precedence::Relation, "<=",
@@ -130,37 +112,20 @@ NumOperatorCodes le_codes {
 
 // ----------------------------------------
 
-void executeGeDblDbl(Executer &executer)
+bool ge(double lhs, double rhs)
 {
-    auto rhs = executer.topDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topDbl() >= rhs);
+    return lhs >= rhs;
 }
 
-void executeGeIntDbl(Executer &executer)
+bool ge(int lhs, int rhs)
 {
-    auto rhs = executer.topDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topIntAsDbl() >= rhs);
+    return lhs >= rhs;
 }
 
-void executeGeDblInt(Executer &executer)
-{
-    auto rhs = executer.topIntAsDbl();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topDbl() >= rhs);
-}
-
-void executeGeIntInt(Executer &executer)
-{
-    auto rhs = executer.topInt();
-    executer.pop();
-    executer.setTopIntFromBool(executer.topInt() >= rhs);
-}
-OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {recreateBinaryOperator, executeGeDblDbl};
-OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, executeGeIntDbl};
-OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, executeGeDblInt};
-OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, executeGeIntInt};
+OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<ge>};
+OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<ge>};
+OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ge>};
+OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, executeCompareIntInt<ge>};
 
 NumOperatorCodes ge_codes {
     Precedence::Relation, ">=",
