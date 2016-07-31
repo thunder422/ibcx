@@ -12,6 +12,7 @@
 #include "wordtype.h"
 
 
+class ComparisonOperator;
 class OperatorCodes;
 
 struct Precedence {
@@ -34,8 +35,30 @@ struct Precedence {
     static OperatorCodes *operatorCodes(Precedence::Level precedence);
     static OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
     static OperatorCodes *operatorCodes(Precedence::Level precedence, const ci_string &word);
-    static OperatorCodes *comparisonOperatorData(const std::string &keyword);
+    static ComparisonOperator comparisonOperator(const std::string &keyword);
 };
+
+
+class ComparisonOperator {
+public:
+    ComparisonOperator();
+    ComparisonOperator(OperatorCodes *codes, Precedence::Level precedence);
+
+    OperatorCodes *codes;
+    Precedence::Level precedence;
+};
+
+inline ComparisonOperator::ComparisonOperator() :
+    codes {nullptr}
+{
+}
+
+inline ComparisonOperator::ComparisonOperator(OperatorCodes *codes,
+        Precedence::Level precedence) :
+    codes {codes},
+    precedence {precedence}
+{
+}
 
 
 #endif  // IBC_PRECEDENCE_H

@@ -16,7 +16,8 @@
 
 Compiler::Compiler(const std::string &line, ProgramUnit &program) :
     iss {line},
-    program {program}
+    program {program},
+    equality_codes {}
 {
 }
 
@@ -45,29 +46,35 @@ OperatorCodes *Compiler::getWordOperatorCodes(Precedence::Level precedence)
     return nullptr;
 }
 
-class CheckForComparisonOperatorCodes {
+class ComparisonOperatorCodes {
 public:
-    CheckForComparisonOperatorCodes(Compiler &compiler) : compiler {compiler} { }
+    ComparisonOperatorCodes(Compiler &compiler) : compiler {compiler} { }
     OperatorCodes *operator()();
 
 private:
     OperatorCodes *codesWithNextPeekChar();
+    OperatorCodes *relationCodes(const ComparisonOperator &comparison_operator);
 
     Compiler &compiler;
     std::string keyword;
 };
 
-OperatorCodes *Compiler::getComparisonOperatorCodes()
+OperatorCodes *Compiler::getComparisonOperatorCodes(Precedence::Level precedence)
 {
+    if (precedence == Precedence::Equality) {
+        auto codes = equality_codes;
+        equality_codes = nullptr;
+        return codes;
+    }
     skipWhiteSpace();
-    if (auto codes = CheckForComparisonOperatorCodes(*this)()) {
+    if (auto codes = ComparisonOperatorCodes(*this)()) {
         skipWhiteSpace();
         return codes;
     }
     return nullptr;
 }
 
-OperatorCodes *CheckForComparisonOperatorCodes::operator()()
+OperatorCodes *ComparisonOperatorCodes::operator()()
 {
     if (auto one_char_codes = codesWithNextPeekChar()) {
         if (auto two_char_codes = codesWithNextPeekChar()) {
@@ -78,14 +85,30 @@ OperatorCodes *CheckForComparisonOperatorCodes::operator()()
     return nullptr;
 }
 
-OperatorCodes *CheckForComparisonOperatorCodes::codesWithNextPeekChar()
+OperatorCodes *ComparisonOperatorCodes::codesWithNextPeekChar()
 {
     keyword += compiler.peekNextChar();
-    if (auto codes = Precedence::comparisonOperatorData(keyword)) {
+    auto comparison_operator = Precedence::comparisonOperator(keyword);
+    if (comparison_operator.codes) {
         compiler.getNextChar();
-        return codes;
+        return relationCodes(comparison_operator);
     }
     return nullptr;
+}
+
+OperatorCodes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &comparison_operator)
+{
+    if (comparison_operator.precedence == Precedence::Relation) {
+        return comparison_operator.codes;
+    } else {
+        compiler.setEqualityCodes(comparison_operator.codes);
+        return nullptr;
+    }
+}
+
+void Compiler::setEqualityCodes(OperatorCodes *codes)
+{
+    equality_codes = codes;
 }
 
 ci_string Compiler::getKeyword()

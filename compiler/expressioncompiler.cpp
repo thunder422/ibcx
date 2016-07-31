@@ -25,6 +25,7 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileEquality();
     DataType compileRelation();
     DataType compileSummation();
     DataType compileModulo();
@@ -67,17 +68,28 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileRelation();
+    auto data_type = compileEquality();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }
     return data_type;
 }
 
+DataType ExpressionCompiler::Impl::compileEquality()
+{
+    auto lhs_data_type = compileRelation();
+    if (auto codes = compiler.getComparisonOperatorCodes(Precedence::Equality)) {
+        auto rhs_data_type = compileRelation();
+        auto info = codes->select(lhs_data_type, rhs_data_type);
+        compiler.addInstruction(info.code);
+    }
+    return lhs_data_type;
+}
+
 DataType ExpressionCompiler::Impl::compileRelation()
 {
     auto lhs_data_type = compileSummation();
-    while (auto codes = compiler.getComparisonOperatorCodes()) {
+    while (auto codes = compiler.getComparisonOperatorCodes(Precedence::Relation)) {
         auto rhs_data_type = compileSummation();
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);

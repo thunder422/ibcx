@@ -29,7 +29,7 @@ public:
     DataType compileExpression(DataType expected_data_type);
     OperatorCodes *getSymbolOperatorCodes(Precedence::Level precedence);
     OperatorCodes *getWordOperatorCodes(Precedence::Level precedence);
-    OperatorCodes *getComparisonOperatorCodes();
+    OperatorCodes *getComparisonOperatorCodes(Precedence::Level precedence);
 
     ci_string getKeyword();
     void clearWord();
@@ -44,6 +44,9 @@ public:
     ProgramCode &&getCodeLine();
 
 private:
+    friend class ComparisonOperatorCodes;
+
+    void setEqualityCodes(OperatorCodes *codes);
     ci_string getAlphaOnlyWord();
 
     std::istringstream iss;
@@ -53,6 +56,7 @@ private:
     unsigned column {0};
     bool last_operand_was_constant;
     ci_string word;
+    OperatorCodes *equality_codes;
 };
 
 

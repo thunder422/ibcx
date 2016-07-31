@@ -466,4 +466,17 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("make sure equal operator compiled at different precedence level")
+    {
+        extern OperatorCode<OpType::IntInt> lt_int_int_code;
+        extern OperatorCode<OpType::IntInt> eq_int_int_code;
+
+        Compiler compiler {"0=1<2", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(code_line.size() == 8);
+        REQUIRE(code_line[7].instructionCode()->getValue() != lt_int_int_code.getValue());
+        REQUIRE(code_line[7].instructionCode()->getValue() == eq_int_int_code.getValue());
+    }
 }

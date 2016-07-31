@@ -23,7 +23,7 @@ public:
     OperatorCodes *operatorCodes(Precedence::Level precedence);
     OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
     OperatorCodes *operatorCodes(Precedence::Level precedence, const ci_string &word);
-    OperatorCodes *comparisonOperatorData(const std::string &keyword);
+    ComparisonOperator comparisonOperatorData(const std::string &keyword);
 
 private:
     struct OperatorData {
@@ -36,7 +36,7 @@ private:
     std::unordered_map<WordType, Precedence::Level> precedences;
     std::unordered_map<WordType, const char *> keywords;
     std::multimap<Precedence::Level, OperatorData> operator_data;
-    std::map<std::string, OperatorCodes *> comparison_operator_data;
+    std::map<std::string, ComparisonOperator> comparison_operator_data;
 };
 
 // ------------------------------------------------------------
@@ -72,7 +72,7 @@ OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence, const ci_
     return PrecedenceInfo::getInstance().operatorCodes(precedence, word);
 }
 
-OperatorCodes *Precedence::comparisonOperatorData(const std::string &keyword)
+ComparisonOperator Precedence::comparisonOperator(const std::string &keyword)
 {
     return PrecedenceInfo::getInstance().comparisonOperatorData(keyword);
 }
@@ -126,11 +126,11 @@ OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, const
     return nullptr;
 }
 
-OperatorCodes *PrecedenceInfo::comparisonOperatorData(const std::string &keyword)
+ComparisonOperator PrecedenceInfo::comparisonOperatorData(const std::string &keyword)
 {
     auto iterator = comparison_operator_data.find(keyword);
     if (iterator == comparison_operator_data.end()) {
-        return nullptr;
+        return ComparisonOperator {};
     } else {
         return iterator->second;
     }
@@ -147,6 +147,6 @@ void PrecedenceInfo::addOperatorData(Precedence::Level precedence, OperatorCodes
         keywords[code_value] = keyword;
     }
     if (precedence == Precedence::Relation || precedence == Precedence::Equality) {
-        comparison_operator_data.emplace(keyword, &codes);
+        comparison_operator_data.emplace(keyword, ComparisonOperator{&codes, precedence});
     }
 }
