@@ -131,3 +131,15 @@ NumOperatorCodes ge_codes {
     Precedence::Relation, ">=",
     ge_dbl_dbl_code, ge_int_dbl_code, ge_dbl_int_code, ge_int_int_code
 };
+
+// ----------------------------------------
+
+OperatorCode<OpType::DblDbl> eq_dbl_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::IntDbl> eq_int_dbl_code {nullptr, nullptr};
+OperatorCode<OpType::DblInt> eq_dbl_int_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> eq_int_int_code {nullptr, nullptr};
+
+NumOperatorCodes eq_codes {
+    Precedence::Equality, "=",
+    eq_dbl_dbl_code, eq_int_dbl_code, eq_dbl_int_code, eq_int_int_code
+};

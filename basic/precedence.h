@@ -23,7 +23,8 @@ struct Precedence {
         IntDivide,
         Modulo,
         Summation,
-        Relation
+        Relation,
+        Equality
     };
 
     static void addOperatorCodes(Precedence::Level precedence, OperatorCodes &codes,
