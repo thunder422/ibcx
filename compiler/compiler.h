@@ -46,6 +46,7 @@ public:
 private:
     friend class ComparisonOperatorCodes;
 
+    OperatorCodes *savedEqualityOperatorCodes();
     void setEqualityCodes(OperatorCodes *codes);
     ci_string getAlphaOnlyWord();
 

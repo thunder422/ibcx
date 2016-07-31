@@ -493,4 +493,11 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check that white space is allowed after the operator")
+    {
+        Compiler compiler {"3= 2", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }

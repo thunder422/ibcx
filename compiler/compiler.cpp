@@ -62,16 +62,18 @@ private:
 OperatorCodes *Compiler::getComparisonOperatorCodes(Precedence::Level precedence)
 {
     if (precedence == Precedence::Equality) {
-        auto codes = equality_codes;
-        equality_codes = nullptr;
-        return codes;
-    }
-    skipWhiteSpace();
-    if (auto codes = ComparisonOperatorCodes(*this)()) {
+        return savedEqualityOperatorCodes();
+    } else {
         skipWhiteSpace();
-        return codes;
+        return ComparisonOperatorCodes(*this)();
     }
-    return nullptr;
+}
+
+OperatorCodes *Compiler::savedEqualityOperatorCodes()
+{
+    auto codes = equality_codes;
+    equality_codes = nullptr;
+    return codes;
 }
 
 OperatorCodes *ComparisonOperatorCodes::operator()()
@@ -91,6 +93,7 @@ OperatorCodes *ComparisonOperatorCodes::codesWithNextPeekChar()
     auto comparison_operator = Precedence::comparisonOperator(keyword);
     if (comparison_operator.codes) {
         compiler.getNextChar();
+        compiler.skipWhiteSpace();
         return relationCodes(comparison_operator);
     }
     return nullptr;
