@@ -479,4 +479,11 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
         REQUIRE(code_line[7].instructionCode()->getValue() != lt_int_int_code.getValue());
         REQUIRE(code_line[7].instructionCode()->getValue() == eq_int_int_code.getValue());
     }
+    SECTION("check for an integer return type for an equal to code")
+    {
+        Compiler compiler {"3.0=2.0", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+
+        REQUIRE(data_type == DataType::Integer);
+    }
 }

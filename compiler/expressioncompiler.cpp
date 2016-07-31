@@ -82,6 +82,7 @@ DataType ExpressionCompiler::Impl::compileEquality()
         auto rhs_data_type = compileRelation();
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
+        lhs_data_type = DataType::Integer;
     }
     return lhs_data_type;
 }
