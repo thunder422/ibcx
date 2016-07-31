@@ -78,7 +78,7 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileEquality()
 {
     auto lhs_data_type = compileRelation();
-    if (auto codes = compiler.getComparisonOperatorCodes(Precedence::Equality)) {
+    while (auto codes = compiler.getComparisonOperatorCodes(Precedence::Equality)) {
         auto rhs_data_type = compileRelation();
         auto info = codes->select(lhs_data_type, rhs_data_type);
         compiler.addInstruction(info.code);
