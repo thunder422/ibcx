@@ -46,12 +46,12 @@ void executeCompareIntInt(Executer &executer)
 
 // ----------------------------------------
 
-bool lt(double lhs, double rhs)
+inline bool lt(double lhs, double rhs)
 {
     return lhs < rhs;
 }
 
-bool lt(int lhs, int rhs)
+inline bool lt(int lhs, int rhs)
 {
     return lhs < rhs;
 }
@@ -68,12 +68,12 @@ NumOperatorCodes lt_codes {
 
 // ----------------------------------------
 
-bool gt(double lhs, double rhs)
+inline bool gt(double lhs, double rhs)
 {
     return lhs > rhs;
 }
 
-bool gt(int lhs, int rhs)
+inline bool gt(int lhs, int rhs)
 {
     return lhs > rhs;
 }
@@ -90,12 +90,12 @@ NumOperatorCodes gt_codes {
 
 // ----------------------------------------
 
-bool le(double lhs, double rhs)
+inline bool le(double lhs, double rhs)
 {
     return lhs <= rhs;
 }
 
-bool le(int lhs, int rhs)
+inline bool le(int lhs, int rhs)
 {
     return lhs <= rhs;
 }
@@ -112,12 +112,12 @@ NumOperatorCodes le_codes {
 
 // ----------------------------------------
 
-bool ge(double lhs, double rhs)
+inline bool ge(double lhs, double rhs)
 {
     return lhs >= rhs;
 }
 
-bool ge(int lhs, int rhs)
+inline bool ge(int lhs, int rhs)
 {
     return lhs >= rhs;
 }
@@ -134,10 +134,20 @@ NumOperatorCodes ge_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> eq_dbl_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntDbl> eq_int_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::DblInt> eq_dbl_int_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntInt> eq_int_int_code {recreateBinaryOperator, nullptr};
+inline bool eq(double lhs, double rhs)
+{
+    return lhs == rhs;
+}
+
+inline bool eq(int lhs, int rhs)
+{
+    return lhs == rhs;
+}
+
+OperatorCode<OpType::DblDbl> eq_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<eq>};
+OperatorCode<OpType::IntDbl> eq_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<eq>};
+OperatorCode<OpType::DblInt> eq_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<eq>};
+OperatorCode<OpType::IntInt> eq_int_int_code {recreateBinaryOperator, executeCompareIntInt<eq>};
 
 NumOperatorCodes eq_codes {
     Precedence::Equality, "=",
