@@ -156,10 +156,10 @@ NumOperatorCodes eq_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> ne_dbl_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::IntDbl> ne_int_dbl_code {nullptr, nullptr};
-OperatorCode<OpType::DblInt> ne_dbl_int_code {nullptr, nullptr};
-OperatorCode<OpType::IntInt> ne_int_int_code {nullptr, nullptr};
+OperatorCode<OpType::DblDbl> ne_dbl_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntDbl> ne_int_dbl_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::DblInt> ne_dbl_int_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::IntInt> ne_int_int_code {recreateBinaryOperator, nullptr};
 
 NumOperatorCodes ne_codes {
     Precedence::Equality, "<>",
