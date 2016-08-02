@@ -609,3 +609,17 @@ TEST_CASE("execute equal to operator", "[eq][execute]")
         REQUIRE(oss.str() == "0\n0\n-1\n");
     }
 }
+
+
+TEST_CASE("compile not equal to operator expressions", "[ne][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure both operands and operator are parsed")
+    {
+        Compiler compiler {"3<>2", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

@@ -57,6 +57,7 @@ private:
 
     Compiler &compiler;
     std::string keyword;
+    OperatorCodes *one_char_codes;
 };
 
 OperatorCodes *Compiler::getComparisonOperatorCodes(Precedence::Level precedence)
@@ -78,7 +79,7 @@ OperatorCodes *Compiler::savedEqualityOperatorCodes()
 
 OperatorCodes *ComparisonOperatorCodes::operator()()
 {
-    if (auto one_char_codes = codesWithNextPeekChar()) {
+    if ((one_char_codes = codesWithNextPeekChar())) {
         if (auto two_char_codes = codesWithNextPeekChar()) {
             return two_char_codes;
         }
@@ -105,6 +106,7 @@ OperatorCodes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &
         return comparison_operator.codes;
     } else {
         compiler.setEqualityCodes(comparison_operator.codes);
+        one_char_codes = nullptr;
         return nullptr;
     }
 }
