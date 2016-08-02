@@ -90,11 +90,13 @@ DataType ExpressionCompiler::Impl::compileEquality()
 DataType ExpressionCompiler::Impl::compileRelation()
 {
     auto lhs_data_type = compileSummation();
-    while (auto codes = compiler.getComparisonOperatorCodes(Precedence::Relation)) {
-        auto rhs_data_type = compileSummation();
-        auto info = codes->select(lhs_data_type, rhs_data_type);
-        compiler.addInstruction(info.code);
-        lhs_data_type = DataType::Integer;
+    if (lhs_data_type != DataType::Null) {
+        while (auto codes = compiler.getComparisonOperatorCodes(Precedence::Relation)) {
+            auto rhs_data_type = compileSummation();
+            auto info = codes->select(lhs_data_type, rhs_data_type);
+            compiler.addInstruction(info.code);
+            lhs_data_type = DataType::Integer;
+        }
     }
     return lhs_data_type;
 }
@@ -102,11 +104,13 @@ DataType ExpressionCompiler::Impl::compileRelation()
 DataType ExpressionCompiler::Impl::compileSummation()
 {
     auto lhs_data_type = compileModulo();
-    while (auto codes = compiler.getSymbolOperatorCodes(Precedence::Summation)) {
-        auto rhs_data_type = compileModulo();
-        auto info = codes->select(lhs_data_type, rhs_data_type);
-        compiler.addInstruction(info.code);
-        lhs_data_type = info.result_data_type;
+    if (lhs_data_type != DataType::Null) {
+        while (auto codes = compiler.getSymbolOperatorCodes(Precedence::Summation)) {
+            auto rhs_data_type = compileModulo();
+            auto info = codes->select(lhs_data_type, rhs_data_type);
+            compiler.addInstruction(info.code);
+            lhs_data_type = info.result_data_type;
+        }
     }
     return lhs_data_type;
 }
@@ -114,11 +118,13 @@ DataType ExpressionCompiler::Impl::compileSummation()
 DataType ExpressionCompiler::Impl::compileModulo()
 {
     auto lhs_data_type = compileIntegerDivision();
-    while (auto codes = compiler.getWordOperatorCodes(Precedence::Modulo)) {
-        auto rhs_data_type = compileIntegerDivision();
-        auto info = codes->select(lhs_data_type, rhs_data_type);
-        compiler.addInstruction(info.code);
-        lhs_data_type = info.result_data_type;
+    if (lhs_data_type != DataType::Null) {
+        while (auto codes = compiler.getWordOperatorCodes(Precedence::Modulo)) {
+            auto rhs_data_type = compileIntegerDivision();
+            auto info = codes->select(lhs_data_type, rhs_data_type);
+            compiler.addInstruction(info.code);
+            lhs_data_type = info.result_data_type;
+        }
     }
     return lhs_data_type;
 }
@@ -126,13 +132,15 @@ DataType ExpressionCompiler::Impl::compileModulo()
 DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
     auto lhs_data_type = compileProduct();
-    while (auto codes = compiler.getSymbolOperatorCodes(Precedence::IntDivide)) {
-        compiler.convertToDouble(lhs_data_type);
-        auto rhs_data_type = compileProduct();
-        compiler.convertToDouble(rhs_data_type);
-        auto info = codes->select(lhs_data_type, rhs_data_type);
-        compiler.addInstruction(info.code);
-        lhs_data_type = info.result_data_type;
+    if (lhs_data_type != DataType::Null) {
+        while (auto codes = compiler.getSymbolOperatorCodes(Precedence::IntDivide)) {
+            compiler.convertToDouble(lhs_data_type);
+            auto rhs_data_type = compileProduct();
+            compiler.convertToDouble(rhs_data_type);
+            auto info = codes->select(lhs_data_type, rhs_data_type);
+            compiler.addInstruction(info.code);
+            lhs_data_type = info.result_data_type;
+        }
     }
     return lhs_data_type;
 }
@@ -140,11 +148,13 @@ DataType ExpressionCompiler::Impl::compileIntegerDivision()
 DataType ExpressionCompiler::Impl::compileProduct()
 {
     auto lhs_data_type = compileExponential();
-    while (auto codes = compiler.getSymbolOperatorCodes(Precedence::Product)) {
-        auto rhs_data_type = compileExponential();
-        auto info = codes->select(lhs_data_type, rhs_data_type);
-        compiler.addInstruction(info.code);
-        lhs_data_type = info.result_data_type;
+    if (lhs_data_type != DataType::Null) {
+        while (auto codes = compiler.getSymbolOperatorCodes(Precedence::Product)) {
+            auto rhs_data_type = compileExponential();
+            auto info = codes->select(lhs_data_type, rhs_data_type);
+            compiler.addInstruction(info.code);
+            lhs_data_type = info.result_data_type;
+        }
     }
     return lhs_data_type;
 }

@@ -6,6 +6,7 @@
  */
 
 #include "catch.hpp"
+#include "compileerror.h"
 #include "compiler.h"
 #include "operators.h"
 #include "programerror.h"
@@ -53,6 +54,13 @@ TEST_CASE("compile less than operator expressions", "[lt][compile]")
         compiler.compileExpression(DataType::Null);
 
         REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("check for error when there is no left hand side operand")
+    {
+        std::string expected_what = "expected numeric expression";
+        Compiler compiler {"<4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
 }
 

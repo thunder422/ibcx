@@ -780,6 +780,13 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check for error when there is no left hand side operand")
+    {
+        std::string expected_what = "expected numeric expression";
+        Compiler compiler {"*4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+    }
 }
 
 TEST_CASE("recreate multiply operator expressions", "[mul][recreate]")
@@ -1226,6 +1233,13 @@ TEST_CASE("compile integer divide operator expressions", "[intdiv][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check for error when there is no left hand side operand")
+    {
+        std::string expected_what = "expected numeric expression";
+        Compiler compiler {"\\4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+    }
 }
 
 TEST_CASE("recreate integer divide operator expressions", "[intdiv][recreate]")
@@ -1395,6 +1409,13 @@ TEST_CASE("compile mod operator expressions", "[mod][compile]")
         REQUIRE(code_line[7].instructionCode()->getValue() == mod_int_dbl_code.getValue());
         REQUIRE(code_line[12].instructionCode()->getValue() == mod_dbl_int_code.getValue());
         REQUIRE(code_line[13].instructionCode()->getValue() == mod_dbl_dbl_code.getValue());
+    }
+    SECTION("check for error when there is no left hand side operand")
+    {
+        std::string expected_what = "expected numeric expression";
+        Compiler compiler {"MOD 4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
 }
 
@@ -1596,6 +1617,13 @@ TEST_CASE("compile add operator expressions", "[add][compile]")
         REQUIRE(code_line[7].instructionCode()->getValue() == add_int_dbl_code.getValue());
         REQUIRE(code_line[12].instructionCode()->getValue() == add_dbl_int_code.getValue());
         REQUIRE(code_line[13].instructionCode()->getValue() == add_dbl_dbl_code.getValue());
+    }
+    SECTION("check for error when there is no left hand side operand")
+    {
+        std::string expected_what = "expected numeric expression";
+        Compiler compiler {"+4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
 }
 
