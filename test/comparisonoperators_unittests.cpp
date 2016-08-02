@@ -57,8 +57,13 @@ TEST_CASE("compile less than operator expressions", "[lt][compile]")
     }
     SECTION("check for error when there is no left hand side operand")
     {
-        std::string expected_what = "expected numeric expression";
         Compiler compiler {"<4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+    }
+    SECTION("check for error when there is a bad right hand side operand")
+    {
+        Compiler compiler {"4<^", program};
 
         REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
@@ -507,6 +512,12 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
         compiler.compileExpression(DataType::Null);
 
         REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("check for error when there is a bad right hand side operand")
+    {
+        Compiler compiler {"4=^", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
 }
 

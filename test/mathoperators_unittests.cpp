@@ -782,8 +782,13 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
     }
     SECTION("check for error when there is no left hand side operand")
     {
-        std::string expected_what = "expected numeric expression";
         Compiler compiler {"*4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+    }
+    SECTION("check for error when there is a bad right hand side operand")
+    {
+        Compiler compiler {"4*^", program};
 
         REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
@@ -1235,8 +1240,13 @@ TEST_CASE("compile integer divide operator expressions", "[intdiv][compile]")
     }
     SECTION("check for error when there is no left hand side operand")
     {
-        std::string expected_what = "expected numeric expression";
         Compiler compiler {"\\4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+    }
+    SECTION("check for error when there is a bad right hand side operand")
+    {
+        Compiler compiler {"4\\^", program};
 
         REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
@@ -1412,8 +1422,13 @@ TEST_CASE("compile mod operator expressions", "[mod][compile]")
     }
     SECTION("check for error when there is no left hand side operand")
     {
-        std::string expected_what = "expected numeric expression";
         Compiler compiler {"MOD 4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+    }
+    SECTION("check for error when there is a bad right hand side operand")
+    {
+        Compiler compiler {"4MOD^", program};
 
         REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
@@ -1620,8 +1635,13 @@ TEST_CASE("compile add operator expressions", "[add][compile]")
     }
     SECTION("check for error when there is no left hand side operand")
     {
-        std::string expected_what = "expected numeric expression";
         Compiler compiler {"+4", program};
+
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+    }
+    SECTION("check for error when there is a bad right hand side operand")
+    {
+        Compiler compiler {"4+^", program};
 
         REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
     }
