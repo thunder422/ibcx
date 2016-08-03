@@ -1,0 +1,34 @@
+IBCX v0.0.2 Release Notes
+=========================
+
+This release of the IBCX consists of a core library for compiling,
+recreating and executing BASIC programs.  The library is intended to be
+used by applications, for example, the included IBC executable, a
+standalone compiler that will also execute the BASIC program once
+compiled if there are not errors.
+
+This release has been tested on Linux Mint 13, Windows 10 and Windows XP
+(see wiki for more details).
+
+Major Changes
+-------------
+
+ * The code for the math operators have been moved to their own source
+   file.
+
+ * All of the math operator unit tests have been put into a single unit
+   tests source file (the unit tests for each operator can still be run
+   independently.
+
+ * A few missing checks on missing or bad operands of operators have
+   been added.
+
+ * Access functions to the top of the executer stack have been added so
+   that the top item on the stack is properly encapsulated.
+
+
+New Language Features
+---------------------
+
+ * Comparison operators (less than, greater than, less than or equal to,
+   greater than or equal to, equal to, and not equal to).

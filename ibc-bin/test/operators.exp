@@ -9,6 +9,9 @@ PRINT 3 * 5 MOD 4
 PRINT (4 MOD 3) * 5
 PRINT 3 * (5 MOD 4)
 PRINT 100 - 2 - 1.5 - (5.0 - 4)
+PRINT 1 < 2 <> 2 < 1
+PRINT 1 <= 2 = 2 <= 1
+PRINT 1 - (2 = 1 + 1)
 END
 
 Executing...
@@ -22,3 +25,6 @@ Executing...
 5
 3
 95.5
+-1
+0
+2
