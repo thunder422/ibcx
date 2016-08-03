@@ -156,10 +156,20 @@ NumOperatorCodes eq_codes {
 
 // ----------------------------------------
 
-OperatorCode<OpType::DblDbl> ne_dbl_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntDbl> ne_int_dbl_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::DblInt> ne_dbl_int_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::IntInt> ne_int_int_code {recreateBinaryOperator, nullptr};
+inline bool ne(double lhs, double rhs)
+{
+    return lhs != rhs;
+}
+
+inline bool ne(int lhs, int rhs)
+{
+    return lhs != rhs;
+}
+
+OperatorCode<OpType::DblDbl> ne_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<ne>};
+OperatorCode<OpType::IntDbl> ne_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<ne>};
+OperatorCode<OpType::DblInt> ne_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ne>};
+OperatorCode<OpType::IntInt> ne_int_int_code {recreateBinaryOperator, executeCompareIntInt<ne>};
 
 NumOperatorCodes ne_codes {
     Precedence::Equality, "<>",
