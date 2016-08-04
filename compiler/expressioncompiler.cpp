@@ -83,6 +83,7 @@ DataType ExpressionCompiler::Impl::compileNot()
     if (codes) {
         auto info = codes->select(DataType::Null, DataType::Null);
         compiler.addInstruction(info.code);
+        data_type = DataType::Integer;
     }
     return data_type;
 }

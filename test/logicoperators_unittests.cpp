@@ -32,4 +32,11 @@ TEST_CASE("compile not operator expressions", "[not][compile]")
         REQUIRE(code_line.size() == 3);
         REQUIRE(code_line[2].instructionCode()->getValue() == not_code.getValue());
     }
+    SECTION("check for an integer return data type")
+    {
+        Compiler compiler {"NOT 2.0", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+
+        REQUIRE(data_type == DataType::Integer);
+    }
 }
