@@ -22,4 +22,14 @@ TEST_CASE("compile not operator expressions", "[not][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check that the not code is added after the operand")
+    {
+        Compiler compiler {"NOT-2", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        extern Code not_code;
+        REQUIRE(code_line.size() == 3);
+        REQUIRE(code_line[2].instructionCode()->getValue() == not_code.getValue());
+    }
 }
