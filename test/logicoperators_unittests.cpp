@@ -39,4 +39,11 @@ TEST_CASE("compile not operator expressions", "[not][compile]")
 
         REQUIRE(data_type == DataType::Integer);
     }
+    SECTION("check that multiple not operators are parsed")
+    {
+        Compiler compiler {"NOT not -2", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }

@@ -78,14 +78,14 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileNot()
 {
-    auto codes = compiler.getWordOperatorCodes(Precedence::Not);
-    auto data_type = compileEquality();
-    if (codes) {
+    if (auto codes = compiler.getWordOperatorCodes(Precedence::Not)) {
+        compileNot();
         auto info = codes->select(DataType::Null, DataType::Null);
         compiler.addInstruction(info.code);
-        data_type = DataType::Integer;
+        return DataType::Integer;
+    } else {
+        return compileEquality();
     }
-    return data_type;
 }
 
 DataType ExpressionCompiler::Impl::compileEquality()
