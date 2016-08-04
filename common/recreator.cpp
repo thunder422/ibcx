@@ -151,6 +151,9 @@ void Recreator::appendUnaryOperator()
     markErrorStart();
     append(getOperatorKeyword());
     markErrorEnd();
+    if (isalpha(topString().back())) {
+        append(' ');
+    }
 }
 
 void Recreator::appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence)

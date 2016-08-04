@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "compiler.h"
 #include "operators.h"
+#include "programerror.h"
 #include "programunit.h"
 
 
@@ -45,5 +46,21 @@ TEST_CASE("compile not operator expressions", "[not][compile]")
         compiler.compileExpression(DataType::Null);
 
         REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}
+
+TEST_CASE("recreate negate operator expressions", "[not][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate a not of a negative integer constant")
+    {
+        std::istringstream iss {"PRINT NOT-2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT NOT -2\n");
     }
 }

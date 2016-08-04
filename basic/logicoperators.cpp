@@ -6,8 +6,9 @@
  */
 
 #include "operators.h"
+#include "recreator.h"
 
 
-OperatorCode<OpType::Int> not_code {nullptr, nullptr};
+OperatorCode<OpType::Int> not_code {recreateUnaryOperator, nullptr};
 
 NotOperatorCodes not_codes {Precedence::Not, "NOT", not_code};
