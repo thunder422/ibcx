@@ -5,10 +5,16 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include "executer.h"
 #include "operators.h"
 #include "recreator.h"
 
 
-OperatorCode<OpType::Int> not_code {recreateUnaryOperator, nullptr};
+void executeNot(Executer &executer)
+{
+    executer.setTopInt(~executer.topInt());
+}
+
+OperatorCode<OpType::Int> not_code {recreateUnaryOperator, executeNot};
 
 NotOperatorCodes not_codes {Precedence::Not, "NOT", not_code};

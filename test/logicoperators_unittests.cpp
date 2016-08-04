@@ -49,7 +49,7 @@ TEST_CASE("compile not operator expressions", "[not][compile]")
     }
 }
 
-TEST_CASE("recreate negate operator expressions", "[not][recreate]")
+TEST_CASE("recreate not operator expressions", "[not][recreate]")
 {
     ProgramUnit program;
 
@@ -62,5 +62,21 @@ TEST_CASE("recreate negate operator expressions", "[not][recreate]")
         program.recreate(oss);
 
         REQUIRE(oss.str() == "PRINT NOT -2\n");
+    }
+}
+
+TEST_CASE("execute not operator", "[not][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a not operator")
+    {
+        std::istringstream iss {"PRINT NOT 2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-3\n");
     }
 }
