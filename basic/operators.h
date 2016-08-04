@@ -45,9 +45,11 @@ public:
     virtual std::vector<WordType> codeValues() const = 0;
 };
 
+
 class UnaryOperatorCodes : public OperatorCodes {
 public:
-    UnaryOperatorCodes(Precedence::Level precedence, const char *keyword, OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code);
+    UnaryOperatorCodes(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code);
     OperatorInfo select(DataType data_type, DataType unused_data_type) const override;
     std::vector<WordType> codeValues() const override;
 
@@ -55,6 +57,7 @@ private:
     OperatorCode<OpType::Dbl> &dbl_code;
     OperatorCode<OpType::Int> &int_code;
 };
+
 
 class NumOperatorCodes : public OperatorCodes {
 public:
@@ -71,14 +74,28 @@ private:
     OperatorCode<OpType::IntInt> &int_int_code;
 };
 
+
 class IntDivOperatorCode : public OperatorCodes {
 public:
-    IntDivOperatorCode(Precedence::Level precedence, const char *keyword, OperatorCode<OpType::DblDbl> &code);
+    IntDivOperatorCode(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::DblDbl> &code);
     OperatorInfo select(DataType lhs_data_type, DataType rhs_data_type) const override;
     std::vector<WordType> codeValues() const override;
 
 private:
     OperatorCode<OpType::DblDbl> &code;
+};
+
+
+class NotOperatorCodes : public OperatorCodes {
+public:
+    NotOperatorCodes(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::Int> &code);
+    OperatorInfo select(DataType unused_data_type1, DataType unused_data_type2) const override;
+    std::vector<WordType> codeValues() const override;
+
+private:
+    OperatorCode<OpType::Int> &code;
 };
 
 

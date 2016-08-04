@@ -120,7 +120,6 @@ ci_string Compiler::getKeyword()
 {
     skipWhiteSpace();
     word = getAlphaOnlyWord();
-    skipWhiteSpace();
     return word;
 }
 
@@ -130,6 +129,7 @@ ci_string Compiler::getAlphaOnlyWord()
     while (isalpha(peekNextChar())) {
         keyword += getNextChar();
     }
+    skipWhiteSpace();
     return keyword;
 }
 
@@ -158,8 +158,9 @@ char Compiler::getNextChar()
 void Compiler::skipWhiteSpace()
 {
     if (peek_char != EOF) {
-        peek_char = 0;
-        iss >> std::ws;
+        while (isspace(peekNextChar())) {
+            getNextChar();
+        }
     }
 }
 

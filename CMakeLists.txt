@@ -66,6 +66,7 @@ set(IBC_SOURCES
     basic/comparisonoperators.cpp
     basic/constnum.cpp
     basic/end.cpp
+    basic/logicoperators.cpp
     basic/mathoperators.cpp
     basic/operators.cpp
     basic/powerdblint.h
@@ -128,3 +129,4 @@ add_unittest(cistring)
 add_unittest(print)
 add_unittest(mathoperators)
 add_unittest(comparisonoperators)
+add_unittest(logicoperators)
