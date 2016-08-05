@@ -80,6 +80,7 @@ DataType ExpressionCompiler::Impl::compileNot()
 {
     if (auto codes = compiler.getWordOperatorCodes(Precedence::Not)) {
         compileNot();
+        compiler.convertToInteger();
         auto info = codes->select(DataType::Null, DataType::Null);
         compiler.addInstruction(info.code);
         return DataType::Integer;

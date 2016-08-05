@@ -80,3 +80,19 @@ TEST_CASE("execute not operator", "[not][execute]")
         REQUIRE(oss.str() == "-3\n");
     }
 }
+
+TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
+{
+    ProgramUnit program;
+
+    SECTION("change a double constant to an integer constant")
+    {
+        std::istringstream iss {"PRINT NOT 2.1"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-3\n");
+    }
+}

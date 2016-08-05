@@ -199,6 +199,14 @@ void Compiler::convertToDouble(DataType operand_data_type)
     }
 }
 
+void Compiler::convertToInteger()
+{
+    extern Code const_int_code;
+
+    auto last_constant_offset = code_line.size() - 2;
+    code_line[last_constant_offset] = ProgramWord {const_int_code};
+}
+
 ProgramCode &&Compiler::getCodeLine()
 {
     return std::move(code_line);

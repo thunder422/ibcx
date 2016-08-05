@@ -41,6 +41,7 @@ public:
     void addInstruction(Code &code);
     DataType addNumConstInstruction(bool floating_point, const std::string &number);
     void convertToDouble(DataType operand_data_type);
+    void convertToInteger();
     ProgramCode &&getCodeLine();
 
 private:
