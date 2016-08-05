@@ -9,6 +9,7 @@
 #include "compileerror.h"
 #include "constnum.h"
 #include "executer.h"
+#include "overflow.h"
 #include "recreator.h"
 
 
@@ -59,6 +60,11 @@ ConstNumCodeInfo ConstNumDictionary::add(bool floating_point, const std::string 
     auto const_num_code_info = converter.convertNumber();
     const_num_code_info.operand = addToDictionary(converter, number);
     return const_num_code_info;
+}
+
+bool ConstNumDictionary::convertibleToInteger(WordType index) const
+{
+    return withinIntegerRange(dbl_values[index]);
 }
 
 WordType ConstNumDictionary::addToDictionary(const ConstNumConverter &converter,

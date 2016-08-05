@@ -93,7 +93,7 @@ DataType ConstNumCompiler::Impl::compile()
         return DataType::Null;
     } else {
         try {
-            return compiler.addNumConstInstruction(floating_point, number);
+            return compiler.addNumConstInstruction(floating_point, number, first_column);
         }
         catch (const std::out_of_range &) {
             unsigned length = number.length();

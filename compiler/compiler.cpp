@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 
+#include "compileerror.h"
 #include "compiler.h"
 #include "expressioncompiler.h"
 #include "operators.h"
@@ -175,10 +176,13 @@ void Compiler::addInstruction(Code &code)
     code_line.emplace_back(code);
 }
 
-DataType Compiler::addNumConstInstruction(bool floating_point, const std::string &number)
+DataType Compiler::addNumConstInstruction(bool floating_point, const std::string &number,
+    unsigned column)
 {
     auto const_num_info = program.constNumDictionary().add(floating_point, number);
     last_operand_was_constant = true;
+    last_constant_column = column;
+    last_constant_length = number.length();
     code_line.emplace_back(const_num_info.code_value);
     code_line.emplace_back(const_num_info.operand);
     return const_num_info.data_type;
@@ -186,31 +190,51 @@ DataType Compiler::addNumConstInstruction(bool floating_point, const std::string
 
 void Compiler::convertToDouble(DataType operand_data_type)
 {
-    extern Code const_dbl_code;
-    extern Code cvtdbl_code;
-
     if (operand_data_type == DataType::Integer) {
         if (last_operand_was_constant) {
-            auto last_constant_offset = code_line.size() - 2;
-            code_line[last_constant_offset] = ProgramWord {const_dbl_code};
+            changeConstantToDouble();
         } else {
+            extern Code cvtdbl_code;
             addInstruction(cvtdbl_code);
         }
     }
 }
 
+void Compiler::changeConstantToDouble()
+{
+    extern Code const_dbl_code;
+
+    auto last_constant_offset = code_line.size() - 2;
+    code_line[last_constant_offset] = ProgramWord {const_dbl_code};
+}
+
 void Compiler::convertToInteger(DataType operand_data_type)
 {
-    extern Code const_int_code;
-    extern Code cvtint_code;
-
     if (operand_data_type == DataType::Double) {
         if (last_operand_was_constant) {
-            auto last_constant_offset = code_line.size() - 2;
-            code_line[last_constant_offset] = ProgramWord {const_int_code};
+            changeConstantToInteger();
         } else {
+            extern Code cvtint_code;
             addInstruction(cvtint_code);
         }
+    }
+}
+
+void Compiler::changeConstantToInteger()
+{
+    extern Code const_int_code;
+
+    auto last_constant_offset = code_line.size() - 2;
+    validateConstantConvertibleToInteger(last_constant_offset);
+    code_line[last_constant_offset] = ProgramWord {const_int_code};
+}
+
+void Compiler::validateConstantConvertibleToInteger(size_t last_constant_offset)
+{
+    auto constant_operand = code_line[last_constant_offset + 1].operand();
+    if (!program.constNumDictionary().convertibleToInteger(constant_operand)) {
+        throw CompileError {"floating point constant is out of range", last_constant_column,
+            last_constant_length};
     }
 }
 

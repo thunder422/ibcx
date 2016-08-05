@@ -16,9 +16,15 @@
 
 
 template <typename T>
+inline bool withinIntegerRange(T value)
+{
+    return value >= std::numeric_limits<int>::min() && value <= std::numeric_limits<int>::max();
+}
+
+template <typename T>
 inline void checkIntegerOverflow(Executer &executer, T result)
 {
-    if (result > std::numeric_limits<int>::max() || result < std::numeric_limits<int>::min()) {
+    if (!withinIntegerRange(result)) {
         throw RunError {"overflow", executer.currentOffset()};
     }
 }

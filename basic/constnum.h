@@ -19,6 +19,7 @@ class ConstNumConverter;
 class ConstNumDictionary : public Dictionary {
 public:
     ConstNumCodeInfo add(bool floating_point, const std::string &number);
+    bool convertibleToInteger(WordType index) const;
     const double *getDblValues() const;
     const int *getIntValues() const;
 

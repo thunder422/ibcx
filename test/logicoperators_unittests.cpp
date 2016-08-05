@@ -116,4 +116,17 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
         REQUIRE(code_line.size() == 7);
         REQUIRE(code_line[5].instructionCode()->getValue() == cvtint_code.getValue());
     }
+    SECTION("check for a compile error if the double constant cannot be converted to an integer")
+    {
+        std::istringstream iss {"PRINT NOT 2.1e20"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            "error on line 1:10: floating point constant is out of range\n"
+            "    PRINT NOT 2.1e20\n"
+            "              ^^^^^^\n"
+        );
+    }
 }

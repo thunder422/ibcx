@@ -410,7 +410,7 @@ TEST_CASE("recreate a constant", "[recreate]")
 
     SECTION("recreate an integer constant")
     {
-        compiler.addNumConstInstruction(false, "12345");
+        compiler.addNumConstInstruction(false, "12345", 0);
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -427,7 +427,7 @@ TEST_CASE("execute a constant code", "[execute]")
 
     SECTION("execute a single integer constant")
     {
-        compiler.addNumConstInstruction(false, "12345");
+        compiler.addNumConstInstruction(false, "12345", 0);
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -437,7 +437,7 @@ TEST_CASE("execute a constant code", "[execute]")
     }
     SECTION("execute a different integer constant")
     {
-        compiler.addNumConstInstruction(false, "23456");
+        compiler.addNumConstInstruction(false, "23456", 0);
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -447,8 +447,8 @@ TEST_CASE("execute a constant code", "[execute]")
     }
     SECTION("execute two consecutive integer constants")
     {
-        compiler.addNumConstInstruction(false, "12345");
-        compiler.addNumConstInstruction(false, "23456");
+        compiler.addNumConstInstruction(false, "12345", 0);
+        compiler.addNumConstInstruction(false, "23456", 0);
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -460,8 +460,8 @@ TEST_CASE("execute a constant code", "[execute]")
     }
     SECTION("execute two consective integer constants and then check evaluation stack")
     {
-        compiler.addNumConstInstruction(false, "12345");
-        compiler.addNumConstInstruction(false, "23456");
+        compiler.addNumConstInstruction(false, "12345", 0);
+        compiler.addNumConstInstruction(false, "23456", 0);
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -474,7 +474,7 @@ TEST_CASE("execute a constant code", "[execute]")
     }
     SECTION("execute a single double constant")
     {
-        compiler.addNumConstInstruction(true, "12.345");
+        compiler.addNumConstInstruction(true, "12.345", 0);
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -484,7 +484,7 @@ TEST_CASE("execute a constant code", "[execute]")
     }
     SECTION("execute a different double constant")
     {
-        compiler.addNumConstInstruction(true, "-2.3456");
+        compiler.addNumConstInstruction(true, "-2.3456", 0);
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
@@ -494,9 +494,9 @@ TEST_CASE("execute a constant code", "[execute]")
     }
     SECTION("check that same constant reuses existing entry in dictionary")
     {
-        compiler.addNumConstInstruction(false, "12345");
-        compiler.addNumConstInstruction(false, "12345");
-        compiler.addNumConstInstruction(false, "23456");
+        compiler.addNumConstInstruction(false, "12345", 0);
+        compiler.addNumConstInstruction(false, "12345", 0);
+        compiler.addNumConstInstruction(false, "23456", 0);
 
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);

@@ -39,7 +39,8 @@ public:
     unsigned getColumn() noexcept;
 
     void addInstruction(Code &code);
-    DataType addNumConstInstruction(bool floating_point, const std::string &number);
+    DataType addNumConstInstruction(bool floating_point, const std::string &number,
+        unsigned column);
     void convertToDouble(DataType operand_data_type);
     void convertToInteger(DataType operand_data_type);
     ProgramCode &&getCodeLine();
@@ -50,6 +51,9 @@ private:
     OperatorCodes *savedEqualityOperatorCodes();
     void setEqualityCodes(OperatorCodes *codes);
     ci_string getAlphaOnlyWord();
+    void changeConstantToDouble();
+    void changeConstantToInteger();
+    void validateConstantConvertibleToInteger(size_t last_constant_offset);
 
     std::istringstream iss;
     ProgramUnit &program;
@@ -57,6 +61,8 @@ private:
     char peek_char {0};
     unsigned column {0};
     bool last_operand_was_constant;
+    unsigned last_constant_column;
+    unsigned last_constant_length;
     ci_string word;
     OperatorCodes *equality_codes;
 };
