@@ -199,13 +199,18 @@ void Compiler::convertToDouble(DataType operand_data_type)
     }
 }
 
-void Compiler::convertToInteger()
+void Compiler::convertToInteger(DataType operand_data_type)
 {
     extern Code const_int_code;
+    extern Code cvtint_code;
 
-    if (last_operand_was_constant) {
-        auto last_constant_offset = code_line.size() - 2;
-        code_line[last_constant_offset] = ProgramWord {const_int_code};
+    if (operand_data_type == DataType::Double) {
+        if (last_operand_was_constant) {
+            auto last_constant_offset = code_line.size() - 2;
+            code_line[last_constant_offset] = ProgramWord {const_int_code};
+        } else {
+            addInstruction(cvtint_code);
+        }
     }
 }
 

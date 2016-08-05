@@ -257,6 +257,8 @@ void executeCvtDbl(Executer &executer)
 
 Code cvtdbl_code {recreateNothing, executeCvtDbl};
 
+Code cvtint_code {nullptr, nullptr};
+
 // ----------------------------------------
 
 void executeModuloDblDbl(Executer &executer)

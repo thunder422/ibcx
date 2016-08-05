@@ -105,4 +105,15 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
 
         REQUIRE(oss.str() == "-3\n");
     }
+    SECTION("add a convert to integer code for a non-constant double operand")
+    {
+        extern Code cvtint_code;
+
+        Compiler compiler {"NOT 1.0 + 1.0", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(code_line.size() == 7);
+        REQUIRE(code_line[5].instructionCode()->getValue() == cvtint_code.getValue());
+    }
 }

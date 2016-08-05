@@ -79,8 +79,8 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileNot()
 {
     if (auto codes = compiler.getWordOperatorCodes(Precedence::Not)) {
-        compileNot();
-        compiler.convertToInteger();
+        auto data_type = compileNot();
+        compiler.convertToInteger(data_type);
         auto info = codes->select(DataType::Null, DataType::Null);
         compiler.addInstruction(info.code);
         return DataType::Integer;
