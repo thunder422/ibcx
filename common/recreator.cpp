@@ -171,7 +171,9 @@ void Recreator::appendUnaryOperand(std::string &&operand, Precedence::Level oper
 void Recreator::appendSpaceForConstant(char first_char)
 {
     if (isdigit(first_char) || first_char == '.') {
-        append(' ');
+        if (topString().back() != ' ') {
+            append(' ');
+        }
     }
 }
 

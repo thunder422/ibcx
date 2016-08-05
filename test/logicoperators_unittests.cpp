@@ -63,6 +63,16 @@ TEST_CASE("recreate not operator expressions", "[not][recreate]")
 
         REQUIRE(oss.str() == "PRINT NOT -2\n");
     }
+    SECTION("recreate a not of a positve integer constant")
+    {
+        std::istringstream iss {"PRINT NOT 2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT NOT 2\n");
+    }
 }
 
 TEST_CASE("execute not operator", "[not][execute]")
