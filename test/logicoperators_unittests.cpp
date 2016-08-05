@@ -95,4 +95,14 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
 
         REQUIRE(oss.str() == "-3\n");
     }
+    SECTION("don't change to an integer constant if operand is not a constant")
+    {
+        std::istringstream iss {"PRINT NOT 1 + 1"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-3\n");
+    }
 }

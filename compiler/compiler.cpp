@@ -203,8 +203,10 @@ void Compiler::convertToInteger()
 {
     extern Code const_int_code;
 
-    auto last_constant_offset = code_line.size() - 2;
-    code_line[last_constant_offset] = ProgramWord {const_int_code};
+    if (last_operand_was_constant) {
+        auto last_constant_offset = code_line.size() - 2;
+        code_line[last_constant_offset] = ProgramWord {const_int_code};
+    }
 }
 
 ProgramCode &&Compiler::getCodeLine()
