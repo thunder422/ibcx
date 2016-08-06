@@ -117,14 +117,14 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
     }
     SECTION("add a convert to integer code for a non-constant double operand")
     {
-        extern Code internal_cvtint_code;
+        extern Code cvtint_code;
 
         Compiler compiler {"NOT 1.0 + 1.0", program};
         compiler.compileExpression(DataType::Null);
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 7);
-        REQUIRE(code_line[5].instructionCode()->getValue() == internal_cvtint_code.getValue());
+        REQUIRE(code_line[5].instructionCode()->getValue() == cvtint_code.getValue());
     }
     SECTION("check for a compile error if the double constant cannot be converted to an integer")
     {
@@ -158,5 +158,19 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
 
             REQUIRE(oss.str() == "-3\n");
         }
+    }
+    SECTION("check for overflow run error on internal convert to integer code")
+    {
+        std::istringstream iss {"PRINT NOT 1.1e20 * 2"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:10: overflow\n"
+            "    PRINT NOT 1.1e20 * 2\n"
+            "              ^^^^^^^^^^\n"
+        );
     }
 }

@@ -255,15 +255,21 @@ void executeCvtDbl(Executer &executer)
     executer.setTopDbl(executer.topIntAsDbl());
 }
 
-Code internal_cvtdbl_code {recreateNothing, executeCvtDbl};
+Code cvtdbl_code {recreateNothing, executeCvtDbl};
 
 void executeCvtInt(Executer &executer)
 {
     auto operand = executer.topDbl();
+    checkIntegerOverflow(executer, operand);
     executer.setTopIntFromDouble(operand);
 }
 
-Code internal_cvtint_code {recreateNothing, executeCvtInt};
+void recreateCvtInt(Recreator &recreator)
+{
+    recreator.markOperandIfError();
+}
+
+Code cvtint_code {recreateCvtInt, executeCvtInt};
 
 // ----------------------------------------
 

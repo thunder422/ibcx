@@ -194,8 +194,8 @@ void Compiler::convertToDouble(DataType operand_data_type)
         if (last_operand_was_constant) {
             changeConstantToDouble();
         } else {
-            extern Code internal_cvtdbl_code;
-            addInstruction(internal_cvtdbl_code);
+            extern Code cvtdbl_code;
+            addInstruction(cvtdbl_code);
         }
     }
 }
@@ -214,8 +214,8 @@ void Compiler::convertToInteger(DataType operand_data_type)
         if (last_operand_was_constant) {
             changeConstantToInteger();
         } else {
-            extern Code internal_cvtint_code;
-            addInstruction(internal_cvtint_code);
+            extern Code cvtint_code;
+            addInstruction(cvtint_code);
         }
     }
 }

@@ -238,6 +238,14 @@ Precedence::Level Recreator::getOperatorPrecedence() const
     return Precedence::getPrecedence(code_value);
 }
 
+void Recreator::markOperandIfError()
+{
+    auto operand = topString();
+    markErrorStart();
+    append(operand);
+    markErrorEnd();
+}
+
 // ------------------------------------------------------------
 
 void recreateUnaryOperator(Recreator &recreator)

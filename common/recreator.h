@@ -40,6 +40,7 @@ public:
 
     void recreateUnaryOperator();
     void recreateBinaryOperator();
+    void markOperandIfError();
 
 private:
     struct StackItem {
