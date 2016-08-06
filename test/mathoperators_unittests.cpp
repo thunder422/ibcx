@@ -1359,14 +1359,14 @@ TEST_CASE("apply necessary conversions to integer divide operator", "[intdiv][co
     }
     SECTION("add a convert to double code for a non-constant integer operand")
     {
-        extern Code cvtdbl_code;
+        extern Code internal_cvtdbl_code;
 
         Compiler compiler {"3.0\\1*2", program};
         compiler.compileExpression(DataType::Null);
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 9);
-        REQUIRE(code_line[7].instructionCode()->getValue() == cvtdbl_code.getValue());
+        REQUIRE(code_line[7].instructionCode()->getValue() == internal_cvtdbl_code.getValue());
     }
     SECTION("internal convert to double code functionality")
     {

@@ -255,9 +255,9 @@ void executeCvtDbl(Executer &executer)
     executer.setTopDbl(executer.topIntAsDbl());
 }
 
-Code cvtdbl_code {recreateNothing, executeCvtDbl};
+Code internal_cvtdbl_code {recreateNothing, executeCvtDbl};
 
-Code cvtint_code {nullptr, nullptr};
+Code internal_cvtint_code {recreateNothing, nullptr};
 
 // ----------------------------------------
 
