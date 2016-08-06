@@ -197,4 +197,11 @@ TEST_CASE("compile and operator expressions", "[and][compile]")
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == and_code.getValue());
     }
+    SECTION("check for an integer return data type")
+    {
+        Compiler compiler {"10.0 AND 7", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+
+        REQUIRE(data_type == DataType::Integer);
+    }
 }
