@@ -241,7 +241,7 @@ void executeIntegerDivide(Executer &executer)
     auto lhs = executer.topDbl();
     auto result = lhs / rhs;
     checkIntegerOverflow(executer, result);
-    executer.setTopInt(static_cast<int>(result));
+    executer.setTopIntFromDouble(result);
 }
 
 OperatorCode<OpType::DblDbl> int_div_code {recreateBinaryOperator, executeIntegerDivide};
@@ -257,7 +257,13 @@ void executeCvtDbl(Executer &executer)
 
 Code internal_cvtdbl_code {recreateNothing, executeCvtDbl};
 
-Code internal_cvtint_code {recreateNothing, nullptr};
+void executeCvtInt(Executer &executer)
+{
+    auto operand = executer.topDbl();
+    executer.setTopIntFromDouble(operand);
+}
+
+Code internal_cvtint_code {recreateNothing, executeCvtInt};
 
 // ----------------------------------------
 

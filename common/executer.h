@@ -42,6 +42,7 @@ public:
     void pop();
     void setTopDbl(double value);
     void setTopInt(int value);
+    void setTopIntFromDouble(double value);
     void setTopIntFromBool(bool value);
     std::ostream &output();
     bool stackEmpty() const;
@@ -102,6 +103,11 @@ inline void Executer::setTopDbl(double value)
 inline void Executer::setTopInt(int value)
 {
     stack.top().int_value = value;
+}
+
+inline void Executer::setTopIntFromDouble(double value)
+{
+    stack.top().int_value = static_cast<int>(value);
 }
 
 inline void Executer::setTopIntFromBool(bool value)

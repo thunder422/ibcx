@@ -152,5 +152,11 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
 
             REQUIRE(oss.str() == "PRINT NOT 1.1 * 2.0\n");
         }
+        SECTION("execute the convert to integer code for a non-constant double operand")
+        {
+            program.run(oss);
+
+            REQUIRE(oss.str() == "-3\n");
+        }
     }
 }
