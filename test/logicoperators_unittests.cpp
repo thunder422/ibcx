@@ -204,4 +204,11 @@ TEST_CASE("compile and operator expressions", "[and][compile]")
 
         REQUIRE(data_type == DataType::Integer);
     }
+    SECTION("check that multiple and operators are parsed")
+    {
+        Compiler compiler {"10 AND 7 AND 28", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }
