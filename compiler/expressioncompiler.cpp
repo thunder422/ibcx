@@ -26,6 +26,8 @@ public:
 private:
     DataType compileNumExpression(DataType expected_data_type);
     DataType compileAnd();
+    DataType compileLogicOperator(Precedence::Level precedence,
+        DataType (Impl::*compile_function)());
     DataType compileNot();
     DataType compileEquality();
     DataType compileRelation();
@@ -79,10 +81,16 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileAnd()
 {
-    auto data_type = compileNot();
-    while (auto codes = compiler.getWordOperatorCodes(Precedence::And)) {
+    return compileLogicOperator(Precedence::And, &Impl::compileNot);
+}
+
+DataType ExpressionCompiler::Impl::compileLogicOperator(Precedence::Level precedence,
+    DataType (Impl::*compile_function)())
+{
+    auto data_type = (this->*compile_function)();
+    while (auto codes = compiler.getWordOperatorCodes(precedence)) {
         compiler.convertToInteger(data_type);
-        data_type = compileNot();
+        data_type = (this->*compile_function)();
         compiler.convertToInteger(data_type);
         auto info = codes->select(DataType::Null, DataType::Null);
         compiler.addInstruction(info.code);
