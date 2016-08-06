@@ -21,6 +21,13 @@ NotOperatorCodes not_codes {Precedence::Not, "NOT", not_code};
 
 // ----------------------------------------
 
-OperatorCode<OpType::IntInt> and_code {recreateBinaryOperator, nullptr};
+void executeAnd(Executer &executer)
+{
+    auto lhs = executer.topInt();
+    executer.pop();
+    executer.setTopInt(lhs & executer.topInt());
+}
+
+OperatorCode<OpType::IntInt> and_code {recreateBinaryOperator, executeAnd};
 
 LogicOperatorCodes and_codes {Precedence::And, "AND", and_code};

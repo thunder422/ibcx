@@ -228,3 +228,19 @@ TEST_CASE("recreate and operator expressions", "[and][recreate]")
         REQUIRE(oss.str() == "PRINT 10 AND 7\n");
     }
 }
+
+TEST_CASE("execute and operator", "[and][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a and operator")
+    {
+        std::istringstream iss {"PRINT 10 AND 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2\n");
+    }
+}
