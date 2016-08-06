@@ -81,6 +81,7 @@ DataType ExpressionCompiler::Impl::compileAnd()
 {
     auto data_type = compileNot();
     while (auto codes = compiler.getWordOperatorCodes(Precedence::And)) {
+        compiler.convertToInteger(data_type);
         compileNot();
         auto info = codes->select(DataType::Null, DataType::Null);
         compiler.addInstruction(info.code);
