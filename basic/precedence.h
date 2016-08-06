@@ -26,7 +26,8 @@ struct Precedence {
         Summation,
         Relation,
         Equality,
-        Not
+        Not,
+        And
     };
 
     static void addOperatorCodes(Precedence::Level precedence, OperatorCodes &codes,

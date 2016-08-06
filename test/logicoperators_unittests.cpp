@@ -174,3 +174,17 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
         );
     }
 }
+
+
+TEST_CASE("compile and operator expressions", "[and][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure operator and operand are parsed")
+    {
+        Compiler compiler {"10 AND 7", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

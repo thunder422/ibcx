@@ -119,8 +119,10 @@ void Compiler::setEqualityCodes(OperatorCodes *codes)
 
 ci_string Compiler::getKeyword()
 {
-    skipWhiteSpace();
-    word = getAlphaOnlyWord();
+    if (word.empty()) {
+        skipWhiteSpace();
+        word = getAlphaOnlyWord();
+    }
     return word;
 }
 

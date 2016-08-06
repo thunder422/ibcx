@@ -25,6 +25,7 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileAnd();
     DataType compileNot();
     DataType compileEquality();
     DataType compileRelation();
@@ -69,9 +70,18 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileNot();
+    auto data_type = compileAnd();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
+    }
+    return data_type;
+}
+
+DataType ExpressionCompiler::Impl::compileAnd()
+{
+    auto data_type = compileNot();
+    if (compiler.getWordOperatorCodes(Precedence::And)) {
+        compileNot();
     }
     return data_type;
 }

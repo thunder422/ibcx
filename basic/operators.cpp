@@ -103,3 +103,24 @@ std::vector<WordType> NotOperatorCodes::codeValues() const
 {
     return std::vector<WordType> {code.getValue()};
 }
+
+
+LogicOperatorCodes::LogicOperatorCodes(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::IntInt> &code) :
+    code {code}
+{
+    Precedence::addOperatorCodes(precedence, *this, keyword);
+}
+
+OperatorInfo LogicOperatorCodes::select(DataType unused_data_type1, DataType unused_data_type2)
+    const
+{
+    (void)unused_data_type1;
+    (void)unused_data_type2;
+    return OperatorInfo {code, DataType::Integer};
+}
+
+std::vector<WordType> LogicOperatorCodes::codeValues() const
+{
+    return std::vector<WordType> {code.getValue()};
+}

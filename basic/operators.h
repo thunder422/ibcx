@@ -99,4 +99,16 @@ private:
 };
 
 
+class LogicOperatorCodes : public OperatorCodes {
+public:
+    LogicOperatorCodes(Precedence::Level precedence, const char *keyword,
+        OperatorCode<OpType::IntInt> &code);
+    OperatorInfo select(DataType unused_data_type1, DataType unused_data_type2) const override;
+    std::vector<WordType> codeValues() const override;
+
+private:
+    OperatorCode<OpType::IntInt> &code;
+};
+
+
 #endif  // IBC_OPERATORS_H
