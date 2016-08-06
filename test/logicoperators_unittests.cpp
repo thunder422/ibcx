@@ -259,4 +259,14 @@ TEST_CASE("apply necessary conversions to and operator", "[and][conversion]")
 
         REQUIRE(oss.str() == "2\n");
     }
+    SECTION("change a right side double constant to an integer constant")
+    {
+        std::istringstream iss {"PRINT 10AND7.0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2\n");
+    }
 }
