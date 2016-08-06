@@ -212,3 +212,19 @@ TEST_CASE("compile and operator expressions", "[and][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate and operator expressions", "[and][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate an and of integer constants")
+    {
+        std::istringstream iss {"PRINT 10 and 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 10 AND 7\n");
+    }
+}

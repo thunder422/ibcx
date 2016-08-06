@@ -21,6 +21,6 @@ NotOperatorCodes not_codes {Precedence::Not, "NOT", not_code};
 
 // ----------------------------------------
 
-OperatorCode<OpType::IntInt> and_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> and_code {recreateBinaryOperator, nullptr};
 
 LogicOperatorCodes and_codes {Precedence::And, "AND", and_code};
