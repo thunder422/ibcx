@@ -80,8 +80,10 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 DataType ExpressionCompiler::Impl::compileAnd()
 {
     auto data_type = compileNot();
-    if (compiler.getWordOperatorCodes(Precedence::And)) {
+    if (auto codes = compiler.getWordOperatorCodes(Precedence::And)) {
         compileNot();
+        auto info = codes->select(DataType::Null, DataType::Null);
+        compiler.addInstruction(info.code);
     }
     return data_type;
 }

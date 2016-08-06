@@ -187,4 +187,14 @@ TEST_CASE("compile and operator expressions", "[and][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check that the and code is added after the operand")
+    {
+        Compiler compiler {"10 AND 7", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        extern Code and_code;
+        REQUIRE(code_line.size() == 5);
+        REQUIRE(code_line[4].instructionCode()->getValue() == and_code.getValue());
+    }
 }
