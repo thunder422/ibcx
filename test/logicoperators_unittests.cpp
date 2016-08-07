@@ -330,3 +330,35 @@ TEST_CASE("compile xor operator expressions", "[xor][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate xor operator expressions", "[xor][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate an xor of integer constants")
+    {
+        std::istringstream iss {"PRINT 10 xor 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 10 XOR 7\n");
+    }
+}
+
+TEST_CASE("execute xor operator", "[xor][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a xor operator")
+    {
+        std::istringstream iss {"PRINT 10 XOR 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "13\n");
+    }
+}
