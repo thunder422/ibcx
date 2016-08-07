@@ -65,6 +65,14 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
 }
 
 
+OperatorInfo CompOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
+{
+    auto info = NumOperatorCodes::select(lhs_data_type, rhs_data_type);
+    info.result_data_type = DataType::Integer;
+    return info;
+}
+
+
 IntDivOperatorCode::IntDivOperatorCode(Precedence::Level precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &code) :
     code {code}

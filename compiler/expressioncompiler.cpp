@@ -17,6 +17,8 @@
 #include "programunit.h"
 
 
+void NoConvert(Compiler &compiler, DataType data_type);
+
 class ExpressionCompiler::Impl {
 public:
     Impl(Compiler &compiler);
@@ -26,22 +28,23 @@ public:
 private:
     DataType compileNumExpression(DataType expected_data_type);
     DataType compileAnd();
-    DataType compileLogicOperator(Precedence::Level precedence, DataType (Impl::*compile_next)());
     DataType compileNot();
     DataType compileEquality();
     DataType compileRelation();
-    DataType compileComparisonOperator(Precedence::Level precedence,
-        DataType (Impl::*compile_next)());
     DataType compileSummation();
     DataType compileModulo();
     DataType compileIntegerDivision();
     DataType compileProduct();
     DataType compileExponential();
-    DataType compileMathOperator(Precedence::Level precedence, DataType (Impl::*compile_next)());
     DataType compileNegation();
     DataType compileNumOperand();
     DataType compileParentheses();
     DataType compileNumConstant();
+    DataType compileOperator(DataType (Impl::*compile_operand)(), Precedence::Level precedence,
+        OperatorCodes *(*get_codes)(Compiler &compiler, Precedence::Level precedence),
+        void (*convert)(Compiler &compiler, DataType data_type) = NoConvert);
+    DataType addSelectedCode(OperatorCodes *codes, DataType lhs_data_type, DataType rhs_data_type)
+        const;
 
     Compiler &compiler;
 };
@@ -58,6 +61,39 @@ DataType ExpressionCompiler::operator()(DataType expected_data_type)
 
 ExpressionCompiler::~ExpressionCompiler()
 {
+}
+
+// ----------------------------------------
+
+OperatorCodes *SymbolGetCodes(Compiler &compiler, Precedence::Level precedence)
+{
+    return compiler.getSymbolOperatorCodes(precedence);
+}
+
+OperatorCodes *ComparisonGetCodes(Compiler &compiler, Precedence::Level precedence)
+{
+    return compiler.getComparisonOperatorCodes(precedence);
+}
+
+OperatorCodes *WordGetCodes(Compiler &compiler, Precedence::Level precedence)
+{
+    return compiler.getWordOperatorCodes(precedence);
+}
+
+void NoConvert(Compiler &compiler, DataType data_type)
+{
+    (void)compiler;
+    (void)data_type;
+}
+
+void ConvertToDouble(Compiler &compiler, DataType data_type)
+{
+    compiler.convertToDouble(data_type);
+}
+
+void ConvertToInteger(Compiler &compiler, DataType data_type)
+{
+    compiler.convertToInteger(data_type);
 }
 
 // ----------------------------------------
@@ -83,22 +119,7 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileAnd()
 {
-    return compileLogicOperator(Precedence::And, &Impl::compileNot);
-}
-
-DataType ExpressionCompiler::Impl::compileLogicOperator(Precedence::Level precedence,
-    DataType (Impl::*compile_next)())
-{
-    auto data_type = (this->*compile_next)();
-    while (auto codes = compiler.getWordOperatorCodes(precedence)) {
-        compiler.convertToInteger(data_type);
-        data_type = (this->*compile_next)();
-        compiler.convertToInteger(data_type);
-        auto info = codes->select(DataType::Null, DataType::Null);
-        compiler.addInstruction(info.code);
-        data_type = DataType::Integer;
-    }
-    return data_type;
+    return compileOperator(&Impl::compileNot, Precedence::And, WordGetCodes, ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileNot()
@@ -106,9 +127,7 @@ DataType ExpressionCompiler::Impl::compileNot()
     if (auto codes = compiler.getWordOperatorCodes(Precedence::Not)) {
         auto data_type = compileNot();
         compiler.convertToInteger(data_type);
-        auto info = codes->select(DataType::Null, DataType::Null);
-        compiler.addInstruction(info.code);
-        return DataType::Integer;
+        return addSelectedCode(codes, DataType::Null, DataType::Null);
     } else {
         return compileEquality();
     }
@@ -116,99 +135,38 @@ DataType ExpressionCompiler::Impl::compileNot()
 
 DataType ExpressionCompiler::Impl::compileEquality()
 {
-    return compileComparisonOperator(Precedence::Equality, &Impl::compileRelation);
+    return compileOperator(&Impl::compileRelation, Precedence::Equality, ComparisonGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileRelation()
 {
-    return compileComparisonOperator(Precedence::Relation, &Impl::compileSummation);
-}
-
-DataType ExpressionCompiler::Impl::compileComparisonOperator(Precedence::Level precedence,
-    DataType (Impl::*compile_next)())
-{
-    auto lhs_data_type = (this->*compile_next)();
-    if (lhs_data_type != DataType::Null) {
-        while (auto codes = compiler.getComparisonOperatorCodes(precedence)) {
-            auto rhs_data_type = (this->*compile_next)();
-            if (rhs_data_type == DataType::Null) {
-                throw ExpNumExprError {compiler.getColumn()};
-            }
-            auto info = codes->select(lhs_data_type, rhs_data_type);
-            compiler.addInstruction(info.code);
-            lhs_data_type = DataType::Integer;
-        }
-    }
-    return lhs_data_type;
+    return compileOperator(&Impl::compileSummation, Precedence::Relation, ComparisonGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileSummation()
 {
-    return compileMathOperator(Precedence::Summation, &Impl::compileModulo);
+    return compileOperator(&Impl::compileModulo, Precedence::Summation, SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileModulo()
 {
-    auto lhs_data_type = compileIntegerDivision();
-    if (lhs_data_type != DataType::Null) {
-        while (auto codes = compiler.getWordOperatorCodes(Precedence::Modulo)) {
-            auto rhs_data_type = compileIntegerDivision();
-            if (rhs_data_type == DataType::Null) {
-                throw ExpNumExprError {compiler.getColumn()};
-            }
-            auto info = codes->select(lhs_data_type, rhs_data_type);
-            compiler.addInstruction(info.code);
-            lhs_data_type = info.result_data_type;
-        }
-    }
-    return lhs_data_type;
+    return compileOperator(&Impl::compileIntegerDivision, Precedence::Modulo, WordGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
-    auto lhs_data_type = compileProduct();
-    if (lhs_data_type != DataType::Null) {
-        while (auto codes = compiler.getSymbolOperatorCodes(Precedence::IntDivide)) {
-            compiler.convertToDouble(lhs_data_type);
-            auto rhs_data_type = compileProduct();
-            if (rhs_data_type == DataType::Null) {
-                throw ExpNumExprError {compiler.getColumn()};
-            }
-            compiler.convertToDouble(rhs_data_type);
-            auto info = codes->select(lhs_data_type, rhs_data_type);
-            compiler.addInstruction(info.code);
-            lhs_data_type = info.result_data_type;
-        }
-    }
-    return lhs_data_type;
+    return compileOperator(&Impl::compileProduct, Precedence::IntDivide, SymbolGetCodes,
+        ConvertToDouble);
 }
 
 DataType ExpressionCompiler::Impl::compileProduct()
 {
-    return compileMathOperator(Precedence::Product, &Impl::compileExponential);
+    return compileOperator(&Impl::compileExponential, Precedence::Product, SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileExponential()
 {
-    return compileMathOperator(Precedence::Exponential, &Impl::compileNumOperand);
-}
-
-DataType ExpressionCompiler::Impl::compileMathOperator(Precedence::Level precedence,
-    DataType (Impl::*compile_next)())
-{
-    auto lhs_data_type = (this->*compile_next)();
-    if (lhs_data_type != DataType::Null) {
-        while (auto codes = compiler.getSymbolOperatorCodes(precedence)) {
-            auto rhs_data_type = (this->*compile_next)();
-            if (rhs_data_type == DataType::Null) {
-                throw ExpNumExprError {compiler.getColumn()};
-            }
-            auto info = codes->select(lhs_data_type, rhs_data_type);
-            compiler.addInstruction(info.code);
-            lhs_data_type = info.result_data_type;
-        }
-    }
-    return lhs_data_type;
+    return compileOperator(&Impl::compileNumOperand, Precedence::Exponential, SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileNegation()
@@ -251,4 +209,32 @@ DataType ExpressionCompiler::Impl::compileNumConstant()
         return compileNegation();
     }
     return data_type;
+}
+
+DataType ExpressionCompiler::Impl::compileOperator(DataType (Impl::*compile_operand)(),
+    Precedence::Level precedence,
+    OperatorCodes *(*get_codes)(Compiler &compiler, Precedence::Level precedence),
+    void (*convert)(Compiler &compiler, DataType data_type))
+{
+    auto lhs_data_type = (this->*compile_operand)();
+    if (lhs_data_type != DataType::Null) {
+        while (auto codes = get_codes(compiler, precedence)) {
+            convert(compiler, lhs_data_type);
+            auto rhs_data_type = (this->*compile_operand)();
+            if (rhs_data_type == DataType::Null) {
+                throw ExpNumExprError {compiler.getColumn()};
+            }
+            convert(compiler, rhs_data_type);
+            lhs_data_type = addSelectedCode(codes, lhs_data_type, rhs_data_type);
+        }
+    }
+    return lhs_data_type;
+}
+
+DataType ExpressionCompiler::Impl::addSelectedCode(OperatorCodes *codes, DataType lhs_data_type,
+    DataType rhs_data_type) const
+{
+    auto info = codes->select(lhs_data_type, rhs_data_type);
+    compiler.addInstruction(info.code);
+    return info.result_data_type;
 }

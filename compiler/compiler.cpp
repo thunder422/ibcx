@@ -101,12 +101,12 @@ OperatorCodes *ComparisonOperatorCodes::codesWithNextPeekChar()
     return nullptr;
 }
 
-OperatorCodes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &comparison_operator)
+OperatorCodes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &compare_operator)
 {
-    if (comparison_operator.precedence == Precedence::Relation) {
-        return comparison_operator.codes;
+    if (compare_operator.precedence == Precedence::Relation) {
+        return compare_operator.codes;
     } else {
-        compiler.setEqualityCodes(comparison_operator.codes);
+        compiler.setEqualityCodes(compare_operator.codes);
         one_char_codes = nullptr;
         return nullptr;
     }

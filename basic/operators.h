@@ -87,6 +87,13 @@ private:
 };
 
 
+class CompOperatorCodes : public NumOperatorCodes {
+public:
+    using NumOperatorCodes::NumOperatorCodes;
+    OperatorInfo select(DataType lhs_data_type, DataType rhs_data_type) const override;
+};
+
+
 class NotOperatorCodes : public OperatorCodes {
 public:
     NotOperatorCodes(Precedence::Level precedence, const char *keyword,
