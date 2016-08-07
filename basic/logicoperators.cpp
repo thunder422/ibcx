@@ -60,6 +60,6 @@ LogicOperatorCodes or_codes {Precedence::Or, "OR", or_code};
 
 // ----------------------------------------
 
-OperatorCode<OpType::IntInt> eqv_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> eqv_code {recreateBinaryOperator, nullptr};
 
 LogicOperatorCodes eqv_codes {Precedence::Eqv, "EQV", eqv_code};

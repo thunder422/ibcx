@@ -376,3 +376,19 @@ TEST_CASE("compile eqv operator expressions", "[eqv][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate eqv operator expressions", "[eqv][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate an eqv of integer constants")
+    {
+        std::istringstream iss {"PRINT 10 eqv 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 10 EQV 7\n");
+    }
+}
