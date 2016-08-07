@@ -284,3 +284,19 @@ TEST_CASE("compile or operator expressions", "[or][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate or operator expressions", "[or][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate an or of integer constants")
+    {
+        std::istringstream iss {"PRINT 10 or 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 10 OR 7\n");
+    }
+}

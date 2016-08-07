@@ -34,6 +34,6 @@ LogicOperatorCodes and_codes {Precedence::And, "AND", and_code};
 
 // ----------------------------------------
 
-OperatorCode<OpType::IntInt> or_code {nullptr, nullptr};
+OperatorCode<OpType::IntInt> or_code {recreateBinaryOperator, nullptr};
 
 LogicOperatorCodes or_codes {Precedence::Or, "OR", or_code};
