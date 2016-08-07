@@ -34,6 +34,12 @@ LogicOperatorCodes and_codes {Precedence::And, "AND", and_code};
 
 // ----------------------------------------
 
+OperatorCode<OpType::IntInt> xor_code {nullptr, nullptr};
+
+LogicOperatorCodes xor_codes {Precedence::Xor, "XOR", xor_code};
+
+// ----------------------------------------
+
 void executeOr(Executer &executer)
 {
     auto lhs = executer.topInt();

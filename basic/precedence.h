@@ -28,6 +28,7 @@ struct Precedence {
         Equality,
         Not,
         And,
+        Xor,
         Or
     };
 

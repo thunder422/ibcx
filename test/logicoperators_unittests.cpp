@@ -316,3 +316,17 @@ TEST_CASE("execute or operator", "[or][execute]")
         REQUIRE(oss.str() == "15\n");
     }
 }
+
+
+TEST_CASE("compile xor operator expressions", "[xor][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure operator and operand are parsed")
+    {
+        Compiler compiler {"10 XOR 7", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

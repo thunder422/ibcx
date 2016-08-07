@@ -28,6 +28,7 @@ public:
 private:
     DataType compileNumExpression(DataType expected_data_type);
     DataType compileOr();
+    DataType compileXor();
     DataType compileAnd();
     DataType compileNot();
     DataType compileEquality();
@@ -120,7 +121,12 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileOr()
 {
-    return compileOperator(Precedence::Or, &Impl::compileAnd, WordGetCodes, ConvertToInteger);
+    return compileOperator(Precedence::Or, &Impl::compileXor, WordGetCodes, ConvertToInteger);
+}
+
+DataType ExpressionCompiler::Impl::compileXor()
+{
+    return compileOperator(Precedence::Xor, &Impl::compileAnd, WordGetCodes, ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileAnd()
