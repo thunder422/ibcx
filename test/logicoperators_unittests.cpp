@@ -270,3 +270,17 @@ TEST_CASE("apply necessary conversions to and operator", "[and][conversion]")
         REQUIRE(oss.str() == "2\n");
     }
 }
+
+
+TEST_CASE("compile or operator expressions", "[or][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure operator and operand are parsed")
+    {
+        Compiler compiler {"10 OR 7", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

@@ -27,6 +27,7 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileOr();
     DataType compileAnd();
     DataType compileNot();
     DataType compileEquality();
@@ -40,7 +41,7 @@ private:
     DataType compileNumOperand();
     DataType compileParentheses();
     DataType compileNumConstant();
-    DataType compileOperator(DataType (Impl::*compile_operand)(), Precedence::Level precedence,
+    DataType compileOperator(Precedence::Level precedence, DataType (Impl::*compile_operand)(),
         OperatorCodes *(*get_codes)(Compiler &compiler, Precedence::Level precedence),
         void (*convert)(Compiler &compiler, DataType data_type) = NoConvert);
     DataType addSelectedCode(OperatorCodes *codes, DataType lhs_data_type, DataType rhs_data_type)
@@ -110,16 +111,21 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileAnd();
+    auto data_type = compileOr();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }
     return data_type;
 }
 
+DataType ExpressionCompiler::Impl::compileOr()
+{
+    return compileOperator(Precedence::Or, &Impl::compileAnd, WordGetCodes, ConvertToInteger);
+}
+
 DataType ExpressionCompiler::Impl::compileAnd()
 {
-    return compileOperator(&Impl::compileNot, Precedence::And, WordGetCodes, ConvertToInteger);
+    return compileOperator(Precedence::And, &Impl::compileNot, WordGetCodes, ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileNot()
@@ -135,38 +141,38 @@ DataType ExpressionCompiler::Impl::compileNot()
 
 DataType ExpressionCompiler::Impl::compileEquality()
 {
-    return compileOperator(&Impl::compileRelation, Precedence::Equality, ComparisonGetCodes);
+    return compileOperator(Precedence::Equality, &Impl::compileRelation, ComparisonGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileRelation()
 {
-    return compileOperator(&Impl::compileSummation, Precedence::Relation, ComparisonGetCodes);
+    return compileOperator(Precedence::Relation, &Impl::compileSummation, ComparisonGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileSummation()
 {
-    return compileOperator(&Impl::compileModulo, Precedence::Summation, SymbolGetCodes);
+    return compileOperator(Precedence::Summation, &Impl::compileModulo, SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileModulo()
 {
-    return compileOperator(&Impl::compileIntegerDivision, Precedence::Modulo, WordGetCodes);
+    return compileOperator(Precedence::Modulo, &Impl::compileIntegerDivision, WordGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
-    return compileOperator(&Impl::compileProduct, Precedence::IntDivide, SymbolGetCodes,
+    return compileOperator(Precedence::IntDivide, &Impl::compileProduct, SymbolGetCodes,
         ConvertToDouble);
 }
 
 DataType ExpressionCompiler::Impl::compileProduct()
 {
-    return compileOperator(&Impl::compileExponential, Precedence::Product, SymbolGetCodes);
+    return compileOperator(Precedence::Product, &Impl::compileExponential, SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileExponential()
 {
-    return compileOperator(&Impl::compileNumOperand, Precedence::Exponential, SymbolGetCodes);
+    return compileOperator(Precedence::Exponential, &Impl::compileNumOperand, SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileNegation()
@@ -211,8 +217,8 @@ DataType ExpressionCompiler::Impl::compileNumConstant()
     return data_type;
 }
 
-DataType ExpressionCompiler::Impl::compileOperator(DataType (Impl::*compile_operand)(),
-    Precedence::Level precedence,
+DataType ExpressionCompiler::Impl::compileOperator(Precedence::Level precedence,
+    DataType (Impl::*compile_operand)(),
     OperatorCodes *(*get_codes)(Compiler &compiler, Precedence::Level precedence),
     void (*convert)(Compiler &compiler, DataType data_type))
 {

@@ -31,3 +31,9 @@ void executeAnd(Executer &executer)
 OperatorCode<OpType::IntInt> and_code {recreateBinaryOperator, executeAnd};
 
 LogicOperatorCodes and_codes {Precedence::And, "AND", and_code};
+
+// ----------------------------------------
+
+OperatorCode<OpType::IntInt> or_code {nullptr, nullptr};
+
+LogicOperatorCodes or_codes {Precedence::Or, "OR", or_code};
