@@ -300,3 +300,19 @@ TEST_CASE("recreate or operator expressions", "[or][recreate]")
         REQUIRE(oss.str() == "PRINT 10 OR 7\n");
     }
 }
+
+TEST_CASE("execute or operator", "[or][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute a or operator")
+    {
+        std::istringstream iss {"PRINT 10 OR 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "15\n");
+    }
+}

@@ -34,6 +34,13 @@ LogicOperatorCodes and_codes {Precedence::And, "AND", and_code};
 
 // ----------------------------------------
 
-OperatorCode<OpType::IntInt> or_code {recreateBinaryOperator, nullptr};
+void executeOr(Executer &executer)
+{
+    auto lhs = executer.topInt();
+    executer.pop();
+    executer.setTopInt(lhs | executer.topInt());
+}
+
+OperatorCode<OpType::IntInt> or_code {recreateBinaryOperator, executeOr};
 
 LogicOperatorCodes or_codes {Precedence::Or, "OR", or_code};
