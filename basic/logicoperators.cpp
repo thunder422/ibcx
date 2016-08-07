@@ -57,3 +57,9 @@ void executeOr(Executer &executer)
 OperatorCode<OpType::IntInt> or_code {recreateBinaryOperator, executeOr};
 
 LogicOperatorCodes or_codes {Precedence::Or, "OR", or_code};
+
+// ----------------------------------------
+
+OperatorCode<OpType::IntInt> eqv_code {nullptr, nullptr};
+
+LogicOperatorCodes eqv_codes {Precedence::Eqv, "EQV", eqv_code};

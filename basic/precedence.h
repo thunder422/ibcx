@@ -29,7 +29,8 @@ struct Precedence {
         Not,
         And,
         Xor,
-        Or
+        Or,
+        Eqv
     };
 
     static void addOperatorCodes(Precedence::Level precedence, OperatorCodes &codes,

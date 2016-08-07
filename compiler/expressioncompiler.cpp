@@ -27,6 +27,7 @@ public:
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
+    DataType compileEqv();
     DataType compileOr();
     DataType compileXor();
     DataType compileAnd();
@@ -112,11 +113,16 @@ DataType ExpressionCompiler::Impl::compileExpression(DataType expected_data_type
 
 DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileOr();
+    auto data_type = compileEqv();
     if (expected_data_type != DataType::Null && data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }
     return data_type;
+}
+
+DataType ExpressionCompiler::Impl::compileEqv()
+{
+    return compileOperator(Precedence::Eqv, &Impl::compileOr, WordGetCodes, ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileOr()

@@ -180,7 +180,7 @@ TEST_CASE("compile and operator expressions", "[and][compile]")
 {
     ProgramUnit program;
 
-    SECTION("make sure operator and operand are parsed")
+    SECTION("make sure operator and operands are parsed")
     {
         Compiler compiler {"10 AND 7", program};
         compiler.compileExpression(DataType::Null);
@@ -276,7 +276,7 @@ TEST_CASE("compile or operator expressions", "[or][compile]")
 {
     ProgramUnit program;
 
-    SECTION("make sure operator and operand are parsed")
+    SECTION("make sure operator and operands are parsed")
     {
         Compiler compiler {"10 OR 7", program};
         compiler.compileExpression(DataType::Null);
@@ -322,7 +322,7 @@ TEST_CASE("compile xor operator expressions", "[xor][compile]")
 {
     ProgramUnit program;
 
-    SECTION("make sure operator and operand are parsed")
+    SECTION("make sure operator and operands are parsed")
     {
         Compiler compiler {"10 XOR 7", program};
         compiler.compileExpression(DataType::Null);
@@ -360,5 +360,19 @@ TEST_CASE("execute xor operator", "[xor][execute]")
         program.run(oss);
 
         REQUIRE(oss.str() == "13\n");
+    }
+}
+
+
+TEST_CASE("compile eqv operator expressions", "[eqv][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure operator and operands are parsed")
+    {
+        Compiler compiler {"10 EQV 7", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
