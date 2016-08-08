@@ -70,3 +70,9 @@ void executeEqv(Executer &executer)
 OperatorCode<OpType::IntInt> eqv_code {recreateBinaryOperator, executeEqv};
 
 LogicOperatorCodes eqv_codes {Precedence::Eqv, "EQV", eqv_code};
+
+// ----------------------------------------
+
+OperatorCode<OpType::IntInt> imp_code {nullptr, nullptr};
+
+LogicOperatorCodes imp_codes {Precedence::Imp, "IMP", imp_code};

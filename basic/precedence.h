@@ -30,7 +30,8 @@ struct Precedence {
         And,
         Xor,
         Or,
-        Eqv
+        Eqv,
+        Imp
     };
 
     static void addOperatorCodes(Precedence::Level precedence, OperatorCodes &codes,

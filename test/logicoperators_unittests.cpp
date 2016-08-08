@@ -408,3 +408,17 @@ TEST_CASE("execute eqv operator", "[eqv][execute]")
         REQUIRE(oss.str() == "-14\n");
     }
 }
+
+
+TEST_CASE("compile imp operator expressions", "[imp][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure operator and operands are parsed")
+    {
+        Compiler compiler {"10 IMP 7", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}
