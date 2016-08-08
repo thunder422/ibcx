@@ -422,3 +422,19 @@ TEST_CASE("compile imp operator expressions", "[imp][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate imp operator expressions", "[imp][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate an imp of integer constants")
+    {
+        std::istringstream iss {"PRINT 10 imp 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT 10 IMP 7\n");
+    }
+}
