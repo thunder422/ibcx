@@ -23,9 +23,9 @@ NotOperatorCodes not_codes {Precedence::Not, "NOT", not_code};
 
 void executeAnd(Executer &executer)
 {
-    auto lhs = executer.topInt();
+    auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(lhs & executer.topInt());
+    executer.setTopInt(executer.topInt() & rhs);
 }
 
 OperatorCode<OpType::IntInt> and_code {recreateBinaryOperator, executeAnd};
@@ -36,9 +36,9 @@ LogicOperatorCodes and_codes {Precedence::And, "AND", and_code};
 
 void executeXor(Executer &executer)
 {
-    auto lhs = executer.topInt();
+    auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(lhs ^ executer.topInt());
+    executer.setTopInt(executer.topInt() ^ rhs);
 }
 
 OperatorCode<OpType::IntInt> xor_code {recreateBinaryOperator, executeXor};
@@ -49,9 +49,9 @@ LogicOperatorCodes xor_codes {Precedence::Xor, "XOR", xor_code};
 
 void executeOr(Executer &executer)
 {
-    auto lhs = executer.topInt();
+    auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(lhs | executer.topInt());
+    executer.setTopInt(executer.topInt() | rhs);
 }
 
 OperatorCode<OpType::IntInt> or_code {recreateBinaryOperator, executeOr};
@@ -62,9 +62,9 @@ LogicOperatorCodes or_codes {Precedence::Or, "OR", or_code};
 
 void executeEqv(Executer &executer)
 {
-    auto lhs = executer.topInt();
+    auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(~(lhs ^ executer.topInt()));
+    executer.setTopInt(~(executer.topInt() ^ rhs));
 }
 
 OperatorCode<OpType::IntInt> eqv_code {recreateBinaryOperator, executeEqv};
@@ -73,6 +73,13 @@ LogicOperatorCodes eqv_codes {Precedence::Eqv, "EQV", eqv_code};
 
 // ----------------------------------------
 
-OperatorCode<OpType::IntInt> imp_code {recreateBinaryOperator, nullptr};
+void executeImp(Executer &executer)
+{
+    auto rhs = executer.topInt();
+    executer.pop();
+    executer.setTopInt(~executer.topInt() | rhs);
+}
+
+OperatorCode<OpType::IntInt> imp_code {recreateBinaryOperator, executeImp};
 
 LogicOperatorCodes imp_codes {Precedence::Imp, "IMP", imp_code};

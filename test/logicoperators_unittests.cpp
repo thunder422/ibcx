@@ -438,3 +438,19 @@ TEST_CASE("recreate imp operator expressions", "[imp][recreate]")
         REQUIRE(oss.str() == "PRINT 10 IMP 7\n");
     }
 }
+
+TEST_CASE("execute imp operator", "[imp][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute an imp operator")
+    {
+        std::istringstream iss {"PRINT 10 IMP 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-9\n");
+    }
+}
