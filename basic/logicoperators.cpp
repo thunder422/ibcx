@@ -60,6 +60,13 @@ LogicOperatorCodes or_codes {Precedence::Or, "OR", or_code};
 
 // ----------------------------------------
 
-OperatorCode<OpType::IntInt> eqv_code {recreateBinaryOperator, nullptr};
+void executeEqv(Executer &executer)
+{
+    auto lhs = executer.topInt();
+    executer.pop();
+    executer.setTopInt(~(lhs ^ executer.topInt()));
+}
+
+OperatorCode<OpType::IntInt> eqv_code {recreateBinaryOperator, executeEqv};
 
 LogicOperatorCodes eqv_codes {Precedence::Eqv, "EQV", eqv_code};

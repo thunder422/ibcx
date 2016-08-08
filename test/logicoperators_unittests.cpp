@@ -392,3 +392,19 @@ TEST_CASE("recreate eqv operator expressions", "[eqv][recreate]")
         REQUIRE(oss.str() == "PRINT 10 EQV 7\n");
     }
 }
+
+TEST_CASE("execute eqv operator", "[eqv][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute an eqv operator")
+    {
+        std::istringstream iss {"PRINT 10 EQV 7"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-14\n");
+    }
+}
