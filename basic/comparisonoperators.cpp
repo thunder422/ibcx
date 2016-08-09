@@ -62,7 +62,7 @@ OperatorCode<OpType::DblInt> lt_dbl_int_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntInt> lt_int_int_code {recreateBinaryOperator, executeCompareIntInt<lt>};
 
 CompOperatorCodes lt_codes {
-    Precedence::Relation, "<",
+    Precedence::Level::Relation, "<",
     lt_dbl_dbl_code, lt_int_dbl_code, lt_dbl_int_code, lt_int_int_code
 };
 
@@ -84,7 +84,7 @@ OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, executeCompareIntInt<gt>};
 
 CompOperatorCodes gt_codes {
-    Precedence::Relation, ">",
+    Precedence::Level::Relation, ">",
     gt_dbl_dbl_code, gt_int_dbl_code, gt_dbl_int_code, gt_int_int_code
 };
 
@@ -106,7 +106,7 @@ OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeCompareIntInt<le>};
 
 CompOperatorCodes le_codes {
-    Precedence::Relation, "<=",
+    Precedence::Level::Relation, "<=",
     le_dbl_dbl_code, le_int_dbl_code, le_dbl_int_code, le_int_int_code
 };
 
@@ -128,7 +128,7 @@ OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, executeCompareIntInt<ge>};
 
 CompOperatorCodes ge_codes {
-    Precedence::Relation, ">=",
+    Precedence::Level::Relation, ">=",
     ge_dbl_dbl_code, ge_int_dbl_code, ge_dbl_int_code, ge_int_int_code
 };
 
@@ -150,7 +150,7 @@ OperatorCode<OpType::DblInt> eq_dbl_int_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntInt> eq_int_int_code {recreateBinaryOperator, executeCompareIntInt<eq>};
 
 CompOperatorCodes eq_codes {
-    Precedence::Equality, "=",
+    Precedence::Level::Equality, "=",
     eq_dbl_dbl_code, eq_int_dbl_code, eq_dbl_int_code, eq_int_int_code
 };
 
@@ -172,6 +172,6 @@ OperatorCode<OpType::DblInt> ne_dbl_int_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntInt> ne_int_int_code {recreateBinaryOperator, executeCompareIntInt<ne>};
 
 CompOperatorCodes ne_codes {
-    Precedence::Equality, "<>",
+    Precedence::Level::Equality, "<>",
     ne_dbl_dbl_code, ne_int_dbl_code, ne_dbl_int_code, ne_int_int_code
 };

@@ -146,7 +146,7 @@ void PrecedenceInfo::addOperatorData(Precedence::Level precedence, OperatorCodes
         precedences[code_value] = precedence;
         keywords[code_value] = keyword;
     }
-    if (precedence == Precedence::Relation || precedence == Precedence::Equality) {
+    if (precedence == Precedence::Level::Relation || precedence == Precedence::Level::Equality) {
         comparison_operator_data.emplace(keyword, ComparisonOperator{&codes, precedence});
     }
 }

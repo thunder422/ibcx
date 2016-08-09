@@ -63,7 +63,7 @@ private:
 
 OperatorCodes *Compiler::getComparisonOperatorCodes(Precedence::Level precedence)
 {
-    if (precedence == Precedence::Equality) {
+    if (precedence == Precedence::Level::Equality) {
         return savedEqualityOperatorCodes();
     } else {
         skipWhiteSpace();
@@ -103,7 +103,7 @@ OperatorCodes *ComparisonOperatorCodes::codesWithNextPeekChar()
 
 OperatorCodes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &compare_operator)
 {
-    if (compare_operator.precedence == Precedence::Relation) {
+    if (compare_operator.precedence == Precedence::Level::Relation) {
         return compare_operator.codes;
     } else {
         compiler.setEqualityCodes(compare_operator.codes);

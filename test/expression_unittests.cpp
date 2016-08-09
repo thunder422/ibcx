@@ -174,3 +174,20 @@ TEST_CASE("compile expressions with the multiply operator", "[multiply]")
         REQUIRE(oss.str() == "PRINT -(2 * 4)\n");
     }
 }
+
+TEST_CASE("check expressions with various operators", "[operator]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate higher precedence unary negate with addition")
+    {
+        std::istringstream iss {"PRINT - 2+4"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "PRINT - 2 + 4\n2\n");
+    }
+}

@@ -26,17 +26,7 @@ public:
     void pushKeyword(CommandCode command_code);
     void push(const std::string &operand);
     bool empty() const;
-    Precedence::Level topPrecedence() const;
-    bool topUnaryOperator() const;
-    void pop();
     void prependKeyword(CommandCode command_code);
-    void append(char c);
-    void append(const std::string &string);
-    void swapTop(std::string &string);
-    void setTopPrecedence(Precedence::Level precedence);
-    void setTopUnaryOperator(bool unary_operator);
-    void markErrorStart();
-    void markErrorEnd();
 
     void recreateUnaryOperator();
     void recreateBinaryOperator();
@@ -45,15 +35,26 @@ public:
 private:
     struct StackItem {
         StackItem(const std::string &string, Precedence::Level precedence);
+        bool isUnaryOperator() const;
 
         std::string string;
         Precedence::Level precedence;
-        bool unary_operator;
+        Precedence::Level unary_operator_precedence;
     };
 
     void setAtErrorOffset();
     void recreateOneCode();
-    std::string &&topString();
+    std::string &&moveTopString();
+    Precedence::Level topPrecedence() const;
+    Precedence::Level topUnaryOperatorPrecedence() const;
+    void pop();
+    void append(char c);
+    void append(const std::string &string);
+    void swapTop(std::string &string);
+    void setTopPrecedence(Precedence::Level precedence);
+    void setTopUnaryOperatorPrecedence(Precedence::Level precedence);
+    void markErrorStart();
+    void markErrorEnd();
     void appendErrorMarker(char error_marker);
     void appendUnaryOperator();
     void appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence);
@@ -72,13 +73,6 @@ private:
     std::stack<StackItem> stack;
     bool at_error_offset;
 };
-
-inline Recreator::StackItem::StackItem(const std::string &string, Precedence::Level precedence) :
-    string {string},
-    precedence {precedence},
-    unary_operator {false}
-{
-}
 
 
 void recreateUnaryOperator(Recreator &recreator);

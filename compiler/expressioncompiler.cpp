@@ -123,32 +123,37 @@ DataType ExpressionCompiler::Impl::compileNumExpression(DataType expected_data_t
 
 DataType ExpressionCompiler::Impl::compileImp()
 {
-    return compileOperator(Precedence::Imp, &Impl::compileEqv, WordGetCodes, ConvertToInteger);
+    return compileOperator(Precedence::Level::Imp, &Impl::compileEqv, WordGetCodes,
+        ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileEqv()
 {
-    return compileOperator(Precedence::Eqv, &Impl::compileOr, WordGetCodes, ConvertToInteger);
+    return compileOperator(Precedence::Level::Eqv, &Impl::compileOr, WordGetCodes,
+        ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileOr()
 {
-    return compileOperator(Precedence::Or, &Impl::compileXor, WordGetCodes, ConvertToInteger);
+    return compileOperator(Precedence::Level::Or, &Impl::compileXor, WordGetCodes,
+        ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileXor()
 {
-    return compileOperator(Precedence::Xor, &Impl::compileAnd, WordGetCodes, ConvertToInteger);
+    return compileOperator(Precedence::Level::Xor, &Impl::compileAnd, WordGetCodes,
+        ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileAnd()
 {
-    return compileOperator(Precedence::And, &Impl::compileNot, WordGetCodes, ConvertToInteger);
+    return compileOperator(Precedence::Level::And, &Impl::compileNot, WordGetCodes,
+        ConvertToInteger);
 }
 
 DataType ExpressionCompiler::Impl::compileNot()
 {
-    if (auto codes = compiler.getWordOperatorCodes(Precedence::Not)) {
+    if (auto codes = compiler.getWordOperatorCodes(Precedence::Level::Not)) {
         auto data_type = compileNot();
         compiler.convertToInteger(data_type);
         return addSelectedCode(codes, DataType::Null, DataType::Null);
@@ -159,38 +164,40 @@ DataType ExpressionCompiler::Impl::compileNot()
 
 DataType ExpressionCompiler::Impl::compileEquality()
 {
-    return compileOperator(Precedence::Equality, &Impl::compileRelation, ComparisonGetCodes);
+    return compileOperator(Precedence::Level::Equality, &Impl::compileRelation, ComparisonGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileRelation()
 {
-    return compileOperator(Precedence::Relation, &Impl::compileSummation, ComparisonGetCodes);
+    return compileOperator(Precedence::Level::Relation, &Impl::compileSummation,
+        ComparisonGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileSummation()
 {
-    return compileOperator(Precedence::Summation, &Impl::compileModulo, SymbolGetCodes);
+    return compileOperator(Precedence::Level::Summation, &Impl::compileModulo, SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileModulo()
 {
-    return compileOperator(Precedence::Modulo, &Impl::compileIntegerDivision, WordGetCodes);
+    return compileOperator(Precedence::Level::Modulo, &Impl::compileIntegerDivision, WordGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileIntegerDivision()
 {
-    return compileOperator(Precedence::IntDivide, &Impl::compileProduct, SymbolGetCodes,
+    return compileOperator(Precedence::Level::IntDivide, &Impl::compileProduct, SymbolGetCodes,
         ConvertToDouble);
 }
 
 DataType ExpressionCompiler::Impl::compileProduct()
 {
-    return compileOperator(Precedence::Product, &Impl::compileExponential, SymbolGetCodes);
+    return compileOperator(Precedence::Level::Product, &Impl::compileExponential, SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileExponential()
 {
-    return compileOperator(Precedence::Exponential, &Impl::compileNumOperand, SymbolGetCodes);
+    return compileOperator(Precedence::Level::Exponential, &Impl::compileNumOperand,
+        SymbolGetCodes);
 }
 
 DataType ExpressionCompiler::Impl::compileNegation()
@@ -200,7 +207,7 @@ DataType ExpressionCompiler::Impl::compileNegation()
     if (data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }
-    auto codes = Precedence::operatorCodes(Precedence::Negate);
+    auto codes = Precedence::operatorCodes(Precedence::Level::Negate);
     compiler.addInstruction(codes->select(data_type).code);
     return data_type;
 }

@@ -16,7 +16,7 @@ class ComparisonOperator;
 class OperatorCodes;
 
 struct Precedence {
-    enum Level {
+    enum class Level {
         Operand,
         Exponential,
         Negate,

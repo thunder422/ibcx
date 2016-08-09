@@ -17,7 +17,7 @@ void executeNot(Executer &executer)
 
 OperatorCode<OpType::Int> not_code {recreateUnaryOperator, executeNot};
 
-NotOperatorCodes not_codes {Precedence::Not, "NOT", not_code};
+NotOperatorCodes not_codes {Precedence::Level::Not, "NOT", not_code};
 
 // ----------------------------------------
 
@@ -30,7 +30,7 @@ void executeAnd(Executer &executer)
 
 OperatorCode<OpType::IntInt> and_code {recreateBinaryOperator, executeAnd};
 
-LogicOperatorCodes and_codes {Precedence::And, "AND", and_code};
+LogicOperatorCodes and_codes {Precedence::Level::And, "AND", and_code};
 
 // ----------------------------------------
 
@@ -43,7 +43,7 @@ void executeXor(Executer &executer)
 
 OperatorCode<OpType::IntInt> xor_code {recreateBinaryOperator, executeXor};
 
-LogicOperatorCodes xor_codes {Precedence::Xor, "XOR", xor_code};
+LogicOperatorCodes xor_codes {Precedence::Level::Xor, "XOR", xor_code};
 
 // ----------------------------------------
 
@@ -56,7 +56,7 @@ void executeOr(Executer &executer)
 
 OperatorCode<OpType::IntInt> or_code {recreateBinaryOperator, executeOr};
 
-LogicOperatorCodes or_codes {Precedence::Or, "OR", or_code};
+LogicOperatorCodes or_codes {Precedence::Level::Or, "OR", or_code};
 
 // ----------------------------------------
 
@@ -69,7 +69,7 @@ void executeEqv(Executer &executer)
 
 OperatorCode<OpType::IntInt> eqv_code {recreateBinaryOperator, executeEqv};
 
-LogicOperatorCodes eqv_codes {Precedence::Eqv, "EQV", eqv_code};
+LogicOperatorCodes eqv_codes {Precedence::Level::Eqv, "EQV", eqv_code};
 
 // ----------------------------------------
 
@@ -82,4 +82,4 @@ void executeImp(Executer &executer)
 
 OperatorCode<OpType::IntInt> imp_code {recreateBinaryOperator, executeImp};
 
-LogicOperatorCodes imp_codes {Precedence::Imp, "IMP", imp_code};
+LogicOperatorCodes imp_codes {Precedence::Level::Imp, "IMP", imp_code};

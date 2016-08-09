@@ -13,6 +13,20 @@
 #include "recreator.h"
 
 
+Recreator::StackItem::StackItem(const std::string &string, Precedence::Level precedence) :
+    string {string},
+    precedence {precedence},
+    unary_operator_precedence {Precedence::Level::Operand}
+{
+}
+
+bool Recreator::StackItem::isUnaryOperator() const
+{
+    return unary_operator_precedence != Precedence::Level::Operand;
+}
+
+// ------------------------------------------------------------
+
 Recreator::Recreator(const ProgramUnit &program, ProgramReader program_reader,
         unsigned error_offset) :
     program {program},
@@ -27,7 +41,7 @@ std::string &&Recreator::operator()()
         setAtErrorOffset();
         recreateOneCode();
     }
-    return topString();
+    return moveTopString();
 }
 
 void Recreator::setAtErrorOffset()
@@ -55,7 +69,7 @@ void Recreator::pushKeyword(CommandCode command_code)
 
 void Recreator::push(const std::string &operand)
 {
-    stack.emplace(operand, Precedence::Operand);
+    stack.emplace(operand, Precedence::Level::Operand);
 }
 
 bool Recreator::empty() const
@@ -63,7 +77,7 @@ bool Recreator::empty() const
     return stack.empty();
 }
 
-std::string &&Recreator::topString()
+std::string &&Recreator::moveTopString()
 {
     return std::move(stack.top().string);
 }
@@ -73,9 +87,9 @@ Precedence::Level Recreator::topPrecedence() const
     return stack.top().precedence;
 }
 
-bool Recreator::topUnaryOperator() const
+Precedence::Level Recreator::topUnaryOperatorPrecedence() const
 {
-    return stack.top().unary_operator;
+    return stack.top().unary_operator_precedence;
 }
 
 void Recreator::pop()
@@ -111,9 +125,9 @@ void Recreator::setTopPrecedence(Precedence::Level precedence)
     stack.top().precedence = precedence;
 }
 
-void Recreator::setTopUnaryOperator(bool unary_operator)
+void Recreator::setTopUnaryOperatorPrecedence(Precedence::Level precedence)
 {
-    stack.top().unary_operator = unary_operator;
+    stack.top().unary_operator_precedence = precedence;
 }
 
 void Recreator::markErrorStart()
@@ -135,7 +149,7 @@ void Recreator::appendErrorMarker(char error_marker)
 
 void Recreator::recreateUnaryOperator()
 {
-    auto operand = topString();
+    auto operand = moveTopString();
 
     appendUnaryOperator();
     auto operator_precedence = getOperatorPrecedence();
@@ -143,7 +157,7 @@ void Recreator::recreateUnaryOperator()
     appendUnaryOperand(std::move(operand), operator_precedence);
 
     setTopPrecedence(operator_precedence);
-    setTopUnaryOperator(true);
+    setTopUnaryOperatorPrecedence(operator_precedence);
 }
 
 void Recreator::appendUnaryOperator()
@@ -151,7 +165,7 @@ void Recreator::appendUnaryOperator()
     markErrorStart();
     append(getOperatorKeyword());
     markErrorEnd();
-    if (isalpha(topString().back())) {
+    if (isalpha(moveTopString().back())) {
         append(' ');
     }
 }
@@ -171,7 +185,7 @@ void Recreator::appendUnaryOperand(std::string &&operand, Precedence::Level oper
 void Recreator::appendSpaceForConstant(char first_char)
 {
     if (isdigit(first_char) || first_char == '.') {
-        if (topString().back() != ' ') {
+        if (moveTopString().back() != ' ') {
             append(' ');
         }
     }
@@ -179,7 +193,7 @@ void Recreator::appendSpaceForConstant(char first_char)
 
 void Recreator::recreateBinaryOperator()
 {
-    StackItem rhs = stack.top();
+    auto rhs = stack.top();
     pop();
 
     auto operator_precedence = getOperatorPrecedence();
@@ -189,15 +203,16 @@ void Recreator::recreateBinaryOperator()
     appendRightOperand(rhs, operator_precedence);
 
     setTopPrecedence(operator_precedence);
-    setTopUnaryOperator(rhs.precedence > operator_precedence && rhs.unary_operator);
+    setTopUnaryOperatorPrecedence(rhs.unary_operator_precedence);
 }
 
 void Recreator::appendLeftOperand(Precedence::Level operator_precedence)
 {
     auto lhs_precedence = topPrecedence();
-    auto lhs_unary_operator = topUnaryOperator();
-    if (lhs_precedence > operator_precedence || lhs_unary_operator) {
-        auto left_operand = topString();
+    auto lhs_unary_operator_precedence = topUnaryOperatorPrecedence();
+    if (lhs_precedence > operator_precedence
+            || lhs_unary_operator_precedence > operator_precedence) {
+        auto left_operand = moveTopString();
         appendWithParens(left_operand);
     }
 }
@@ -213,7 +228,7 @@ void Recreator::appendBinaryOperator()
 
 void Recreator::appendRightOperand(const StackItem &rhs, Precedence::Level operator_precedence)
 {
-    auto lower_precedence = rhs.precedence >= operator_precedence && !rhs.unary_operator;
+    auto lower_precedence = rhs.precedence >= operator_precedence && !rhs.isUnaryOperator();
     if (lower_precedence) {
         appendWithParens(rhs.string);
     } else {
@@ -240,7 +255,7 @@ Precedence::Level Recreator::getOperatorPrecedence() const
 
 void Recreator::markOperandIfError()
 {
-    auto operand = topString();
+    auto operand = moveTopString();
     markErrorStart();
     append(operand);
     markErrorEnd();
