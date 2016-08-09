@@ -190,4 +190,16 @@ TEST_CASE("check expressions with various operators", "[operator]")
 
         REQUIRE(oss.str() == "PRINT - 2 + 4\n2\n");
     }
+    SECTION("check parsing of unary not operator on a right side operand")
+    {
+        std::istringstream iss {"PRINT 2 + NOT-4"};
+        std::ostringstream oss;
+
+        if (program.compileSource(iss, oss)) {
+            program.recreate(oss);
+            program.run(oss);
+        }
+
+        REQUIRE(oss.str() == "PRINT 2 + NOT -4\n5\n");
+    }
 }

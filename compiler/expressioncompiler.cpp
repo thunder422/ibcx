@@ -33,6 +33,8 @@ private:
     DataType compileXor();
     DataType compileAnd();
     DataType compileNot();
+    OperatorCodes *getNotOperatorCodes();
+    DataType compileNotOperand(OperatorCodes *codes);
     DataType compileEquality();
     DataType compileRelation();
     DataType compileSummation();
@@ -153,13 +155,23 @@ DataType ExpressionCompiler::Impl::compileAnd()
 
 DataType ExpressionCompiler::Impl::compileNot()
 {
-    if (auto codes = compiler.getWordOperatorCodes(Precedence::Level::Not)) {
-        auto data_type = compileNot();
-        compiler.convertToInteger(data_type);
-        return addSelectedCode(codes, DataType::Null, DataType::Null);
+    if (auto codes = getNotOperatorCodes()) {
+        return compileNotOperand(codes);
     } else {
         return compileEquality();
     }
+}
+
+OperatorCodes *ExpressionCompiler::Impl::getNotOperatorCodes()
+{
+    return compiler.getWordOperatorCodes(Precedence::Level::Not);
+}
+
+DataType ExpressionCompiler::Impl::compileNotOperand(OperatorCodes *codes)
+{
+    auto data_type = compileNot();
+    compiler.convertToInteger(data_type);
+    return addSelectedCode(codes, DataType::Null, DataType::Null);
 }
 
 DataType ExpressionCompiler::Impl::compileEquality()
@@ -216,6 +228,9 @@ DataType ExpressionCompiler::Impl::compileNumOperand()
 {
     if (compiler.peekNextChar() == '(') {
         return compileParentheses();
+    }
+    if (auto codes = getNotOperatorCodes()) {
+        return compileNotOperand(codes);
     }
     return compileNumConstant();
 }
