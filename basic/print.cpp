@@ -41,11 +41,7 @@ void compilePrint(Compiler &compiler)
 
 void recreatePrint(Recreator &recreator)
 {
-    if (recreator.empty()) {
-        recreator.pushKeyword(print_code);
-    } else {
-        recreator.prependKeyword(print_code);
-    }
+    recreator.addCommandKeyword(print_code);
 }
 
 void recreatePrintItem(Recreator &recreator)

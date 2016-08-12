@@ -72,8 +72,8 @@ void ProgramUnit::recreate(std::ostream &os)
 
 std::string ProgramUnit::recreateLine(unsigned line_index, unsigned error_offset) const
 {
-    Recreator recreate {*this, createProgramReader(line_index), error_offset};
-    return recreate();
+    auto recreator = Recreator::create(*this, createProgramReader(line_index), error_offset);
+    return recreator->recreate();
 }
 
 ProgramReader ProgramUnit::createProgramReader(unsigned line_index) const

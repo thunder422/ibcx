@@ -8,70 +8,29 @@
 #ifndef IBC_RECREATOR_H
 #define IBC_RECREATOR_H
 
-#include <stack>
+#include <memory>
 #include <string>
-
-#include "precedence.h"
-#include "programreader.h"
 
 
 class CommandCode;
+class ProgramReader;
 class ProgramUnit;
 
 class Recreator {
 public:
-    Recreator(const ProgramUnit &program, ProgramReader program_reader, unsigned error_offset);
-    std::string &&operator()();
-    std::string getConstNumOperand() const;
-    void pushKeyword(CommandCode command_code);
-    void push(const std::string &operand);
-    bool empty() const;
-    void prependKeyword(CommandCode command_code);
+    static std::unique_ptr<Recreator> create(const ProgramUnit &program,
+        ProgramReader program_reader, unsigned error_offset);
 
-    void recreateUnaryOperator();
-    void recreateBinaryOperator();
-    void markOperandIfError();
+    virtual ~Recreator() = default;
 
-private:
-    struct StackItem {
-        StackItem(const std::string &string, Precedence::Level precedence);
-        bool isUnaryOperator() const;
+    virtual std::string &&recreate() = 0;
+    virtual std::string getConstNumOperand() const = 0;
+    virtual void addCommandKeyword(CommandCode command_code) = 0;
+    virtual void push(const std::string &operand) = 0;
 
-        std::string string;
-        Precedence::Level precedence;
-        Precedence::Level unary_operator_precedence;
-    };
-
-    void setAtErrorOffset();
-    void recreateOneCode();
-    std::string &&moveTopString();
-    Precedence::Level topPrecedence() const;
-    Precedence::Level topUnaryOperatorPrecedence() const;
-    void pop();
-    void append(char c);
-    void append(const std::string &string);
-    void swapTop(std::string &string);
-    void setTopPrecedence(Precedence::Level precedence);
-    void setTopUnaryOperatorPrecedence(Precedence::Level precedence);
-    void markErrorStart();
-    void markErrorEnd();
-    void appendErrorMarker(char error_marker);
-    void appendUnaryOperator();
-    void appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence);
-    void appendSpaceForConstant(char first_char);
-    void appendLeftOperand(Precedence::Level operator_precedence);
-    void appendBinaryOperator();
-    void appendRightOperand(const StackItem &rhs, Precedence::Level operator_precedence);
-    void appendWithParens(const std::string &string);
-    const char *getOperatorKeyword() const;
-    Precedence::Level getOperatorPrecedence() const;
-
-    const ProgramUnit &program;
-    mutable ProgramReader program_reader;
-    WordType code_value;
-    unsigned error_offset;
-    std::stack<StackItem> stack;
-    bool at_error_offset;
+    virtual void recreateUnaryOperator() = 0;
+    virtual void recreateBinaryOperator() = 0;
+    virtual void markOperandIfError() = 0;
 };
 
 

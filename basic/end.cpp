@@ -26,7 +26,7 @@ void compileEnd(Compiler &compiler)
 
 void recreateEnd(Recreator &recreator)
 {
-    recreator.pushKeyword(end_code);
+    recreator.addCommandKeyword(end_code);
 }
 
 void executeEnd(Executer &executer)

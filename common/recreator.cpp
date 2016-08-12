@@ -5,29 +5,31 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include <stack>
+
 #include "commandcode.h"
-#include "precedence.h"
 #include "programcode.h"
 #include "programerror.h"
+#include "programreader.h"
 #include "programunit.h"
-#include "recreator.h"
+#include "recreatorimpl.h"
 
 
-Recreator::StackItem::StackItem(const std::string &string, Precedence::Level precedence) :
+RecreatorImpl::StackItem::StackItem(const std::string &string, Precedence::Level precedence) :
     string {string},
     precedence {precedence},
     unary_operator_precedence {Precedence::Level::Operand}
 {
 }
 
-bool Recreator::StackItem::isUnaryOperator() const
+bool RecreatorImpl::StackItem::isUnaryOperator() const
 {
     return unary_operator_precedence != Precedence::Level::Operand;
 }
 
 // ------------------------------------------------------------
 
-Recreator::Recreator(const ProgramUnit &program, ProgramReader program_reader,
+RecreatorImpl::RecreatorImpl(const ProgramUnit &program, ProgramReader program_reader,
         unsigned error_offset) :
     program {program},
     program_reader {program_reader},
@@ -35,7 +37,7 @@ Recreator::Recreator(const ProgramUnit &program, ProgramReader program_reader,
 {
 }
 
-std::string &&Recreator::operator()()
+std::string &&RecreatorImpl::recreate()
 {
     while (program_reader.hasMoreCode()) {
         setAtErrorOffset();
@@ -44,60 +46,59 @@ std::string &&Recreator::operator()()
     return moveTopString();
 }
 
-void Recreator::setAtErrorOffset()
+void RecreatorImpl::setAtErrorOffset()
 {
     at_error_offset = program_reader.currentOffset() == error_offset;
 }
 
-void Recreator::recreateOneCode()
+void RecreatorImpl::recreateOneCode()
 {
     auto code = program_reader.getInstruction();
     code_value = code->getValue();
     code->recreate(*this);
 }
 
-std::string Recreator::getConstNumOperand() const
+std::string RecreatorImpl::getConstNumOperand() const
 {
     auto operand = program_reader.getOperand();
     return program.constNumDictionary().get(operand);
 }
 
-void Recreator::pushKeyword(CommandCode command_code)
+void RecreatorImpl::addCommandKeyword(CommandCode command_code)
 {
-    push(command_code.getKeyword());
+    if (stack.empty()) {
+        push(command_code.getKeyword());
+    } else {
+        prependKeyword(command_code);
+    }
 }
 
-void Recreator::push(const std::string &operand)
+void RecreatorImpl::push(const std::string &operand)
 {
     stack.emplace(operand, Precedence::Level::Operand);
 }
 
-bool Recreator::empty() const
-{
-    return stack.empty();
-}
-
-std::string &&Recreator::moveTopString()
+std::string &&RecreatorImpl::moveTopString()
 {
     return std::move(stack.top().string);
 }
 
-Precedence::Level Recreator::topPrecedence() const
+Precedence::Level RecreatorImpl::topPrecedence() const
 {
     return stack.top().precedence;
 }
 
-Precedence::Level Recreator::topUnaryOperatorPrecedence() const
+Precedence::Level RecreatorImpl::topUnaryOperatorPrecedence() const
 {
     return stack.top().unary_operator_precedence;
 }
 
-void Recreator::pop()
+void RecreatorImpl::pop()
 {
     stack.pop();
 }
 
-void Recreator::prependKeyword(CommandCode command_code)
+void RecreatorImpl::prependKeyword(CommandCode command_code)
 {
     std::string string = command_code.getKeyword();
     swapTop(string);
@@ -105,49 +106,49 @@ void Recreator::prependKeyword(CommandCode command_code)
     append(string);
 }
 
-void Recreator::append(char c)
+void RecreatorImpl::append(char c)
 {
     stack.top().string += c;
 }
 
-void Recreator::append(const std::string &string)
+void RecreatorImpl::append(const std::string &string)
 {
     stack.top().string += string;
 }
 
-void Recreator::swapTop(std::string &string)
+void RecreatorImpl::swapTop(std::string &string)
 {
     std::swap(stack.top().string, string);
 }
 
-void Recreator::setTopPrecedence(Precedence::Level precedence)
+void RecreatorImpl::setTopPrecedence(Precedence::Level precedence)
 {
     stack.top().precedence = precedence;
 }
 
-void Recreator::setTopUnaryOperatorPrecedence(Precedence::Level precedence)
+void RecreatorImpl::setTopUnaryOperatorPrecedence(Precedence::Level precedence)
 {
     stack.top().unary_operator_precedence = precedence;
 }
 
-void Recreator::markErrorStart()
+void RecreatorImpl::markErrorStart()
 {
     appendErrorMarker(StartErrorMarker);
 }
 
-void Recreator::markErrorEnd()
+void RecreatorImpl::markErrorEnd()
 {
     appendErrorMarker(EndErrorMarker);
 }
 
-void Recreator::appendErrorMarker(char error_marker)
+void RecreatorImpl::appendErrorMarker(char error_marker)
 {
     if (at_error_offset) {
         append(error_marker);
     }
 }
 
-void Recreator::recreateUnaryOperator()
+void RecreatorImpl::recreateUnaryOperator()
 {
     auto operand = moveTopString();
 
@@ -160,7 +161,7 @@ void Recreator::recreateUnaryOperator()
     setTopUnaryOperatorPrecedence(operator_precedence);
 }
 
-void Recreator::appendUnaryOperator()
+void RecreatorImpl::appendUnaryOperator()
 {
     markErrorStart();
     append(getOperatorKeyword());
@@ -170,7 +171,7 @@ void Recreator::appendUnaryOperator()
     }
 }
 
-void Recreator::appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence)
+void RecreatorImpl::appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence)
 {
     auto operand_precedence = topPrecedence();
     auto lower_precedence = operand_precedence > operator_precedence;
@@ -182,7 +183,7 @@ void Recreator::appendUnaryOperand(std::string &&operand, Precedence::Level oper
     }
 }
 
-void Recreator::appendSpaceForConstant(char first_char)
+void RecreatorImpl::appendSpaceForConstant(char first_char)
 {
     if (isdigit(first_char) || first_char == '.') {
         if (moveTopString().back() != ' ') {
@@ -191,7 +192,7 @@ void Recreator::appendSpaceForConstant(char first_char)
     }
 }
 
-void Recreator::recreateBinaryOperator()
+void RecreatorImpl::recreateBinaryOperator()
 {
     auto rhs = stack.top();
     pop();
@@ -206,7 +207,7 @@ void Recreator::recreateBinaryOperator()
     setTopUnaryOperatorPrecedence(rhs.unary_operator_precedence);
 }
 
-void Recreator::appendLeftOperand(Precedence::Level operator_precedence)
+void RecreatorImpl::appendLeftOperand(Precedence::Level operator_precedence)
 {
     auto lhs_precedence = topPrecedence();
     auto lhs_unary_operator_precedence = topUnaryOperatorPrecedence();
@@ -217,7 +218,7 @@ void Recreator::appendLeftOperand(Precedence::Level operator_precedence)
     }
 }
 
-void Recreator::appendBinaryOperator()
+void RecreatorImpl::appendBinaryOperator()
 {
     append(' ');
     markErrorStart();
@@ -226,7 +227,7 @@ void Recreator::appendBinaryOperator()
     append(' ');
 }
 
-void Recreator::appendRightOperand(const StackItem &rhs, Precedence::Level operator_precedence)
+void RecreatorImpl::appendRightOperand(const StackItem &rhs, Precedence::Level operator_precedence)
 {
     auto lower_precedence = rhs.precedence >= operator_precedence && !rhs.isUnaryOperator();
     if (lower_precedence) {
@@ -236,29 +237,37 @@ void Recreator::appendRightOperand(const StackItem &rhs, Precedence::Level opera
     }
 }
 
-void Recreator::appendWithParens(const std::string &string)
+void RecreatorImpl::appendWithParens(const std::string &string)
 {
     append('(');
     append(string);
     append(')');
 }
 
-const char *Recreator::getOperatorKeyword() const
+const char *RecreatorImpl::getOperatorKeyword() const
 {
     return Precedence::getKeyword(code_value);
 }
 
-Precedence::Level Recreator::getOperatorPrecedence() const
+Precedence::Level RecreatorImpl::getOperatorPrecedence() const
 {
     return Precedence::getPrecedence(code_value);
 }
 
-void Recreator::markOperandIfError()
+void RecreatorImpl::markOperandIfError()
 {
     auto operand = moveTopString();
     markErrorStart();
     append(operand);
     markErrorEnd();
+}
+
+// ------------------------------------------------------------
+
+std::unique_ptr<Recreator> Recreator::create(const ProgramUnit &program,
+    ProgramReader program_reader, unsigned error_offset)
+{
+    return std::unique_ptr<Recreator> {new RecreatorImpl {program, program_reader, error_offset}};
 }
 
 // ------------------------------------------------------------
