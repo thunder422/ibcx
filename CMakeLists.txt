@@ -79,7 +79,6 @@ set(IBC_SOURCES
     common/dictionary.cpp
     common/executer.cpp
     common/recreator.cpp
-    common/recreatorimpl.h
     common/runerror.h
     common/wordtype.h
     compiler/commandcompiler.cpp
