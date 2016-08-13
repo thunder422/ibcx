@@ -121,6 +121,7 @@ ci_string Compiler::getKeyword()
 {
     if (word.empty()) {
         skipWhiteSpace();
+        word_column = column;
         word = getAlphaOnlyWord();
     }
     return word;
@@ -128,6 +129,7 @@ ci_string Compiler::getKeyword()
 
 void Compiler::parseKeyword(char first_char)
 {
+    word_column = column - 1;
     auto remaining_word = getAlphaOnlyWord();
     word += first_char;
     word += remaining_word;
@@ -136,7 +138,6 @@ void Compiler::parseKeyword(char first_char)
 ci_string Compiler::getAlphaOnlyWord()
 {
     ci_string keyword;
-    word_column = column;
     while (isalpha(peekNextChar())) {
         keyword += getNextChar();
     }

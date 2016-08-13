@@ -216,4 +216,11 @@ TEST_CASE("check expressions with various operators", "[operator]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("mark sure compiler column is correct when parsing a word beginning with 'E'")
+    {
+        Compiler compiler {"3+2ebad", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.getColumn() == 3);
+    }
 }
