@@ -202,4 +202,11 @@ TEST_CASE("check expressions with various operators", "[operator]")
 
         REQUIRE(oss.str() == "PRINT 2 + NOT -4\n5\n");
     }
+    SECTION("make sure compiler column is correct when parsing a word")
+    {
+        Compiler compiler {"3+2bad", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.getColumn() == 3);
+    }
 }
