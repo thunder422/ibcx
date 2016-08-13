@@ -39,7 +39,7 @@ std::vector<ProgramError> ProgramUnit::compile(std::istream &is)
     std::string line;
     while (std::getline(is, line)) {
         try {
-            auto code_line = CommandCompiler{line, *this}();
+            auto code_line = CommandCompiler::create(line, *this)->compile();
             appendCodeLine(code_line);
         }
         catch (const CompileError &error) {

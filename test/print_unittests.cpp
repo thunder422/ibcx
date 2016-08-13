@@ -24,7 +24,7 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
 
     SECTION("compile a PRINT command with an expression (single constant for now)")
     {
-        auto code_line = CommandCompiler{"PRINT 234", program}();
+        auto code_line = CommandCompiler::create("PRINT 234", program)->compile();
 
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
@@ -38,7 +38,7 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
         extern Code const_dbl_code;
         extern Code print_dbl_code;
 
-        auto code_line = CommandCompiler{"PRINT -5.6e14", program}();
+        auto code_line = CommandCompiler::create("PRINT -5.6e14", program)->compile();
 
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
@@ -49,7 +49,7 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
     }
     SECTION("compile a lower case PRINT command")
     {
-        auto code_line = CommandCompiler{"print", program}();
+        auto code_line = CommandCompiler::create("print", program)->compile();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());

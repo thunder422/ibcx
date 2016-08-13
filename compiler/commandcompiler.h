@@ -12,19 +12,16 @@
 #include <memory>
 
 
-class Compiler;
 class ProgramCode;
 class ProgramUnit;
 
 class CommandCompiler {
 public:
-    CommandCompiler(const std::string &source_line, ProgramUnit &program);
-    ProgramCode &&operator()();
-    ~CommandCompiler();
+    static std::unique_ptr<CommandCompiler> create(const std::string &source_line,
+        ProgramUnit &program);
 
-private:
-    class Impl;
-    std::unique_ptr<Impl> pimpl;
+    virtual ProgramCode &&compile() = 0;
+    virtual ~CommandCompiler() = default;
 };
 
 

@@ -200,7 +200,8 @@ DataType ExpressionCompilerImpl::compileIntegerDivision()
 
 DataType ExpressionCompilerImpl::compileProduct()
 {
-    return compileOperator(Precedence::Level::Product, &ExpressionCompilerImpl::compileExponential, SymbolGetCodes);
+    return compileOperator(Precedence::Level::Product, &ExpressionCompilerImpl::compileExponential,
+        SymbolGetCodes);
 }
 
 DataType ExpressionCompilerImpl::compileExponential()

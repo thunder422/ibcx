@@ -14,11 +14,11 @@
 #include "programcode.h"
 
 
-class CommandCompiler::Impl {
+class CommandCompilerImpl : public CommandCompiler {
 public:
-    Impl(const std::string &source_line, ProgramUnit &program);
+    CommandCompilerImpl(const std::string &source_line, ProgramUnit &program);
 
-    ProgramCode &&compile();
+    ProgramCode &&compile() override;
 
 private:
     Compiler compiler;
@@ -26,28 +26,20 @@ private:
 
 // ----------------------------------------
 
-CommandCompiler::CommandCompiler(const std::string &source_line, ProgramUnit &program) :
-    pimpl {new Impl(source_line, program)}
+std::unique_ptr<CommandCompiler> CommandCompiler::create(const std::string &source_line,
+    ProgramUnit &program)
 {
-}
-
-ProgramCode &&CommandCompiler::operator()()
-{
-    return pimpl->compile();
-}
-
-CommandCompiler::~CommandCompiler()
-{
+    return std::unique_ptr<CommandCompiler> {new CommandCompilerImpl {source_line, program}};
 }
 
 // ----------------------------------------
 
-CommandCompiler::Impl::Impl(const std::string &source_line, ProgramUnit &program) :
+CommandCompilerImpl::CommandCompilerImpl(const std::string &source_line, ProgramUnit &program) :
     compiler {source_line, program}
 {
 }
 
-ProgramCode &&CommandCompiler::Impl::compile()
+ProgramCode &&CommandCompilerImpl::compile()
 {
     if (compiler.peekNextChar() != EOF) {
         auto keyword = compiler.getKeyword();

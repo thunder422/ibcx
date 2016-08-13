@@ -28,43 +28,43 @@ TEST_CASE("compile simple commands", "[commands]")
 
     SECTION("compile an empty command line")
     {
-        auto code_line = CommandCompiler{"", program}();
+        auto code_line = CommandCompiler::create("", program)->compile();
 
         REQUIRE(code_line.empty());
     }
     SECTION("compile a simple PRINT command")
     {
-        auto code_line = CommandCompiler{"PRINT", program}();
+        auto code_line = CommandCompiler::create("PRINT", program)->compile();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("compile an END command")
     {
-        auto code_line = CommandCompiler{"END", program}();
+        auto code_line = CommandCompiler::create("END", program)->compile();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == end_code.getValue());
     }
     SECTION("allow white space before a command")
     {
-        auto code_line = CommandCompiler{"   PRINT", program}();
+        auto code_line = CommandCompiler::create("   PRINT", program)->compile();
 
         REQUIRE(code_line.size() == 1);
         REQUIRE(code_line[0].instructionCode()->getValue() == print_code.getValue());
     }
     SECTION("check for an error if non-alphabetic word if first")
     {
-        CommandCompiler compile_command {"   123", program};
+        auto command = CommandCompiler::create("   123", program);
 
         SECTION("check that error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_command(), CompileError);
+            REQUIRE_THROWS_AS(command->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_command();
+                command->compile();
             }
             catch (const CompileError &error) {
                 std::string expected = "expected command keyword";
@@ -76,16 +76,16 @@ TEST_CASE("compile simple commands", "[commands]")
     }
     SECTION("verify error column when constant is not at the beginning of the stream")
     {
-        CommandCompiler compile_command {"print 01", program};
+        auto command = CommandCompiler::create("print 01", program);
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_command(), CompileError);
+            REQUIRE_THROWS_AS(command->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_command();
+                command->compile();
             }
             catch (const CompileError &error) {
                 std::string expected = "expected decimal point after leading zero";
@@ -244,16 +244,16 @@ TEST_CASE("correct error column on large double constant", "[large-constant]")
 {
     ProgramUnit program;
 
-    CommandCompiler compile_command {"PRINT 1.23e4567", program};
+    auto command = CommandCompiler::create("PRINT 1.23e4567", program);
 
     SECTION("check that error is thrown")
     {
-        REQUIRE_THROWS_AS(compile_command(), CompileError);
+        REQUIRE_THROWS_AS(command->compile(), CompileError);
     }
     SECTION("check the message, column and length of the error thrown")
     {
         try {
-            compile_command();
+            command->compile();
         }
         catch (const CompileError &error) {
             std::string expected = "floating point constant is out of range";

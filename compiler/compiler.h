@@ -65,7 +65,7 @@ private:
     unsigned last_constant_column;
     unsigned last_constant_length;
     ci_string word;
-    OperatorCodes *equality_codes;
+    OperatorCodes *equality_codes {};
     unsigned word_column {0};
 };
 

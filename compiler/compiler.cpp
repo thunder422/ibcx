@@ -17,8 +17,7 @@
 
 Compiler::Compiler(const std::string &line, ProgramUnit &program) :
     iss {line},
-    program {program},
-    equality_codes {}
+    program {program}
 {
 }
 
