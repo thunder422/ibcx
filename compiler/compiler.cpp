@@ -126,6 +126,13 @@ ci_string Compiler::getKeyword()
     return word;
 }
 
+void Compiler::parseKeyword(char first_char)
+{
+    auto remaining_word = getAlphaOnlyWord();
+    word += first_char;
+    word += remaining_word;
+}
+
 ci_string Compiler::getAlphaOnlyWord()
 {
     ci_string keyword;

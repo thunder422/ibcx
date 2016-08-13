@@ -209,4 +209,11 @@ TEST_CASE("check expressions with various operators", "[operator]")
 
         REQUIRE(compiler.getColumn() == 3);
     }
+    SECTION("make sure eqv operator is parsed correctly when there are no spaces")
+    {
+        Compiler compiler {"3+2eqv5", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }

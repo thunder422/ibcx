@@ -21,7 +21,7 @@ public:
     ConstNumCompiler(Compiler &compiler);
     DataType operator()();
     bool negateOperator() const noexcept;
-    bool possibleOperator() const noexcept;
+    char nextChar() const noexcept;
     ~ConstNumCompiler();
 
     class Impl;

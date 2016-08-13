@@ -32,6 +32,7 @@ public:
     OperatorCodes *getComparisonOperatorCodes(Precedence::Level precedence);
 
     ci_string getKeyword();
+    void parseKeyword(char first_char);
     void clearWord();
     char peekNextChar();
     char getNextChar();

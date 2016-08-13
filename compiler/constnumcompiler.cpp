@@ -21,7 +21,7 @@ public:
 
     DataType compile();
     bool negateOperator() const noexcept;
-    bool possibleOperator() const noexcept;
+    char nextChar() const noexcept;
 
 private:
     void parseInput();
@@ -38,7 +38,7 @@ private:
     bool validMantissaChar(int next_char) noexcept;
     void addNextChar();
     void setNegateOperator() noexcept;
-    void setPossibleOperator() noexcept;
+    void removeExponentChar() noexcept;
 
     Compiler &compiler;
 
@@ -48,7 +48,7 @@ private:
     bool floating_point {false};
     bool done {false};
     bool negate_operator {false};
-    bool possible_operator {false};
+    char next_char {0};
 };
 
 // ----------------------------------------
@@ -68,9 +68,9 @@ bool ConstNumCompiler::negateOperator() const noexcept
     return pimpl->negateOperator();
 }
 
-bool ConstNumCompiler::possibleOperator() const noexcept
+char ConstNumCompiler::nextChar() const noexcept
 {
-    return pimpl->possibleOperator();
+    return pimpl->nextChar();
 }
 
 ConstNumCompiler::~ConstNumCompiler()
@@ -107,9 +107,9 @@ bool ConstNumCompiler::Impl::negateOperator() const noexcept
     return negate_operator;
 }
 
-bool ConstNumCompiler::Impl::possibleOperator() const noexcept
+char ConstNumCompiler::Impl::nextChar() const noexcept
 {
-    return possible_operator;
+    return next_char;
 }
 
 // ----------------------------------------
@@ -184,7 +184,7 @@ void ConstNumCompiler::Impl::parseExponentState(int next_char)
     } else if (isdigit(next_char)) {
         parse_state = &Impl::parseExponentDigitsState;
     } else if (isalpha(next_char)) {
-        setPossibleOperator();
+        removeExponentChar();
         return;
     } else {
         throw CompileError {"expected sign or digit for exponent", compiler.getColumn()};
@@ -238,9 +238,9 @@ void ConstNumCompiler::Impl::setNegateOperator() noexcept
     done = true;
 }
 
-void ConstNumCompiler::Impl::setPossibleOperator() noexcept
+void ConstNumCompiler::Impl::removeExponentChar() noexcept
 {
-    possible_operator = true;
+    next_char = number.back();
     number.pop_back();
     done = true;
 }
