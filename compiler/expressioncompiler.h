@@ -18,13 +18,10 @@ class Compiler;
 
 class ExpressionCompiler {
 public:
-    ExpressionCompiler(Compiler &compiler);
-    DataType operator()(DataType expected_data_type);
-    ~ExpressionCompiler();
+    static std::unique_ptr<ExpressionCompiler> create(Compiler &compiler);
 
-private:
-    class Impl;
-    std::unique_ptr<Impl> pimpl;
+    virtual DataType compile(DataType expected_data_type) = 0;
+    virtual ~ExpressionCompiler() = default;
 };
 
 

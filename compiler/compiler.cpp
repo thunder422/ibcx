@@ -24,7 +24,7 @@ Compiler::Compiler(const std::string &line, ProgramUnit &program) :
 
 DataType Compiler::compileExpression(DataType expected_data_type)
 {
-    return ExpressionCompiler{*this}(expected_data_type);
+    return ExpressionCompiler::create(*this)->compile(expected_data_type);
 }
 
 OperatorCodes *Compiler::getSymbolOperatorCodes(Precedence::Level precedence)
