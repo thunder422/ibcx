@@ -254,8 +254,8 @@ DataType ExpressionCompiler::Impl::compileNumConstant()
     if (data_type == DataType::Null && compile_constant.negateOperator()) {
         return compileNegation();
     }
-    if (auto next_char = compile_constant.nextChar()) {
-        compiler.parseKeyword(next_char);
+    if (auto unparsed_char = compile_constant.unparsedChar()) {
+        compiler.parseKeyword(unparsed_char);
     }
     return data_type;
 }

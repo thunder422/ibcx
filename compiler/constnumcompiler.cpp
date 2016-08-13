@@ -21,7 +21,7 @@ public:
 
     DataType compile();
     bool negateOperator() const noexcept;
-    char nextChar() const noexcept;
+    char unparsedChar() const noexcept;
 
 private:
     void parseInput();
@@ -48,7 +48,7 @@ private:
     bool floating_point {false};
     bool done {false};
     bool negate_operator {false};
-    char next_char {0};
+    char unparsed_char {0};
 };
 
 // ----------------------------------------
@@ -68,9 +68,9 @@ bool ConstNumCompiler::negateOperator() const noexcept
     return pimpl->negateOperator();
 }
 
-char ConstNumCompiler::nextChar() const noexcept
+char ConstNumCompiler::unparsedChar() const noexcept
 {
-    return pimpl->nextChar();
+    return pimpl->unparsedChar();
 }
 
 ConstNumCompiler::~ConstNumCompiler()
@@ -107,9 +107,9 @@ bool ConstNumCompiler::Impl::negateOperator() const noexcept
     return negate_operator;
 }
 
-char ConstNumCompiler::Impl::nextChar() const noexcept
+char ConstNumCompiler::Impl::unparsedChar() const noexcept
 {
-    return next_char;
+    return unparsed_char;
 }
 
 // ----------------------------------------
@@ -240,7 +240,7 @@ void ConstNumCompiler::Impl::setNegateOperator() noexcept
 
 void ConstNumCompiler::Impl::removeExponentChar() noexcept
 {
-    next_char = number.back();
+    unparsed_char = number.back();
     number.pop_back();
     done = true;
 }

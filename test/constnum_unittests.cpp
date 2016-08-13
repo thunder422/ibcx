@@ -313,7 +313,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         auto data_type = compile_constant();
         REQUIRE_OPERAND(DataType::Double, "-1e1");
         REQUIRE(compiler.peekNextChar() == '-');
-        REQUIRE(compile_constant.nextChar() == 0);
+        REQUIRE(compile_constant.unparsedChar() == 0);
     }
     SECTION("look for possible operator status (true if 'E' followed by another letter)")
     {
@@ -322,7 +322,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         auto data_type = compile_constant();
         REQUIRE_OPERAND(DataType::Integer, "-1");
         REQUIRE(compiler.peekNextChar() == 'q');
-        REQUIRE(compile_constant.nextChar() == 'e');
+        REQUIRE(compile_constant.unparsedChar() == 'e');
     }
     SECTION("check when 'E' character not followed by a another letter throws an error")
     {
