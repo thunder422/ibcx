@@ -15,13 +15,13 @@
 #include "programunit.h"
 
 
-class ConstNumCompiler::Impl {
+class ConstNumCompilerImpl : public ConstNumCompiler {
 public:
-    Impl(Compiler &compiler);
+    ConstNumCompilerImpl(Compiler &compiler);
 
-    DataType compile();
-    bool negateOperator() const noexcept;
-    char unparsedChar() const noexcept;
+    DataType compile() override;
+    bool negateOperator() const noexcept override;
+    char unparsedChar() const noexcept override;
 
 private:
     void parseInput();
@@ -42,7 +42,7 @@ private:
 
     Compiler &compiler;
 
-    void (Impl::*parse_state)(int next_char);
+    void (ConstNumCompilerImpl::*parse_state)(int next_char);
     std::string number;
     unsigned first_column;
     bool floating_point {false};
@@ -53,40 +53,21 @@ private:
 
 // ----------------------------------------
 
-ConstNumCompiler::ConstNumCompiler(Compiler &compiler) :
-    pimpl {new Impl(compiler)}
+std::unique_ptr<ConstNumCompiler> ConstNumCompiler::create(Compiler &compiler)
 {
-}
-
-DataType ConstNumCompiler::operator()()
-{
-    return pimpl->compile();
-}
-
-bool ConstNumCompiler::negateOperator() const noexcept
-{
-    return pimpl->negateOperator();
-}
-
-char ConstNumCompiler::unparsedChar() const noexcept
-{
-    return pimpl->unparsedChar();
-}
-
-ConstNumCompiler::~ConstNumCompiler()
-{
+    return std::unique_ptr<ConstNumCompiler> {new ConstNumCompilerImpl {compiler}};
 }
 
 // ----------------------------------------
 
-ConstNumCompiler::Impl::Impl(Compiler &compiler) :
+ConstNumCompilerImpl::ConstNumCompilerImpl(Compiler &compiler) :
     compiler {compiler},
-    parse_state {&Impl::parseStartState},
+    parse_state {&ConstNumCompilerImpl::parseStartState},
     first_column {compiler.getColumn()}
 {
 }
 
-DataType ConstNumCompiler::Impl::compile()
+DataType ConstNumCompilerImpl::compile()
 {
     parseInput();
     if (number.empty()) {
@@ -102,19 +83,19 @@ DataType ConstNumCompiler::Impl::compile()
     }
 }
 
-bool ConstNumCompiler::Impl::negateOperator() const noexcept
+bool ConstNumCompilerImpl::negateOperator() const noexcept
 {
     return negate_operator;
 }
 
-char ConstNumCompiler::Impl::unparsedChar() const noexcept
+char ConstNumCompilerImpl::unparsedChar() const noexcept
 {
     return unparsed_char;
 }
 
 // ----------------------------------------
 
-void ConstNumCompiler::Impl::parseInput()
+void ConstNumCompilerImpl::parseInput()
 {
     do {
         auto next_char = compiler.peekNextChar();
@@ -122,12 +103,12 @@ void ConstNumCompiler::Impl::parseInput()
     } while (!done);
 }
 
-void ConstNumCompiler::Impl::parseStartState(int next_char)
+void ConstNumCompilerImpl::parseStartState(int next_char)
 {
     if (next_char == '0') {
-        parse_state = &Impl::parseZeroState;
+        parse_state = &ConstNumCompilerImpl::parseZeroState;
     } else if (next_char == '-') {
-        parse_state = &Impl::parseNegativeState;
+        parse_state = &ConstNumCompilerImpl::parseNegativeState;
     } else if (!validMantissaChar(next_char)) {
         done = true;
         return;
@@ -135,7 +116,7 @@ void ConstNumCompiler::Impl::parseStartState(int next_char)
     addNextChar();
 }
 
-void ConstNumCompiler::Impl::parseNegativeState(int next_char)
+void ConstNumCompilerImpl::parseNegativeState(int next_char)
 {
     if (validMantissaChar(next_char)) {
         addNextChar();
@@ -144,10 +125,10 @@ void ConstNumCompiler::Impl::parseNegativeState(int next_char)
     }
 }
 
-void ConstNumCompiler::Impl::parseZeroState(int next_char)
+void ConstNumCompilerImpl::parseZeroState(int next_char)
 {
     if (next_char == '.') {
-        parse_state = &Impl::parseMantissaState;
+        parse_state = &ConstNumCompilerImpl::parseMantissaState;
     } else if (isdigit(next_char)) {
         throw CompileError {"expected decimal point after leading zero", compiler.getColumn()};
     } else {
@@ -155,21 +136,21 @@ void ConstNumCompiler::Impl::parseZeroState(int next_char)
     }
 }
 
-void ConstNumCompiler::Impl::parsePeriodState(int next_char)
+void ConstNumCompilerImpl::parsePeriodState(int next_char)
 {
     if (isdigit(next_char)) {
-        parse_state = &Impl::parseMantissaState;
+        parse_state = &ConstNumCompilerImpl::parseMantissaState;
     } else {
         throw CompileError {"expected digit after decimal point", compiler.getColumn()};
     }
 }
 
-void ConstNumCompiler::Impl::parseMantissaState(int next_char)
+void ConstNumCompilerImpl::parseMantissaState(int next_char)
 {
     if (next_char == '.' && !floating_point) {
         floating_point = true;
     } else if (toupper(next_char) == 'E') {
-        parse_state = &Impl::parseExponentState;
+        parse_state = &ConstNumCompilerImpl::parseExponentState;
     } else if (!isdigit(next_char)) {
         done = true;
         return;
@@ -177,12 +158,12 @@ void ConstNumCompiler::Impl::parseMantissaState(int next_char)
     addNextChar();
 }
 
-void ConstNumCompiler::Impl::parseExponentState(int next_char)
+void ConstNumCompilerImpl::parseExponentState(int next_char)
 {
     if (next_char == '-' || next_char == '+') {
-        parse_state = &Impl::parseExponentSignState;
+        parse_state = &ConstNumCompilerImpl::parseExponentSignState;
     } else if (isdigit(next_char)) {
-        parse_state = &Impl::parseExponentDigitsState;
+        parse_state = &ConstNumCompilerImpl::parseExponentDigitsState;
     } else if (isalpha(next_char)) {
         removeExponentChar();
         return;
@@ -193,16 +174,16 @@ void ConstNumCompiler::Impl::parseExponentState(int next_char)
     addNextChar();
 }
 
-void ConstNumCompiler::Impl::parseExponentSignState(int next_char)
+void ConstNumCompilerImpl::parseExponentSignState(int next_char)
 {
     if (isdigit(next_char)) {
-        parse_state = &Impl::parseExponentDigitsState;
+        parse_state = &ConstNumCompilerImpl::parseExponentDigitsState;
     } else {
         throw CompileError {"expected digit after exponent sign", compiler.getColumn()};
     }
 }
 
-void ConstNumCompiler::Impl::parseExponentDigitsState(int next_char)
+void ConstNumCompilerImpl::parseExponentDigitsState(int next_char)
 {
     if (isdigit(next_char)) {
         addNextChar();
@@ -213,32 +194,32 @@ void ConstNumCompiler::Impl::parseExponentDigitsState(int next_char)
 
 // ----------------------------------------
 
-void ConstNumCompiler::Impl::addNextChar()
+void ConstNumCompilerImpl::addNextChar()
 {
     number += compiler.getNextChar();
 }
 
-bool ConstNumCompiler::Impl::validMantissaChar(int next_char) noexcept
+bool ConstNumCompilerImpl::validMantissaChar(int next_char) noexcept
 {
     if (next_char == '.') {
         floating_point = true;
-        parse_state = &Impl::parsePeriodState;
+        parse_state = &ConstNumCompilerImpl::parsePeriodState;
     } else if (isdigit(next_char)) {
-        parse_state = &Impl::parseMantissaState;
+        parse_state = &ConstNumCompilerImpl::parseMantissaState;
     } else {
         return false;
     }
     return true;
 }
 
-void ConstNumCompiler::Impl::setNegateOperator() noexcept
+void ConstNumCompilerImpl::setNegateOperator() noexcept
 {
     negate_operator = true;
     number.clear();
     done = true;
 }
 
-void ConstNumCompiler::Impl::removeExponentChar() noexcept
+void ConstNumCompilerImpl::removeExponentChar() noexcept
 {
     unparsed_char = number.back();
     number.pop_back();

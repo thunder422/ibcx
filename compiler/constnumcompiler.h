@@ -18,15 +18,12 @@ class Compiler;
 
 class ConstNumCompiler {
 public:
-    ConstNumCompiler(Compiler &compiler);
-    DataType operator()();
-    bool negateOperator() const noexcept;
-    char unparsedChar() const noexcept;
-    ~ConstNumCompiler();
+    static std::unique_ptr<ConstNumCompiler> create(Compiler &compiler);
 
-    class Impl;
-private:
-    std::unique_ptr<Impl> pimpl;
+    virtual DataType compile() = 0;
+    virtual bool negateOperator() const noexcept = 0;
+    virtual char unparsedChar() const noexcept = 0;
+    virtual ~ConstNumCompiler() = default;
 };
 
 

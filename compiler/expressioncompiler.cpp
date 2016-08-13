@@ -249,12 +249,12 @@ DataType ExpressionCompiler::Impl::compileParentheses()
 
 DataType ExpressionCompiler::Impl::compileNumConstant()
 {
-    ConstNumCompiler compile_constant {compiler};
-    auto data_type = compile_constant();
-    if (data_type == DataType::Null && compile_constant.negateOperator()) {
+    auto constant_number = ConstNumCompiler::create(compiler);
+    auto data_type = constant_number->compile();
+    if (data_type == DataType::Null && constant_number->negateOperator()) {
         return compileNegation();
     }
-    if (auto unparsed_char = compile_constant.unparsedChar()) {
+    if (auto unparsed_char = constant_number->unparsedChar()) {
         compiler.parseKeyword(unparsed_char);
     }
     return data_type;

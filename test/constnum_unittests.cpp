@@ -22,7 +22,7 @@ TEST_CASE("compiling integer constants from a string", "[integers]")
     SECTION("input stream does not contain a constant (caller will determine action)")
     {
         Compiler compiler {"%", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         auto code_line = compiler.getCodeLine();
         REQUIRE(data_type == DataType::Null);
         REQUIRE(code_line.size() == 0);
@@ -33,26 +33,26 @@ TEST_CASE("compiling integer constants from a string", "[integers]")
         extern Code const_int_code;
 
         Compiler compiler {"1", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Integer, "1");
         REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
     }
     SECTION("compile a multiple digit number")
     {
         Compiler compiler {"123", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Integer, "123");
     }
     SECTION("compile a negative number")
     {
         Compiler compiler {"-234", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Integer, "-234");
     }
     SECTION("terminate compiling at correct character")
     {
         Compiler compiler {"345+", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Integer, "345");
         REQUIRE(compiler.peekNextChar() == '+');
     }
@@ -66,19 +66,19 @@ TEST_CASE("compiling floating point constants from a string", "[doubles]")
     SECTION("compile a number with a decimal point")
     {
         Compiler compiler {"0.5", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "0.5");
     }
     SECTION("compile a number with a decimal point at the beginning")
     {
         Compiler compiler {".75", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, ".75");
     }
     SECTION("compile a number with a second decimal point (should ignore second one)")
     {
         Compiler compiler {"0.1.", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "0.1");
         REQUIRE(compiler.peekNextChar() == '.');
     }
@@ -87,40 +87,40 @@ TEST_CASE("compiling floating point constants from a string", "[doubles]")
         extern Code const_dbl_code;
 
         Compiler compiler {"1.2", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "1.2");
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
     }
     SECTION("compile a number with an exponent")
     {
         Compiler compiler {"1e0", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "1e0");
     }
     SECTION("make sure compiling stops before a second 'E'")
     {
         Compiler compiler {"1e0E", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "1e0");
         REQUIRE(compiler.peekNextChar() == 'E');
     }
     SECTION("compile a number with a minus exponent")
     {
         Compiler compiler {"1e-2", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "1e-2");
     }
     SECTION("compile a number with a minus exponent terminated be a minus operator")
     {
         Compiler compiler {"1e-2-", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "1e-2");
         REQUIRE(compiler.peekNextChar() == '-');
     }
     SECTION("compile a number with a plus exponent")
     {
         Compiler compiler {"1e+2", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "1e+2");
     }
 }
@@ -133,16 +133,16 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     SECTION("check for an error when a leading zero is not followed by a digit")
     {
         Compiler compiler {"01", program};
-        ConstNumCompiler compile_constant {compiler};
+        auto constant_number = ConstNumCompiler::create(compiler);
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_constant(), CompileError);
+            REQUIRE_THROWS_AS(constant_number->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_constant();
+                constant_number->compile();
             }
             catch (const CompileError &error) {
                 std::string expected = "expected decimal point after leading zero";
@@ -155,7 +155,7 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     SECTION("check compiling ends when followed by a non-period non-digit")
     {
         Compiler compiler {"0-", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Integer, "0");
         REQUIRE(compiler.peekNextChar() == '-');
     }
@@ -169,16 +169,16 @@ TEST_CASE("handle leading period of a constant correctly including errors", "[pe
     SECTION("check for an error when a leading period is followed by another period")
     {
         Compiler compiler {"..", program};
-        ConstNumCompiler compile_constant {compiler};
+        auto constant_number = ConstNumCompiler::create(compiler);
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_constant(), CompileError);
+            REQUIRE_THROWS_AS(constant_number->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_constant();
+                constant_number->compile();
             }
             catch (const CompileError &error) {
                 std::string expected = "expected digit after decimal point";
@@ -198,16 +198,16 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     SECTION("check for an error if no sign or digits at the start of an exponent")
     {
         Compiler compiler {"1e.", program};
-        ConstNumCompiler compile_constant {compiler};
+        auto constant_number = ConstNumCompiler::create(compiler);
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_constant(), CompileError);
+            REQUIRE_THROWS_AS(constant_number->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_constant();
+                constant_number->compile();
             }
             catch (const CompileError &error) {
                 std::string expected = "expected sign or digit for exponent";
@@ -220,23 +220,23 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     SECTION("allow for possible EQV operator ('E' lost, which will be handled by caller)")
     {
         Compiler compiler {"1eq", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Integer, "1");
         REQUIRE(compiler.peekNextChar() == 'q');
     }
     SECTION("check for an error if there is no digit after an exponent sign")
     {
         Compiler compiler {"1e-A", program};
-        ConstNumCompiler compile_constant {compiler};
+        auto constant_number = ConstNumCompiler::create(compiler);
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_constant(), CompileError);
+            REQUIRE_THROWS_AS(constant_number->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_constant();
+                constant_number->compile();
             }
             catch (const CompileError &error) {
                 std::string expected = "expected digit after exponent sign";
@@ -249,16 +249,16 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     SECTION("check for an error if terminated by end of the line after an exponent sign")
     {
         Compiler compiler {"1e+", program};
-        ConstNumCompiler compile_constant {compiler};
+        auto constant_number = ConstNumCompiler::create(compiler);
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_constant(), CompileError);
+            REQUIRE_THROWS_AS(constant_number->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_constant();
+                constant_number->compile();
             }
             catch (const CompileError &error) {
                 REQUIRE(error.column == 3);
@@ -276,7 +276,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     SECTION("look for possible negate operator ('-' not followed by '.' or digit)")
     {
         Compiler compiler {"-e", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         auto code_line = compiler.getCodeLine();
         REQUIRE(data_type == DataType::Null);
         REQUIRE(code_line.size() == 0);
@@ -284,59 +284,59 @@ TEST_CASE("look for possible exit conditions", "[exit]")
     SECTION("allow a period after a negative sign")
     {
         Compiler compiler {"-.1", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "-.1");
     }
     SECTION("look for negate operator status (false if not negate operator)")
     {
         Compiler compiler {"-1-", program};
-        ConstNumCompiler compile_constant {compiler};
-        auto data_type = compile_constant();
+        auto constant_number = ConstNumCompiler::create(compiler);
+        auto data_type = constant_number->compile();
         REQUIRE_OPERAND(DataType::Integer, "-1");
         REQUIRE(compiler.peekNextChar() == '-');
-        REQUIRE_FALSE(compile_constant.negateOperator());
+        REQUIRE_FALSE(constant_number->negateOperator());
     }
     SECTION("look for negate operator status (true for negate operator)")
     {
         Compiler compiler {"-e", program};
-        ConstNumCompiler compile_constant {compiler};
-        auto data_type = compile_constant();
+        auto constant_number = ConstNumCompiler::create(compiler);
+        auto data_type = constant_number->compile();
         auto code_line = compiler.getCodeLine();
         REQUIRE(data_type == DataType::Null);
         REQUIRE(compiler.peekNextChar() == 'e');
-        REQUIRE(compile_constant.negateOperator());
+        REQUIRE(constant_number->negateOperator());
     }
     SECTION("look for possible operator status (false if no operator starting with 'E')")
     {
         Compiler compiler {"-1e1-", program};
-        ConstNumCompiler compile_constant {compiler};
-        auto data_type = compile_constant();
+        auto constant_number = ConstNumCompiler::create(compiler);
+        auto data_type = constant_number->compile();
         REQUIRE_OPERAND(DataType::Double, "-1e1");
         REQUIRE(compiler.peekNextChar() == '-');
-        REQUIRE(compile_constant.unparsedChar() == 0);
+        REQUIRE(constant_number->unparsedChar() == 0);
     }
     SECTION("look for possible operator status (true if 'E' followed by another letter)")
     {
         Compiler compiler {"-1eqv", program};
-        ConstNumCompiler compile_constant {compiler};
-        auto data_type = compile_constant();
+        auto constant_number = ConstNumCompiler::create(compiler);
+        auto data_type = constant_number->compile();
         REQUIRE_OPERAND(DataType::Integer, "-1");
         REQUIRE(compiler.peekNextChar() == 'q');
-        REQUIRE(compile_constant.unparsedChar() == 'e');
+        REQUIRE(constant_number->unparsedChar() == 'e');
     }
     SECTION("check when 'E' character not followed by a another letter throws an error")
     {
         Compiler compiler {"-1e$", program};
-        ConstNumCompiler compile_constant {compiler};
+        auto constant_number = ConstNumCompiler::create(compiler);
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compile_constant(), CompileError);
+            REQUIRE_THROWS_AS(constant_number->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compile_constant();
+                constant_number->compile();
             }
             catch (const CompileError &error) {
                 std::string expected_what = "expected sign or digit for exponent";
@@ -374,7 +374,7 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
                 Compiler compiler {test.input, program};
 
                 CAPTURE(test.input);
-                REQUIRE_THROWS_AS(ConstNumCompiler{compiler}(), CompileError);
+                REQUIRE_THROWS_AS(ConstNumCompiler::create(compiler)->compile(), CompileError);
             }
         }
         SECTION("check the message, column and length of the errors thrown")
@@ -384,7 +384,7 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
 
                 CAPTURE(test.input);
                 try {
-                    ConstNumCompiler{compiler}();
+                    ConstNumCompiler::create(compiler)->compile();
                 }
                 catch (const CompileError &error) {
                     REQUIRE(error.what() == test.expected_what);
@@ -397,7 +397,7 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
     SECTION("miscellaneous test")
     {
         Compiler compiler {"1..", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "1.");
         REQUIRE(compiler.peekNextChar() == '.');
     }
@@ -520,7 +520,7 @@ TEST_CASE("constant errrors", "[errors]")
         extern Code const_dbl_code;
 
         Compiler compiler {"12345678901", program};
-        auto data_type = ConstNumCompiler{compiler}();
+        auto data_type = ConstNumCompiler::create(compiler)->compile();
         REQUIRE_OPERAND(DataType::Double, "12345678901")
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
     }
@@ -531,12 +531,12 @@ TEST_CASE("constant errrors", "[errors]")
         Compiler compiler {"1.23e4567", program};
         SECTION("check that error is thrown")
         {
-            REQUIRE_THROWS_AS(ConstNumCompiler{compiler}(), CompileError);
+            REQUIRE_THROWS_AS(ConstNumCompiler::create(compiler)->compile(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                ConstNumCompiler{compiler}();
+                ConstNumCompiler::create(compiler)->compile();
             }
             catch (const CompileError &error) {
                 std::string expected = "floating point constant is out of range";
