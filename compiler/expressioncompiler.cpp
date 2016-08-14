@@ -33,8 +33,8 @@ private:
     DataType compileXor();
     DataType compileAnd();
     DataType compileNot();
-    OperatorCodes *getNotOperatorCodes();
-    DataType compileNotOperand(OperatorCodes *codes);
+    Codes *getNotOperatorCodes();
+    DataType compileNotOperand(Codes *codes);
     DataType compileEquality();
     DataType compileRelation();
     DataType compileSummation();
@@ -49,10 +49,9 @@ private:
     DataType compileNumConstant();
     DataType compileOperator(Precedence::Level precedence,
         DataType (ExpressionCompilerImpl::*compile_operand)(),
-        OperatorCodes *(*get_codes)(Compiler &compiler, Precedence::Level precedence),
+        Codes *(*get_codes)(Compiler &compiler, Precedence::Level precedence),
         void (*convert)(Compiler &compiler, DataType data_type) = NoConvert);
-    DataType addSelectedCode(OperatorCodes *codes, DataType lhs_data_type, DataType rhs_data_type)
-        const;
+    DataType addSelectedCode(Codes *codes, DataType lhs_data_type, DataType rhs_data_type) const;
 
     Compiler &compiler;
 };
@@ -66,17 +65,17 @@ std::unique_ptr<ExpressionCompiler> ExpressionCompiler::create(Compiler &compile
 
 // ----------------------------------------
 
-OperatorCodes *SymbolGetCodes(Compiler &compiler, Precedence::Level precedence)
+Codes *SymbolGetCodes(Compiler &compiler, Precedence::Level precedence)
 {
     return compiler.getSymbolOperatorCodes(precedence);
 }
 
-OperatorCodes *ComparisonGetCodes(Compiler &compiler, Precedence::Level precedence)
+Codes *ComparisonGetCodes(Compiler &compiler, Precedence::Level precedence)
 {
     return compiler.getComparisonOperatorCodes(precedence);
 }
 
-OperatorCodes *WordGetCodes(Compiler &compiler, Precedence::Level precedence)
+Codes *WordGetCodes(Compiler &compiler, Precedence::Level precedence)
 {
     return compiler.getWordOperatorCodes(precedence);
 }
@@ -157,12 +156,12 @@ DataType ExpressionCompilerImpl::compileNot()
     }
 }
 
-OperatorCodes *ExpressionCompilerImpl::getNotOperatorCodes()
+Codes *ExpressionCompilerImpl::getNotOperatorCodes()
 {
     return compiler.getWordOperatorCodes(Precedence::Level::Not);
 }
 
-DataType ExpressionCompilerImpl::compileNotOperand(OperatorCodes *codes)
+DataType ExpressionCompilerImpl::compileNotOperand(Codes *codes)
 {
     auto data_type = compileNot();
     compiler.convertToInteger(data_type);
@@ -273,7 +272,7 @@ DataType ExpressionCompilerImpl::compileNumConstant()
 
 DataType ExpressionCompilerImpl::compileOperator(Precedence::Level precedence,
     DataType (ExpressionCompilerImpl::*compile_operand)(),
-    OperatorCodes *(*get_codes)(Compiler &compiler, Precedence::Level precedence),
+    Codes *(*get_codes)(Compiler &compiler, Precedence::Level precedence),
     void (*convert)(Compiler &compiler, DataType data_type))
 {
     auto lhs_data_type = (this->*compile_operand)();
@@ -291,7 +290,7 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence::Level precedence,
     return lhs_data_type;
 }
 
-DataType ExpressionCompilerImpl::addSelectedCode(OperatorCodes *codes, DataType lhs_data_type,
+DataType ExpressionCompilerImpl::addSelectedCode(Codes *codes, DataType lhs_data_type,
     DataType rhs_data_type) const
 {
     auto info = codes->select(lhs_data_type, rhs_data_type);

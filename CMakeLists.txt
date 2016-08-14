@@ -62,6 +62,7 @@ include_directories(basic common compiler program)
 
 set(IBC_SOURCES
     basic/code.cpp
+    basic/codes.h
     basic/commandcode.cpp
     basic/comparisonoperators.cpp
     basic/constnum.cpp

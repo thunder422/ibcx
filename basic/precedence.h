@@ -13,7 +13,7 @@
 
 
 class ComparisonOperator;
-class OperatorCodes;
+class Codes;
 
 struct Precedence {
     enum class Level {
@@ -34,13 +34,12 @@ struct Precedence {
         Imp
     };
 
-    static void addOperatorCodes(Precedence::Level precedence, OperatorCodes &codes,
-        const char *keyword);
+    static void addOperatorCodes(Precedence::Level precedence, Codes &codes, const char *keyword);
     static const char *getKeyword(WordType code_value);
     static Precedence::Level getPrecedence(WordType code_value);
-    static OperatorCodes *operatorCodes(Precedence::Level precedence);
-    static OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
-    static OperatorCodes *operatorCodes(Precedence::Level precedence, const ci_string &word);
+    static Codes *operatorCodes(Precedence::Level precedence);
+    static Codes *operatorCodes(Precedence::Level precedence, char operator_char);
+    static Codes *operatorCodes(Precedence::Level precedence, const ci_string &word);
     static ComparisonOperator comparisonOperator(const std::string &keyword);
 };
 
@@ -48,9 +47,9 @@ struct Precedence {
 class ComparisonOperator {
 public:
     ComparisonOperator();
-    ComparisonOperator(OperatorCodes *codes, Precedence::Level precedence);
+    ComparisonOperator(Codes *codes, Precedence::Level precedence);
 
-    OperatorCodes *codes;
+    Codes *codes;
     Precedence::Level precedence;
 };
 
@@ -59,8 +58,7 @@ inline ComparisonOperator::ComparisonOperator() :
 {
 }
 
-inline ComparisonOperator::ComparisonOperator(OperatorCodes *codes,
-        Precedence::Level precedence) :
+inline ComparisonOperator::ComparisonOperator(Codes *codes, Precedence::Level precedence) :
     codes {codes},
     precedence {precedence}
 {

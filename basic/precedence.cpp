@@ -16,18 +16,17 @@
 class PrecedenceInfo {
 public:
     static PrecedenceInfo &getInstance();
-    void addOperatorData(Precedence::Level precedence, OperatorCodes &codes,
-        const char *keyword);
+    void addOperatorData(Precedence::Level precedence, Codes &codes, const char *keyword);
     Precedence::Level getPrecedence(WordType code_value) const;
     const char *getKeyword(WordType code_value) const;
-    OperatorCodes *operatorCodes(Precedence::Level precedence);
-    OperatorCodes *operatorCodes(Precedence::Level precedence, char operator_char);
-    OperatorCodes *operatorCodes(Precedence::Level precedence, const ci_string &word);
+    Codes *operatorCodes(Precedence::Level precedence);
+    Codes *operatorCodes(Precedence::Level precedence, char operator_char);
+    Codes *operatorCodes(Precedence::Level precedence, const ci_string &word);
     ComparisonOperator comparisonOperatorData(const std::string &keyword);
 
 private:
     struct OperatorData {
-        OperatorCodes &codes;
+        Codes &codes;
         const char *keyword;
     };
 
@@ -41,8 +40,7 @@ private:
 
 // ------------------------------------------------------------
 
-void Precedence::addOperatorCodes(Precedence::Level precedence, OperatorCodes &codes,
-    const char *keyword)
+void Precedence::addOperatorCodes(Precedence::Level precedence, Codes &codes, const char *keyword)
 {
     PrecedenceInfo::getInstance().addOperatorData(precedence, codes, keyword);
 }
@@ -57,17 +55,17 @@ Precedence::Level Precedence::getPrecedence(WordType code_value)
     return PrecedenceInfo::getInstance().getPrecedence(code_value);
 }
 
-OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence)
+Codes *Precedence::operatorCodes(Precedence::Level precedence)
 {
     return PrecedenceInfo::getInstance().operatorCodes(precedence);
 }
 
-OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence, char operator_char)
+Codes *Precedence::operatorCodes(Precedence::Level precedence, char operator_char)
 {
     return PrecedenceInfo::getInstance().operatorCodes(precedence, operator_char);
 }
 
-OperatorCodes *Precedence::operatorCodes(Precedence::Level precedence, const ci_string &word)
+Codes *Precedence::operatorCodes(Precedence::Level precedence, const ci_string &word)
 {
     return PrecedenceInfo::getInstance().operatorCodes(precedence, word);
 }
@@ -95,14 +93,14 @@ const char *PrecedenceInfo::getKeyword(WordType code_value) const
     return keywords.at(code_value);
 }
 
-OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence)
+Codes *PrecedenceInfo::operatorCodes(Precedence::Level precedence)
 {
     auto iterators = operator_data.equal_range(precedence);
     auto &operator_data = iterators.first->second;
     return &operator_data.codes;
 }
 
-OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, char operator_char)
+Codes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, char operator_char)
 {
     auto iterators = operator_data.equal_range(precedence);
     for (auto iterator = iterators.first; iterator != iterators.second; ++iterator) {
@@ -114,7 +112,7 @@ OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, char 
     return nullptr;
 }
 
-OperatorCodes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, const ci_string &word)
+Codes *PrecedenceInfo::operatorCodes(Precedence::Level precedence, const ci_string &word)
 {
     auto iterators = operator_data.equal_range(precedence);
     for (auto iterator = iterators.first; iterator != iterators.second; ++iterator) {
@@ -138,7 +136,7 @@ ComparisonOperator PrecedenceInfo::comparisonOperatorData(const std::string &key
 
 // --------------------
 
-void PrecedenceInfo::addOperatorData(Precedence::Level precedence, OperatorCodes &codes,
+void PrecedenceInfo::addOperatorData(Precedence::Level precedence, Codes &codes,
     const char *keyword)
 {
     operator_data.emplace(precedence, OperatorData{codes, keyword});
