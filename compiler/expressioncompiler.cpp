@@ -45,6 +45,7 @@ private:
     DataType compileNegation();
     DataType compileNumOperand();
     DataType compileParentheses();
+    DataType compileFunction();
     DataType compileNumConstant();
     DataType compileOperator(Precedence::Level precedence,
         DataType (ExpressionCompilerImpl::*compile_operand)(),
@@ -230,7 +231,19 @@ DataType ExpressionCompilerImpl::compileNumOperand()
     if (auto codes = getNotOperatorCodes()) {
         return compileNotOperand(codes);
     }
+    if (compiler.getKeyword() == "ABS") {
+        return compileFunction();
+    }
     return compileNumConstant();
+}
+
+DataType ExpressionCompilerImpl::compileFunction()
+{
+    compiler.clearWord();
+    if (compiler.peekNextChar() == '(') {
+        compileParentheses();
+    }
+    return DataType::Double;
 }
 
 DataType ExpressionCompilerImpl::compileParentheses()
