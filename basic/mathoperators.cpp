@@ -30,7 +30,7 @@ void executeNegateInt(Executer &executer)
 OperatorCode<OpType::Dbl> neg_dbl_code {recreateUnaryOperator, executeNegateDbl};
 OperatorCode<OpType::Int> neg_int_code {recreateUnaryOperator, executeNegateInt};
 
-UnaryOperatorCodes neg_codes {Precedence::Level::Negate, "-", neg_dbl_code, neg_int_code};
+UnaryOperatorCodes neg_codes {Precedence::Negate, "-", neg_dbl_code, neg_int_code};
 
 // ----------------------------------------
 
@@ -95,7 +95,7 @@ OperatorCode<OpType::DblInt> exp_dbl_int_code {recreateBinaryOperator, executeEx
 OperatorCode<OpType::IntInt> exp_int_int_code {recreateBinaryOperator, executeExponentialIntInt};
 
 NumOperatorCodes exp_codes {
-    Precedence::Level::Exponential, "^",
+    Precedence::Exponential, "^",
     exp_dbl_dbl_code, exp_int_dbl_code, exp_dbl_int_code, exp_int_int_code
 };
 
@@ -154,7 +154,7 @@ OperatorCode<OpType::DblInt> mul_dbl_int_code {recreateBinaryOperator, executeMu
 OperatorCode<OpType::IntInt> mul_int_int_code {recreateBinaryOperator, executeMultiplyIntInt};
 
 NumOperatorCodes mul_codes {
-    Precedence::Level::Product, "*",
+    Precedence::Product, "*",
     mul_dbl_dbl_code, mul_int_dbl_code, mul_dbl_int_code, mul_int_int_code
 };
 
@@ -229,7 +229,7 @@ OperatorCode<OpType::DblInt> div_dbl_int_code {recreateBinaryOperator, executeDi
 OperatorCode<OpType::IntInt> div_int_int_code {recreateBinaryOperator, executeDivideIntInt};
 
 NumOperatorCodes div_codes {
-    Precedence::Level::Product, "/",
+    Precedence::Product, "/",
     div_dbl_dbl_code, div_int_dbl_code, div_dbl_int_code, div_int_int_code
 };
 
@@ -246,7 +246,7 @@ void executeIntegerDivide(Executer &executer)
 
 OperatorCode<OpType::DblDbl> int_div_code {recreateBinaryOperator, executeIntegerDivide};
 
-IntDivOperatorCode int_div_codes {Precedence::Level::IntDivide, "\\", int_div_code};
+IntDivOperatorCode int_div_codes {Precedence::IntDivide, "\\", int_div_code};
 
 // ----------------------------------------
 
@@ -306,7 +306,7 @@ OperatorCode<OpType::DblInt> mod_dbl_int_code {recreateBinaryOperator, executeMo
 OperatorCode<OpType::IntInt> mod_int_int_code {recreateBinaryOperator, executeModuloIntInt};
 
 NumOperatorCodes mod_codes {
-    Precedence::Level::Modulo, "MOD",
+    Precedence::Modulo, "MOD",
     mod_dbl_dbl_code, mod_int_dbl_code, mod_dbl_int_code, mod_int_int_code
 };
 
@@ -351,7 +351,7 @@ OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAd
 OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
 
 NumOperatorCodes add_codes {
-    Precedence::Level::Summation, "+",
+    Precedence::Summation, "+",
     add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code, add_int_int_code
 };
 
@@ -396,6 +396,6 @@ OperatorCode<OpType::DblInt> sub_dbl_int_code {recreateBinaryOperator, executeSu
 OperatorCode<OpType::IntInt> sub_int_int_code {recreateBinaryOperator, executeSubtractIntInt};
 
 NumOperatorCodes sub_codes {
-    Precedence::Level::Summation, "-",
+    Precedence::Summation, "-",
     sub_dbl_dbl_code, sub_int_dbl_code, sub_dbl_int_code, sub_int_int_code
 };

@@ -14,8 +14,8 @@
 
 #include "cistring.h"
 #include "datatype.h"
-#include "precedence.h"
 #include "programcode.h"
+#include "table.h"
 
 
 class Code;
@@ -27,9 +27,9 @@ class Compiler {
 public:
     Compiler(const std::string &line, ProgramUnit &program);
     DataType compileExpression(DataType expected_data_type);
-    Codes *getSymbolOperatorCodes(Precedence::Level precedence);
-    Codes *getWordOperatorCodes(Precedence::Level precedence);
-    Codes *getComparisonOperatorCodes(Precedence::Level precedence);
+    Codes *getSymbolOperatorCodes(Precedence precedence);
+    Codes *getWordOperatorCodes(Precedence precedence);
+    Codes *getComparisonOperatorCodes(Precedence precedence);
 
     ci_string getKeyword();
     void parseKeyword(char first_char);

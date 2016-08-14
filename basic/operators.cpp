@@ -8,12 +8,12 @@
 #include "operators.h"
 
 
-UnaryOperatorCodes::UnaryOperatorCodes(Precedence::Level precedence, const char *keyword,
+UnaryOperatorCodes::UnaryOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code) :
     dbl_code {dbl_code},
     int_code {int_code}
 {
-    Precedence::addOperatorCodes(precedence, *this, keyword);
+    Table::addOperatorCodes(precedence, *this, keyword);
 }
 
 Codes::Info UnaryOperatorCodes::select(DataType data_type, DataType unused_data_type) const
@@ -32,7 +32,7 @@ std::vector<WordType> UnaryOperatorCodes::codeValues() const
 }
 
 
-NumOperatorCodes::NumOperatorCodes(Precedence::Level precedence, const char *keyword,
+NumOperatorCodes::NumOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
         OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code) :
     dbl_dbl_code {dbl_dbl_code},
@@ -40,7 +40,7 @@ NumOperatorCodes::NumOperatorCodes(Precedence::Level precedence, const char *key
     dbl_int_code {dbl_int_code},
     int_int_code {int_int_code}
 {
-    Precedence::addOperatorCodes(precedence, *this, keyword);
+    Table::addOperatorCodes(precedence, *this, keyword);
 }
 
 Codes::Info NumOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
@@ -73,11 +73,11 @@ Codes::Info CompOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_
 }
 
 
-IntDivOperatorCode::IntDivOperatorCode(Precedence::Level precedence, const char *keyword,
+IntDivOperatorCode::IntDivOperatorCode(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &code) :
     code {code}
 {
-    Precedence::addOperatorCodes(precedence, *this, keyword);
+    Table::addOperatorCodes(precedence, *this, keyword);
 }
 
 Codes::Info IntDivOperatorCode::select(DataType lhs_data_type, DataType rhs_data_type) const
@@ -93,11 +93,11 @@ std::vector<WordType> IntDivOperatorCode::codeValues() const
 }
 
 
-NotOperatorCodes::NotOperatorCodes(Precedence::Level precedence, const char *keyword,
+NotOperatorCodes::NotOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::Int> &code) :
     code {code}
 {
-    Precedence::addOperatorCodes(precedence, *this, keyword);
+    Table::addOperatorCodes(precedence, *this, keyword);
 }
 
 Codes::Info NotOperatorCodes::select(DataType unused_data_type1, DataType unused_data_type2) const
@@ -113,11 +113,11 @@ std::vector<WordType> NotOperatorCodes::codeValues() const
 }
 
 
-LogicOperatorCodes::LogicOperatorCodes(Precedence::Level precedence, const char *keyword,
+LogicOperatorCodes::LogicOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::IntInt> &code) :
     code {code}
 {
-    Precedence::addOperatorCodes(precedence, *this, keyword);
+    Table::addOperatorCodes(precedence, *this, keyword);
 }
 
 Codes::Info LogicOperatorCodes::select(DataType unused_data_type1, DataType unused_data_type2) const

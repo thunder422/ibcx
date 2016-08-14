@@ -26,10 +26,10 @@ DataType Compiler::compileExpression(DataType expected_data_type)
     return ExpressionCompiler::create(*this)->compile(expected_data_type);
 }
 
-Codes *Compiler::getSymbolOperatorCodes(Precedence::Level precedence)
+Codes *Compiler::getSymbolOperatorCodes(Precedence precedence)
 {
     skipWhiteSpace();
-    if (auto codes = Precedence::operatorCodes(precedence, peekNextChar())) {
+    if (auto codes = Table::operatorCodes(precedence, peekNextChar())) {
         getNextChar();
         skipWhiteSpace();
         return codes;
@@ -37,9 +37,9 @@ Codes *Compiler::getSymbolOperatorCodes(Precedence::Level precedence)
     return nullptr;
 }
 
-Codes *Compiler::getWordOperatorCodes(Precedence::Level precedence)
+Codes *Compiler::getWordOperatorCodes(Precedence precedence)
 {
-    if (auto codes = Precedence::operatorCodes(precedence, getKeyword())) {
+    if (auto codes = Table::operatorCodes(precedence, getKeyword())) {
         clearWord();
         return codes;
     }
@@ -60,9 +60,9 @@ private:
     Codes *one_char_codes;
 };
 
-Codes *Compiler::getComparisonOperatorCodes(Precedence::Level precedence)
+Codes *Compiler::getComparisonOperatorCodes(Precedence precedence)
 {
-    if (precedence == Precedence::Level::Equality) {
+    if (precedence == Precedence::Equality) {
         return savedEqualityOperatorCodes();
     } else {
         skipWhiteSpace();
@@ -91,7 +91,7 @@ Codes *ComparisonOperatorCodes::operator()()
 Codes *ComparisonOperatorCodes::codesWithNextPeekChar()
 {
     keyword += compiler.peekNextChar();
-    auto comparison_operator = Precedence::comparisonOperator(keyword);
+    auto comparison_operator = Table::comparisonOperator(keyword);
     if (comparison_operator.codes) {
         compiler.getNextChar();
         compiler.skipWhiteSpace();
@@ -102,7 +102,7 @@ Codes *ComparisonOperatorCodes::codesWithNextPeekChar()
 
 Codes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &compare_operator)
 {
-    if (compare_operator.precedence == Precedence::Level::Relation) {
+    if (compare_operator.precedence == Precedence::Relation) {
         return compare_operator.codes;
     } else {
         compiler.setEqualityCodes(compare_operator.codes);

@@ -10,7 +10,7 @@
 
 #include "code.h"
 #include "codes.h"
-#include "precedence.h"
+#include "table.h"
 
 
 enum class OpType {
@@ -34,7 +34,7 @@ public:
 
 class UnaryOperatorCodes : public Codes {
 public:
-    UnaryOperatorCodes(Precedence::Level precedence, const char *keyword,
+    UnaryOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code);
     Info select(DataType data_type, DataType unused_data_type) const override;
     std::vector<WordType> codeValues() const override;
@@ -47,7 +47,7 @@ private:
 
 class NumOperatorCodes : public Codes {
 public:
-    NumOperatorCodes(Precedence::Level precedence, const char *keyword,
+    NumOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
         OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code);
     Info select(DataType lhs_data_type, DataType rhs_data_type) const override;
@@ -63,7 +63,7 @@ private:
 
 class IntDivOperatorCode : public Codes {
 public:
-    IntDivOperatorCode(Precedence::Level precedence, const char *keyword,
+    IntDivOperatorCode(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &code);
     Info select(DataType lhs_data_type, DataType rhs_data_type) const override;
     std::vector<WordType> codeValues() const override;
@@ -82,8 +82,7 @@ public:
 
 class NotOperatorCodes : public Codes {
 public:
-    NotOperatorCodes(Precedence::Level precedence, const char *keyword,
-        OperatorCode<OpType::Int> &code);
+    NotOperatorCodes(Precedence precedence, const char *keyword, OperatorCode<OpType::Int> &code);
     Info select(DataType unused_data_type1, DataType unused_data_type2) const override;
     std::vector<WordType> codeValues() const override;
 
@@ -94,7 +93,7 @@ private:
 
 class LogicOperatorCodes : public Codes {
 public:
-    LogicOperatorCodes(Precedence::Level precedence, const char *keyword,
+    LogicOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::IntInt> &code);
     Info select(DataType unused_data_type1, DataType unused_data_type2) const override;
     std::vector<WordType> codeValues() const override;

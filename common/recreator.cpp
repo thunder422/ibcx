@@ -8,12 +8,12 @@
 #include <stack>
 
 #include "commandcode.h"
-#include "precedence.h"
 #include "programcode.h"
 #include "programerror.h"
 #include "programreader.h"
 #include "programunit.h"
 #include "recreator.h"
+#include "table.h"
 
 
 class RecreatorImpl : public Recreator {
@@ -31,38 +31,38 @@ public:
 
 private:
     struct StackItem {
-        StackItem(const std::string &string, Precedence::Level precedence);
+        StackItem(const std::string &string, Precedence precedence);
         bool isUnaryOperator() const;
 
         std::string string;
-        Precedence::Level precedence;
-        Precedence::Level unary_operator_precedence;
+        Precedence precedence;
+        Precedence unary_operator_precedence;
     };
 
     void setAtErrorOffset();
     void recreateOneCode();
     std::string &&moveTopString();
     void prependKeyword(CommandCode command_code);
-    Precedence::Level topPrecedence() const;
-    Precedence::Level topUnaryOperatorPrecedence() const;
+    Precedence topPrecedence() const;
+    Precedence topUnaryOperatorPrecedence() const;
     void pop();
     void append(char c);
     void append(const std::string &string);
     void swapTop(std::string &string);
-    void setTopPrecedence(Precedence::Level precedence);
-    void setTopUnaryOperatorPrecedence(Precedence::Level precedence);
+    void setTopPrecedence(Precedence precedence);
+    void setTopUnaryOperatorPrecedence(Precedence precedence);
     void markErrorStart();
     void markErrorEnd();
     void appendErrorMarker(char error_marker);
     void appendUnaryOperator();
-    void appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence);
+    void appendUnaryOperand(std::string &&operand, Precedence operator_precedence);
     void appendSpaceForConstant(char first_char);
-    void appendLeftOperand(Precedence::Level operator_precedence);
+    void appendLeftOperand(Precedence operator_precedence);
     void appendBinaryOperator();
-    void appendRightOperand(const StackItem &rhs, Precedence::Level operator_precedence);
+    void appendRightOperand(const StackItem &rhs, Precedence operator_precedence);
     void appendWithParens(const std::string &string);
     const char *getOperatorKeyword() const;
-    Precedence::Level getOperatorPrecedence() const;
+    Precedence getOperatorPrecedence() const;
 
     const ProgramUnit &program;
     mutable ProgramReader program_reader;
@@ -82,16 +82,16 @@ std::unique_ptr<Recreator> Recreator::create(const ProgramUnit &program,
 
 // ------------------------------------------------------------
 
-RecreatorImpl::StackItem::StackItem(const std::string &string, Precedence::Level precedence) :
+RecreatorImpl::StackItem::StackItem(const std::string &string, Precedence precedence) :
     string {string},
     precedence {precedence},
-    unary_operator_precedence {Precedence::Level::Operand}
+    unary_operator_precedence {Precedence::Operand}
 {
 }
 
 bool RecreatorImpl::StackItem::isUnaryOperator() const
 {
-    return unary_operator_precedence != Precedence::Level::Operand;
+    return unary_operator_precedence != Precedence::Operand;
 }
 
 // ------------------------------------------------------------
@@ -142,7 +142,7 @@ void RecreatorImpl::addCommandKeyword(CommandCode command_code)
 
 void RecreatorImpl::push(const std::string &operand)
 {
-    stack.emplace(operand, Precedence::Level::Operand);
+    stack.emplace(operand, Precedence::Operand);
 }
 
 std::string &&RecreatorImpl::moveTopString()
@@ -150,12 +150,12 @@ std::string &&RecreatorImpl::moveTopString()
     return std::move(stack.top().string);
 }
 
-Precedence::Level RecreatorImpl::topPrecedence() const
+Precedence RecreatorImpl::topPrecedence() const
 {
     return stack.top().precedence;
 }
 
-Precedence::Level RecreatorImpl::topUnaryOperatorPrecedence() const
+Precedence RecreatorImpl::topUnaryOperatorPrecedence() const
 {
     return stack.top().unary_operator_precedence;
 }
@@ -188,12 +188,12 @@ void RecreatorImpl::swapTop(std::string &string)
     std::swap(stack.top().string, string);
 }
 
-void RecreatorImpl::setTopPrecedence(Precedence::Level precedence)
+void RecreatorImpl::setTopPrecedence(Precedence precedence)
 {
     stack.top().precedence = precedence;
 }
 
-void RecreatorImpl::setTopUnaryOperatorPrecedence(Precedence::Level precedence)
+void RecreatorImpl::setTopUnaryOperatorPrecedence(Precedence precedence)
 {
     stack.top().unary_operator_precedence = precedence;
 }
@@ -238,7 +238,7 @@ void RecreatorImpl::appendUnaryOperator()
     }
 }
 
-void RecreatorImpl::appendUnaryOperand(std::string &&operand, Precedence::Level operator_precedence)
+void RecreatorImpl::appendUnaryOperand(std::string &&operand, Precedence operator_precedence)
 {
     auto operand_precedence = topPrecedence();
     auto lower_precedence = operand_precedence > operator_precedence;
@@ -274,7 +274,7 @@ void RecreatorImpl::recreateBinaryOperator()
     setTopUnaryOperatorPrecedence(rhs.unary_operator_precedence);
 }
 
-void RecreatorImpl::appendLeftOperand(Precedence::Level operator_precedence)
+void RecreatorImpl::appendLeftOperand(Precedence operator_precedence)
 {
     auto lhs_precedence = topPrecedence();
     auto lhs_unary_operator_precedence = topUnaryOperatorPrecedence();
@@ -294,7 +294,7 @@ void RecreatorImpl::appendBinaryOperator()
     append(' ');
 }
 
-void RecreatorImpl::appendRightOperand(const StackItem &rhs, Precedence::Level operator_precedence)
+void RecreatorImpl::appendRightOperand(const StackItem &rhs, Precedence operator_precedence)
 {
     auto lower_precedence = rhs.precedence >= operator_precedence && !rhs.isUnaryOperator();
     if (lower_precedence) {
@@ -313,12 +313,12 @@ void RecreatorImpl::appendWithParens(const std::string &string)
 
 const char *RecreatorImpl::getOperatorKeyword() const
 {
-    return Precedence::getKeyword(code_value);
+    return Table::getKeyword(code_value);
 }
 
-Precedence::Level RecreatorImpl::getOperatorPrecedence() const
+Precedence RecreatorImpl::getOperatorPrecedence() const
 {
-    return Precedence::getPrecedence(code_value);
+    return Table::getPrecedence(code_value);
 }
 
 void RecreatorImpl::markOperandIfError()
