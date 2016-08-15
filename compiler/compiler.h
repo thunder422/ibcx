@@ -30,6 +30,7 @@ public:
     Codes *getSymbolOperatorCodes(Precedence precedence);
     Codes *getWordOperatorCodes(Precedence precedence);
     Codes *getComparisonOperatorCodes(Precedence precedence);
+    Codes *getNumFunctionCodes();
 
     ci_string getKeyword();
     void parseKeyword(char first_char);

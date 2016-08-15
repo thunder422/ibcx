@@ -239,10 +239,9 @@ DataType ExpressionCompilerImpl::compileNumOperand()
 
 DataType ExpressionCompilerImpl::compileFunction()
 {
-    if (compiler.getKeyword() != "ABS") {
+    if (!compiler.getNumFunctionCodes()) {
         return DataType::Null;
     }
-    compiler.clearWord();
     if (compiler.peekNextChar() == '(') {
         compileParentheses();
     }

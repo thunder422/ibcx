@@ -67,7 +67,9 @@ set(IBC_SOURCES
     basic/comparisonoperators.cpp
     basic/constnum.cpp
     basic/end.cpp
+    basic/functions.cpp
     basic/logicoperators.cpp
+    basic/mathfunctions.cpp
     basic/mathoperators.cpp
     basic/operators.cpp
     basic/powerdblint.h

@@ -36,12 +36,14 @@ class Codes;
 
 struct Table {
     static void addOperatorCodes(Precedence precedence, Codes &codes, const char *keyword);
+    static void addNumFunctionCodes(Codes &codes, const char *keyword);
     static const char *getKeyword(WordType code_value);
     static Precedence getPrecedence(WordType code_value);
     static Codes *operatorCodes(Precedence precedence);
     static Codes *operatorCodes(Precedence precedence, char operator_char);
     static Codes *operatorCodes(Precedence precedence, const ci_string &word);
     static ComparisonOperator comparisonOperator(const std::string &keyword);
+    static Codes *numFunctionCodes(const ci_string &word);
 };
 
 

@@ -116,6 +116,15 @@ void Compiler::setEqualityCodes(Codes *codes)
     equality_codes = codes;
 }
 
+Codes *Compiler::getNumFunctionCodes()
+{
+    auto codes = Table::numFunctionCodes(word);
+    if (codes) {
+        clearWord();
+    }
+    return codes;
+}
+
 ci_string Compiler::getKeyword()
 {
     if (word.empty()) {

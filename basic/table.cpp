@@ -17,12 +17,14 @@ class TableInfo {
 public:
     static TableInfo &getInstance();
     void addOperatorData(Precedence precedence, Codes &codes, const char *keyword);
+    void addNumFunctionData(Codes &codes, const char *keyword);
     Precedence getPrecedence(WordType code_value) const;
     const char *getKeyword(WordType code_value) const;
     Codes *operatorCodes(Precedence precedence);
     Codes *operatorCodes(Precedence precedence, char operator_char);
     Codes *operatorCodes(Precedence precedence, const ci_string &word);
     ComparisonOperator comparisonOperatorData(const std::string &keyword);
+    Codes *numFunctionCodes(const ci_string &word);
 
 private:
     struct OperatorData {
@@ -36,6 +38,7 @@ private:
     std::unordered_map<WordType, const char *> keywords;
     std::multimap<Precedence, OperatorData> operator_data;
     std::map<std::string, ComparisonOperator> comparison_operator_data;
+    std::map<ci_string, Codes &> num_function_codes;
 };
 
 // ------------------------------------------------------------
@@ -43,6 +46,11 @@ private:
 void Table::addOperatorCodes(Precedence precedence, Codes &codes, const char *keyword)
 {
     TableInfo::getInstance().addOperatorData(precedence, codes, keyword);
+}
+
+void Table::addNumFunctionCodes(Codes &codes, const char *keyword)
+{
+    TableInfo::getInstance().addNumFunctionData(codes, keyword);
 }
 
 const char *Table::getKeyword(WordType code_value)
@@ -73,6 +81,11 @@ Codes *Table::operatorCodes(Precedence precedence, const ci_string &word)
 ComparisonOperator Table::comparisonOperator(const std::string &keyword)
 {
     return TableInfo::getInstance().comparisonOperatorData(keyword);
+}
+
+Codes *Table::numFunctionCodes(const ci_string &word)
+{
+    return TableInfo::getInstance().numFunctionCodes(word);
 }
 
 // ------------------------------------------------------------
@@ -134,6 +147,12 @@ ComparisonOperator TableInfo::comparisonOperatorData(const std::string &keyword)
     }
 }
 
+Codes *TableInfo::numFunctionCodes(const ci_string &word)
+{
+    auto iterator = num_function_codes.find(word);
+    return iterator != num_function_codes.end() ? &iterator->second : nullptr;
+}
+
 // --------------------
 
 void TableInfo::addOperatorData(Precedence precedence, Codes &codes, const char *keyword)
@@ -145,5 +164,13 @@ void TableInfo::addOperatorData(Precedence precedence, Codes &codes, const char 
     }
     if (precedence == Precedence::Relation || precedence == Precedence::Equality) {
         comparison_operator_data.emplace(keyword, ComparisonOperator{&codes, precedence});
+    }
+}
+
+void TableInfo::addNumFunctionData(Codes &codes, const char *keyword)
+{
+    num_function_codes.emplace(keyword, codes);
+    for (auto code_value : codes.codeValues()) {
+        keywords[code_value] = keyword;
     }
 }
