@@ -230,22 +230,19 @@ DataType ExpressionCompilerImpl::compileNumOperand()
     if (auto codes = getNotOperatorCodes()) {
         return compileNotOperand(codes);
     }
-    auto data_type = compileFunction();
-    if (data_type != DataType::Null) {
-        return data_type;
-    }
+    compileFunction();
     return compileNumConstant();
 }
 
 DataType ExpressionCompilerImpl::compileFunction()
 {
-    if (!compiler.getNumFunctionCodes()) {
-        return DataType::Null;
+    if (auto codes = compiler.getNumFunctionCodes()) {
+        if (compiler.peekNextChar() == '(') {
+            compileParentheses();
+        }
+        addSelectedCode(codes, DataType::Double, DataType::Double);
     }
-    if (compiler.peekNextChar() == '(') {
-        compileParentheses();
-    }
-    return DataType::Double;
+    return DataType::Null;
 }
 
 DataType ExpressionCompilerImpl::compileParentheses()
