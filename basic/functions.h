@@ -27,10 +27,21 @@ public:
 };
 
 
-class MultiTypeFunctionCodes : public Codes {
+class FunctionCodes : public Codes {
+public:
+    struct Info {
+        Code &code;
+        DataType result_data_type;
+    };
+
+    virtual Info select(DataType data_type) const = 0;
+};
+
+
+class MultiTypeFunctionCodes : public FunctionCodes {
 public:
     MultiTypeFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &dbl_code);
-    Info select(DataType data_type_1, DataType unused_data_type) const override;
+    Info select(DataType data_type) const override;
     std::vector<WordType> codeValues() const override;
 
 private:

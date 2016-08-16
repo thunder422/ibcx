@@ -21,16 +21,15 @@
 class Code;
 class ProgramCode;
 class ProgramUnit;
-class Codes;
 
 class Compiler {
 public:
     Compiler(const std::string &line, ProgramUnit &program);
     DataType compileExpression(DataType expected_data_type);
-    Codes *getSymbolOperatorCodes(Precedence precedence);
-    Codes *getWordOperatorCodes(Precedence precedence);
-    Codes *getComparisonOperatorCodes(Precedence precedence);
-    Codes *getNumFunctionCodes();
+    OperatorCodes *getSymbolOperatorCodes(Precedence precedence);
+    OperatorCodes *getWordOperatorCodes(Precedence precedence);
+    OperatorCodes *getComparisonOperatorCodes(Precedence precedence);
+    FunctionCodes *getNumFunctionCodes();
 
     ci_string getKeyword();
     void parseKeyword(char first_char);
@@ -50,8 +49,8 @@ public:
 private:
     friend class ComparisonOperatorCodes;
 
-    Codes *savedEqualityOperatorCodes();
-    void setEqualityCodes(Codes *codes);
+    OperatorCodes *savedEqualityOperatorCodes();
+    void setEqualityCodes(OperatorCodes *codes);
     ci_string getAlphaOnlyWord();
     void changeConstantToDouble();
     void changeConstantToInteger();
@@ -66,7 +65,7 @@ private:
     unsigned last_constant_column;
     unsigned last_constant_length;
     ci_string word;
-    Codes *equality_codes {};
+    OperatorCodes *equality_codes {};
     unsigned word_column {0};
 };
 

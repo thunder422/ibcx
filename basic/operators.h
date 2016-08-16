@@ -32,7 +32,17 @@ public:
 };
 
 
-class UnaryOperatorCodes : public Codes {
+class OperatorCodes : public Codes {
+public:
+    struct Info {
+        Code &code;
+        DataType result_data_type;
+    };
+
+    virtual Info select(DataType lhs_data_type, DataType rhs_data_type = DataType::Null) const = 0;
+};
+
+class UnaryOperatorCodes : public OperatorCodes {
 public:
     UnaryOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::Dbl> &dbl_code, OperatorCode<OpType::Int> &int_code);
@@ -45,7 +55,7 @@ private:
 };
 
 
-class NumOperatorCodes : public Codes {
+class NumOperatorCodes : public OperatorCodes {
 public:
     NumOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
@@ -61,7 +71,7 @@ private:
 };
 
 
-class IntDivOperatorCode : public Codes {
+class IntDivOperatorCode : public OperatorCodes {
 public:
     IntDivOperatorCode(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &code);
@@ -80,7 +90,7 @@ public:
 };
 
 
-class NotOperatorCodes : public Codes {
+class NotOperatorCodes : public OperatorCodes {
 public:
     NotOperatorCodes(Precedence precedence, const char *keyword, OperatorCode<OpType::Int> &code);
     Info select(DataType unused_data_type1, DataType unused_data_type2) const override;
@@ -91,7 +101,7 @@ private:
 };
 
 
-class LogicOperatorCodes : public Codes {
+class LogicOperatorCodes : public OperatorCodes {
 public:
     LogicOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::IntInt> &code);

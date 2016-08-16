@@ -9,6 +9,7 @@
 #include <unordered_map>
 
 #include "cistring.h"
+#include "functions.h"
 #include "operators.h"
 #include "table.h"
 
@@ -16,19 +17,19 @@
 class TableInfo {
 public:
     static TableInfo &getInstance();
-    void addOperatorData(Precedence precedence, Codes &codes, const char *keyword);
-    void addNumFunctionData(Codes &codes, const char *keyword);
+    void addOperatorData(Precedence precedence, OperatorCodes &codes, const char *keyword);
+    void addNumFunctionData(FunctionCodes &codes, const char *keyword);
     Precedence getPrecedence(WordType code_value) const;
     const char *getKeyword(WordType code_value) const;
-    Codes *operatorCodes(Precedence precedence);
-    Codes *operatorCodes(Precedence precedence, char operator_char);
-    Codes *operatorCodes(Precedence precedence, const ci_string &word);
+    OperatorCodes *operatorCodes(Precedence precedence);
+    OperatorCodes *operatorCodes(Precedence precedence, char operator_char);
+    OperatorCodes *operatorCodes(Precedence precedence, const ci_string &word);
     ComparisonOperator comparisonOperatorData(const std::string &keyword);
-    Codes *numFunctionCodes(const ci_string &word);
+    FunctionCodes *numFunctionCodes(const ci_string &word);
 
 private:
     struct OperatorData {
-        Codes &codes;
+        OperatorCodes &codes;
         const char *keyword;
     };
 
@@ -38,17 +39,17 @@ private:
     std::unordered_map<WordType, const char *> keywords;
     std::multimap<Precedence, OperatorData> operator_data;
     std::map<std::string, ComparisonOperator> comparison_operator_data;
-    std::map<ci_string, Codes &> num_function_codes;
+    std::map<ci_string, FunctionCodes &> num_function_codes;
 };
 
 // ------------------------------------------------------------
 
-void Table::addOperatorCodes(Precedence precedence, Codes &codes, const char *keyword)
+void Table::addOperatorCodes(Precedence precedence, OperatorCodes &codes, const char *keyword)
 {
     TableInfo::getInstance().addOperatorData(precedence, codes, keyword);
 }
 
-void Table::addNumFunctionCodes(Codes &codes, const char *keyword)
+void Table::addNumFunctionCodes(FunctionCodes &codes, const char *keyword)
 {
     TableInfo::getInstance().addNumFunctionData(codes, keyword);
 }
@@ -63,17 +64,17 @@ Precedence Table::getPrecedence(WordType code_value)
     return TableInfo::getInstance().getPrecedence(code_value);
 }
 
-Codes *Table::operatorCodes(Precedence precedence)
+OperatorCodes *Table::operatorCodes(Precedence precedence)
 {
     return TableInfo::getInstance().operatorCodes(precedence);
 }
 
-Codes *Table::operatorCodes(Precedence precedence, char operator_char)
+OperatorCodes *Table::operatorCodes(Precedence precedence, char operator_char)
 {
     return TableInfo::getInstance().operatorCodes(precedence, operator_char);
 }
 
-Codes *Table::operatorCodes(Precedence precedence, const ci_string &word)
+OperatorCodes *Table::operatorCodes(Precedence precedence, const ci_string &word)
 {
     return TableInfo::getInstance().operatorCodes(precedence, word);
 }
@@ -83,7 +84,7 @@ ComparisonOperator Table::comparisonOperator(const std::string &keyword)
     return TableInfo::getInstance().comparisonOperatorData(keyword);
 }
 
-Codes *Table::numFunctionCodes(const ci_string &word)
+FunctionCodes *Table::numFunctionCodes(const ci_string &word)
 {
     return TableInfo::getInstance().numFunctionCodes(word);
 }
@@ -106,14 +107,14 @@ const char *TableInfo::getKeyword(WordType code_value) const
     return keywords.at(code_value);
 }
 
-Codes *TableInfo::operatorCodes(Precedence precedence)
+OperatorCodes *TableInfo::operatorCodes(Precedence precedence)
 {
     auto iterators = operator_data.equal_range(precedence);
     auto &operator_data = iterators.first->second;
     return &operator_data.codes;
 }
 
-Codes *TableInfo::operatorCodes(Precedence precedence, char operator_char)
+OperatorCodes *TableInfo::operatorCodes(Precedence precedence, char operator_char)
 {
     auto iterators = operator_data.equal_range(precedence);
     for (auto iterator = iterators.first; iterator != iterators.second; ++iterator) {
@@ -125,7 +126,7 @@ Codes *TableInfo::operatorCodes(Precedence precedence, char operator_char)
     return nullptr;
 }
 
-Codes *TableInfo::operatorCodes(Precedence precedence, const ci_string &word)
+OperatorCodes *TableInfo::operatorCodes(Precedence precedence, const ci_string &word)
 {
     auto iterators = operator_data.equal_range(precedence);
     for (auto iterator = iterators.first; iterator != iterators.second; ++iterator) {
@@ -147,7 +148,7 @@ ComparisonOperator TableInfo::comparisonOperatorData(const std::string &keyword)
     }
 }
 
-Codes *TableInfo::numFunctionCodes(const ci_string &word)
+FunctionCodes *TableInfo::numFunctionCodes(const ci_string &word)
 {
     auto iterator = num_function_codes.find(word);
     return iterator != num_function_codes.end() ? &iterator->second : nullptr;
@@ -155,7 +156,7 @@ Codes *TableInfo::numFunctionCodes(const ci_string &word)
 
 // --------------------
 
-void TableInfo::addOperatorData(Precedence precedence, Codes &codes, const char *keyword)
+void TableInfo::addOperatorData(Precedence precedence, OperatorCodes &codes, const char *keyword)
 {
     operator_data.emplace(precedence, OperatorData{codes, keyword});
     for (auto code_value : codes.codeValues()) {
@@ -167,7 +168,7 @@ void TableInfo::addOperatorData(Precedence precedence, Codes &codes, const char 
     }
 }
 
-void TableInfo::addNumFunctionData(Codes &codes, const char *keyword)
+void TableInfo::addNumFunctionData(FunctionCodes &codes, const char *keyword)
 {
     num_function_codes.emplace(keyword, codes);
     for (auto code_value : codes.codeValues()) {

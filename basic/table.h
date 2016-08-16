@@ -32,27 +32,28 @@ enum class Precedence {
 
 
 class ComparisonOperator;
-class Codes;
+class FunctionCodes;
+class OperatorCodes;
 
 struct Table {
-    static void addOperatorCodes(Precedence precedence, Codes &codes, const char *keyword);
-    static void addNumFunctionCodes(Codes &codes, const char *keyword);
+    static void addOperatorCodes(Precedence precedence, OperatorCodes &codes, const char *keyword);
+    static void addNumFunctionCodes(FunctionCodes &codes, const char *keyword);
     static const char *getKeyword(WordType code_value);
     static Precedence getPrecedence(WordType code_value);
-    static Codes *operatorCodes(Precedence precedence);
-    static Codes *operatorCodes(Precedence precedence, char operator_char);
-    static Codes *operatorCodes(Precedence precedence, const ci_string &word);
+    static OperatorCodes *operatorCodes(Precedence precedence);
+    static OperatorCodes *operatorCodes(Precedence precedence, char operator_char);
+    static OperatorCodes *operatorCodes(Precedence precedence, const ci_string &word);
     static ComparisonOperator comparisonOperator(const std::string &keyword);
-    static Codes *numFunctionCodes(const ci_string &word);
+    static FunctionCodes *numFunctionCodes(const ci_string &word);
 };
 
 
 class ComparisonOperator {
 public:
     ComparisonOperator();
-    ComparisonOperator(Codes *codes, Precedence precedence);
+    ComparisonOperator(OperatorCodes *codes, Precedence precedence);
 
-    Codes *codes;
+    OperatorCodes *codes;
     Precedence precedence;
 };
 
@@ -61,7 +62,7 @@ inline ComparisonOperator::ComparisonOperator() :
 {
 }
 
-inline ComparisonOperator::ComparisonOperator(Codes *codes, Precedence precedence) :
+inline ComparisonOperator::ComparisonOperator(OperatorCodes *codes, Precedence precedence) :
     codes {codes},
     precedence {precedence}
 {

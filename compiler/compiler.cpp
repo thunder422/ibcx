@@ -26,7 +26,7 @@ DataType Compiler::compileExpression(DataType expected_data_type)
     return ExpressionCompiler::create(*this)->compile(expected_data_type);
 }
 
-Codes *Compiler::getSymbolOperatorCodes(Precedence precedence)
+OperatorCodes *Compiler::getSymbolOperatorCodes(Precedence precedence)
 {
     skipWhiteSpace();
     if (auto codes = Table::operatorCodes(precedence, peekNextChar())) {
@@ -37,7 +37,7 @@ Codes *Compiler::getSymbolOperatorCodes(Precedence precedence)
     return nullptr;
 }
 
-Codes *Compiler::getWordOperatorCodes(Precedence precedence)
+OperatorCodes *Compiler::getWordOperatorCodes(Precedence precedence)
 {
     if (auto codes = Table::operatorCodes(precedence, getKeyword())) {
         clearWord();
@@ -49,18 +49,18 @@ Codes *Compiler::getWordOperatorCodes(Precedence precedence)
 class ComparisonOperatorCodes {
 public:
     ComparisonOperatorCodes(Compiler &compiler) : compiler {compiler} { }
-    Codes *operator()();
+    OperatorCodes *operator()();
 
 private:
-    Codes *codesWithNextPeekChar();
-    Codes *relationCodes(const ComparisonOperator &comparison_operator);
+    OperatorCodes *codesWithNextPeekChar();
+    OperatorCodes *relationCodes(const ComparisonOperator &comparison_operator);
 
     Compiler &compiler;
     std::string keyword;
-    Codes *one_char_codes;
+    OperatorCodes *one_char_codes;
 };
 
-Codes *Compiler::getComparisonOperatorCodes(Precedence precedence)
+OperatorCodes *Compiler::getComparisonOperatorCodes(Precedence precedence)
 {
     if (precedence == Precedence::Equality) {
         return savedEqualityOperatorCodes();
@@ -70,14 +70,14 @@ Codes *Compiler::getComparisonOperatorCodes(Precedence precedence)
     }
 }
 
-Codes *Compiler::savedEqualityOperatorCodes()
+OperatorCodes *Compiler::savedEqualityOperatorCodes()
 {
     auto codes = equality_codes;
     equality_codes = nullptr;
     return codes;
 }
 
-Codes *ComparisonOperatorCodes::operator()()
+OperatorCodes *ComparisonOperatorCodes::operator()()
 {
     if ((one_char_codes = codesWithNextPeekChar())) {
         if (auto two_char_codes = codesWithNextPeekChar()) {
@@ -88,7 +88,7 @@ Codes *ComparisonOperatorCodes::operator()()
     return nullptr;
 }
 
-Codes *ComparisonOperatorCodes::codesWithNextPeekChar()
+OperatorCodes *ComparisonOperatorCodes::codesWithNextPeekChar()
 {
     keyword += compiler.peekNextChar();
     auto comparison_operator = Table::comparisonOperator(keyword);
@@ -100,7 +100,7 @@ Codes *ComparisonOperatorCodes::codesWithNextPeekChar()
     return nullptr;
 }
 
-Codes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &compare_operator)
+OperatorCodes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &compare_operator)
 {
     if (compare_operator.precedence == Precedence::Relation) {
         return compare_operator.codes;
@@ -111,12 +111,12 @@ Codes *ComparisonOperatorCodes::relationCodes(const ComparisonOperator &compare_
     }
 }
 
-void Compiler::setEqualityCodes(Codes *codes)
+void Compiler::setEqualityCodes(OperatorCodes *codes)
 {
     equality_codes = codes;
 }
 
-Codes *Compiler::getNumFunctionCodes()
+FunctionCodes *Compiler::getNumFunctionCodes()
 {
     auto codes = Table::numFunctionCodes(word);
     if (codes) {

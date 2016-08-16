@@ -16,13 +16,13 @@ UnaryOperatorCodes::UnaryOperatorCodes(Precedence precedence, const char *keywor
     Table::addOperatorCodes(precedence, *this, keyword);
 }
 
-Codes::Info UnaryOperatorCodes::select(DataType data_type, DataType unused_data_type) const
+OperatorCodes::Info UnaryOperatorCodes::select(DataType data_type, DataType unused_data_type) const
 {
     (void)unused_data_type;
     if (data_type == DataType::Double) {
-        return Codes::Info {dbl_code, DataType::Double};
+        return OperatorCodes::Info {dbl_code, DataType::Double};
     } else {
-        return Codes::Info {int_code, DataType::Integer};
+        return OperatorCodes::Info {int_code, DataType::Integer};
     }
 }
 
@@ -43,16 +43,16 @@ NumOperatorCodes::NumOperatorCodes(Precedence precedence, const char *keyword,
     Table::addOperatorCodes(precedence, *this, keyword);
 }
 
-Codes::Info NumOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
+OperatorCodes::Info NumOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
 {
     if (lhs_data_type == DataType::Integer && rhs_data_type == DataType::Integer) {
-        return Codes::Info {int_int_code, DataType::Integer};
+        return OperatorCodes::Info {int_int_code, DataType::Integer};
     } else if (lhs_data_type == DataType::Integer) {
-        return Codes::Info {int_dbl_code, DataType::Double};
+        return OperatorCodes::Info {int_dbl_code, DataType::Double};
     } else if (rhs_data_type == DataType::Integer) {
-        return Codes::Info {dbl_int_code, DataType::Double};
+        return OperatorCodes::Info {dbl_int_code, DataType::Double};
     } else {
-        return Codes::Info {dbl_dbl_code, DataType::Double};
+        return OperatorCodes::Info {dbl_dbl_code, DataType::Double};
     }
 }
 
@@ -65,7 +65,7 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
 }
 
 
-Codes::Info CompOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
+OperatorCodes::Info CompOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
 {
     auto info = NumOperatorCodes::select(lhs_data_type, rhs_data_type);
     info.result_data_type = DataType::Integer;
@@ -80,11 +80,11 @@ IntDivOperatorCode::IntDivOperatorCode(Precedence precedence, const char *keywor
     Table::addOperatorCodes(precedence, *this, keyword);
 }
 
-Codes::Info IntDivOperatorCode::select(DataType lhs_data_type, DataType rhs_data_type) const
+OperatorCodes::Info IntDivOperatorCode::select(DataType lhs_data_type, DataType rhs_data_type) const
 {
     (void)lhs_data_type;
     (void)rhs_data_type;
-    return Codes::Info {code, DataType::Integer};
+    return OperatorCodes::Info {code, DataType::Integer};
 }
 
 std::vector<WordType> IntDivOperatorCode::codeValues() const
@@ -100,11 +100,12 @@ NotOperatorCodes::NotOperatorCodes(Precedence precedence, const char *keyword,
     Table::addOperatorCodes(precedence, *this, keyword);
 }
 
-Codes::Info NotOperatorCodes::select(DataType unused_data_type1, DataType unused_data_type2) const
+OperatorCodes::Info NotOperatorCodes::select(DataType unused_data_type1, DataType unused_data_type2)
+    const
 {
     (void)unused_data_type1;
     (void)unused_data_type2;
-    return Codes::Info {code, DataType::Integer};
+    return OperatorCodes::Info {code, DataType::Integer};
 }
 
 std::vector<WordType> NotOperatorCodes::codeValues() const
@@ -120,11 +121,12 @@ LogicOperatorCodes::LogicOperatorCodes(Precedence precedence, const char *keywor
     Table::addOperatorCodes(precedence, *this, keyword);
 }
 
-Codes::Info LogicOperatorCodes::select(DataType unused_data_type1, DataType unused_data_type2) const
+OperatorCodes::Info LogicOperatorCodes::select(DataType unused_data_type1,
+    DataType unused_data_type2) const
 {
     (void)unused_data_type1;
     (void)unused_data_type2;
-    return Codes::Info {code, DataType::Integer};
+    return OperatorCodes::Info {code, DataType::Integer};
 }
 
 std::vector<WordType> LogicOperatorCodes::codeValues() const

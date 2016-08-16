@@ -18,12 +18,6 @@ class Code;
 
 class Codes {
 public:
-    struct Info {
-        Code &code;
-        DataType result_data_type;
-    };
-
-    virtual Info select(DataType data_type_1, DataType data_type_2 = DataType::Null) const = 0;
     virtual std::vector<WordType> codeValues() const = 0;
 };
 

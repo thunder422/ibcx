@@ -15,11 +15,10 @@ MultiTypeFunctionCodes::MultiTypeFunctionCodes(const char *keyword,
     Table::addNumFunctionCodes(*this, keyword);
 }
 
-Codes::Info MultiTypeFunctionCodes::select(DataType data_type_1, DataType unused_data_type) const
+FunctionCodes::Info MultiTypeFunctionCodes::select(DataType data_type) const
 {
-    (void)unused_data_type;
-    (void)data_type_1;
-    return Codes::Info {dbl_code, DataType::Double};
+    (void)data_type;
+    return FunctionCodes::Info {dbl_code, DataType::Double};
 }
 
 std::vector<WordType> MultiTypeFunctionCodes::codeValues() const
