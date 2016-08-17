@@ -14,7 +14,8 @@
 
 
 enum class ArgType {
-    Dbl
+    Dbl,
+    Int
 };
 
 
@@ -40,12 +41,14 @@ public:
 
 class MultiTypeFunctionCodes : public FunctionCodes {
 public:
-    MultiTypeFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &dbl_code);
+    MultiTypeFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &dbl_code,
+        FunctionCode<ArgType::Int> &int_code);
     Info select(DataType data_type) const override;
     std::vector<WordType> codeValues() const override;
 
 private:
     FunctionCode<ArgType::Dbl> &dbl_code;
+    FunctionCode<ArgType::Int> &int_code;
 };
 
 #endif  // IBC_FUNCTIONS_H

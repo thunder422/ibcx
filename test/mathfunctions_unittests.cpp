@@ -21,7 +21,7 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
-    SECTION("check that function code is added after the operand")
+    SECTION("check that the double function code is added after the operand")
     {
         Compiler compiler {"ABS(-2.1)", program};
         compiler.compileExpression(DataType::Null);
@@ -37,5 +37,15 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
         auto data_type = compiler.compileExpression(DataType::Null);
 
         REQUIRE(data_type == DataType::Double);
+    }
+    SECTION("check that the integer function code is added after the operand")
+    {
+        Compiler compiler {"ABS(-2)", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        extern Code abs_int_code;
+        REQUIRE(code_line.size() == 3);
+        REQUIRE(code_line[2].instructionCode()->getValue() == abs_int_code.getValue());
     }
 }

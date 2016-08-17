@@ -244,9 +244,9 @@ DataType ExpressionCompilerImpl::compileFunction()
 {
     if (auto codes = compiler.getNumFunctionCodes()) {
         if (compiler.peekNextChar() == '(') {
-            compileParentheses();
+            auto data_type = compileParentheses();
+            return addFunctionCode(codes, data_type);
         }
-        return addFunctionCode(codes, DataType::Double);
     }
     return DataType::Null;
 }

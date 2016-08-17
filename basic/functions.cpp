@@ -9,16 +9,20 @@
 
 
 MultiTypeFunctionCodes::MultiTypeFunctionCodes(const char *keyword,
-        FunctionCode<ArgType::Dbl> &dbl_code) :
-    dbl_code {dbl_code}
+        FunctionCode<ArgType::Dbl> &dbl_code, FunctionCode<ArgType::Int> &int_code) :
+    dbl_code {dbl_code},
+    int_code {int_code}
 {
     Table::addNumFunctionCodes(*this, keyword);
 }
 
 FunctionCodes::Info MultiTypeFunctionCodes::select(DataType data_type) const
 {
-    (void)data_type;
-    return FunctionCodes::Info {dbl_code, DataType::Double};
+    if (data_type == DataType::Double) {
+        return FunctionCodes::Info {dbl_code, DataType::Double};
+    } else {
+        return FunctionCodes::Info {int_code, DataType::Integer};
+    }
 }
 
 std::vector<WordType> MultiTypeFunctionCodes::codeValues() const
