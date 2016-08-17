@@ -47,7 +47,7 @@ private:
     DataType compileNumOperand();
     DataType compileParentheses();
     DataType compileFunction();
-    void addFunctionCode(FunctionCodes *codes, DataType data_type) const;
+    DataType addFunctionCode(FunctionCodes *codes, DataType data_type) const;
     DataType compileNumConstant();
     DataType compileOperator(Precedence precedence,
         DataType (ExpressionCompilerImpl::*compile_operand)(),
@@ -233,7 +233,10 @@ DataType ExpressionCompilerImpl::compileNumOperand()
     if (auto codes = getNotOperatorCodes()) {
         return compileNotOperand(codes);
     }
-    compileFunction();
+    auto data_type = compileFunction();
+    if (data_type != DataType::Null) {
+        return data_type;
+    }
     return compileNumConstant();
 }
 
@@ -243,15 +246,16 @@ DataType ExpressionCompilerImpl::compileFunction()
         if (compiler.peekNextChar() == '(') {
             compileParentheses();
         }
-        addFunctionCode(codes, DataType::Double);
+        return addFunctionCode(codes, DataType::Double);
     }
     return DataType::Null;
 }
 
-void ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes, DataType data_type) const
+DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes, DataType data_type) const
 {
     auto info = codes->select(data_type);
     compiler.addInstruction(info.code);
+    return info.result_data_type;
 }
 
 DataType ExpressionCompilerImpl::compileParentheses()

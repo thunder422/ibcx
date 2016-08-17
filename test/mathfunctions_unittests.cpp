@@ -31,4 +31,11 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
         REQUIRE(code_line.size() == 3);
         REQUIRE(code_line[2].instructionCode()->getValue() == abs_dbl_code.getValue());
     }
+    SECTION("check for a double return data type")
+    {
+        Compiler compiler {"ABS(-2.1)", program};
+        auto data_type = compiler.compileExpression(DataType::Null);
+
+        REQUIRE(data_type == DataType::Double);
+    }
 }
