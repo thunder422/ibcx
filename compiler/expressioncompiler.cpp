@@ -244,7 +244,7 @@ DataType ExpressionCompilerImpl::compileFunction()
 {
     if (auto codes = compiler.getNumFunctionCodes()) {
         if (compiler.peekNextChar() != '(') {
-            throw CompileError {"", 0};
+            throw CompileError {"expected opening parentheses", compiler.getColumn()};
         }
         auto data_type = compileParentheses();
         return addFunctionCode(codes, data_type);

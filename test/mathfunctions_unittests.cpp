@@ -57,5 +57,17 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
         {
             REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
         }
+        SECTION("check the message, column and length of the error thrown")
+        {
+            try {
+                compiler.compileExpression(DataType::Null);
+            }
+            catch (const CompileError &error) {
+                std::string expected_what = "expected opening parentheses";
+                REQUIRE(error.what() == expected_what);
+                REQUIRE(error.column == 4);
+                REQUIRE(error.length == 1);
+            }
+        }
     }
 }
