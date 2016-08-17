@@ -27,6 +27,7 @@ public:
 
     void recreateUnaryOperator() override;
     void recreateBinaryOperator() override;
+    void recreateFunction() override;
     void markOperandIfError() override;
 
 private:
@@ -61,7 +62,7 @@ private:
     void appendBinaryOperator();
     void appendRightOperand(const StackItem &rhs, Precedence operator_precedence);
     void appendWithParens(const std::string &string);
-    const char *getOperatorKeyword() const;
+    const char *getCodeKeyword() const;
     Precedence getOperatorPrecedence() const;
 
     const ProgramUnit &program;
@@ -231,7 +232,7 @@ void RecreatorImpl::recreateUnaryOperator()
 void RecreatorImpl::appendUnaryOperator()
 {
     markErrorStart();
-    append(getOperatorKeyword());
+    append(getCodeKeyword());
     markErrorEnd();
     if (isalpha(moveTopString().back())) {
         append(' ');
@@ -289,7 +290,7 @@ void RecreatorImpl::appendBinaryOperator()
 {
     append(' ');
     markErrorStart();
-    append(getOperatorKeyword());
+    append(getCodeKeyword());
     markErrorEnd();
     append(' ');
 }
@@ -304,6 +305,13 @@ void RecreatorImpl::appendRightOperand(const StackItem &rhs, Precedence operator
     }
 }
 
+void RecreatorImpl::recreateFunction()
+{
+    auto operand = moveTopString();
+    append(getCodeKeyword());
+    appendWithParens(operand);
+}
+
 void RecreatorImpl::appendWithParens(const std::string &string)
 {
     append('(');
@@ -311,7 +319,7 @@ void RecreatorImpl::appendWithParens(const std::string &string)
     append(')');
 }
 
-const char *RecreatorImpl::getOperatorKeyword() const
+const char *RecreatorImpl::getCodeKeyword() const
 {
     return Table::getKeyword(code_value);
 }
@@ -339,6 +347,11 @@ void recreateUnaryOperator(Recreator &recreator)
 void recreateBinaryOperator(Recreator &recreator)
 {
     recreator.recreateBinaryOperator();
+}
+
+void recreateFunction(Recreator &recreator)
+{
+    recreator.recreateFunction();
 }
 
 void recreateNothing(Recreator &recreator)

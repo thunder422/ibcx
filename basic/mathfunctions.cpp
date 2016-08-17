@@ -6,9 +6,10 @@
  */
 
 #include "functions.h"
+#include "recreator.h"
 
 
-FunctionCode<ArgType::Dbl> abs_dbl_code {nullptr, nullptr};
+FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, nullptr};
 FunctionCode<ArgType::Int> abs_int_code {nullptr, nullptr};
 
 MultiTypeFunctionCodes abs_codes {"ABS", abs_dbl_code, abs_int_code};

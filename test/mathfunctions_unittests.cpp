@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "compileerror.h"
 #include "compiler.h"
+#include "programerror.h"
 #include "programunit.h"
 
 
@@ -69,5 +70,21 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
                 REQUIRE(error.length == 1);
             }
         }
+    }
+}
+
+TEST_CASE("recreate abs function expressions", "[abs][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT ABS(-2.1)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT ABS(-2.1)\n");
     }
 }

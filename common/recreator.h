@@ -30,12 +30,14 @@ public:
 
     virtual void recreateUnaryOperator() = 0;
     virtual void recreateBinaryOperator() = 0;
+    virtual void recreateFunction() = 0;
     virtual void markOperandIfError() = 0;
 };
 
 
 void recreateUnaryOperator(Recreator &recreator);
 void recreateBinaryOperator(Recreator &recreator);
+void recreateFunction(Recreator &recreator);
 void recreateNothing(Recreator &recreator);
 
 
