@@ -243,10 +243,11 @@ DataType ExpressionCompilerImpl::compileNumOperand()
 DataType ExpressionCompilerImpl::compileFunction()
 {
     if (auto codes = compiler.getNumFunctionCodes()) {
-        if (compiler.peekNextChar() == '(') {
-            auto data_type = compileParentheses();
-            return addFunctionCode(codes, data_type);
+        if (compiler.peekNextChar() != '(') {
+            throw CompileError {"", 0};
         }
+        auto data_type = compileParentheses();
+        return addFunctionCode(codes, data_type);
     }
     return DataType::Null;
 }

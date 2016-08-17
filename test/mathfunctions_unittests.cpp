@@ -6,6 +6,7 @@
  */
 
 #include "catch.hpp"
+#include "compileerror.h"
 #include "compiler.h"
 #include "programunit.h"
 
@@ -47,5 +48,14 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
         extern Code abs_int_code;
         REQUIRE(code_line.size() == 3);
         REQUIRE(code_line[2].instructionCode()->getValue() == abs_int_code.getValue());
+    }
+    SECTION("check for an error if there is no opening parenthesis")
+    {
+        Compiler compiler {"ABS -2.1", program};
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
+        }
     }
 }
