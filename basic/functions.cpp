@@ -27,5 +27,5 @@ FunctionCodes::Info MultiTypeFunctionCodes::select(DataType data_type) const
 
 std::vector<WordType> MultiTypeFunctionCodes::codeValues() const
 {
-    return std::vector<WordType> {dbl_code.getValue()};
+    return std::vector<WordType> {dbl_code.getValue(), int_code.getValue()};
 }

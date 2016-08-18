@@ -10,6 +10,6 @@
 
 
 FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, nullptr};
-FunctionCode<ArgType::Int> abs_int_code {nullptr, nullptr};
+FunctionCode<ArgType::Int> abs_int_code {recreateFunction, nullptr};
 
 MultiTypeFunctionCodes abs_codes {"ABS", abs_dbl_code, abs_int_code};

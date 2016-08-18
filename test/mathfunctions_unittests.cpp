@@ -87,4 +87,14 @@ TEST_CASE("recreate abs function expressions", "[abs][recreate]")
 
         REQUIRE(oss.str() == "PRINT ABS(-2.1)\n");
     }
+    SECTION("recreate function with an integer argument")
+    {
+        std::istringstream iss {"PRINT ABS  (-2)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT ABS(-2)\n");
+    }
 }
