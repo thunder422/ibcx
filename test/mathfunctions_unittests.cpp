@@ -123,4 +123,14 @@ TEST_CASE("execute abs function expressions", "[abs][execute]")
 
         REQUIRE(oss.str() == "2.1\n");
     }
+    SECTION("execute with a positive integer argument")
+    {
+        std::istringstream iss {"PRINT ABS(2)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2\n");
+    }
 }

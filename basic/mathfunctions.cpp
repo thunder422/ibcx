@@ -18,7 +18,12 @@ void executeAbsDbl(Executer &executer)
     }
 }
 
+void executeAbsInt(Executer &executer)
+{
+    (void)executer;
+}
+
 FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, executeAbsDbl};
-FunctionCode<ArgType::Int> abs_int_code {recreateFunction, nullptr};
+FunctionCode<ArgType::Int> abs_int_code {recreateFunction, executeAbsInt};
 
 MultiTypeFunctionCodes abs_codes {"ABS", abs_dbl_code, abs_int_code};
