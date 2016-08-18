@@ -98,3 +98,19 @@ TEST_CASE("recreate abs function expressions", "[abs][recreate]")
         REQUIRE(oss.str() == "PRINT ABS(-2)\n");
     }
 }
+
+TEST_CASE("execute abs function expressions", "[abs][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute with a positive double argument")
+    {
+        std::istringstream iss {"PRINT ABS(2.1)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2.1\n");
+    }
+}

@@ -9,7 +9,12 @@
 #include "recreator.h"
 
 
-FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, nullptr};
+void executeAbsDbl(Executer &executer)
+{
+    (void)executer;
+}
+
+FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, executeAbsDbl};
 FunctionCode<ArgType::Int> abs_int_code {recreateFunction, nullptr};
 
 MultiTypeFunctionCodes abs_codes {"ABS", abs_dbl_code, abs_int_code};
