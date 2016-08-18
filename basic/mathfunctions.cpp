@@ -5,13 +5,17 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include "executer.h"
 #include "functions.h"
 #include "recreator.h"
 
 
 void executeAbsDbl(Executer &executer)
 {
-    (void)executer;
+    auto argument = executer.topDbl();
+    if (argument < 0) {
+        executer.setTopDbl(-argument);
+    }
 }
 
 FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, executeAbsDbl};
