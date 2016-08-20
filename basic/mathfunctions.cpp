@@ -20,7 +20,10 @@ void executeAbsDbl(Executer &executer)
 
 void executeAbsInt(Executer &executer)
 {
-    (void)executer;
+    auto argument = executer.topInt();
+    if (argument < 0) {
+        executer.setTopInt(-argument);
+    }
 }
 
 FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, executeAbsDbl};
