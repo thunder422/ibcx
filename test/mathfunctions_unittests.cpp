@@ -143,4 +143,17 @@ TEST_CASE("execute abs function expressions", "[abs][execute]")
 
         REQUIRE(oss.str() == "2\n");
     }
+    SECTION("check for an overflow with maxmimum negative integer argument")
+    {
+        std::istringstream iss {"PRINT ABS(-2147483648)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:6: overflow\n"
+            "    PRINT ABS(-2147483648)\n"
+            "          ^^^\n");
+    }
 }

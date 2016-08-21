@@ -308,7 +308,9 @@ void RecreatorImpl::appendRightOperand(const StackItem &rhs, Precedence operator
 void RecreatorImpl::recreateFunction()
 {
     auto operand = moveTopString();
+    markErrorStart();
     append(getCodeKeyword());
+    markErrorEnd();
     appendWithParens(operand);
 }
 

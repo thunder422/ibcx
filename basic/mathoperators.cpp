@@ -21,9 +21,7 @@ void executeNegateDbl(Executer &executer)
 void executeNegateInt(Executer &executer)
 {
     auto operand = executer.topInt();
-    if (operand == std::numeric_limits<int32_t>::min()) {
-        throw RunError {"overflow", executer.currentOffset()};
-    }
+    checkNegativeIntegerOverflow(executer, operand);
     executer.setTopInt(-operand);
 }
 

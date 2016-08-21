@@ -30,6 +30,13 @@ inline void checkIntegerOverflow(Executer &executer, T result)
     }
 }
 
+inline void checkNegativeIntegerOverflow(Executer &executer, int32_t value)
+{
+    if (value == std::numeric_limits<int32_t>::min()) {
+        throw RunError {"overflow", executer.currentOffset()};
+    }
+}
+
 inline void checkDoubleOverflow(Executer &executer, double result)
 {
     if (std::fabs(result) > std::numeric_limits<double>::max()) {

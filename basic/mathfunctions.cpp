@@ -7,6 +7,7 @@
 
 #include "executer.h"
 #include "functions.h"
+#include "overflow.h"
 #include "recreator.h"
 
 
@@ -22,6 +23,7 @@ void executeAbsInt(Executer &executer)
 {
     auto argument = executer.topInt();
     if (argument < 0) {
+        checkNegativeIntegerOverflow(executer, argument);
         executer.setTopInt(-argument);
     }
 }
