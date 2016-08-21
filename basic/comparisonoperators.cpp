@@ -10,7 +10,7 @@
 #include "recreator.h"
 
 using DblCompareFunction = bool(*)(double, double);
-using IntCompareFunction = bool(*)(int, int);
+using IntCompareFunction = bool(*)(int32_t, int32_t);
 
 template <DblCompareFunction compare>
 void executeCompareDblDbl(Executer &executer)
@@ -51,7 +51,7 @@ inline bool lt(double lhs, double rhs)
     return lhs < rhs;
 }
 
-inline bool lt(int lhs, int rhs)
+inline bool lt(int32_t lhs, int32_t rhs)
 {
     return lhs < rhs;
 }
@@ -73,7 +73,7 @@ inline bool gt(double lhs, double rhs)
     return lhs > rhs;
 }
 
-inline bool gt(int lhs, int rhs)
+inline bool gt(int32_t lhs, int32_t rhs)
 {
     return lhs > rhs;
 }
@@ -95,7 +95,7 @@ inline bool le(double lhs, double rhs)
     return lhs <= rhs;
 }
 
-inline bool le(int lhs, int rhs)
+inline bool le(int32_t lhs, int32_t rhs)
 {
     return lhs <= rhs;
 }
@@ -117,7 +117,7 @@ inline bool ge(double lhs, double rhs)
     return lhs >= rhs;
 }
 
-inline bool ge(int lhs, int rhs)
+inline bool ge(int32_t lhs, int32_t rhs)
 {
     return lhs >= rhs;
 }
@@ -139,7 +139,7 @@ inline bool eq(double lhs, double rhs)
     return lhs == rhs;
 }
 
-inline bool eq(int lhs, int rhs)
+inline bool eq(int32_t lhs, int32_t rhs)
 {
     return lhs == rhs;
 }
@@ -161,7 +161,7 @@ inline bool ne(double lhs, double rhs)
     return lhs != rhs;
 }
 
-inline bool ne(int lhs, int rhs)
+inline bool ne(int32_t lhs, int32_t rhs)
 {
     return lhs != rhs;
 }

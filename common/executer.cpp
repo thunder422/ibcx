@@ -12,7 +12,7 @@
 
 
 Executer::Executer(const WordType *code, const double *const_dbl_values,
-        const int *const_int_values, std::ostream &os) :
+        const int32_t *const_int_values, std::ostream &os) :
     code {code},
     execute_functions {Code::getExecuteFunctions()},
     const_dbl_values {const_dbl_values},

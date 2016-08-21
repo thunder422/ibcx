@@ -19,15 +19,15 @@ class Executer {
 public:
     struct StackItem {
         StackItem(double dbl_value);
-        StackItem(int int_value);
+        StackItem(int32_t int_value);
 
         union {
             double dbl_value;
-            int int_value;
+            int32_t int_value;
         };
     };
 
-    Executer(const WordType *code, const double *const_dbl_values, const int *const_int_values,
+    Executer(const WordType *code, const double *const_dbl_values, const int32_t *const_int_values,
         std::ostream &os);
     void run();
     void executeOneCode();
@@ -37,11 +37,12 @@ public:
     void pushConstDbl(WordType operand);
     void pushConstInt(WordType operand);
     double topDbl() const;
-    int topInt() const;
+    int32_t topInt() const;
     double topIntAsDbl() const;
     void pop();
     void setTopDbl(double value);
-    void setTopInt(int value);
+    void setTopInt(int32_t value);
+    void setTopIntFromInt64(int64_t value);
     void setTopIntFromDouble(double value);
     void setTopIntFromBool(bool value);
     std::ostream &output();
@@ -53,7 +54,7 @@ private:
     const WordType *code;
     const ExecuteFunctionPointer *execute_functions;
     const double *const_dbl_values;
-    const int *const_int_values;
+    const int32_t *const_int_values;
 
     WordType *program_counter;
     std::stack<StackItem> stack;
@@ -80,7 +81,7 @@ inline double Executer::topDbl() const
     return stack.top().dbl_value;
 }
 
-inline int Executer::topInt() const
+inline int32_t Executer::topInt() const
 {
     return stack.top().int_value;
 }
@@ -100,14 +101,19 @@ inline void Executer::setTopDbl(double value)
     stack.top().dbl_value = value;
 }
 
-inline void Executer::setTopInt(int value)
+inline void Executer::setTopInt(int32_t value)
 {
     stack.top().int_value = value;
 }
 
+inline void Executer::setTopIntFromInt64(int64_t value)
+{
+    stack.top().int_value = static_cast<int32_t>(value);
+}
+
 inline void Executer::setTopIntFromDouble(double value)
 {
-    stack.top().int_value = static_cast<int>(value);
+    stack.top().int_value = static_cast<int32_t>(value);
 }
 
 inline void Executer::setTopIntFromBool(bool value)
@@ -121,7 +127,7 @@ inline Executer::StackItem::StackItem(double dbl_value) :
 {
 }
 
-inline Executer::StackItem::StackItem(int int_value) :
+inline Executer::StackItem::StackItem(int32_t int_value) :
     int_value {int_value}
 {
 }

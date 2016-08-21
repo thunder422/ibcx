@@ -21,13 +21,13 @@ public:
     ConstNumCodeInfo add(bool floating_point, const std::string &number);
     bool convertibleToInteger(WordType index) const;
     const double *getDblValues() const;
-    const int *getIntValues() const;
+    const int32_t *getIntValues() const;
 
 private:
     WordType addToDictionary(const ConstNumConverter &converter, const std::string &number);
 
     std::vector<double> dbl_values;
-    std::vector<int> int_values;
+    std::vector<int32_t> int_values;
 };
 
 inline const double *ConstNumDictionary::getDblValues() const
@@ -35,7 +35,7 @@ inline const double *ConstNumDictionary::getDblValues() const
     return dbl_values.data();
 }
 
-inline const int *ConstNumDictionary::getIntValues() const
+inline const int32_t *ConstNumDictionary::getIntValues() const
 {
     return int_values.data();
 }

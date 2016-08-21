@@ -15,7 +15,7 @@
 
 
 struct PowerDblInt {
-    PowerDblInt(Executer &executer, double x, int y);
+    PowerDblInt(Executer &executer, double x, int32_t y);
     double operator()();
 
 private:
@@ -26,10 +26,10 @@ private:
 
     Executer &executer;
     double x;
-    int y;
+    int32_t y;
 };
 
-inline PowerDblInt::PowerDblInt(Executer &executer, double x, int y) :
+inline PowerDblInt::PowerDblInt(Executer &executer, double x, int32_t y) :
     executer {executer},
     x {x},
     y {y}
@@ -39,10 +39,10 @@ inline PowerDblInt::PowerDblInt(Executer &executer, double x, int y) :
 inline double PowerDblInt::operator()()
 {
     if (y > 0) {
-        constexpr int MaximumPowerExponent = 19;
+        constexpr int32_t MaximumPowerExponent = 19;
         return y < MaximumPowerExponent ? multiplyForPositiveExponent() : useDoublePower();
     } else {
-        constexpr int MinimumPowerExponent = -17;
+        constexpr int32_t MinimumPowerExponent = -17;
         return y > MinimumPowerExponent ? divideForNegativeExponent() : useDoublePower();
     }
 }

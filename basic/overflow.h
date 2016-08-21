@@ -18,7 +18,8 @@
 template <typename T>
 inline bool withinIntegerRange(T value)
 {
-    return value >= std::numeric_limits<int>::min() && value <= std::numeric_limits<int>::max();
+    return value >= std::numeric_limits<int32_t>::min()
+        && value <= std::numeric_limits<int32_t>::max();
 }
 
 template <typename T>

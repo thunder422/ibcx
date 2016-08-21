@@ -21,7 +21,7 @@ void executeNegateDbl(Executer &executer)
 void executeNegateInt(Executer &executer)
 {
     auto operand = executer.topInt();
-    if (operand == std::numeric_limits<int>::min()) {
+    if (operand == std::numeric_limits<int32_t>::min()) {
         throw RunError {"overflow", executer.currentOffset()};
     }
     executer.setTopInt(-operand);
@@ -142,10 +142,10 @@ void executeMultiplyIntInt(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    int64_t result = executer.topInt();
+    auto result = int64_t{executer.topInt()};
     result *= rhs;
     checkIntegerOverflow(executer, result);
-    executer.setTopInt(result);
+    executer.setTopIntFromInt64(result);
 }
 
 OperatorCode<OpType::DblDbl> mul_dbl_dbl_code {recreateBinaryOperator, executeMultiplyDblDbl};
@@ -169,7 +169,7 @@ void checkDivideByZero(Executer &executer, T rhs)
 }
 
 inline double popDoubleDivisor(Executer &executer);
-inline int popIntegerDivisor(Executer &executer);
+inline int32_t popIntegerDivisor(Executer &executer);
 inline void divideAndCheckResult(Executer &executer, double lhs, double rhs);
 
 void executeDivideDblDbl(Executer &executer)
@@ -215,7 +215,7 @@ void executeDivideIntInt(Executer &executer)
     executer.setTopInt(executer.topInt() / rhs);
 }
 
-inline int popIntegerDivisor(Executer &executer)
+inline int32_t popIntegerDivisor(Executer &executer)
 {
     auto rhs = executer.topInt();
     checkDivideByZero(executer, rhs);
@@ -339,10 +339,10 @@ void executeAddIntInt(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    int64_t result = executer.topInt();
+    auto result = int64_t{executer.topInt()};
     result += rhs;
     checkIntegerOverflow(executer, result);
-    executer.setTopInt(result);
+    executer.setTopIntFromInt64(result);
 }
 
 OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, executeAddDblDbl};
@@ -384,10 +384,10 @@ void executeSubtractIntInt(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    int64_t result = executer.topInt();
+    auto result = int64_t{executer.topInt()};
     result -= rhs;
     checkIntegerOverflow(executer, result);
-    executer.setTopInt(result);
+    executer.setTopIntFromInt64(result);
 }
 
 OperatorCode<OpType::DblDbl> sub_dbl_dbl_code {recreateBinaryOperator, executeSubtractDblDbl};

@@ -40,7 +40,7 @@ public:
 
     ConstNumCodeInfo convertNumber();
     double getDblValue() const;
-    int getIntValue() const;
+    int32_t getIntValue() const;
 
 private:
     void tryToCreateIntCode();
@@ -51,7 +51,7 @@ private:
     const std::string &number;
     ConstNumCodeInfo const_num_code_info;
     double dbl_value;
-    int int_value;
+    int32_t int_value;
 };
 
 ConstNumCodeInfo ConstNumDictionary::add(bool floating_point, const std::string &number)
@@ -128,7 +128,7 @@ double ConstNumConverter::getDblValue() const
     return dbl_value;
 }
 
-int ConstNumConverter::getIntValue() const
+int32_t ConstNumConverter::getIntValue() const
 {
     return int_value;
 }
