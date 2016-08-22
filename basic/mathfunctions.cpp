@@ -35,7 +35,7 @@ MultiTypeFunctionCodes abs_codes {"ABS", abs_dbl_code, abs_int_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::Dbl> sgn_dbl_code {nullptr, nullptr};
-FunctionCode<ArgType::Int> sgn_int_code {nullptr, nullptr};
+FunctionCode<ArgType::Dbl> sgn_dbl_code {recreateFunction, nullptr};
+FunctionCode<ArgType::Int> sgn_int_code {recreateFunction, nullptr};
 
 MultiTypeFunctionCodes sgn_codes {"SGN", sgn_dbl_code, sgn_int_code};

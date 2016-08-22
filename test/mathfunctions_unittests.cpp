@@ -171,3 +171,29 @@ TEST_CASE("compile sign function expressions", "[sgn][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate sgn function expressions", "[sgn][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT SGN(-2.1)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT SGN(-2.1)\n");
+    }
+    SECTION("recreate function with an integer argument")
+    {
+        std::istringstream iss {"PRINT SGN(-2)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT SGN(-2)\n");
+    }
+}
