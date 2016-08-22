@@ -32,3 +32,10 @@ FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, executeAbsDbl};
 FunctionCode<ArgType::Int> abs_int_code {recreateFunction, executeAbsInt};
 
 MultiTypeFunctionCodes abs_codes {"ABS", abs_dbl_code, abs_int_code};
+
+// ----------------------------------------
+
+FunctionCode<ArgType::Dbl> sgn_dbl_code {nullptr, nullptr};
+FunctionCode<ArgType::Int> sgn_int_code {nullptr, nullptr};
+
+MultiTypeFunctionCodes sgn_codes {"SGN", sgn_dbl_code, sgn_int_code};

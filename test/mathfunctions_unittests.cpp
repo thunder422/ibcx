@@ -157,3 +157,17 @@ TEST_CASE("execute abs function expressions", "[abs][execute]")
             "          ^^^\n");
     }
 }
+
+
+TEST_CASE("compile sign function expressions", "[sgn][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"SGN(-2)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}
