@@ -197,3 +197,69 @@ TEST_CASE("recreate sgn function expressions", "[sgn][recreate]")
         REQUIRE(oss.str() == "PRINT SGN(-2)\n");
     }
 }
+
+TEST_CASE("execute sgn function expressions", "[sgn][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute with a zero double argument")
+    {
+        std::istringstream iss {"PRINT SGN(0.0)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n");
+    }
+    SECTION("execute with a positve double argument")
+    {
+        std::istringstream iss {"PRINT SGN(7.3)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "1\n");
+    }
+    SECTION("execute with a negative double argument")
+    {
+        std::istringstream iss {"PRINT SGN(-3.7)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n");
+    }
+    SECTION("execute with a zero integer argument")
+    {
+        std::istringstream iss {"PRINT SGN(0)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n");
+    }
+    SECTION("execute with a positve integer argument")
+    {
+        std::istringstream iss {"PRINT SGN(7)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "1\n");
+    }
+    SECTION("execute with a negative integer argument")
+    {
+        std::istringstream iss {"PRINT SGN(-3)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n");
+    }
+}

@@ -38,10 +38,11 @@ public:
     void pushConstInt(WordType operand);
     double topDbl() const;
     int32_t topInt() const;
+    template <typename T> T top() const;
     double topIntAsDbl() const;
     void pop();
-    void setTopDbl(double value);
-    void setTopInt(int32_t value);
+    void setTop(double value);
+    void setTop(int32_t value);
     void setTopIntFromInt64(int64_t value);
     void setTopIntFromDouble(double value);
     void setTopIntFromBool(bool value);
@@ -86,6 +87,18 @@ inline int32_t Executer::topInt() const
     return stack.top().int_value;
 }
 
+template <>
+inline double Executer::top() const
+{
+    return topDbl();
+}
+
+template <>
+inline int32_t Executer::top() const
+{
+    return topInt();
+}
+
 inline double Executer::topIntAsDbl() const
 {
     return static_cast<double>(topInt());
@@ -96,12 +109,12 @@ inline void Executer::pop()
     stack.pop();
 }
 
-inline void Executer::setTopDbl(double value)
+inline void Executer::setTop(double value)
 {
     stack.top().dbl_value = value;
 }
 
-inline void Executer::setTopInt(int32_t value)
+inline void Executer::setTop(int32_t value)
 {
     stack.top().int_value = value;
 }

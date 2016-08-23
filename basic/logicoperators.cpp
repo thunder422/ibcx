@@ -12,7 +12,7 @@
 
 void executeNot(Executer &executer)
 {
-    executer.setTopInt(~executer.topInt());
+    executer.setTop(~executer.topInt());
 }
 
 OperatorCode<OpType::Int> not_code {recreateUnaryOperator, executeNot};
@@ -25,7 +25,7 @@ void executeAnd(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(executer.topInt() & rhs);
+    executer.setTop(executer.topInt() & rhs);
 }
 
 OperatorCode<OpType::IntInt> and_code {recreateBinaryOperator, executeAnd};
@@ -38,7 +38,7 @@ void executeXor(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(executer.topInt() ^ rhs);
+    executer.setTop(executer.topInt() ^ rhs);
 }
 
 OperatorCode<OpType::IntInt> xor_code {recreateBinaryOperator, executeXor};
@@ -51,7 +51,7 @@ void executeOr(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(executer.topInt() | rhs);
+    executer.setTop(executer.topInt() | rhs);
 }
 
 OperatorCode<OpType::IntInt> or_code {recreateBinaryOperator, executeOr};
@@ -64,7 +64,7 @@ void executeEqv(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(~(executer.topInt() ^ rhs));
+    executer.setTop(~(executer.topInt() ^ rhs));
 }
 
 OperatorCode<OpType::IntInt> eqv_code {recreateBinaryOperator, executeEqv};
@@ -77,7 +77,7 @@ void executeImp(Executer &executer)
 {
     auto rhs = executer.topInt();
     executer.pop();
-    executer.setTopInt(~executer.topInt() | rhs);
+    executer.setTop(~executer.topInt() | rhs);
 }
 
 OperatorCode<OpType::IntInt> imp_code {recreateBinaryOperator, executeImp};

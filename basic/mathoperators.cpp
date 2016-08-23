@@ -15,14 +15,14 @@
 
 void executeNegateDbl(Executer &executer)
 {
-    executer.setTopDbl(-executer.topDbl());
+    executer.setTop(-executer.topDbl());
 }
 
 void executeNegateInt(Executer &executer)
 {
     auto operand = executer.topInt();
     checkNegativeIntegerOverflow(executer, operand);
-    executer.setTopInt(-operand);
+    executer.setTop(-operand);
 }
 
 OperatorCode<OpType::Dbl> neg_dbl_code {recreateUnaryOperator, executeNegateDbl};
@@ -55,7 +55,7 @@ inline void calculatePowerDblDbl(Executer &executer, double x, double y)
 {
     auto result = std::pow(x, y);
     validatePowerResult(x, result, executer);
-    executer.setTopDbl(result);
+    executer.setTop(result);
 }
 
 inline void validatePowerResult(double x, double result, Executer &executer)
@@ -76,7 +76,7 @@ void executeExponentialDblInt(Executer &executer)
     auto y = executer.topInt();
     executer.pop();
     auto x = executer.topDbl();
-    executer.setTopDbl(PowerDblInt{executer, x, y}());
+    executer.setTop(PowerDblInt{executer, x, y}());
 }
 
 void executeExponentialIntInt(Executer &executer)
@@ -84,7 +84,7 @@ void executeExponentialIntInt(Executer &executer)
     auto y = executer.topInt();
     executer.pop();
     auto x = executer.topInt();
-    executer.setTopInt(PowerIntInt{executer, x, y}());
+    executer.setTop(PowerIntInt{executer, x, y}());
 }
 
 OperatorCode<OpType::DblDbl> exp_dbl_dbl_code {recreateBinaryOperator, executeExponentialDblDbl};
@@ -133,7 +133,7 @@ inline void multiplyAndCheckResult(Executer &executer, double lhs, double rhs)
 {
     auto result = lhs * rhs;
     checkDoubleOverflow(executer, result);
-    executer.setTopDbl(result);
+    executer.setTop(result);
 }
 
 void executeMultiplyIntInt(Executer &executer)
@@ -197,20 +197,20 @@ void executeDivideDblInt(Executer &executer)
     auto rhs = static_cast<double>(popIntegerDivisor(executer));
     auto lhs = executer.topDbl();
     auto result = lhs / rhs;
-    executer.setTopDbl(result);
+    executer.setTop(result);
 }
 
 inline void divideAndCheckResult(Executer &executer, double lhs, double rhs)
 {
     auto result = lhs / rhs;
     checkDoubleOverflow(executer, result);
-    executer.setTopDbl(result);
+    executer.setTop(result);
 }
 
 void executeDivideIntInt(Executer &executer)
 {
     auto rhs = popIntegerDivisor(executer);
-    executer.setTopInt(executer.topInt() / rhs);
+    executer.setTop(executer.topInt() / rhs);
 }
 
 inline int32_t popIntegerDivisor(Executer &executer)
@@ -250,7 +250,7 @@ IntDivOperatorCode int_div_codes {Precedence::IntDivide, "\\", int_div_code};
 
 void executeCvtDbl(Executer &executer)
 {
-    executer.setTopDbl(executer.topIntAsDbl());
+    executer.setTop(executer.topIntAsDbl());
 }
 
 Code cvtdbl_code {recreateNothing, executeCvtDbl};
@@ -275,27 +275,27 @@ void executeModuloDblDbl(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
     auto lhs = executer.topDbl();
-    executer.setTopDbl(std::fmod(lhs, rhs));
+    executer.setTop(std::fmod(lhs, rhs));
 }
 
 void executeModuloIntDbl(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
     auto lhs = executer.topIntAsDbl();
-    executer.setTopDbl(std::fmod(lhs, rhs));
+    executer.setTop(std::fmod(lhs, rhs));
 }
 
 void executeModuloDblInt(Executer &executer)
 {
     auto rhs = static_cast<double>(popIntegerDivisor(executer));
     auto lhs = executer.topDbl();
-    executer.setTopDbl(std::fmod(lhs, rhs));
+    executer.setTop(std::fmod(lhs, rhs));
 }
 
 void executeModuloIntInt(Executer &executer)
 {
     auto rhs = popIntegerDivisor(executer);
-    executer.setTopInt(executer.topInt() % rhs);
+    executer.setTop(executer.topInt() % rhs);
 }
 
 OperatorCode<OpType::DblDbl> mod_dbl_dbl_code {recreateBinaryOperator, executeModuloDblDbl};
@@ -316,21 +316,21 @@ void executeAddDblDbl(Executer &executer)
     executer.pop();
     auto result = executer.topDbl() + rhs;
     checkDoubleOverflow(executer, result);
-    executer.setTopDbl(result);
+    executer.setTop(result);
 }
 
 void executeAddIntDbl(Executer &executer)
 {
     auto rhs = executer.topDbl();
     executer.pop();
-    executer.setTopDbl(executer.topIntAsDbl() + rhs);
+    executer.setTop(executer.topIntAsDbl() + rhs);
 }
 
 void executeAddDblInt(Executer &executer)
 {
     auto rhs = executer.topIntAsDbl();
     executer.pop();
-    executer.setTopDbl(executer.topDbl() + rhs);
+    executer.setTop(executer.topDbl() + rhs);
 }
 
 void executeAddIntInt(Executer &executer)
@@ -361,21 +361,21 @@ void executeSubtractDblDbl(Executer &executer)
     executer.pop();
     auto result = executer.topDbl() - rhs;
     checkDoubleOverflow(executer, result);
-    executer.setTopDbl(result);
+    executer.setTop(result);
 }
 
 void executeSubtractIntDbl(Executer &executer)
 {
     auto rhs = executer.topDbl();
     executer.pop();
-    executer.setTopDbl(executer.topIntAsDbl() - rhs);
+    executer.setTop(executer.topIntAsDbl() - rhs);
 }
 
 void executeSubtractDblInt(Executer &executer)
 {
     auto rhs = executer.topIntAsDbl();
     executer.pop();
-    executer.setTopDbl(executer.topDbl() - rhs);
+    executer.setTop(executer.topDbl() - rhs);
 }
 
 void executeSubtractIntInt(Executer &executer)
