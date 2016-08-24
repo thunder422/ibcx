@@ -277,3 +277,19 @@ TEST_CASE("compile square root function expressions", "[sqr][compile]")
         REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
+
+TEST_CASE("recreate square root function expressions", "[sqr][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT SQR(-6.25)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT SQR(-6.25)\n");
+    }
+}

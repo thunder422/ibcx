@@ -65,6 +65,6 @@ MultiTypeFunctionCodes sgn_codes {"SGN", sgn_dbl_code, sgn_int_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::Dbl> sqr_code {nullptr, nullptr};
+FunctionCode<ArgType::Dbl> sqr_code {recreateFunction, nullptr};
 
 MathFunctionCodes sqr_codes {"SQR", sqr_code};
