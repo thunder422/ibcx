@@ -29,3 +29,22 @@ std::vector<WordType> MultiTypeFunctionCodes::codeValues() const
 {
     return std::vector<WordType> {dbl_code.getValue(), int_code.getValue()};
 }
+
+// ----------------------------------------
+
+MathFunctionCodes::MathFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code) :
+    code {code}
+{
+    Table::addNumFunctionCodes(*this, keyword);
+}
+
+FunctionCodes::Info MathFunctionCodes::select(DataType unused_data_type) const
+{
+    (void)unused_data_type;
+    return FunctionCodes::Info {code, DataType::Double};
+}
+
+std::vector<WordType> MathFunctionCodes::codeValues() const
+{
+    return std::vector<WordType> {code.getValue()};
+}

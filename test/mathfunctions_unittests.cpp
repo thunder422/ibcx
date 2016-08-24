@@ -263,3 +263,17 @@ TEST_CASE("execute sgn function expressions", "[sgn][execute]")
         REQUIRE(oss.str() == "-1\n");
     }
 }
+
+
+TEST_CASE("compile square root function expressions", "[sqr][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"SQR(6.25)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

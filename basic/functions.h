@@ -51,4 +51,16 @@ private:
     FunctionCode<ArgType::Int> &int_code;
 };
 
+
+class MathFunctionCodes : public FunctionCodes {
+public:
+    MathFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code);
+    Info select(DataType unused_data_type) const override;
+    std::vector<WordType> codeValues() const override;
+
+private:
+    FunctionCode<ArgType::Dbl> &code;
+};
+
+
 #endif  // IBC_FUNCTIONS_H
