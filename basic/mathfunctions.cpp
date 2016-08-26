@@ -68,6 +68,9 @@ MultiTypeFunctionCodes sgn_codes {"SGN", sgn_dbl_code, sgn_int_code};
 void executeSqr(Executer &executer)
 {
     auto argument = executer.topDbl();
+    if (argument < 0) {
+        throw RunError {"square root of negative number", executer.currentOffset()};
+    }
     executer.setTop(std::sqrt(argument));
 }
 

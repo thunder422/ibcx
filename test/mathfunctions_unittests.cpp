@@ -308,4 +308,17 @@ TEST_CASE("execute square root function expressions", "[sqr][execute]")
 
         REQUIRE(oss.str() == "2.5\n");
     }
+    SECTION("check for an error for a negative argument")
+    {
+        std::istringstream iss {"PRINT SQR(-6.25)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:6: square root of negative number\n"
+            "    PRINT SQR(-6.25)\n"
+            "          ^^^\n");
+    }
 }
