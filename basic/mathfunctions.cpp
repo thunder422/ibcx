@@ -65,6 +65,12 @@ MultiTypeFunctionCodes sgn_codes {"SGN", sgn_dbl_code, sgn_int_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::Dbl> sqr_code {recreateFunction, nullptr};
+void executeSqr(Executer &executer)
+{
+    auto argument = executer.topDbl();
+    executer.setTop(std::sqrt(argument));
+}
+
+FunctionCode<ArgType::Dbl> sqr_code {recreateFunction, executeSqr};
 
 MathFunctionCodes sqr_codes {"SQR", sqr_code};

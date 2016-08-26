@@ -293,3 +293,19 @@ TEST_CASE("recreate square root function expressions", "[sqr][recreate]")
         REQUIRE(oss.str() == "PRINT SQR(-6.25)\n");
     }
 }
+
+TEST_CASE("execute square root function expressions", "[sqr][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute with a double argument")
+    {
+        std::istringstream iss {"PRINT SQR(6.25)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2.5\n");
+    }
+}
