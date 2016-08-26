@@ -168,7 +168,7 @@ TEST_CASE("execute negate operator expressions", "[neg][execute]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:6: overflow\n"
+            "run error at line 1:7: overflow\n"
             "    PRINT --2147483648\n"
             "          ^\n");
     }
@@ -439,7 +439,7 @@ TEST_CASE("execute integer-interger exponential operator", "[exp][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:9: overflow\n"
+            "run error at line 1:10: overflow\n"
             "    PRINT 16 ^ 8\n"
             "             ^\n");
     }
@@ -452,7 +452,7 @@ TEST_CASE("execute integer-interger exponential operator", "[exp][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:9: overflow\n"
+            "run error at line 1:10: overflow\n"
             "    PRINT -8 ^ 11\n"
             "             ^\n");
     }
@@ -465,7 +465,7 @@ TEST_CASE("execute integer-interger exponential operator", "[exp][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:9: overflow\n"
+            "run error at line 1:10: overflow\n"
             "    PRINT -4 ^ 16\n"
             "             ^\n");
     }
@@ -498,7 +498,7 @@ TEST_CASE("execute integer-interger exponential operator", "[exp][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: overflow\n"
+            "run error at line 1:11: overflow\n"
             "    PRINT 123 ^ 20\n"
             "              ^\n");
     }
@@ -521,7 +521,7 @@ TEST_CASE("execute integer-interger exponential operator", "[exp][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:11: overflow\n"
+            "run error at line 1:12: overflow\n"
             "    PRINT -123 ^ 20\n"
             "               ^\n");
     }
@@ -534,7 +534,7 @@ TEST_CASE("execute integer-interger exponential operator", "[exp][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:11: overflow\n"
+            "run error at line 1:12: overflow\n"
             "    PRINT -123 ^ 19\n"
             "               ^\n");
     }
@@ -563,7 +563,7 @@ TEST_CASE("execute double-double exponential operator", "[exp][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:11: domain error (non-integer exponent)\n"
+            "run error at line 1:12: domain error (non-integer exponent)\n"
             "    PRINT -3.0 ^ 2.5\n"
             "               ^\n");
     }
@@ -576,7 +576,7 @@ TEST_CASE("execute double-double exponential operator", "[exp][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:12: overflow\n"
+            "run error at line 1:13: overflow\n"
             "    PRINT 123.0 ^ 456.0\n"
             "                ^\n");
     }
@@ -589,7 +589,7 @@ TEST_CASE("execute double-double exponential operator", "[exp][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: divide by zero\n"
+            "run error at line 1:11: divide by zero\n"
             "    PRINT 0.0 ^ -0.5\n"
             "              ^\n");
     }
@@ -644,7 +644,7 @@ TEST_CASE("execute double-integer exponential operator", "[exp][dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: divide by zero\n"
+            "run error at line 1:11: divide by zero\n"
             "    PRINT 0.0 ^ -1\n"
             "              ^\n");
     }
@@ -657,7 +657,7 @@ TEST_CASE("execute double-integer exponential operator", "[exp][dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:12: overflow\n"
+            "run error at line 1:13: overflow\n"
             "    PRINT 1e307 ^ 4\n"
             "                ^\n");
     }
@@ -680,7 +680,7 @@ TEST_CASE("execute double-integer exponential operator", "[exp][dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:12: overflow\n"
+            "run error at line 1:13: overflow\n"
             "    PRINT 123.0 ^ 456\n"
             "                ^\n");
     }
@@ -703,7 +703,7 @@ TEST_CASE("execute double-integer exponential operator", "[exp][dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:15: overflow\n"
+            "run error at line 1:16: overflow\n"
             "    PRINT 2.0e-300 ^ -17\n"
             "                   ^\n");
     }
@@ -863,7 +863,7 @@ TEST_CASE("execute integer-integer multiply operator", "[mul][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:17: overflow\n"
+            "run error at line 1:18: overflow\n"
             "    PRINT 2000000000 * 3\n"
             "                     ^\n");
     }
@@ -876,7 +876,7 @@ TEST_CASE("execute integer-integer multiply operator", "[mul][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:17: overflow\n"
+            "run error at line 1:18: overflow\n"
             "    PRINT 2000000000 * -3\n"
             "                     ^\n");
     }
@@ -905,7 +905,7 @@ TEST_CASE("execute double-double multiply operator", "[mul][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:12: overflow\n"
+            "run error at line 1:13: overflow\n"
             "    PRINT 2e300 * 3e20\n"
             "                ^\n");
     }
@@ -918,7 +918,7 @@ TEST_CASE("execute double-double multiply operator", "[mul][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:13: overflow\n"
+            "run error at line 1:14: overflow\n"
             "    PRINT -2e300 * 3e20\n"
             "                 ^\n");
     }
@@ -957,7 +957,7 @@ TEST_CASE("execute double-integer multiply operator", "[mul][dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:12: overflow\n"
+            "run error at line 1:13: overflow\n"
             "    PRINT 2e307 * 30000000\n"
             "                ^\n");
     }
@@ -986,7 +986,7 @@ TEST_CASE("execute integer-double multiply operator", "[mul][int-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:15: overflow\n"
+            "run error at line 1:16: overflow\n"
             "    PRINT 20000000 * 3e307\n"
             "                   ^\n");
     }
@@ -1075,7 +1075,7 @@ TEST_CASE("execute integer-integer divide operator", "[div][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:8: divide by zero\n"
+            "run error at line 1:9: divide by zero\n"
             "    PRINT 3 / 0\n"
             "            ^\n");
     }
@@ -1104,7 +1104,7 @@ TEST_CASE("execute double-double divide operator", "[div][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: divide by zero\n"
+            "run error at line 1:11: divide by zero\n"
             "    PRINT 3.0 / 0.0\n"
             "              ^\n");
     }
@@ -1117,7 +1117,7 @@ TEST_CASE("execute double-double divide operator", "[div][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:12: overflow\n"
+            "run error at line 1:13: overflow\n"
             "    PRINT 2e300 / 3e-20\n"
             "                ^\n");
     }
@@ -1130,7 +1130,7 @@ TEST_CASE("execute double-double divide operator", "[div][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:13: overflow\n"
+            "run error at line 1:14: overflow\n"
             "    PRINT -2e300 / 3e-20\n"
             "                 ^\n");
     }
@@ -1159,7 +1159,7 @@ TEST_CASE("execute integer-double divide operator", "[div][int-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:8: divide by zero\n"
+            "run error at line 1:9: divide by zero\n"
             "    PRINT 3 / 0.0\n"
             "            ^\n");
     }
@@ -1172,7 +1172,7 @@ TEST_CASE("execute integer-double divide operator", "[div][int-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: overflow\n"
+            "run error at line 1:11: overflow\n"
             "    PRINT 200 / 3e-307\n"
             "              ^\n");
     }
@@ -1201,7 +1201,7 @@ TEST_CASE("execute double-integer divide operator", "[div][dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: divide by zero\n"
+            "run error at line 1:11: divide by zero\n"
             "    PRINT 3.0 / 0\n"
             "              ^\n");
     }
@@ -1291,7 +1291,7 @@ TEST_CASE("execute integer divide operator", "[intdiv][execute]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: divide by zero\n"
+            "run error at line 1:11: divide by zero\n"
             "    PRINT 3.0 \\ 0.0\n"
             "              ^\n");
     }
@@ -1304,7 +1304,7 @@ TEST_CASE("execute integer divide operator", "[intdiv][execute]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:11: overflow\n"
+            "run error at line 1:12: overflow\n"
             "    PRINT 2e20 \\ 2e10\n"
             "               ^\n");
     }
@@ -1317,7 +1317,7 @@ TEST_CASE("execute integer divide operator", "[intdiv][execute]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:11: overflow\n"
+            "run error at line 1:12: overflow\n"
             "    PRINT 2e20 \\ -2e10\n"
             "               ^\n");
     }
@@ -1510,7 +1510,7 @@ TEST_CASE("execute integer-integer mod operator", "[mod][int-int]")
             program.runCode(oss);
 
             REQUIRE(oss.str() ==
-                "run error at line 1:8: divide by zero\n"
+                "run error at line 1:9: divide by zero\n"
                 "    PRINT 5 MOD 0\n"
                 "            ^^^\n");
         }
@@ -1540,7 +1540,7 @@ TEST_CASE("execute double-double mod operator", "[mod][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: divide by zero\n"
+            "run error at line 1:11: divide by zero\n"
             "    PRINT 5.3 MOD 0.0\n"
             "              ^^^\n");
     }
@@ -1569,7 +1569,7 @@ TEST_CASE("execute integer-double mod operator", "[mod][int-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:8: divide by zero\n"
+            "run error at line 1:9: divide by zero\n"
             "    PRINT 5 MOD 0.0\n"
             "            ^^^\n");
     }
@@ -1598,7 +1598,7 @@ TEST_CASE("execute double-integer mod operator", "[mod][dbl-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: divide by zero\n"
+            "run error at line 1:11: divide by zero\n"
             "    PRINT 5.3 MOD 0\n"
             "              ^^^\n");
     }
@@ -1716,7 +1716,7 @@ TEST_CASE("execute integer-integer add operator", "[add][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:17: overflow\n"
+            "run error at line 1:18: overflow\n"
             "    PRINT 2000000000 + 2000000000\n"
             "                     ^\n");
     }
@@ -1729,7 +1729,7 @@ TEST_CASE("execute integer-integer add operator", "[add][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:18: overflow\n"
+            "run error at line 1:19: overflow\n"
             "    PRINT -2000000000 + -2000000000\n"
             "                      ^\n");
     }
@@ -1758,7 +1758,7 @@ TEST_CASE("execute double-double add operator", "[add][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:12: overflow\n"
+            "run error at line 1:13: overflow\n"
             "    PRINT 1e308 + 1e308\n"
             "                ^\n");
     }
@@ -1771,7 +1771,7 @@ TEST_CASE("execute double-double add operator", "[add][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:13: overflow\n"
+            "run error at line 1:14: overflow\n"
             "    PRINT -1e308 + -1e308\n"
             "                 ^\n");
     }
@@ -1892,7 +1892,7 @@ TEST_CASE("execute integer-integer subtract operator", "[sub][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:17: overflow\n"
+            "run error at line 1:18: overflow\n"
             "    PRINT 2000000000 - -1000000000\n"
             "                     ^\n");
     }
@@ -1905,7 +1905,7 @@ TEST_CASE("execute integer-integer subtract operator", "[sub][int-int]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:18: overflow\n"
+            "run error at line 1:19: overflow\n"
             "    PRINT -2000000000 - 1000000000\n"
             "                      ^\n");
     }
@@ -1934,7 +1934,7 @@ TEST_CASE("execute double-double subtract operator", "[sub][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:12: overflow\n"
+            "run error at line 1:13: overflow\n"
             "    PRINT 1e308 - -1e308\n"
             "                ^\n");
     }
@@ -1947,7 +1947,7 @@ TEST_CASE("execute double-double subtract operator", "[sub][dbl-dbl]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:13: overflow\n"
+            "run error at line 1:14: overflow\n"
             "    PRINT -1e308 - 1e308\n"
             "                 ^\n");
     }

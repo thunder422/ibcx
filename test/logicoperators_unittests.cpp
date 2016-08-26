@@ -134,7 +134,7 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
         program.compileSource(iss, oss);
 
         REQUIRE(oss.str() ==
-            "error on line 1:10: floating point constant is out of range\n"
+            "error on line 1:11: floating point constant is out of range\n"
             "    PRINT NOT 2.1e20\n"
             "              ^^^^^^\n"
         );
@@ -168,7 +168,7 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:10: overflow\n"
+            "run error at line 1:11: overflow\n"
             "    PRINT NOT 1.1e20 * 2\n"
             "              ^^^^^^^^^^\n"
         );

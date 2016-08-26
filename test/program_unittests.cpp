@@ -206,10 +206,10 @@ TEST_CASE("compile multiple line program", "[compile]")
         REQUIRE_FALSE(program.compileSource(iss, oss));
 
         REQUIRE(oss.str() ==
-            "error on line 1:12: expected sign or digit for exponent\n"
+            "error on line 1:13: expected sign or digit for exponent\n"
             "    print 1.704e%23\n"
             "                ^\n"
-            "error on line 2:6: floating point constant is out of range\n"
+            "error on line 2:7: floating point constant is out of range\n"
             "    print 2.45e3000\n"
             "          ^^^^^^^^^\n"
         );
@@ -291,7 +291,7 @@ TEST_CASE("run program code", "[execute]")
         REQUIRE_FALSE(program.runCode(oss));
         REQUIRE(oss.str() ==
             "4096\n"
-            "run error at line 2:12: divide by zero\n"
+            "run error at line 2:13: divide by zero\n"
             "    PRINT 0 ^ 4 ^ -1\n"
             "                ^\n");
     }

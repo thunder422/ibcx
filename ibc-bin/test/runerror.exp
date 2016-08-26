@@ -1,4 +1,4 @@
 4096
-run error at line 2:12: divide by zero
+run error at line 2:13: divide by zero
     PRINT 0 ^ 4 ^ -1
                 ^

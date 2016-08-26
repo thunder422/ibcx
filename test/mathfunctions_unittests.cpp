@@ -152,7 +152,7 @@ TEST_CASE("execute abs function expressions", "[abs][execute]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:6: overflow\n"
+            "run error at line 1:7: overflow\n"
             "    PRINT ABS(-2147483648)\n"
             "          ^^^\n");
     }
@@ -317,7 +317,7 @@ TEST_CASE("execute square root function expressions", "[sqr][execute]")
         program.runCode(oss);
 
         REQUIRE(oss.str() ==
-            "run error at line 1:6: square root of negative number\n"
+            "run error at line 1:7: square root of negative number\n"
             "    PRINT SQR(-6.25)\n"
             "          ^^^\n");
     }

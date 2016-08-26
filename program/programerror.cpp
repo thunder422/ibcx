@@ -48,7 +48,7 @@ void ProgramError::output(std::ostream &os) const
     if (line.empty()) {
         os << "end of program: " << what() << std::endl;
     } else {
-        os << "line " << line_number << ':' << column << ": " << what() << std::endl;
+        os << "line " << line_number << ':' << column + 1 << ": " << what() << std::endl;
         os << "    " << line << std::endl;
         std::string spaces(4 + column, ' ');
         std::string indicator(length, '^');
