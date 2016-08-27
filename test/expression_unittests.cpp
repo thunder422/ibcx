@@ -147,6 +147,19 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
 
         REQUIRE(oss.str() == "PRINT (- 3) ^ 1 ^ 2\n");
     }
+    SECTION("report an error if there is no expresion after an open parentheses")
+    {
+        std::istringstream iss {"PRINT ("};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            "error on line 1:8: expected numeric expression\n"
+            "    PRINT (\n"
+            "           ^\n"
+        );
+    }
 }
 
 TEST_CASE("compile expressions with the multiply operator", "[multiply]")

@@ -24,7 +24,7 @@ class ExpressionCompilerImpl : public ExpressionCompiler {
 public:
     ExpressionCompilerImpl(Compiler &compiler);
 
-    void compileExpression(DataType expected_data_type) override;
+    DataType compileExpression(DataType expected_data_type) override;
     DataType compileExpression() override;
 
 private:
@@ -108,12 +108,13 @@ ExpressionCompilerImpl::ExpressionCompilerImpl(Compiler &compiler) :
 {
 }
 
-void ExpressionCompilerImpl::compileExpression(DataType expected_data_type)
+DataType ExpressionCompilerImpl::compileExpression(DataType expected_data_type)
 {
     auto data_type = compileNumExpression(expected_data_type);
     if (data_type == DataType::Null) {
         throw ExpNumExprError {compiler.getColumn()};
     }
+    return data_type;
 }
 
 DataType ExpressionCompilerImpl::compileExpression()
@@ -282,7 +283,7 @@ DataType ExpressionCompilerImpl::compileParentheses(DataType expected_data_type)
 {
     compiler.getNextChar();
     compiler.skipWhiteSpace();
-    auto data_type = compileNumExpression(expected_data_type);
+    auto data_type = compileExpression(expected_data_type);
     if (compiler.peekNextChar() != ')') {
         throw CompileError {"expected closing parentheses", compiler.getColumn()};
     }
