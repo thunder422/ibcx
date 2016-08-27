@@ -21,9 +21,14 @@ Compiler::Compiler(const std::string &line, ProgramUnit &program) :
 {
 }
 
-DataType Compiler::compileExpression(DataType expected_data_type)
+void Compiler::compileExpression(DataType expected_data_type)
 {
-    return ExpressionCompiler::create(*this)->compile(expected_data_type);
+    ExpressionCompiler::create(*this)->compileExpression(expected_data_type);
+}
+
+DataType Compiler::compileExpression()
+{
+    return ExpressionCompiler::create(*this)->compileExpression();
 }
 
 OperatorCodes *Compiler::getSymbolOperatorCodes(Precedence precedence)

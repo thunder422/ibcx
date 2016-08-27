@@ -22,7 +22,7 @@ TEST_CASE("compile numeric expressions with constants", "[constant]")
         extern Code constIntCode;
 
         Compiler compiler {"1", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         REQUIRE_OPERAND(DataType::Integer, "1");
     }
     SECTION("verify an error is thrown when nothing is in the input stream")

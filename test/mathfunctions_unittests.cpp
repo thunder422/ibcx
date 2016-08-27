@@ -36,7 +36,7 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
     SECTION("check for a double return data type")
     {
         Compiler compiler {"ABS(-2.1)", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
 
         REQUIRE(data_type == DataType::Double);
     }

@@ -29,7 +29,7 @@ Code print_int_code {recreatePrintItem, executePrintInt};
 void compilePrint(Compiler &compiler)
 {
     if (compiler.peekNextChar() != EOF) {
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         if (data_type == DataType::Double) {
             compiler.addInstruction(print_dbl_code);
         } else {

@@ -24,14 +24,15 @@ class ExpressionCompilerImpl : public ExpressionCompiler {
 public:
     ExpressionCompilerImpl(Compiler &compiler);
 
-    DataType compile(DataType expected_data_type) override;
+    void compileExpression(DataType expected_data_type) override;
+    DataType compileExpression() override;
 
 private:
     DataType compileNumExpression(DataType expected_data_type);
-    DataType compileImp();
-    DataType compileEqv();
+    DataType compileImplication();
+    DataType compileEquivalence();
     DataType compileOr();
-    DataType compileXor();
+    DataType compileExclusiveOr();
     DataType compileAnd();
     DataType compileNot();
     OperatorCodes *getNotOperatorCodes();
@@ -107,31 +108,39 @@ ExpressionCompilerImpl::ExpressionCompilerImpl(Compiler &compiler) :
 {
 }
 
-DataType ExpressionCompilerImpl::compile(DataType expected_data_type)
+void ExpressionCompilerImpl::compileExpression(DataType expected_data_type)
 {
-    return compileNumExpression(expected_data_type);
+    auto data_type = compileNumExpression(expected_data_type);
+    if (data_type == DataType::Null) {
+        throw ExpNumExprError {compiler.getColumn()};
+    }
+}
+
+DataType ExpressionCompilerImpl::compileExpression()
+{
+    auto data_type = compileNumExpression(DataType::Null);
+    return data_type;
 }
 
 DataType ExpressionCompilerImpl::compileNumExpression(DataType expected_data_type)
 {
-    auto data_type = compileImp();
-    if (expected_data_type != DataType::Null) {
-        if (data_type == DataType::Null) {
-            throw ExpNumExprError {compiler.getColumn()};
-        } else if (expected_data_type == DataType::Double) {
+    auto data_type = compileImplication();
+    if (data_type != DataType::Null) {
+        if (expected_data_type == DataType::Double) {
             ConvertToDouble(compiler, data_type);
+            data_type = DataType::Double;
         }
     }
     return data_type;
 }
 
-DataType ExpressionCompilerImpl::compileImp()
+DataType ExpressionCompilerImpl::compileImplication()
 {
-    return compileOperator(Precedence::Imp, &ExpressionCompilerImpl::compileEqv, WordGetCodes,
-        ConvertToInteger);
+    return compileOperator(Precedence::Imp, &ExpressionCompilerImpl::compileEquivalence,
+        WordGetCodes, ConvertToInteger);
 }
 
-DataType ExpressionCompilerImpl::compileEqv()
+DataType ExpressionCompilerImpl::compileEquivalence()
 {
     return compileOperator(Precedence::Eqv, &ExpressionCompilerImpl::compileOr, WordGetCodes,
         ConvertToInteger);
@@ -139,11 +148,11 @@ DataType ExpressionCompilerImpl::compileEqv()
 
 DataType ExpressionCompilerImpl::compileOr()
 {
-    return compileOperator(Precedence::Or, &ExpressionCompilerImpl::compileXor, WordGetCodes,
-        ConvertToInteger);
+    return compileOperator(Precedence::Or, &ExpressionCompilerImpl::compileExclusiveOr,
+        WordGetCodes, ConvertToInteger);
 }
 
-DataType ExpressionCompilerImpl::compileXor()
+DataType ExpressionCompilerImpl::compileExclusiveOr()
 {
     return compileOperator(Precedence::Xor, &ExpressionCompilerImpl::compileAnd, WordGetCodes,
         ConvertToInteger);

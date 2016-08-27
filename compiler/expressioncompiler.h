@@ -20,7 +20,8 @@ class ExpressionCompiler {
 public:
     static std::unique_ptr<ExpressionCompiler> create(Compiler &compiler);
 
-    virtual DataType compile(DataType expected_data_type) = 0;
+    virtual void compileExpression(DataType expected_data_type) = 0;
+    virtual DataType compileExpression() = 0;
     virtual ~ExpressionCompiler() = default;
 };
 

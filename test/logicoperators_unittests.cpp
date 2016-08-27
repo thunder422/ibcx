@@ -36,7 +36,7 @@ TEST_CASE("compile not operator expressions", "[not][compile]")
     SECTION("check for an integer return data type")
     {
         Compiler compiler {"NOT 2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
 
         REQUIRE(data_type == DataType::Integer);
     }
@@ -200,7 +200,7 @@ TEST_CASE("compile and operator expressions", "[and][compile]")
     SECTION("check for an integer return data type")
     {
         Compiler compiler {"10.0 AND 7", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
 
         REQUIRE(data_type == DataType::Integer);
     }

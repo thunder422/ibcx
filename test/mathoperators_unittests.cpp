@@ -27,7 +27,7 @@ TEST_CASE("compile negate operator expressions", "[neg][compile]")
     SECTION("check that a double negate code is added after the operand")
     {
         Compiler compiler {"--2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code neg_dbl_code;
@@ -38,7 +38,7 @@ TEST_CASE("compile negate operator expressions", "[neg][compile]")
     SECTION("check that an integer negate code is added after the operand")
     {
         Compiler compiler {"--2", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code neg_int_code;
@@ -69,7 +69,7 @@ TEST_CASE("compile negate operator expressions", "[neg][compile]")
     SECTION("check that white space is allowed after a negate operator")
     {
         Compiler compiler {"- 2", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code neg_int_code;
@@ -210,7 +210,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
     SECTION("make sure parsing stops if there is no operand")
     {
         Compiler compiler {"^2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == '^');
     }
@@ -238,7 +238,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         extern OperatorCode<OpType::IntInt> exp_int_int_code;
 
         Compiler compiler {"3^2", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(data_type == DataType::Integer);
@@ -250,7 +250,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         extern OperatorCode<OpType::DblDbl> exp_dbl_dbl_code;
 
         Compiler compiler {"3.0^2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(data_type == DataType::Double);
@@ -262,7 +262,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         extern OperatorCode<OpType::DblInt> exp_dbl_int_code;
 
         Compiler compiler {"3.0^2", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(data_type == DataType::Double);
@@ -274,7 +274,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         extern OperatorCode<OpType::IntDbl> exp_int_dbl_code;
 
         Compiler compiler {"3^2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(data_type == DataType::Double);
@@ -726,7 +726,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         extern OperatorCode<OpType::IntInt> mul_int_int_code;
 
         Compiler compiler {"3*2", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(data_type == DataType::Integer);
@@ -738,7 +738,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         extern OperatorCode<OpType::DblDbl> mul_dbl_dbl_code;
 
         Compiler compiler {"3.0*2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(data_type == DataType::Double);
@@ -750,7 +750,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         extern OperatorCode<OpType::DblInt> mul_dbl_int_code;
 
         Compiler compiler {"3.0*2", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(data_type == DataType::Double);
@@ -762,7 +762,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         extern OperatorCode<OpType::IntDbl> mul_int_dbl_code;
 
         Compiler compiler {"3*2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(data_type == DataType::Double);
@@ -1224,7 +1224,7 @@ TEST_CASE("compile integer divide operator expressions", "[intdiv][compile]")
         extern OperatorCode<OpType::DblDbl> int_div_code;
 
         Compiler compiler {"3.0\\2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 5);

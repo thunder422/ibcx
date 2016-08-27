@@ -25,7 +25,8 @@ class ProgramUnit;
 class Compiler {
 public:
     Compiler(const std::string &line, ProgramUnit &program);
-    DataType compileExpression(DataType expected_data_type);
+    void compileExpression(DataType expected_data_type);
+    DataType compileExpression();
     OperatorCodes *getSymbolOperatorCodes(Precedence precedence);
     OperatorCodes *getWordOperatorCodes(Precedence precedence);
     OperatorCodes *getComparisonOperatorCodes(Precedence precedence);

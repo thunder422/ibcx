@@ -37,7 +37,7 @@ TEST_CASE("compile less than operator expressions", "[lt][compile]")
     SECTION("check for an integer return type for a less than code")
     {
         Compiler compiler {"3.0<2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
 
         REQUIRE(data_type == DataType::Integer);
     }
@@ -495,7 +495,7 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
     SECTION("check for an integer return type for an equal to code")
     {
         Compiler compiler {"3.0=2.0", program};
-        auto data_type = compiler.compileExpression(DataType::Null);
+        auto data_type = compiler.compileExpression();
 
         REQUIRE(data_type == DataType::Integer);
     }
