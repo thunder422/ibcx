@@ -35,6 +35,7 @@ public:
         DataType result_data_type;
     };
 
+    virtual DataType argumentDataType() const = 0;
     virtual Info select(DataType data_type) const = 0;
 };
 
@@ -43,8 +44,9 @@ class MultiTypeFunctionCodes : public FunctionCodes {
 public:
     MultiTypeFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &dbl_code,
         FunctionCode<ArgType::Int> &int_code);
-    Info select(DataType data_type) const override;
     std::vector<WordType> codeValues() const override;
+    Info select(DataType data_type) const override;
+    DataType argumentDataType() const override;
 
 private:
     FunctionCode<ArgType::Dbl> &dbl_code;
@@ -55,8 +57,9 @@ private:
 class MathFunctionCodes : public FunctionCodes {
 public:
     MathFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code);
-    Info select(DataType unused_data_type) const override;
     std::vector<WordType> codeValues() const override;
+    Info select(DataType unused_data_type) const override;
+    DataType argumentDataType() const override;
 
 private:
     FunctionCode<ArgType::Dbl> &code;

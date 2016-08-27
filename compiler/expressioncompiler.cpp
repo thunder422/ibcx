@@ -45,9 +45,10 @@ private:
     DataType compileExponential();
     DataType compileNegation();
     DataType compileNumOperand();
-    DataType compileParentheses();
     DataType compileFunction();
     DataType addFunctionCode(FunctionCodes *codes, DataType data_type) const;
+    DataType compileFunctionArguments(FunctionCodes *codes);
+    DataType compileParentheses(DataType expected_data_type);
     DataType compileNumConstant();
     DataType compileOperator(Precedence precedence,
         DataType (ExpressionCompilerImpl::*compile_operand)(),
@@ -114,8 +115,12 @@ DataType ExpressionCompilerImpl::compile(DataType expected_data_type)
 DataType ExpressionCompilerImpl::compileNumExpression(DataType expected_data_type)
 {
     auto data_type = compileImp();
-    if (expected_data_type != DataType::Null && data_type == DataType::Null) {
-        throw ExpNumExprError {compiler.getColumn()};
+    if (expected_data_type != DataType::Null) {
+        if (data_type == DataType::Null) {
+            throw ExpNumExprError {compiler.getColumn()};
+        } else if (expected_data_type == DataType::Double) {
+            ConvertToDouble(compiler, data_type);
+        }
     }
     return data_type;
 }
@@ -228,7 +233,7 @@ DataType ExpressionCompilerImpl::compileNegation()
 DataType ExpressionCompilerImpl::compileNumOperand()
 {
     if (compiler.peekNextChar() == '(') {
-        return compileParentheses();
+        return compileParentheses(DataType::Null);
     }
     if (auto codes = getNotOperatorCodes()) {
         return compileNotOperand(codes);
@@ -243,13 +248,18 @@ DataType ExpressionCompilerImpl::compileNumOperand()
 DataType ExpressionCompilerImpl::compileFunction()
 {
     if (auto codes = compiler.getNumFunctionCodes()) {
-        if (compiler.peekNextChar() != '(') {
-            throw CompileError {"expected opening parentheses", compiler.getColumn()};
-        }
-        auto data_type = compileParentheses();
-        return addFunctionCode(codes, data_type);
+        return compileFunctionArguments(codes);
     }
     return DataType::Null;
+}
+
+DataType ExpressionCompilerImpl::compileFunctionArguments(FunctionCodes *codes)
+{
+    if (compiler.peekNextChar() != '(') {
+        throw CompileError {"expected opening parentheses", compiler.getColumn()};
+    }
+    auto data_type = compileParentheses(codes->argumentDataType());
+    return addFunctionCode(codes, data_type);
 }
 
 DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes, DataType data_type) const
@@ -259,11 +269,11 @@ DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes, DataType 
     return info.result_data_type;
 }
 
-DataType ExpressionCompilerImpl::compileParentheses()
+DataType ExpressionCompilerImpl::compileParentheses(DataType expected_data_type)
 {
     compiler.getNextChar();
     compiler.skipWhiteSpace();
-    auto data_type = compileNumExpression(DataType::Double);
+    auto data_type = compileNumExpression(expected_data_type);
     if (compiler.peekNextChar() != ')') {
         throw CompileError {"expected closing parentheses", compiler.getColumn()};
     }

@@ -16,6 +16,11 @@ MultiTypeFunctionCodes::MultiTypeFunctionCodes(const char *keyword,
     Table::addNumFunctionCodes(*this, keyword);
 }
 
+std::vector<WordType> MultiTypeFunctionCodes::codeValues() const
+{
+    return std::vector<WordType> {dbl_code.getValue(), int_code.getValue()};
+}
+
 FunctionCodes::Info MultiTypeFunctionCodes::select(DataType data_type) const
 {
     if (data_type == DataType::Double) {
@@ -25,9 +30,9 @@ FunctionCodes::Info MultiTypeFunctionCodes::select(DataType data_type) const
     }
 }
 
-std::vector<WordType> MultiTypeFunctionCodes::codeValues() const
+DataType MultiTypeFunctionCodes::argumentDataType() const
 {
-    return std::vector<WordType> {dbl_code.getValue(), int_code.getValue()};
+    return DataType::Null;
 }
 
 // ----------------------------------------
@@ -38,13 +43,18 @@ MathFunctionCodes::MathFunctionCodes(const char *keyword, FunctionCode<ArgType::
     Table::addNumFunctionCodes(*this, keyword);
 }
 
+std::vector<WordType> MathFunctionCodes::codeValues() const
+{
+    return std::vector<WordType> {code.getValue()};
+}
+
 FunctionCodes::Info MathFunctionCodes::select(DataType unused_data_type) const
 {
     (void)unused_data_type;
     return FunctionCodes::Info {code, DataType::Double};
 }
 
-std::vector<WordType> MathFunctionCodes::codeValues() const
+DataType MathFunctionCodes::argumentDataType() const
 {
-    return std::vector<WordType> {code.getValue()};
+    return DataType::Double;
 }

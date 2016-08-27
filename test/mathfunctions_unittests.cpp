@@ -321,4 +321,14 @@ TEST_CASE("execute square root function expressions", "[sqr][execute]")
             "    PRINT SQR(-6.25)\n"
             "          ^^^\n");
     }
+    SECTION("execute with an integer argument")
+    {
+        std::istringstream iss {"PRINT SQR(625)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "25\n");
+    }
 }
