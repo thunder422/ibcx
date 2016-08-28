@@ -578,3 +578,37 @@ TEST_CASE("tangent function expressions", "[tan]")
         REQUIRE(oss.str() == "1.26016\n");
     }
 }
+
+
+TEST_CASE("arctangent function expressions", "[atn]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"ATN(0.9)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT atn(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT ATN(0.9)\n");
+    }
+    SECTION("execute function with a double argument")
+    {
+        std::istringstream iss {"PRINT ATN(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0.732815\n");
+    }
+}

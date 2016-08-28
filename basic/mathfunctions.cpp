@@ -144,3 +144,14 @@ void executeTan(Executer &executer)
 FunctionCode<ArgType::Dbl> tan_code {recreateFunction, executeTan};
 
 MathFunctionCodes tan_codes {"TAN", tan_code};
+
+// ----------------------------------------
+
+void executeAtn(Executer &executer)
+{
+    executer.setTop(std::atan(executer.topDbl()));
+}
+
+FunctionCode<ArgType::Dbl> atn_code {recreateFunction, executeAtn};
+
+MathFunctionCodes atn_codes {"ATN", atn_code};
