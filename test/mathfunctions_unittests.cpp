@@ -544,3 +544,37 @@ TEST_CASE("sine function expressions", "[sin]")
         REQUIRE(oss.str() == "0.783327\n");
     }
 }
+
+
+TEST_CASE("tangent function expressions", "[tan]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"TAN(0.9)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT tan(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT TAN(0.9)\n");
+    }
+    SECTION("execute function with a double argument")
+    {
+        std::istringstream iss {"PRINT TAN(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "1.26016\n");
+    }
+}

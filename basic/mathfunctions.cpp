@@ -133,3 +133,14 @@ void executeSin(Executer &executer)
 FunctionCode<ArgType::Dbl> sin_code {recreateFunction, executeSin};
 
 MathFunctionCodes sin_codes {"SIN", sin_code};
+
+// ----------------------------------------
+
+void executeTan(Executer &executer)
+{
+    executer.setTop(std::tan(executer.topDbl()));
+}
+
+FunctionCode<ArgType::Dbl> tan_code {recreateFunction, executeTan};
+
+MathFunctionCodes tan_codes {"TAN", tan_code};
