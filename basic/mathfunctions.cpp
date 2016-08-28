@@ -170,3 +170,16 @@ void executeLog(Executer &executer)
 FunctionCode<ArgType::Dbl> log_code {recreateFunction, executeLog};
 
 MathFunctionCodes log_codes {"LOG", log_code};
+
+// ----------------------------------------
+
+void executeExp(Executer &executer)
+{
+    auto result = std::exp(executer.topDbl());
+    checkForOverflow(executer, result);
+    executer.setTop(result);
+}
+
+FunctionCode<ArgType::Dbl> exp_code {recreateFunction, executeExp};
+
+static MathFunctionCodes exp_codes {"EXP", exp_code};

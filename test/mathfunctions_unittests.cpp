@@ -672,3 +672,60 @@ TEST_CASE("natural logarithm function expressions", "[log]")
             "          ^^^\n");
     }
 }
+
+
+TEST_CASE("base-e exponential function expressions", "[exp]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"EXP(0.9)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT exp(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT EXP(0.9)\n");
+    }
+    SECTION("execute function with a double argument")
+    {
+        std::istringstream iss {"PRINT EXP(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "2.4596\n");
+    }
+    SECTION("check execution of underflow")
+    {
+        std::istringstream iss {"PRINT EXP(-1e308)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "0\n");
+    }
+    SECTION("check execution of overflow")
+    {
+        std::istringstream iss {"PRINT EXP(1e308)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:7: overflow\n"
+            "    PRINT EXP(1e308)\n"
+            "          ^^^\n");
+    }
+}

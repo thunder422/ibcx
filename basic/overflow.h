@@ -44,5 +44,12 @@ inline void checkDoubleOverflow(Executer &executer, double result)
     }
 }
 
+inline void checkForOverflow(Executer &executer, double result)
+{
+    if (result == HUGE_VAL) {
+        throw RunError {"overflow", executer.currentOffset()};
+    }
+}
+
 
 #endif  // IBC_OVERFLOW_H

@@ -11,6 +11,7 @@
 #include <cmath>
 
 #include "executer.h"
+#include "overflow.h"
 #include "runerror.h"
 
 
@@ -22,7 +23,6 @@ private:
     double multiplyForPositiveExponent();
     double divideForNegativeExponent();
     double useDoublePower();
-    void checkForOverflow(double result);
 
     Executer &executer;
     double x;
@@ -53,7 +53,7 @@ inline double PowerDblInt::multiplyForPositiveExponent()
     while (--y >= 0) {
         result *= x;
     }
-    checkForOverflow(result);
+    checkForOverflow(executer, result);
     return result;
 }
 
@@ -72,15 +72,8 @@ inline double PowerDblInt::divideForNegativeExponent()
 inline double PowerDblInt::useDoublePower()
 {
     auto result = std::pow(x, y);
-    checkForOverflow(result);
+    checkForOverflow(executer, result);
     return result;
-}
-
-inline void PowerDblInt::checkForOverflow(double result)
-{
-    if (result == HUGE_VAL) {
-        throw RunError {"overflow", executer.currentOffset()};
-    }
 }
 
 
