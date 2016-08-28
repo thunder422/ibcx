@@ -99,3 +99,15 @@ void executeFix(Executer &executer)
 FunctionCode<ArgType::Dbl> fix_code {recreateFunction, executeFix};
 
 MathFunctionCodes fix_codes {"FIX", fix_code};
+
+// ----------------------------------------
+
+void executeFrac(Executer &executer)
+{
+    auto argument = executer.topDbl();
+    executer.setTop(argument - std::trunc(argument));
+}
+
+FunctionCode<ArgType::Dbl> frac_code {recreateFunction, executeFrac};
+
+MathFunctionCodes frac_codes {"FRAC", frac_code};
