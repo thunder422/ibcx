@@ -155,3 +155,18 @@ void executeAtn(Executer &executer)
 FunctionCode<ArgType::Dbl> atn_code {recreateFunction, executeAtn};
 
 MathFunctionCodes atn_codes {"ATN", atn_code};
+
+// ----------------------------------------
+
+void executeLog(Executer &executer)
+{
+    auto argument = executer.topDbl();
+    if (argument <= 0) {
+        throw RunError {"logarithm of non-positive number", executer.currentOffset()};
+    }
+    executer.setTop(std::log(argument));
+}
+
+FunctionCode<ArgType::Dbl> log_code {recreateFunction, executeLog};
+
+MathFunctionCodes log_codes {"LOG", log_code};

@@ -612,3 +612,63 @@ TEST_CASE("arctangent function expressions", "[atn]")
         REQUIRE(oss.str() == "0.732815\n");
     }
 }
+
+
+TEST_CASE("natural logarithm function expressions", "[log]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"LOG(0.9)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT log(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT LOG(0.9)\n");
+    }
+    SECTION("execute function with a double argument")
+    {
+        std::istringstream iss {"PRINT LOG(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-0.105361\n");
+    }
+    SECTION("execute function with zero argument")
+    {
+        std::istringstream iss {"PRINT LOG(0.0)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:7: logarithm of non-positive number\n"
+            "    PRINT LOG(0.0)\n"
+            "          ^^^\n");
+    }
+    SECTION("execute function with negative argument")
+    {
+        std::istringstream iss {"PRINT LOG(-0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:7: logarithm of non-positive number\n"
+            "    PRINT LOG(-0.9)\n"
+            "          ^^^\n");
+    }
+}
