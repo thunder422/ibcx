@@ -66,4 +66,16 @@ private:
 };
 
 
+class ConvertFunctionCodes : public FunctionCodes {
+public:
+    ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Int> &code);
+    std::vector<WordType> codeValues() const override;
+    Info select(DataType data_type) const override;
+    DataType argumentDataType() const override;
+
+private:
+    FunctionCode<ArgType::Int> &code;
+};
+
+
 #endif  // IBC_FUNCTIONS_H

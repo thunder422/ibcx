@@ -183,3 +183,9 @@ void executeExp(Executer &executer)
 FunctionCode<ArgType::Dbl> exp_code {recreateFunction, executeExp};
 
 static MathFunctionCodes exp_codes {"EXP", exp_code};
+
+// ----------------------------------------
+
+FunctionCode<ArgType::Int> cdbl_code {nullptr, nullptr};
+
+ConvertFunctionCodes cdbl_codes {"CDBL", cdbl_code};

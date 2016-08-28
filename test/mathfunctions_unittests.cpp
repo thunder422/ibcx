@@ -729,3 +729,34 @@ TEST_CASE("base-e exponential function expressions", "[exp]")
             "          ^^^\n");
     }
 }
+
+
+TEST_CASE("compile convert to double function expressions", "[cdbl][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"CDBL(123)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("check that the function code is added after the operand")
+    {
+        Compiler compiler {"CDBL(1+1)", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        extern Code cdbl_code;
+        REQUIRE(code_line.size() == 6);
+        REQUIRE(code_line[5].instructionCode()->getValue() == cdbl_code.getValue());
+    }
+    SECTION("check that the function code is added after the operand")
+    {
+        Compiler compiler {"CDBL(123)", program};
+        auto data_type = compiler.compileExpression();
+
+        REQUIRE(data_type == DataType::Double);
+    }
+}
