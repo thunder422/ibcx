@@ -510,3 +510,37 @@ TEST_CASE("cosine function expressions", "[cos]")
         REQUIRE(oss.str() == "0.62161\n");
     }
 }
+
+
+TEST_CASE("sine function expressions", "[sin]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"SIN(0.9)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT sin(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT SIN(0.9)\n");
+    }
+    SECTION("execute function with a double argument")
+    {
+        std::istringstream iss {"PRINT SIN(0.9)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0.783327\n");
+    }
+}
