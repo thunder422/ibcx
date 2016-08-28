@@ -77,3 +77,14 @@ void executeSqr(Executer &executer)
 FunctionCode<ArgType::Dbl> sqr_code {recreateFunction, executeSqr};
 
 MathFunctionCodes sqr_codes {"SQR", sqr_code};
+
+// ----------------------------------------
+
+void executeInt(Executer &executer)
+{
+    executer.setTop(std::floor(executer.topDbl()));
+}
+
+FunctionCode<ArgType::Dbl> int_code {recreateFunction, executeInt};
+
+MathFunctionCodes int_codes {"INT", int_code};

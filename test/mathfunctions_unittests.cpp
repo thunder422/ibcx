@@ -332,3 +332,59 @@ TEST_CASE("execute square root function expressions", "[sqr][execute]")
         REQUIRE(oss.str() == "25\n");
     }
 }
+
+
+TEST_CASE("compile interger function expressions", "[int][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"INT(6.25)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}
+
+TEST_CASE("recreate integer function expressions", "[int][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT INT(-6.25)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT INT(-6.25)\n");
+    }
+}
+
+TEST_CASE("execute integer function expressions", "[int][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute with positive arguments")
+    {
+        std::istringstream iss {"PRINT INT(6.01)\nPRINT INT(6.99)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "6\n6\n");
+    }
+    SECTION("execute with negative arguments")
+    {
+        std::istringstream iss {"PRINT INT(-6.01)\nPRINT INT(-6.99)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-7\n-7\n");
+    }
+}
