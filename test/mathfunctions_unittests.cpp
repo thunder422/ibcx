@@ -388,3 +388,47 @@ TEST_CASE("execute integer function expressions", "[int][execute]")
         REQUIRE(oss.str() == "-7\n-7\n");
     }
 }
+
+
+TEST_CASE("compile fix function expressions", "[fix]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"FIX(6.25)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("recreate function with a double argument")
+    {
+        std::istringstream iss {"PRINT FIX(-6.25)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT FIX(-6.25)\n");
+    }
+    SECTION("execute with positive arguments")
+    {
+        std::istringstream iss {"PRINT FIX(6.01)\nPRINT FIX(6.99)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "6\n6\n");
+    }
+    SECTION("execute with negative arguments")
+    {
+        std::istringstream iss {"PRINT FIX(-6.01)\nPRINT FIX(-6.99)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-6\n-6\n");
+    }
+}

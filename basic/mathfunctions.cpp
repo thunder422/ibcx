@@ -88,3 +88,14 @@ void executeInt(Executer &executer)
 FunctionCode<ArgType::Dbl> int_code {recreateFunction, executeInt};
 
 MathFunctionCodes int_codes {"INT", int_code};
+
+// ----------------------------------------
+
+void executeFix(Executer &executer)
+{
+    executer.setTop(std::trunc(executer.topDbl()));
+}
+
+FunctionCode<ArgType::Dbl> fix_code {recreateFunction, executeFix};
+
+MathFunctionCodes fix_codes {"FIX", fix_code};
