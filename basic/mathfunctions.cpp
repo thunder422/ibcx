@@ -111,3 +111,14 @@ void executeFrac(Executer &executer)
 FunctionCode<ArgType::Dbl> frac_code {recreateFunction, executeFrac};
 
 MathFunctionCodes frac_codes {"FRAC", frac_code};
+
+// ----------------------------------------
+
+void executeCos(Executer &executer)
+{
+    executer.setTop(std::cos(executer.topDbl()));
+}
+
+FunctionCode<ArgType::Dbl> cos_code {recreateFunction, executeCos};
+
+MathFunctionCodes cos_codes {"COS", cos_code};
