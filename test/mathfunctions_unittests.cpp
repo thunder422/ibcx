@@ -760,3 +760,19 @@ TEST_CASE("compile convert to double function expressions", "[cdbl][compile]")
         REQUIRE(data_type == DataType::Double);
     }
 }
+
+TEST_CASE("recreate convert to double function expressions", "[cdbl][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate function with a integer argument")
+    {
+        std::istringstream iss {"print cdbl(1+1)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT CDBL(1 + 1)\n");
+    }
+}

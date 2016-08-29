@@ -186,6 +186,6 @@ static MathFunctionCodes exp_codes {"EXP", exp_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::Int> cdbl_code {nullptr, nullptr};
+FunctionCode<ArgType::Int> cdbl_code {recreateFunction, nullptr};
 
 ConvertFunctionCodes cdbl_codes {"CDBL", cdbl_code};
