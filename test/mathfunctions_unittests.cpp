@@ -776,3 +776,19 @@ TEST_CASE("recreate convert to double function expressions", "[cdbl][recreate]")
         REQUIRE(oss.str() == "PRINT CDBL(1 + 1)\n");
     }
 }
+
+TEST_CASE("execute convert to double funciton expressions", "[cdbl][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute with an integer expression")
+    {
+        std::istringstream iss {"PRINT CDBL(100+20+3)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "123\n");
+    }
+}

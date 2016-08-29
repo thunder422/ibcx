@@ -248,13 +248,6 @@ IntDivOperatorCode int_div_codes {Precedence::IntDivide, "\\", int_div_code};
 
 // ----------------------------------------
 
-void executeCvtDbl(Executer &executer)
-{
-    executer.setTop(executer.topIntAsDbl());
-}
-
-Code cvtdbl_code {recreateNothing, executeCvtDbl};
-
 void executeCvtInt(Executer &executer)
 {
     auto operand = executer.topDbl();

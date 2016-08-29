@@ -186,6 +186,13 @@ static MathFunctionCodes exp_codes {"EXP", exp_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::Int> cdbl_code {recreateFunction, nullptr};
+void executeCvtDbl(Executer &executer)
+{
+    executer.setTop(executer.topIntAsDbl());
+}
+
+Code cvtdbl_code {recreateNothing, executeCvtDbl};
+
+FunctionCode<ArgType::Int> cdbl_code {recreateFunction, executeCvtDbl};
 
 ConvertFunctionCodes cdbl_codes {"CDBL", cdbl_code};
