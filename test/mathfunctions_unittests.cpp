@@ -759,6 +759,18 @@ TEST_CASE("compile convert to double function expressions", "[cdbl][compile]")
 
         REQUIRE(data_type == DataType::Double);
     }
+    SECTION("check for an internal convert to integer code for an integer argument")
+    {
+        Compiler compiler {"CDBL(1.0+2.1)", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        extern Code cvtint_code;
+        extern Code cdbl_code;
+        REQUIRE(code_line.size() == 7);
+        REQUIRE(code_line[5].instructionCode()->getValue() == cvtint_code.getValue());
+        REQUIRE(code_line[6].instructionCode()->getValue() == cdbl_code.getValue());
+    }
 }
 
 TEST_CASE("recreate convert to double function expressions", "[cdbl][recreate]")

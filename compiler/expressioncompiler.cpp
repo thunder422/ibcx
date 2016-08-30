@@ -129,7 +129,8 @@ DataType ExpressionCompilerImpl::compileNumExpression(DataType expected_data_typ
     if (data_type != DataType::Null) {
         if (expected_data_type == DataType::Double) {
             ConvertToDouble(compiler, data_type);
-            data_type = DataType::Double;
+        } else if (expected_data_type == DataType::Integer) {
+            ConvertToInteger(compiler, data_type);
         }
     }
     return data_type;
