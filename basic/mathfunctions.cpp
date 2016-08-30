@@ -201,7 +201,7 @@ ConvertFunctionCodes cdbl_codes {"CDBL", cdbl_code};
 
 void executeCvtInt(Executer &executer)
 {
-    auto operand = executer.topDbl();
+    auto operand = std::round(executer.topDbl());
     checkIntegerOverflow(executer, operand);
     executer.setTopIntFromDouble(operand);
 }

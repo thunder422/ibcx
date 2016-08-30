@@ -866,4 +866,14 @@ TEST_CASE("execute convert to integer funciton expressions", "[cint][execute]")
 
         REQUIRE(oss.str() == "123\n");
     }
+    SECTION("check that values are rounded up when required")
+    {
+        std::istringstream iss {"PRINT CINT(123.5)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "124\n");
+    }
 }
