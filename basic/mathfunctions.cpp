@@ -199,6 +199,6 @@ ConvertFunctionCodes cdbl_codes {"CDBL", cdbl_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::Dbl> cint_code {nullptr, nullptr};
+FunctionCode<ArgType::Dbl> cint_code {recreateFunction, nullptr};
 
 ConvertFunctionCodes cint_codes {"CINT", cint_code};

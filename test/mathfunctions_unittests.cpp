@@ -835,3 +835,19 @@ TEST_CASE("compile convert to integer function expressions", "[cint][compile]")
         REQUIRE(data_type == DataType::Integer);
     }
 }
+
+TEST_CASE("recreate convert to integer function expressions", "[cint][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate function with a integer argument")
+    {
+        std::istringstream iss {"print cint(123.4)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT CINT(123.4)\n");
+    }
+}
