@@ -61,8 +61,13 @@ DataType MathFunctionCodes::argumentDataType() const
 
 // ----------------------------------------
 
-ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword,
-        FunctionCode<ArgType::Int> &code) :
+ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Int> &code) :
+    code {code}
+{
+    Table::addNumFunctionCodes(*this, keyword);
+}
+
+ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code) :
     code {code}
 {
     Table::addNumFunctionCodes(*this, keyword);

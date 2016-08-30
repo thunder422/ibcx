@@ -804,3 +804,17 @@ TEST_CASE("execute convert to double funciton expressions", "[cdbl][execute]")
         REQUIRE(oss.str() == "123\n");
     }
 }
+
+
+TEST_CASE("compile convert to integer function expressions", "[cint][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function and argument are parsed")
+    {
+        Compiler compiler {"CINT(123.4)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

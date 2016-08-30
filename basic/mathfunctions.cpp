@@ -196,3 +196,9 @@ Code cvtdbl_code {recreateNothing, executeCvtDbl};
 FunctionCode<ArgType::Int> cdbl_code {recreateFunction, executeCvtDbl};
 
 ConvertFunctionCodes cdbl_codes {"CDBL", cdbl_code};
+
+// ----------------------------------------
+
+FunctionCode<ArgType::Dbl> cint_code {nullptr, nullptr};
+
+ConvertFunctionCodes cint_codes {"CINT", cint_code};
