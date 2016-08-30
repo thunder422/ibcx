@@ -77,6 +77,7 @@ public:
 private:
     Code &code;
     DataType argument_data_type;
+    DataType return_data_type;
 };
 
 

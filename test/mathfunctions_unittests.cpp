@@ -752,7 +752,7 @@ TEST_CASE("compile convert to double function expressions", "[cdbl][compile]")
         REQUIRE(code_line.size() == 6);
         REQUIRE(code_line[5].instructionCode()->getValue() == cdbl_code.getValue());
     }
-    SECTION("check that the function code is added after the operand")
+    SECTION("check that the function has the correct return data type")
     {
         Compiler compiler {"CDBL(123)", program};
         auto data_type = compiler.compileExpression();
@@ -826,5 +826,12 @@ TEST_CASE("compile convert to integer function expressions", "[cint][compile]")
         extern Code cint_code;
         REQUIRE(code_line.size() == 6);
         REQUIRE(code_line[5].instructionCode()->getValue() == cint_code.getValue());
+    }
+    SECTION("check that the function has the correct return data type")
+    {
+        Compiler compiler {"CINT(123.4)", program};
+        auto data_type = compiler.compileExpression();
+
+        REQUIRE(data_type == DataType::Integer);
     }
 }

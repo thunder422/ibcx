@@ -63,14 +63,16 @@ DataType MathFunctionCodes::argumentDataType() const
 
 ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Int> &code) :
     code {code},
-    argument_data_type {DataType::Integer}
+    argument_data_type {DataType::Integer},
+    return_data_type {DataType::Double}
 {
     Table::addNumFunctionCodes(*this, keyword);
 }
 
 ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code) :
     code {code},
-    argument_data_type {DataType::Double}
+    argument_data_type {DataType::Double},
+    return_data_type {DataType::Integer}
 {
     Table::addNumFunctionCodes(*this, keyword);
 }
@@ -83,7 +85,7 @@ std::vector<WordType> ConvertFunctionCodes::codeValues() const
 FunctionCodes::Info ConvertFunctionCodes::select(DataType data_type) const
 {
     (void)data_type;
-    return FunctionCodes::Info {code, DataType::Double};
+    return FunctionCodes::Info {code, return_data_type};
 }
 
 DataType ConvertFunctionCodes::argumentDataType() const
