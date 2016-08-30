@@ -851,3 +851,19 @@ TEST_CASE("recreate convert to integer function expressions", "[cint][recreate]"
         REQUIRE(oss.str() == "PRINT CINT(123.4)\n");
     }
 }
+
+TEST_CASE("execute convert to integer funciton expressions", "[cint][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("execute with a double argument")
+    {
+        std::istringstream iss {"PRINT CINT(123.4)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "123\n");
+    }
+}

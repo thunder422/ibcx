@@ -199,6 +199,20 @@ ConvertFunctionCodes cdbl_codes {"CDBL", cdbl_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::Dbl> cint_code {recreateFunction, nullptr};
+void executeCvtInt(Executer &executer)
+{
+    auto operand = executer.topDbl();
+    checkIntegerOverflow(executer, operand);
+    executer.setTopIntFromDouble(operand);
+}
+
+void recreateCvtInt(Recreator &recreator)
+{
+    recreator.markOperandIfError();
+}
+
+Code cvtint_code {recreateCvtInt, executeCvtInt};
+
+FunctionCode<ArgType::Dbl> cint_code {recreateFunction, executeCvtInt};
 
 ConvertFunctionCodes cint_codes {"CINT", cint_code};

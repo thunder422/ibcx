@@ -248,22 +248,6 @@ IntDivOperatorCode int_div_codes {Precedence::IntDivide, "\\", int_div_code};
 
 // ----------------------------------------
 
-void executeCvtInt(Executer &executer)
-{
-    auto operand = executer.topDbl();
-    checkIntegerOverflow(executer, operand);
-    executer.setTopIntFromDouble(operand);
-}
-
-void recreateCvtInt(Recreator &recreator)
-{
-    recreator.markOperandIfError();
-}
-
-Code cvtint_code {recreateCvtInt, executeCvtInt};
-
-// ----------------------------------------
-
 void executeModuloDblDbl(Executer &executer)
 {
     auto rhs = popDoubleDivisor(executer);
