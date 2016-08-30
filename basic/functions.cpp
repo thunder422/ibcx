@@ -62,13 +62,15 @@ DataType MathFunctionCodes::argumentDataType() const
 // ----------------------------------------
 
 ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Int> &code) :
-    code {code}
+    code {code},
+    argument_data_type {DataType::Integer}
 {
     Table::addNumFunctionCodes(*this, keyword);
 }
 
 ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code) :
-    code {code}
+    code {code},
+    argument_data_type {DataType::Double}
 {
     Table::addNumFunctionCodes(*this, keyword);
 }
@@ -86,5 +88,5 @@ FunctionCodes::Info ConvertFunctionCodes::select(DataType data_type) const
 
 DataType ConvertFunctionCodes::argumentDataType() const
 {
-    return DataType::Integer;
+    return argument_data_type;
 }

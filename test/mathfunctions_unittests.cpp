@@ -817,4 +817,14 @@ TEST_CASE("compile convert to integer function expressions", "[cint][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check that the function code is added after the operand")
+    {
+        Compiler compiler {"CINT(1.0+2.1)", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        extern Code cint_code;
+        REQUIRE(code_line.size() == 6);
+        REQUIRE(code_line[5].instructionCode()->getValue() == cint_code.getValue());
+    }
 }
