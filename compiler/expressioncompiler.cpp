@@ -267,13 +267,13 @@ DataType ExpressionCompilerImpl::compileFunction()
 
 DataType ExpressionCompilerImpl::compileFunctionArguments(FunctionCodes *codes)
 {
-    if (codes->hasArguments()) {
-        if (compiler.peekNextChar() != '(') {
-            throw CompileError {"expected opening parentheses", compiler.getColumn()};
+    if (compiler.peekNextChar() != '(') {
+        if (codes->argumentOptional()) {
+            return DataType::Null;
         }
-        return compileParentheses(codes->argumentDataType());
+        throw CompileError {"expected opening parentheses", compiler.getColumn()};
     }
-    return DataType::Null;
+    return compileParentheses(codes->argumentDataType());
 }
 
 DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes, DataType data_type) const

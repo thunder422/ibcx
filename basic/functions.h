@@ -36,8 +36,8 @@ public:
         DataType result_data_type;
     };
 
+    virtual bool argumentOptional() const;
     virtual DataType argumentDataType() const = 0;
-    virtual bool hasArguments() const;
     virtual Info select(DataType data_type) const = 0;
 };
 
@@ -85,15 +85,17 @@ private:
 
 class RandomFunctionCodes : public FunctionCodes {
 public:
-    RandomFunctionCodes(const char *keyword, FunctionCode<ArgType::None> &none_code);
+    RandomFunctionCodes(const char *keyword, FunctionCode<ArgType::None> &none_code,
+        FunctionCode<ArgType::Int> &int_code);
     std::vector<WordType> codeValues() const override;
-    bool hasArguments() const override;
+    bool argumentOptional() const override;
     DataType argumentDataType() const override;
     Info select(DataType data_type) const override;
 
 
 private:
     FunctionCode<ArgType::None> &none_code;
+    FunctionCode<ArgType::Int> &int_code;
 };
 
 

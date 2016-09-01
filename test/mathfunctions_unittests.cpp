@@ -890,4 +890,11 @@ TEST_CASE("compile random function expressions", "[rnd][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("make sure function with an integer argument is parsed")
+    {
+        Compiler compiler {"RND(10)", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }

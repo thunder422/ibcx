@@ -8,9 +8,9 @@
 #include "functions.h"
 
 
-bool FunctionCodes::hasArguments() const
+bool FunctionCodes::argumentOptional() const
 {
-    return true;
+    return false;
 }
 
 // ----------------------------------------
@@ -103,20 +103,21 @@ FunctionCodes::Info ConvertFunctionCodes::select(DataType data_type) const
 // ----------------------------------------
 
 RandomFunctionCodes::RandomFunctionCodes(const char *keyword,
-        FunctionCode<ArgType::None> &none_code) :
-    none_code {none_code}
+        FunctionCode<ArgType::None> &none_code, FunctionCode<ArgType::Int> &int_code) :
+    none_code {none_code},
+    int_code {int_code}
 {
     Table::addNumFunctionCodes(*this, keyword);
 }
 
 std::vector<WordType> RandomFunctionCodes::codeValues() const
 {
-    return std::vector<WordType> {none_code.getValue()};
+    return std::vector<WordType> {none_code.getValue(), int_code.getValue()};
 }
 
-bool RandomFunctionCodes::hasArguments() const
+bool RandomFunctionCodes::argumentOptional() const
 {
-    return false;
+    return true;
 }
 
 DataType RandomFunctionCodes::argumentDataType() const
