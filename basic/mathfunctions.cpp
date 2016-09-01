@@ -216,3 +216,9 @@ Code cvtint_code {recreateCvtInt, executeCvtInt};
 FunctionCode<ArgType::Dbl> cint_code {recreateFunction, executeCvtInt};
 
 ConvertFunctionCodes cint_codes {"CINT", cint_code};
+
+// ----------------------------------------
+
+FunctionCode<ArgType::None> rnd_code {nullptr, nullptr};
+
+RandomFunctionCodes rnd_codes {"RND", rnd_code};

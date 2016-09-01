@@ -877,3 +877,17 @@ TEST_CASE("execute convert to integer funciton expressions", "[cint][execute]")
         REQUIRE(oss.str() == "124\n");
     }
 }
+
+
+TEST_CASE("compile random function expressions", "[rnd][compile]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure function with no argument is parsed")
+    {
+        Compiler compiler {"RND", program};
+        compiler.compileExpression(DataType::Null);
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

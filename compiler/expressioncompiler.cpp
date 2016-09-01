@@ -47,8 +47,8 @@ private:
     DataType compileNegation();
     DataType compileNumOperand();
     DataType compileFunction();
-    DataType addFunctionCode(FunctionCodes *codes, DataType data_type) const;
     DataType compileFunctionArguments(FunctionCodes *codes);
+    DataType addFunctionCode(FunctionCodes *codes, DataType data_type) const;
     DataType compileParentheses(DataType expected_data_type);
     DataType compileNumConstant();
     DataType compileOperator(Precedence precedence,
@@ -259,18 +259,21 @@ DataType ExpressionCompilerImpl::compileNumOperand()
 DataType ExpressionCompilerImpl::compileFunction()
 {
     if (auto codes = compiler.getNumFunctionCodes()) {
-        return compileFunctionArguments(codes);
+        auto data_type = compileFunctionArguments(codes);
+        return addFunctionCode(codes, data_type);
     }
     return DataType::Null;
 }
 
 DataType ExpressionCompilerImpl::compileFunctionArguments(FunctionCodes *codes)
 {
-    if (compiler.peekNextChar() != '(') {
-        throw CompileError {"expected opening parentheses", compiler.getColumn()};
+    if (codes->hasArguments()) {
+        if (compiler.peekNextChar() != '(') {
+            throw CompileError {"expected opening parentheses", compiler.getColumn()};
+        }
+        return compileParentheses(codes->argumentDataType());
     }
-    auto data_type = compileParentheses(codes->argumentDataType());
-    return addFunctionCode(codes, data_type);
+    return DataType::Null;
 }
 
 DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes, DataType data_type) const

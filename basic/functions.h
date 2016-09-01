@@ -15,7 +15,8 @@
 
 enum class ArgType {
     Dbl,
-    Int
+    Int,
+    None
 };
 
 
@@ -36,6 +37,7 @@ public:
     };
 
     virtual DataType argumentDataType() const = 0;
+    virtual bool hasArguments() const;
     virtual Info select(DataType data_type) const = 0;
 };
 
@@ -58,8 +60,8 @@ class MathFunctionCodes : public FunctionCodes {
 public:
     MathFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code);
     std::vector<WordType> codeValues() const override;
-    Info select(DataType unused_data_type) const override;
     DataType argumentDataType() const override;
+    Info select(DataType unused_data_type) const override;
 
 private:
     FunctionCode<ArgType::Dbl> &code;
@@ -71,13 +73,27 @@ public:
     ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Int> &code);
     ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code);
     std::vector<WordType> codeValues() const override;
-    Info select(DataType data_type) const override;
     DataType argumentDataType() const override;
+    Info select(DataType data_type) const override;
 
 private:
     Code &code;
     DataType argument_data_type;
     DataType return_data_type;
+};
+
+
+class RandomFunctionCodes : public FunctionCodes {
+public:
+    RandomFunctionCodes(const char *keyword, FunctionCode<ArgType::None> &none_code);
+    std::vector<WordType> codeValues() const override;
+    bool hasArguments() const override;
+    DataType argumentDataType() const override;
+    Info select(DataType data_type) const override;
+
+
+private:
+    FunctionCode<ArgType::None> &none_code;
 };
 
 
