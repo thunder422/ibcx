@@ -220,6 +220,6 @@ ConvertFunctionCodes cint_codes {"CINT", cint_code};
 // ----------------------------------------
 
 FunctionCode<ArgType::None> rnd_code {nullptr, nullptr};
-FunctionCode<ArgType::Int> rnd_int_code {nullptr, nullptr};
+FunctionCode<ArgType::Int> rnd_int_code {recreateFunction, nullptr};
 
 RandomFunctionCodes rnd_codes {"RND", rnd_code, rnd_int_code};

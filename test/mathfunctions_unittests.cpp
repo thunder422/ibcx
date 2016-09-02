@@ -932,3 +932,19 @@ TEST_CASE("compile random function expressions", "[rnd][compile]")
         REQUIRE(code_line[0].instructionCode()->getValue() == rnd_code.getValue());
     }
 }
+
+TEST_CASE("recreate random function expressions", "[rnd][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate function with a integer argument")
+    {
+        std::istringstream iss {"print rnd(10)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT RND(10)\n");
+    }
+}
