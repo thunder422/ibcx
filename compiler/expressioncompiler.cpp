@@ -47,8 +47,8 @@ private:
     DataType compileNegation();
     DataType compileNumOperand();
     DataType compileFunction();
-    DataType compileFunctionArguments(FunctionCodes *codes);
-    DataType addFunctionCode(FunctionCodes *codes, DataType data_type) const;
+    std::vector<DataType> compileFunctionArguments(FunctionCodes *codes);
+    DataType addFunctionCode(FunctionCodes *codes, std::vector<DataType> argument_data_types) const;
     DataType compileParentheses(DataType expected_data_type);
     DataType compileNumConstant();
     DataType compileOperator(Precedence precedence,
@@ -259,26 +259,28 @@ DataType ExpressionCompilerImpl::compileNumOperand()
 DataType ExpressionCompilerImpl::compileFunction()
 {
     if (auto codes = compiler.getNumFunctionCodes()) {
-        auto data_type = compileFunctionArguments(codes);
-        return addFunctionCode(codes, data_type);
+        auto argument_data_types = compileFunctionArguments(codes);
+        return addFunctionCode(codes, argument_data_types);
     }
     return DataType::Null;
 }
 
-DataType ExpressionCompilerImpl::compileFunctionArguments(FunctionCodes *codes)
+std::vector<DataType> ExpressionCompilerImpl::compileFunctionArguments(FunctionCodes *codes)
 {
-    if (compiler.peekNextChar() != '(') {
-        if (codes->argumentOptional()) {
-            return DataType::Null;
-        }
+    std::vector<DataType> argument_data_types;
+    if (compiler.peekNextChar() == '(') {
+        auto data_type = compileParentheses(codes->argumentDataType());
+        argument_data_types.push_back(data_type);
+    } else if (!codes->argumentOptional()) {
         throw CompileError {"expected opening parentheses", compiler.getColumn()};
     }
-    return compileParentheses(codes->argumentDataType());
+    return argument_data_types;
 }
 
-DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes, DataType data_type) const
+DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes,
+    std::vector<DataType> argument_data_types) const
 {
-    auto info = codes->select(data_type);
+    auto info = codes->select(argument_data_types);
     compiler.addInstruction(info.code);
     return info.result_data_type;
 }

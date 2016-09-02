@@ -38,7 +38,7 @@ public:
 
     virtual bool argumentOptional() const;
     virtual DataType argumentDataType() const = 0;
-    virtual Info select(DataType data_type) const = 0;
+    virtual Info select(std::vector<DataType> argument_data_types) const = 0;
 };
 
 
@@ -47,7 +47,7 @@ public:
     MultiTypeFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &dbl_code,
         FunctionCode<ArgType::Int> &int_code);
     std::vector<WordType> codeValues() const override;
-    Info select(DataType data_type) const override;
+    Info select(std::vector<DataType> argument_data_types) const override;
     DataType argumentDataType() const override;
 
 private:
@@ -61,7 +61,7 @@ public:
     MathFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code);
     std::vector<WordType> codeValues() const override;
     DataType argumentDataType() const override;
-    Info select(DataType unused_data_type) const override;
+    Info select(std::vector<DataType> unused_data_types) const override;
 
 private:
     FunctionCode<ArgType::Dbl> &code;
@@ -74,7 +74,7 @@ public:
     ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code);
     std::vector<WordType> codeValues() const override;
     DataType argumentDataType() const override;
-    Info select(DataType data_type) const override;
+    Info select(std::vector<DataType> unused_data_types) const override;
 
 private:
     Code &code;
@@ -90,7 +90,7 @@ public:
     std::vector<WordType> codeValues() const override;
     bool argumentOptional() const override;
     DataType argumentDataType() const override;
-    Info select(DataType data_type) const override;
+    Info select(std::vector<DataType> argument_data_types) const override;
 
 
 private:

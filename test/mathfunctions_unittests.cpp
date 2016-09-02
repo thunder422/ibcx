@@ -897,4 +897,38 @@ TEST_CASE("compile random function expressions", "[rnd][compile]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check for an integer return data type with argument form")
+    {
+        Compiler compiler {"RND(10)", program};
+        auto data_type = compiler.compileExpression();
+
+        REQUIRE(data_type == DataType::Integer);
+    }
+    SECTION("check that the integer function code is added after the operand")
+    {
+        Compiler compiler {"RND(10)", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        extern Code rnd_int_code;
+        REQUIRE(code_line.size() == 3);
+        REQUIRE(code_line[2].instructionCode()->getValue() == rnd_int_code.getValue());
+    }
+    SECTION("check for a double return data type with no argument form")
+    {
+        Compiler compiler {"RND", program};
+        auto data_type = compiler.compileExpression();
+
+        REQUIRE(data_type == DataType::Double);
+    }
+    SECTION("check that the no argument function code is added to the code")
+    {
+        Compiler compiler {"RND", program};
+        compiler.compileExpression(DataType::Null);
+        auto code_line = compiler.getCodeLine();
+
+        extern Code rnd_code;
+        REQUIRE(code_line.size() == 1);
+        REQUIRE(code_line[0].instructionCode()->getValue() == rnd_code.getValue());
+    }
 }
