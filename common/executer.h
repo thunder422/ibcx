@@ -51,6 +51,7 @@ public:
     std::ostream &output();
     bool stackEmpty() const;
     double getRandomNumber();
+    int32_t getRandomNumber(int32_t limit);
 
 private:
     void reset();

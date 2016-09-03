@@ -63,3 +63,8 @@ double Executer::getRandomNumber()
 {
     return uniform_distribution(random_number_generator);
 }
+
+int32_t Executer::getRandomNumber(int32_t limit)
+{
+    return std::uniform_int_distribution<int>{1, limit}(random_number_generator);
+}

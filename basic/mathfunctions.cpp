@@ -224,7 +224,12 @@ void executeRnd(Executer &executer)
     executer.push(executer.getRandomNumber());
 }
 
+void executeRndInt(Executer &executer)
+{
+    executer.setTop(executer.getRandomNumber(executer.topInt()));
+}
+
 FunctionCode<ArgType::None> rnd_code {recreateFunctionWithNoArguments, executeRnd};
-FunctionCode<ArgType::Int> rnd_int_code {recreateFunctionWithOneArgument, nullptr};
+FunctionCode<ArgType::Int> rnd_int_code {recreateFunctionWithOneArgument, executeRndInt};
 
 RandomFunctionCodes rnd_codes {"RND", rnd_code, rnd_int_code};

@@ -1011,4 +1011,34 @@ TEST_CASE("execute random function expressions", "[rnd][execute]")
         }
         REQUIRE(random_numbers.size() == RandomTestCount);
     }
+    SECTION("check that random integer argument function returns integers between 1 and argument")
+    {
+        const int RandomTestCount = 50;
+        std::string input;
+        for (int i = 0; i < RandomTestCount; ++i) {
+            input += "PRINT RND(10)\n";
+        }
+        std::istringstream iss {input};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        auto numbers = ParseValues<int32_t>(oss);
+        REQUIRE(numbers.size() == RandomTestCount);
+        std::set<int> random_numbers;
+        int min = numbers.front();
+        int max = min;
+        for (auto number : numbers) {
+            if (min > number) {
+                min = number;
+            } else if (max < number) {
+                max = number;
+            }
+            random_numbers.insert(number);
+        }
+        REQUIRE(random_numbers.size() == 10);
+        REQUIRE(min == 1);
+        REQUIRE(max == 10);
+    }
 }
