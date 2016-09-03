@@ -143,7 +143,7 @@ TEST_CASE("execute abs function expressions", "[abs][execute]")
 
         REQUIRE(oss.str() == "2\n");
     }
-    SECTION("check for an overflow with maxmimum negative integer argument")
+    SECTION("check for an overflow with maximum negative integer argument")
     {
         std::istringstream iss {"PRINT ABS(-2147483648)"};
         std::ostringstream oss;
@@ -172,7 +172,7 @@ TEST_CASE("compile sign function expressions", "[sgn][compile]")
     }
 }
 
-TEST_CASE("recreate sgn function expressions", "[sgn][recreate]")
+TEST_CASE("recreate sign function expressions", "[sgn][recreate]")
 {
     ProgramUnit program;
 
@@ -198,7 +198,7 @@ TEST_CASE("recreate sgn function expressions", "[sgn][recreate]")
     }
 }
 
-TEST_CASE("execute sgn function expressions", "[sgn][execute]")
+TEST_CASE("execute sign function expressions", "[sgn][execute]")
 {
     ProgramUnit program;
 
@@ -212,7 +212,7 @@ TEST_CASE("execute sgn function expressions", "[sgn][execute]")
 
         REQUIRE(oss.str() == "0\n");
     }
-    SECTION("execute with a positve double argument")
+    SECTION("execute with a positive double argument")
     {
         std::istringstream iss {"PRINT SGN(7.3)"};
         std::ostringstream oss;
@@ -242,7 +242,7 @@ TEST_CASE("execute sgn function expressions", "[sgn][execute]")
 
         REQUIRE(oss.str() == "0\n");
     }
-    SECTION("execute with a positve integer argument")
+    SECTION("execute with a positive integer argument")
     {
         std::istringstream iss {"PRINT SGN(7)"};
         std::ostringstream oss;
@@ -334,7 +334,7 @@ TEST_CASE("execute square root function expressions", "[sqr][execute]")
 }
 
 
-TEST_CASE("compile interger function expressions", "[int][compile]")
+TEST_CASE("compile integer function expressions", "[int][compile]")
 {
     ProgramUnit program;
 
@@ -789,7 +789,7 @@ TEST_CASE("recreate convert to double function expressions", "[cdbl][recreate]")
     }
 }
 
-TEST_CASE("execute convert to double funciton expressions", "[cdbl][execute]")
+TEST_CASE("execute convert to double function expressions", "[cdbl][execute]")
 {
     ProgramUnit program;
 
@@ -852,7 +852,7 @@ TEST_CASE("recreate convert to integer function expressions", "[cint][recreate]"
     }
 }
 
-TEST_CASE("execute convert to integer funciton expressions", "[cint][execute]")
+TEST_CASE("execute convert to integer function expressions", "[cint][execute]")
 {
     ProgramUnit program;
 

@@ -63,7 +63,7 @@ TEST_CASE("recreate not operator expressions", "[not][recreate]")
 
         REQUIRE(oss.str() == "PRINT NOT -2\n");
     }
-    SECTION("recreate a not of a positve integer constant")
+    SECTION("recreate a not of a positive integer constant")
     {
         std::istringstream iss {"PRINT NOT 2"};
         std::ostringstream oss;
@@ -318,7 +318,7 @@ TEST_CASE("execute or operator", "[or][execute]")
 }
 
 
-TEST_CASE("compile xor operator expressions", "[xor][compile]")
+TEST_CASE("compile exclusive-or operator expressions", "[xor][compile]")
 {
     ProgramUnit program;
 
@@ -331,11 +331,11 @@ TEST_CASE("compile xor operator expressions", "[xor][compile]")
     }
 }
 
-TEST_CASE("recreate xor operator expressions", "[xor][recreate]")
+TEST_CASE("recreate exclusive-or operator expressions", "[xor][recreate]")
 {
     ProgramUnit program;
 
-    SECTION("recreate an xor of integer constants")
+    SECTION("recreate an exclusive-or of integer constants")
     {
         std::istringstream iss {"PRINT 10 xor 7"};
         std::ostringstream oss;
@@ -347,11 +347,11 @@ TEST_CASE("recreate xor operator expressions", "[xor][recreate]")
     }
 }
 
-TEST_CASE("execute xor operator", "[xor][execute]")
+TEST_CASE("execute exclusive-or operator", "[xor][execute]")
 {
     ProgramUnit program;
 
-    SECTION("execute a xor operator")
+    SECTION("execute a exclusive-or operator")
     {
         std::istringstream iss {"PRINT 10 XOR 7"};
         std::ostringstream oss;
@@ -364,7 +364,7 @@ TEST_CASE("execute xor operator", "[xor][execute]")
 }
 
 
-TEST_CASE("compile eqv operator expressions", "[eqv][compile]")
+TEST_CASE("compile equivalence operator expressions", "[eqv][compile]")
 {
     ProgramUnit program;
 
@@ -377,11 +377,11 @@ TEST_CASE("compile eqv operator expressions", "[eqv][compile]")
     }
 }
 
-TEST_CASE("recreate eqv operator expressions", "[eqv][recreate]")
+TEST_CASE("recreate equivalence operator expressions", "[eqv][recreate]")
 {
     ProgramUnit program;
 
-    SECTION("recreate an eqv of integer constants")
+    SECTION("recreate an equivalence of integer constants")
     {
         std::istringstream iss {"PRINT 10 eqv 7"};
         std::ostringstream oss;
@@ -393,11 +393,11 @@ TEST_CASE("recreate eqv operator expressions", "[eqv][recreate]")
     }
 }
 
-TEST_CASE("execute eqv operator", "[eqv][execute]")
+TEST_CASE("execute equivalence operator", "[eqv][execute]")
 {
     ProgramUnit program;
 
-    SECTION("execute an eqv operator")
+    SECTION("execute an equivalence operator")
     {
         std::istringstream iss {"PRINT 10 EQV 7"};
         std::ostringstream oss;
@@ -410,7 +410,7 @@ TEST_CASE("execute eqv operator", "[eqv][execute]")
 }
 
 
-TEST_CASE("compile imp operator expressions", "[imp][compile]")
+TEST_CASE("compile implication operator expressions", "[imp][compile]")
 {
     ProgramUnit program;
 
@@ -423,11 +423,11 @@ TEST_CASE("compile imp operator expressions", "[imp][compile]")
     }
 }
 
-TEST_CASE("recreate imp operator expressions", "[imp][recreate]")
+TEST_CASE("recreate implication operator expressions", "[imp][recreate]")
 {
     ProgramUnit program;
 
-    SECTION("recreate an imp of integer constants")
+    SECTION("recreate an implication of integer constants")
     {
         std::istringstream iss {"PRINT 10 imp 7"};
         std::ostringstream oss;
@@ -439,11 +439,11 @@ TEST_CASE("recreate imp operator expressions", "[imp][recreate]")
     }
 }
 
-TEST_CASE("execute imp operator", "[imp][execute]")
+TEST_CASE("execute implication operator", "[imp][execute]")
 {
     ProgramUnit program;
 
-    SECTION("execute an imp operator")
+    SECTION("execute an implication operator")
     {
         std::istringstream iss {"PRINT 10 IMP 7"};
         std::ostringstream oss;

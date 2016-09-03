@@ -458,7 +458,7 @@ TEST_CASE("execute a constant code", "[execute]")
         executer.executeOneCode();
         REQUIRE(executer.topInt() == 23456);
     }
-    SECTION("execute two consective integer constants and then check evaluation stack")
+    SECTION("execute two consecutive integer constants and then check evaluation stack")
     {
         compiler.addNumConstInstruction(false, "12345", 0);
         compiler.addNumConstInstruction(false, "23456", 0);
@@ -511,7 +511,7 @@ TEST_CASE("execute a constant code", "[execute]")
     }
 }
 
-TEST_CASE("constant errrors", "[errors]")
+TEST_CASE("constant errors", "[errors]")
 {
     ProgramUnit program;
 

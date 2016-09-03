@@ -93,7 +93,7 @@ TEST_CASE("recreate negate operator expressions", "[neg][recreate]")
 
         REQUIRE(oss.str() == "PRINT --2\n");
     }
-    SECTION("recreate a negation of a positve integer constant")
+    SECTION("recreate a negation of a positive integer constant")
     {
         std::istringstream iss {"PRINT - 2"};
         std::ostringstream oss;
@@ -340,7 +340,7 @@ TEST_CASE("recreate exponential operator expression", "[exp][recreate]")
     }
 }
 
-TEST_CASE("execute integer-interger exponential operator", "[exp][int-int]")
+TEST_CASE("execute integer-integer exponential operator", "[exp][int-int]")
 {
     ProgramUnit program;
 
@@ -671,7 +671,7 @@ TEST_CASE("execute double-integer exponential operator", "[exp][dbl-int]")
 
         REQUIRE(oss.str() == "-524288\n");
     }
-    SECTION("overflow error if the result is too large with altenate power")
+    SECTION("overflow error if the result is too large with alternate power")
     {
         std::istringstream iss {"PRINT 123.0^456"};
         std::ostringstream oss;

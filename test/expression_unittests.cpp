@@ -56,7 +56,7 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
         Compiler compiler {"4^(3^2)", program};
         compiler.compileExpression(DataType::Null);
 
-        SECTION("verify that opening paretheses is accepted")
+        SECTION("verify that opening parentheses is accepted")
         {
             REQUIRE(compiler.peekNextChar() != '(');
         }
@@ -65,7 +65,7 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
             auto code_line = compiler.getCodeLine();
             REQUIRE(code_line.size() == 8);
         }
-        SECTION("verify that the closing parenses is accepted")
+        SECTION("verify that the closing parentheses is accepted")
         {
             REQUIRE(compiler.peekNextChar() == EOF);
         }
@@ -147,7 +147,7 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
 
         REQUIRE(oss.str() == "PRINT (- 3) ^ 1 ^ 2\n");
     }
-    SECTION("report an error if there is no expresion after an open parentheses")
+    SECTION("report an error if there is no expression after an open parentheses")
     {
         std::istringstream iss {"PRINT ("};
         std::ostringstream oss;
