@@ -11,6 +11,9 @@
 #include "executer.h"
 
 
+std::default_random_engine random_number_generator;
+
+
 Executer::Executer(const WordType *code, const double *const_dbl_values,
         const int32_t *const_int_values, std::ostream &os) :
     code {code},
@@ -54,4 +57,9 @@ std::ostream &Executer::output()
 bool Executer::stackEmpty() const
 {
     return stack.empty();
+}
+
+double Executer::getRandomNumber()
+{
+    return uniform_distribution(random_number_generator);
 }

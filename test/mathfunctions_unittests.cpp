@@ -990,4 +990,25 @@ TEST_CASE("execute random function expressions", "[rnd][execute]")
         REQUIRE(numbers.front() > 0.0);
         REQUIRE(numbers.front() < 1.0);
     }
+    SECTION("check that values are random from random no argument function")
+    {
+        const int RandomTestCount = 10;
+        std::string input;
+        for (int i = 0; i < RandomTestCount; ++i) {
+            input += "PRINT RND\n";
+        }
+        std::istringstream iss {input};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        auto numbers = ParseValues<double>(oss);
+        REQUIRE(numbers.size() == RandomTestCount);
+        std::set<double> random_numbers;
+        for (auto number : numbers) {
+            random_numbers.insert(number);
+        }
+        REQUIRE(random_numbers.size() == RandomTestCount);
+    }
 }

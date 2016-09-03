@@ -221,7 +221,7 @@ ConvertFunctionCodes cint_codes {"CINT", cint_code};
 
 void executeRnd(Executer &executer)
 {
-    executer.push(0.123);
+    executer.push(executer.getRandomNumber());
 }
 
 FunctionCode<ArgType::None> rnd_code {recreateFunctionWithNoArguments, executeRnd};

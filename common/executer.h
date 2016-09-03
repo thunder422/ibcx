@@ -9,6 +9,7 @@
 #define IBC_EXECUTER_H
 
 #include <iosfwd>
+#include <random>
 #include <stack>
 
 #include "code.h"
@@ -49,6 +50,7 @@ public:
     void setTopIntFromBool(bool value);
     std::ostream &output();
     bool stackEmpty() const;
+    double getRandomNumber();
 
 private:
     void reset();
@@ -61,6 +63,7 @@ private:
     WordType *program_counter;
     std::stack<StackItem> stack;
     std::ostream &os;
+    std::uniform_real_distribution<double> uniform_distribution {0.0, 1.0};
 };
 
 inline WordType Executer::getOperand()
