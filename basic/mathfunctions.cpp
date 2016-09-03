@@ -219,7 +219,12 @@ ConvertFunctionCodes cint_codes {"CINT", cint_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::None> rnd_code {recreateFunctionWithNoArguments, nullptr};
+void executeRnd(Executer &executer)
+{
+    executer.push(0.123);
+}
+
+FunctionCode<ArgType::None> rnd_code {recreateFunctionWithNoArguments, executeRnd};
 FunctionCode<ArgType::Int> rnd_int_code {recreateFunctionWithOneArgument, nullptr};
 
 RandomFunctionCodes rnd_codes {"RND", rnd_code, rnd_int_code};

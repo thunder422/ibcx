@@ -34,6 +34,7 @@ public:
     unsigned currentOffset() const;
 
     WordType getOperand();
+    template <typename T> void push(T value);
     void pushConstDbl(WordType operand);
     void pushConstInt(WordType operand);
     double topDbl() const;
@@ -65,6 +66,12 @@ private:
 inline WordType Executer::getOperand()
 {
     return *program_counter++;
+}
+
+template <typename T>
+inline void Executer::push(T value)
+{
+    stack.emplace(value);
 }
 
 inline void Executer::pushConstDbl(WordType operand)

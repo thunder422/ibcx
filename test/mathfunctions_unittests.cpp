@@ -958,3 +958,25 @@ TEST_CASE("recreate random function expressions", "[rnd][recreate]")
         REQUIRE(oss.str() == "PRINT RND\n");
     }
 }
+
+TEST_CASE("execute random function expressions", "[rnd][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("check that random no argument function returns a double between 0 and 1")
+    {
+        std::istringstream iss {"PRINT RND"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        std::istringstream iss2 {oss.str()};
+        double number;
+        REQUIRE(iss2 >> number);
+        REQUIRE(number > 0.0);
+        REQUIRE(number < 1.0);
+        iss2 >> std::ws;
+        REQUIRE(iss2.peek() == EOF);
+    }
+}
