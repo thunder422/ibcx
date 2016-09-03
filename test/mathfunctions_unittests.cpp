@@ -959,6 +959,20 @@ TEST_CASE("recreate random function expressions", "[rnd][recreate]")
     }
 }
 
+template <typename T>
+std::vector<T> ParseValues(const std::ostringstream &oss)
+{
+    std::vector<T> values;
+
+    std::istringstream iss {oss.str()};
+
+    T value;
+    while (iss >> value) {
+        values.emplace_back(value);
+    }
+    return values;
+}
+
 TEST_CASE("execute random function expressions", "[rnd][execute]")
 {
     ProgramUnit program;
@@ -971,12 +985,9 @@ TEST_CASE("execute random function expressions", "[rnd][execute]")
         program.compile(iss);
         program.run(oss);
 
-        std::istringstream iss2 {oss.str()};
-        double number;
-        REQUIRE(iss2 >> number);
-        REQUIRE(number > 0.0);
-        REQUIRE(number < 1.0);
-        iss2 >> std::ws;
-        REQUIRE(iss2.peek() == EOF);
+        auto numbers = ParseValues<double>(oss);
+        REQUIRE(numbers.size() == 1);
+        REQUIRE(numbers.front() > 0.0);
+        REQUIRE(numbers.front() < 1.0);
     }
 }
