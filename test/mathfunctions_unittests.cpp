@@ -947,4 +947,14 @@ TEST_CASE("recreate random function expressions", "[rnd][recreate]")
 
         REQUIRE(oss.str() == "PRINT RND(10)\n");
     }
+    SECTION("recreate function with no arguments")
+    {
+        std::istringstream iss {"print rnd"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == "PRINT RND\n");
+    }
 }

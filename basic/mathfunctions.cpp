@@ -28,8 +28,8 @@ void executeAbsInt(Executer &executer)
     }
 }
 
-FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunction, executeAbsDbl};
-FunctionCode<ArgType::Int> abs_int_code {recreateFunction, executeAbsInt};
+FunctionCode<ArgType::Dbl> abs_dbl_code {recreateFunctionWithOneArgument, executeAbsDbl};
+FunctionCode<ArgType::Int> abs_int_code {recreateFunctionWithOneArgument, executeAbsInt};
 
 MultiTypeFunctionCodes abs_codes {"ABS", abs_dbl_code, abs_int_code};
 
@@ -58,8 +58,8 @@ void executeSgnInt(Executer &executer)
     executeSgn<int32_t>(executer);
 }
 
-FunctionCode<ArgType::Dbl> sgn_dbl_code {recreateFunction, executeSgnDbl};
-FunctionCode<ArgType::Int> sgn_int_code {recreateFunction, executeSgnInt};
+FunctionCode<ArgType::Dbl> sgn_dbl_code {recreateFunctionWithOneArgument, executeSgnDbl};
+FunctionCode<ArgType::Int> sgn_int_code {recreateFunctionWithOneArgument, executeSgnInt};
 
 MultiTypeFunctionCodes sgn_codes {"SGN", sgn_dbl_code, sgn_int_code};
 
@@ -74,7 +74,7 @@ void executeSqr(Executer &executer)
     executer.setTop(std::sqrt(argument));
 }
 
-FunctionCode<ArgType::Dbl> sqr_code {recreateFunction, executeSqr};
+FunctionCode<ArgType::Dbl> sqr_code {recreateFunctionWithOneArgument, executeSqr};
 
 MathFunctionCodes sqr_codes {"SQR", sqr_code};
 
@@ -85,7 +85,7 @@ void executeInt(Executer &executer)
     executer.setTop(std::floor(executer.topDbl()));
 }
 
-FunctionCode<ArgType::Dbl> int_code {recreateFunction, executeInt};
+FunctionCode<ArgType::Dbl> int_code {recreateFunctionWithOneArgument, executeInt};
 
 MathFunctionCodes int_codes {"INT", int_code};
 
@@ -96,7 +96,7 @@ void executeFix(Executer &executer)
     executer.setTop(std::trunc(executer.topDbl()));
 }
 
-FunctionCode<ArgType::Dbl> fix_code {recreateFunction, executeFix};
+FunctionCode<ArgType::Dbl> fix_code {recreateFunctionWithOneArgument, executeFix};
 
 MathFunctionCodes fix_codes {"FIX", fix_code};
 
@@ -108,7 +108,7 @@ void executeFrac(Executer &executer)
     executer.setTop(argument - std::trunc(argument));
 }
 
-FunctionCode<ArgType::Dbl> frac_code {recreateFunction, executeFrac};
+FunctionCode<ArgType::Dbl> frac_code {recreateFunctionWithOneArgument, executeFrac};
 
 MathFunctionCodes frac_codes {"FRAC", frac_code};
 
@@ -119,7 +119,7 @@ void executeCos(Executer &executer)
     executer.setTop(std::cos(executer.topDbl()));
 }
 
-FunctionCode<ArgType::Dbl> cos_code {recreateFunction, executeCos};
+FunctionCode<ArgType::Dbl> cos_code {recreateFunctionWithOneArgument, executeCos};
 
 MathFunctionCodes cos_codes {"COS", cos_code};
 
@@ -130,7 +130,7 @@ void executeSin(Executer &executer)
     executer.setTop(std::sin(executer.topDbl()));
 }
 
-FunctionCode<ArgType::Dbl> sin_code {recreateFunction, executeSin};
+FunctionCode<ArgType::Dbl> sin_code {recreateFunctionWithOneArgument, executeSin};
 
 MathFunctionCodes sin_codes {"SIN", sin_code};
 
@@ -141,7 +141,7 @@ void executeTan(Executer &executer)
     executer.setTop(std::tan(executer.topDbl()));
 }
 
-FunctionCode<ArgType::Dbl> tan_code {recreateFunction, executeTan};
+FunctionCode<ArgType::Dbl> tan_code {recreateFunctionWithOneArgument, executeTan};
 
 MathFunctionCodes tan_codes {"TAN", tan_code};
 
@@ -152,7 +152,7 @@ void executeAtn(Executer &executer)
     executer.setTop(std::atan(executer.topDbl()));
 }
 
-FunctionCode<ArgType::Dbl> atn_code {recreateFunction, executeAtn};
+FunctionCode<ArgType::Dbl> atn_code {recreateFunctionWithOneArgument, executeAtn};
 
 MathFunctionCodes atn_codes {"ATN", atn_code};
 
@@ -167,7 +167,7 @@ void executeLog(Executer &executer)
     executer.setTop(std::log(argument));
 }
 
-FunctionCode<ArgType::Dbl> log_code {recreateFunction, executeLog};
+FunctionCode<ArgType::Dbl> log_code {recreateFunctionWithOneArgument, executeLog};
 
 MathFunctionCodes log_codes {"LOG", log_code};
 
@@ -180,7 +180,7 @@ void executeExp(Executer &executer)
     executer.setTop(result);
 }
 
-FunctionCode<ArgType::Dbl> exp_code {recreateFunction, executeExp};
+FunctionCode<ArgType::Dbl> exp_code {recreateFunctionWithOneArgument, executeExp};
 
 static MathFunctionCodes exp_codes {"EXP", exp_code};
 
@@ -193,7 +193,7 @@ void executeCvtDbl(Executer &executer)
 
 Code cvtdbl_code {recreateNothing, executeCvtDbl};
 
-FunctionCode<ArgType::Int> cdbl_code {recreateFunction, executeCvtDbl};
+FunctionCode<ArgType::Int> cdbl_code {recreateFunctionWithOneArgument, executeCvtDbl};
 
 ConvertFunctionCodes cdbl_codes {"CDBL", cdbl_code};
 
@@ -213,13 +213,13 @@ void recreateCvtInt(Recreator &recreator)
 
 Code cvtint_code {recreateCvtInt, executeCvtInt};
 
-FunctionCode<ArgType::Dbl> cint_code {recreateFunction, executeCvtInt};
+FunctionCode<ArgType::Dbl> cint_code {recreateFunctionWithOneArgument, executeCvtInt};
 
 ConvertFunctionCodes cint_codes {"CINT", cint_code};
 
 // ----------------------------------------
 
-FunctionCode<ArgType::None> rnd_code {nullptr, nullptr};
-FunctionCode<ArgType::Int> rnd_int_code {recreateFunction, nullptr};
+FunctionCode<ArgType::None> rnd_code {recreateFunctionWithNoArguments, nullptr};
+FunctionCode<ArgType::Int> rnd_int_code {recreateFunctionWithOneArgument, nullptr};
 
 RandomFunctionCodes rnd_codes {"RND", rnd_code, rnd_int_code};

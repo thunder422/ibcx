@@ -27,7 +27,8 @@ public:
 
     void recreateUnaryOperator() override;
     void recreateBinaryOperator() override;
-    void recreateFunction() override;
+    void recreateFunctionWithNoArguments() override;
+    void recreateFunctionWithOneArgument() override;
     void markOperandIfError() override;
 
 private:
@@ -305,7 +306,12 @@ void RecreatorImpl::appendRightOperand(const StackItem &rhs, Precedence operator
     }
 }
 
-void RecreatorImpl::recreateFunction()
+void RecreatorImpl::recreateFunctionWithNoArguments()
+{
+    push(getCodeKeyword());
+}
+
+void RecreatorImpl::recreateFunctionWithOneArgument()
 {
     auto operand = moveTopString();
     markErrorStart();
@@ -351,9 +357,14 @@ void recreateBinaryOperator(Recreator &recreator)
     recreator.recreateBinaryOperator();
 }
 
-void recreateFunction(Recreator &recreator)
+void recreateFunctionWithNoArguments(Recreator &recreator)
 {
-    recreator.recreateFunction();
+    recreator.recreateFunctionWithNoArguments();
+}
+
+void recreateFunctionWithOneArgument(Recreator &recreator)
+{
+    recreator.recreateFunctionWithOneArgument();
 }
 
 void recreateNothing(Recreator &recreator)
