@@ -1041,4 +1041,30 @@ TEST_CASE("execute random function expressions", "[rnd][execute]")
         REQUIRE(min == 1);
         REQUIRE(max == 10);
     }
+    SECTION("check for error when integer argument is zero")
+    {
+        std::istringstream iss {"PRINT RND(0)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:7: random function on zero or negative number\n"
+            "    PRINT RND(0)\n"
+            "          ^^^\n");
+    }
+    SECTION("check for error when integer argument is negative")
+    {
+        std::istringstream iss {"PRINT RND(-1)"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "run error at line 1:7: random function on zero or negative number\n"
+            "    PRINT RND(-1)\n"
+            "          ^^^\n");
+    }
 }

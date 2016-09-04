@@ -226,7 +226,11 @@ void executeRnd(Executer &executer)
 
 void executeRndInt(Executer &executer)
 {
-    executer.setTop(executer.getRandomNumber(executer.topInt()));
+    auto argument = executer.topInt();
+    if (argument <= 0) {
+        throw RunError {"random function on zero or negative number", executer.currentOffset()};
+    }
+    executer.setTop(executer.getRandomNumber(argument));
 }
 
 FunctionCode<ArgType::None> rnd_code {recreateFunctionWithNoArguments, executeRnd};
