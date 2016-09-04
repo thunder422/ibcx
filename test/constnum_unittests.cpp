@@ -573,4 +573,52 @@ TEST_CASE("changing a constant from double to integer", "[convert]")
 
         REQUIRE(oss.str() == "-124\n");
     }
+    SECTION("check within upper limit of a double convertable to an integer")
+    {
+        std::istringstream iss {"PRINT 2147483647.499 OR 0"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "2147483647\n");
+    }
+    SECTION("check outside upper limit of a double convertable to an integer")
+    {
+        std::istringstream iss {"PRINT 2147483647.5 OR 0"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "error on line 1:7: floating point constant is out of range\n"
+            "    PRINT 2147483647.5 OR 0\n"
+            "          ^^^^^^^^^^^^\n"
+        );
+    }
+    SECTION("check within lower limit of a double convertable to an integer")
+    {
+        std::istringstream iss {"PRINT -2147483648.499 OR 0"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() == "-2147483648\n");
+    }
+    SECTION("check outside lower limit of a double convertable to an integer")
+    {
+        std::istringstream iss {"PRINT -2147483648.5 OR 0"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "error on line 1:7: floating point constant is out of range\n"
+            "    PRINT -2147483648.5 OR 0\n"
+            "          ^^^^^^^^^^^^^\n"
+        );
+    }
 }

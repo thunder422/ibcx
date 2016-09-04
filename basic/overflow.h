@@ -15,8 +15,14 @@
 #include "runerror.h"
 
 
-template <typename T>
-inline bool withinIntegerRange(T value)
+inline bool withinIntegerRange(double value)
+{
+    auto upper_out_of_range = static_cast<double>(std::numeric_limits<int32_t>::max()) + 0.5;
+    auto lower_out_of_range = static_cast<double>(std::numeric_limits<int32_t>::min()) - 0.5;
+    return value > lower_out_of_range && value < upper_out_of_range;
+}
+
+inline bool withinIntegerRange(int64_t value)
 {
     return value >= std::numeric_limits<int32_t>::min()
         && value <= std::numeric_limits<int32_t>::max();
