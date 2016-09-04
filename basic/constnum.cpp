@@ -120,7 +120,7 @@ void ConstNumConverter::createDblCode()
     dbl_value = std::stod(number);
     const_num_code_info.code_value = const_dbl_code.getValue();
     const_num_code_info.data_type = DataType::Double;
-    int_value = dbl_value;
+    int_value = static_cast<int32_t>(std::lround(dbl_value));
 }
 
 double ConstNumConverter::getDblValue() const

@@ -11,6 +11,7 @@
 #include "compileerror.h"
 #include "executer.h"
 #include "programcode.h"
+#include "programerror.h"
 #include "programunit.h"
 #include "support.h"
 
@@ -545,5 +546,31 @@ TEST_CASE("constant errors", "[errors]")
                 REQUIRE(error.length == 9);
             }
         }
+    }
+}
+
+TEST_CASE("changing a constant from double to integer", "[convert]")
+{
+    ProgramUnit program;
+
+    SECTION("round positive double constant up (away from zero)")
+    {
+        std::istringstream iss {"PRINT 123.5 OR 0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "124\n");
+    }
+    SECTION("round negative double constant down (away from zero)")
+    {
+        std::istringstream iss {"PRINT -123.5 OR 0"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-124\n");
     }
 }
