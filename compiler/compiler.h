@@ -27,6 +27,8 @@ public:
     Compiler(const std::string &line, ProgramUnit &program);
     void compileExpression(DataType expected_data_type);
     DataType compileExpression();
+    void compileStringConstant();
+
     OperatorCodes *getSymbolOperatorCodes(Precedence precedence);
     OperatorCodes *getWordOperatorCodes(Precedence precedence);
     OperatorCodes *getComparisonOperatorCodes(Precedence precedence);

@@ -31,6 +31,13 @@ DataType Compiler::compileExpression()
     return ExpressionCompiler::create(*this)->compileExpression();
 }
 
+void Compiler::compileStringConstant()
+{
+    if (peekNextChar() == '"') {
+        getNextChar();
+    }
+}
+
 OperatorCodes *Compiler::getSymbolOperatorCodes(Precedence precedence)
 {
     skipWhiteSpace();
