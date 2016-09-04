@@ -1,0 +1,10 @@
+IBCX v0.0.4 Release Notes
+=========================
+
+This release has been tested on Linux Mint 13, Windows 10 and Windows XP
+(see wiki for more details).
+
+New Language Features
+---------------------
+
+ * Numeric (non-string) functions have been implemented.
