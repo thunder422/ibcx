@@ -42,4 +42,11 @@ TEST_CASE("string constants", "[const][compile]")
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() == '+');
     }
+    SECTION("parse two sequential double quotes as part of the constant")
+    {
+        Compiler compiler {R"*("te""st")*", program};
+
+        compiler.compileStringConstant();
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }
