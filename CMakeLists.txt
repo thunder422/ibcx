@@ -66,6 +66,7 @@ set(IBC_SOURCES
     basic/commandcode.cpp
     basic/comparisonoperators.cpp
     basic/constnum.cpp
+    basic/conststr.cpp
     basic/end.cpp
     basic/functions.cpp
     basic/logicoperators.cpp

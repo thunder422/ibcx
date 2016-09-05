@@ -39,17 +39,20 @@ DataType Compiler::compileStringConstant()
         return DataType::Null;
     }
     getNextChar();
+    std::string string;
     while (peekNextChar() != EOF) {
-        getNextChar();
+        string.push_back(getNextChar());
         if (peekNextChar() == '"') {
-            getNextChar();
+            auto quote = getNextChar();
             if (peekNextChar() != '"') {
                 break;
             }
+            string.push_back(quote);
         }
     }
     code_line.emplace_back(const_str_code.getValue());
-    code_line.emplace_back(0);
+    auto operand = program.constStrDictionary().add(string);
+    code_line.emplace_back(operand);
     return DataType::String;
 }
 

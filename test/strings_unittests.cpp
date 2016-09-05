@@ -74,4 +74,19 @@ TEST_CASE("string constants", "[const][compile]")
         REQUIRE(code_line.size() == 2);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_str_code.getValue());
     }
+    SECTION("check that each string has a unique operand (index) value")
+    {
+        Compiler compiler1 {R"*("first")*", program};
+        compiler1.compileStringConstant();
+        Compiler compiler2 {R"*("second")*", program};
+        compiler2.compileStringConstant();
+
+        auto code_line1 = compiler1.getCodeLine();
+        auto code_line2 = compiler2.getCodeLine();
+
+        REQUIRE(code_line1.size() == 2);
+        REQUIRE(code_line2.size() == 2);
+        REQUIRE(code_line1[1].operand() == 0);
+        REQUIRE(code_line2[1].operand() == 1);
+    }
 }

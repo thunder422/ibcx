@@ -11,6 +11,7 @@
 #include <string>
 
 #include "constnum.h"
+#include "conststr.h"
 #include "programcode.h"
 
 
@@ -35,6 +36,7 @@ public:
 
     ConstNumDictionary &constNumDictionary();
     const ConstNumDictionary &constNumDictionary() const;
+    ConstStrDictionary &constStrDictionary();
 
 private:
     bool compileLine(const std::string &line);
@@ -54,6 +56,7 @@ private:
     std::vector<LineInfo> line_info;
     ProgramCode code;
     ConstNumDictionary const_num_dictionary;
+    ConstStrDictionary const_str_dictionary;
 };
 
 
@@ -65,6 +68,11 @@ inline ConstNumDictionary &ProgramUnit::constNumDictionary()
 inline const ConstNumDictionary &ProgramUnit::constNumDictionary() const
 {
     return const_num_dictionary;
+}
+
+inline ConstStrDictionary &ProgramUnit::constStrDictionary()
+{
+    return const_str_dictionary;
 }
 
 inline ProgramUnit::LineInfo::LineInfo(unsigned offset, unsigned size) :
