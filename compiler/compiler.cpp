@@ -39,6 +39,10 @@ void Compiler::compileStringConstant()
     getNextChar();
     while (peekNextChar() != EOF) {
         getNextChar();
+        if (peekNextChar() == '"') {
+            getNextChar();
+            return;
+        }
     }
 }
 

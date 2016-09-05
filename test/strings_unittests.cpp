@@ -35,4 +35,11 @@ TEST_CASE("string constants", "[const][compile]")
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() == '1');
     }
+    SECTION("make sure parsing stops after ending double quote")
+    {
+        Compiler compiler {R"*("test"+)*", program};
+
+        compiler.compileStringConstant();
+        REQUIRE(compiler.peekNextChar() == '+');
+    }
 }
