@@ -154,7 +154,32 @@ ProgramEndGuard::~ProgramEndGuard()
 Executer ProgramUnit::createExecutor(std::ostream &os) const
 {
     return Executer {code.getBeginning(), const_num_dictionary.getDblValues(),
-        const_num_dictionary.getIntValues(), os};
+                const_num_dictionary.getIntValues(), os};
+}
+
+ConstNumCodeInfo ProgramUnit::addConstantNumber(bool floating_point, const std::string &number)
+{
+    return const_num_dictionary.add(floating_point, number);
+}
+
+bool ProgramUnit::isConstantNumberConvertibleToInteger(WordType index) const
+{
+    return const_num_dictionary.convertibleToInteger(index);
+}
+
+std::string ProgramUnit::getConstantNumber(WordType index) const
+{
+    return const_num_dictionary.get(index);
+}
+
+WordType ProgramUnit::addConstantString(const std::string &string)
+{
+    return const_str_dictionary.add(string);
+}
+
+std::string ProgramUnit::getConstantString(WordType index) const
+{
+    return const_str_dictionary.get(index);
 }
 
 unsigned ProgramUnit::lineIndex(unsigned offset) const

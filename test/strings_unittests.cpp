@@ -87,12 +87,12 @@ TEST_CASE("string constants", "[const][compile]")
         REQUIRE(code_line1.size() == 2);
         auto operand = code_line1[1].operand();
         REQUIRE(operand == 0);
-        REQUIRE(program.constStrDictionary().get(operand) == "first");
+        REQUIRE(program.getConstantString(operand) == "first");
 
         REQUIRE(code_line2.size() == 2);
         operand = code_line2[1].operand();
         REQUIRE(operand == 1);
-        REQUIRE(program.constStrDictionary().get(operand) == "second");
+        REQUIRE(program.getConstantString(operand) == "second");
     }
     SECTION("check that an empty string is compiled correctly")
     {
@@ -103,7 +103,7 @@ TEST_CASE("string constants", "[const][compile]")
 
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
-        REQUIRE(program.constStrDictionary().get(operand) == "");
+        REQUIRE(program.getConstantString(operand) == "");
     }
     SECTION("check that a string with an embedded double quote is stored correctly")
     {
@@ -114,6 +114,6 @@ TEST_CASE("string constants", "[const][compile]")
 
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
-        REQUIRE(program.constStrDictionary().get(operand) == R"*(te"st)*");
+        REQUIRE(program.getConstantString(operand) == R"*(te"st)*");
     }
 }

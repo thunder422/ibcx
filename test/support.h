@@ -14,7 +14,7 @@
     auto code_line = compiler.getCodeLine(); \
     REQUIRE(code_line.size() == expected_code_size); \
     auto operand = code_line[1].operand(); \
-    REQUIRE(program.constNumDictionary().get(operand) == number);
+    REQUIRE(program.getConstantNumber(operand) == number);
 
 #define REQUIRE_OPERAND(expected_data_type, number) \
     REQUIRE_CODESIZE_OPERAND(2, expected_data_type, number)

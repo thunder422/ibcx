@@ -29,7 +29,7 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
         auto operand = code_line[1].operand();
-        REQUIRE(program.constNumDictionary().get(operand) == "234");
+        REQUIRE(program.getConstantNumber(operand) == "234");
         REQUIRE(code_line[2].instructionCode()->getValue() == print_int_code.getValue());
         REQUIRE(code_line[3].instructionCode()->getValue() == print_code.getValue());
     }
@@ -43,7 +43,7 @@ TEST_CASE("compile simple PRINT commands", "[compile]")
         REQUIRE(code_line.size() == 4);
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
         auto operand = code_line[1].operand();
-        REQUIRE(program.constNumDictionary().get(operand) == "-5.6e14");
+        REQUIRE(program.getConstantNumber(operand) == "-5.6e14");
         REQUIRE(code_line[2].instructionCode()->getValue() == print_dbl_code.getValue());
         REQUIRE(code_line[3].instructionCode()->getValue() == print_code.getValue());
     }

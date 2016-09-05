@@ -34,10 +34,11 @@ public:
     void run(std::ostream &os);
     Executer createExecutor(std::ostream &os) const;
 
-    ConstNumDictionary &constNumDictionary();
-    const ConstNumDictionary &constNumDictionary() const;
-    ConstStrDictionary &constStrDictionary();
-    const ConstStrDictionary &constStrDictionary() const;
+    ConstNumCodeInfo addConstantNumber(bool floating_point, const std::string &number);
+    bool isConstantNumberConvertibleToInteger(WordType index) const;
+    std::string getConstantNumber(WordType index) const;
+    WordType addConstantString(const std::string &string);
+    std::string getConstantString(WordType index) const;
 
 private:
     bool compileLine(const std::string &line);
@@ -60,26 +61,6 @@ private:
     ConstStrDictionary const_str_dictionary;
 };
 
-
-inline ConstNumDictionary &ProgramUnit::constNumDictionary()
-{
-    return const_num_dictionary;
-}
-
-inline const ConstNumDictionary &ProgramUnit::constNumDictionary() const
-{
-    return const_num_dictionary;
-}
-
-inline ConstStrDictionary &ProgramUnit::constStrDictionary()
-{
-    return const_str_dictionary;
-}
-
-inline const ConstStrDictionary &ProgramUnit::constStrDictionary() const
-{
-    return const_str_dictionary;
-}
 
 inline ProgramUnit::LineInfo::LineInfo(unsigned offset, unsigned size) :
     offset {offset},

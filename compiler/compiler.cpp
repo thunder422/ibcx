@@ -33,14 +33,13 @@ DataType Compiler::compileExpression()
 
 DataType Compiler::compileStringConstant()
 {
-    if (peekNextChar() != '"') {
-        return DataType::Null;
+    if (peekNextChar() == '"') {
+        getNextChar();
+        std::string string = parseStringConstant();
+        addStrConstInstruction(string);
+        return DataType::String;
     }
-    getNextChar();
-
-    std::string string = parseStringConstant();
-    addStrConstInstruction(string);
-    return DataType::String;
+    return DataType::Null;
 }
 
 std::string Compiler::parseStringConstant()
@@ -73,7 +72,7 @@ Code const_str_code {nullptr, nullptr};
 void Compiler::addStrConstInstruction(const std::string &string)
 {
     code_line.emplace_back(const_str_code.getValue());
-    auto operand = program.constStrDictionary().add(string);
+    auto operand = program.addConstantString(string);
     code_line.emplace_back(operand);
 }
 
@@ -249,7 +248,7 @@ void Compiler::addInstruction(Code &code)
 DataType Compiler::addNumConstInstruction(bool floating_point, const std::string &number,
     unsigned column)
 {
-    auto const_num_info = program.constNumDictionary().add(floating_point, number);
+    auto const_num_info = program.addConstantNumber(floating_point, number);
     last_operand_was_constant = true;
     last_constant_column = column;
     last_constant_length = number.length();
@@ -302,7 +301,7 @@ void Compiler::changeConstantToInteger()
 void Compiler::validateConstantConvertibleToInteger(size_t last_constant_offset)
 {
     auto constant_operand = code_line[last_constant_offset + 1].operand();
-    if (!program.constNumDictionary().convertibleToInteger(constant_operand)) {
+    if (!program.isConstantNumberConvertibleToInteger(constant_operand)) {
         throw CompileError {"floating point constant is out of range", last_constant_column,
             last_constant_length};
     }

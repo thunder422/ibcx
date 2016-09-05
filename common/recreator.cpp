@@ -130,7 +130,7 @@ void RecreatorImpl::recreateOneCode()
 std::string RecreatorImpl::getConstNumOperand() const
 {
     auto operand = program_reader.getOperand();
-    return program.constNumDictionary().get(operand);
+    return program.getConstantNumber(operand);
 }
 
 void RecreatorImpl::addCommandKeyword(CommandCode command_code)
