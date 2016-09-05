@@ -31,29 +31,50 @@ DataType Compiler::compileExpression()
     return ExpressionCompiler::create(*this)->compileExpression();
 }
 
-Code const_str_code {nullptr, nullptr};
-
 DataType Compiler::compileStringConstant()
 {
     if (peekNextChar() != '"') {
         return DataType::Null;
     }
     getNextChar();
+
+    std::string string = parseStringConstant();
+    addStrConstInstruction(string);
+    return DataType::String;
+}
+
+std::string Compiler::parseStringConstant()
+{
     std::string string;
-    while (peekNextChar() != EOF) {
-        auto c = getNextChar();
-        if (c == '"') {
-            if (peekNextChar() != '"') {
-                break;
-            }
-            c = getNextChar();
-        }
+    while (auto c = getStringConstantChar()) {
         string.push_back(c);
     }
+    return string;
+}
+
+char Compiler::getStringConstantChar()
+{
+    return peekNextChar() == EOF ? 0 : parseStringConstantChar();
+}
+
+char Compiler::parseStringConstantChar()
+{
+    auto c = getNextChar();
+    return c == '"' ? identifyEmbeddedQuote() : c;
+}
+
+char Compiler::identifyEmbeddedQuote()
+{
+    return peekNextChar() == '"' ? getNextChar() : 0;
+}
+
+Code const_str_code {nullptr, nullptr};
+
+void Compiler::addStrConstInstruction(const std::string &string)
+{
     code_line.emplace_back(const_str_code.getValue());
     auto operand = program.constStrDictionary().add(string);
     code_line.emplace_back(operand);
-    return DataType::String;
 }
 
 OperatorCodes *Compiler::getSymbolOperatorCodes(Precedence precedence)

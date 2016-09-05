@@ -52,6 +52,12 @@ public:
 private:
     friend class ComparisonOperatorCodes;
 
+    std::string parseStringConstant();
+    char getStringConstantChar();
+    char parseStringConstantChar();
+    char identifyEmbeddedQuote();
+    void addStrConstInstruction(const std::string &string);
+
     OperatorCodes *savedEqualityOperatorCodes();
     void setEqualityCodes(OperatorCodes *codes);
     ci_string getAlphaOnlyWord();
