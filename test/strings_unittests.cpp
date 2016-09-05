@@ -28,4 +28,11 @@ TEST_CASE("string constants", "[const][compile]")
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("make sure parsing stops if first character is not a double quote")
+    {
+        Compiler compiler {"123", program};
+
+        compiler.compileStringConstant();
+        REQUIRE(compiler.peekNextChar() == '1');
+    }
 }
