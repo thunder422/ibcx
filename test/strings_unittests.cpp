@@ -89,4 +89,15 @@ TEST_CASE("string constants", "[const][compile]")
         REQUIRE(code_line1[1].operand() == 0);
         REQUIRE(code_line2[1].operand() == 1);
     }
+    SECTION("check that an empty string is compiled correctly")
+    {
+        Compiler compiler {R"*("")*", program};
+        compiler.compileStringConstant();
+
+        auto code_line = compiler.getCodeLine();
+
+        REQUIRE(code_line.size() == 2);
+        auto operand = code_line[1].operand();
+        REQUIRE(program.constStrDictionary().get(operand) == "");
+    }
 }

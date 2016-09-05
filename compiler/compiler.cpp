@@ -41,14 +41,14 @@ DataType Compiler::compileStringConstant()
     getNextChar();
     std::string string;
     while (peekNextChar() != EOF) {
-        string.push_back(getNextChar());
-        if (peekNextChar() == '"') {
-            auto quote = getNextChar();
+        auto c = getNextChar();
+        if (c == '"') {
             if (peekNextChar() != '"') {
                 break;
             }
-            string.push_back(quote);
+            c = getNextChar();
         }
+        string.push_back(c);
     }
     code_line.emplace_back(const_str_code.getValue());
     auto operand = program.constStrDictionary().add(string);

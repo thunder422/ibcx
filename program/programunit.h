@@ -37,6 +37,7 @@ public:
     ConstNumDictionary &constNumDictionary();
     const ConstNumDictionary &constNumDictionary() const;
     ConstStrDictionary &constStrDictionary();
+    const ConstStrDictionary &constStrDictionary() const;
 
 private:
     bool compileLine(const std::string &line);
@@ -71,6 +72,11 @@ inline const ConstNumDictionary &ProgramUnit::constNumDictionary() const
 }
 
 inline ConstStrDictionary &ProgramUnit::constStrDictionary()
+{
+    return const_str_dictionary;
+}
+
+inline const ConstStrDictionary &ProgramUnit::constStrDictionary() const
 {
     return const_str_dictionary;
 }
