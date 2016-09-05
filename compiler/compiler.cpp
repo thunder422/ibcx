@@ -31,6 +31,8 @@ DataType Compiler::compileExpression()
     return ExpressionCompiler::create(*this)->compileExpression();
 }
 
+Code const_str_code {nullptr, nullptr};
+
 DataType Compiler::compileStringConstant()
 {
     if (peekNextChar() != '"') {
@@ -46,6 +48,8 @@ DataType Compiler::compileStringConstant()
             }
         }
     }
+    code_line.emplace_back(const_str_code.getValue());
+    code_line.emplace_back(0);
     return DataType::String;
 }
 

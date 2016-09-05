@@ -63,4 +63,15 @@ TEST_CASE("string constants", "[const][compile]")
         auto data_type = compiler.compileStringConstant();
         REQUIRE(data_type == DataType::String);
     }
+    SECTION("check that a string constant is added to the program code")
+    {
+        Compiler compiler {R"*("test")*", program};
+
+        compiler.compileStringConstant();
+        auto code_line = compiler.getCodeLine();
+
+        extern Code const_str_code;
+        REQUIRE(code_line.size() == 2);
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_str_code.getValue());
+    }
 }
