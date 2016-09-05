@@ -21,4 +21,11 @@ TEST_CASE("string constants", "[const][compile]")
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() != '"');
     }
+    SECTION("parse past the ending double quote character")
+    {
+        Compiler compiler {R"*("test")*", program};
+
+        compiler.compileStringConstant();
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
 }

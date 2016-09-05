@@ -33,7 +33,11 @@ DataType Compiler::compileExpression()
 
 void Compiler::compileStringConstant()
 {
-    if (peekNextChar() == '"') {
+    if (peekNextChar() != '"') {
+        return;
+    }
+    getNextChar();
+    while (peekNextChar() != EOF) {
         getNextChar();
     }
 }
