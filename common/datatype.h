@@ -12,7 +12,8 @@
 enum class DataType {
     Null,
     Double,
-    Integer
+    Integer,
+    String
 };
 
 

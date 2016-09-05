@@ -31,10 +31,10 @@ DataType Compiler::compileExpression()
     return ExpressionCompiler::create(*this)->compileExpression();
 }
 
-void Compiler::compileStringConstant()
+DataType Compiler::compileStringConstant()
 {
     if (peekNextChar() != '"') {
-        return;
+        return DataType::Null;
     }
     getNextChar();
     while (peekNextChar() != EOF) {
@@ -42,10 +42,11 @@ void Compiler::compileStringConstant()
         if (peekNextChar() == '"') {
             getNextChar();
             if (peekNextChar() != '"') {
-                return;
+                break;
             }
         }
     }
+    return DataType::String;
 }
 
 OperatorCodes *Compiler::getSymbolOperatorCodes(Precedence precedence)

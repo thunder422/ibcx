@@ -49,4 +49,18 @@ TEST_CASE("string constants", "[const][compile]")
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check for a null return data type when there is no string constant")
+    {
+        Compiler compiler {"123", program};
+
+        auto data_type = compiler.compileStringConstant();
+        REQUIRE(data_type == DataType::Null);
+    }
+    SECTION("check for a string return data type when there is a string constant")
+    {
+        Compiler compiler {R"*("test")*", program};
+
+        auto data_type = compiler.compileStringConstant();
+        REQUIRE(data_type == DataType::String);
+    }
 }
