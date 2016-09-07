@@ -30,15 +30,15 @@ std::vector<WordType> MultiTypeFunctionCodes::codeValues() const
 
 DataType MultiTypeFunctionCodes::argumentDataType() const
 {
-    return DataType::Null;
+    return {};
 }
 
 FunctionCodes::Info MultiTypeFunctionCodes::select(std::vector<DataType> argument_data_types) const
 {
-    if (argument_data_types.front() == DataType::Double) {
-        return FunctionCodes::Info {dbl_code, DataType::Double};
+    if (argument_data_types.front().isDouble()) {
+        return FunctionCodes::Info {dbl_code, DataType::Double()};
     } else {
-        return FunctionCodes::Info {int_code, DataType::Integer};
+        return FunctionCodes::Info {int_code, DataType::Integer()};
     }
 }
 
@@ -57,29 +57,29 @@ std::vector<WordType> MathFunctionCodes::codeValues() const
 
 DataType MathFunctionCodes::argumentDataType() const
 {
-    return DataType::Double;
+    return DataType::Double();
 }
 
 FunctionCodes::Info MathFunctionCodes::select(std::vector<DataType> unused_data_types) const
 {
     (void)unused_data_types;
-    return FunctionCodes::Info {code, DataType::Double};
+    return FunctionCodes::Info {code, DataType::Double()};
 }
 
 // ----------------------------------------
 
 ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Int> &code) :
     code {code},
-    argument_data_type {DataType::Integer},
-    return_data_type {DataType::Double}
+    argument_data_type {DataType::Integer()},
+    return_data_type {DataType::Double()}
 {
     Table::addNumFunctionCodes(*this, keyword);
 }
 
 ConvertFunctionCodes::ConvertFunctionCodes(const char *keyword, FunctionCode<ArgType::Dbl> &code) :
     code {code},
-    argument_data_type {DataType::Double},
-    return_data_type {DataType::Integer}
+    argument_data_type {DataType::Double()},
+    return_data_type {DataType::Integer()}
 {
     Table::addNumFunctionCodes(*this, keyword);
 }
@@ -122,14 +122,14 @@ bool RandomFunctionCodes::argumentOptional() const
 
 DataType RandomFunctionCodes::argumentDataType() const
 {
-    return DataType::Null;
+    return {};
 }
 
 FunctionCodes::Info RandomFunctionCodes::select(std::vector<DataType> argument_data_types) const
 {
     if (argument_data_types.empty()) {
-        return FunctionCodes::Info {none_code, DataType::Double};
+        return FunctionCodes::Info {none_code, DataType::Double()};
     } else {
-        return FunctionCodes::Info {int_code, DataType::Integer};
+        return FunctionCodes::Info {int_code, DataType::Integer()};
     }
 }

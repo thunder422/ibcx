@@ -39,7 +39,7 @@ public:
         DataType result_data_type;
     };
 
-    virtual Info select(DataType lhs_data_type, DataType rhs_data_type = DataType::Null) const = 0;
+    virtual Info select(DataType lhs_data_type, DataType rhs_data_type = {}) const = 0;
 };
 
 class UnaryOperatorCodes : public OperatorCodes {

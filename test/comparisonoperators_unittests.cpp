@@ -19,7 +19,7 @@ TEST_CASE("compile less than operator expressions", "[lt][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3<2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -28,7 +28,7 @@ TEST_CASE("compile less than operator expressions", "[lt][compile]")
         extern OperatorCode<OpType::IntInt> lt_dbl_dbl_code;
 
         Compiler compiler {"3.0<2.0", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 5);
@@ -39,19 +39,19 @@ TEST_CASE("compile less than operator expressions", "[lt][compile]")
         Compiler compiler {"3.0<2.0", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
     }
     SECTION("check that multiple operators are parsed")
     {
         Compiler compiler {"3<2<1", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("check that white space is allowed after the operator")
     {
         Compiler compiler {"3< 2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -59,13 +59,13 @@ TEST_CASE("compile less than operator expressions", "[lt][compile]")
     {
         Compiler compiler {"<4", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
     SECTION("check for error when there is a bad right hand side operand")
     {
         Compiler compiler {"4<^", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
 }
 
@@ -166,7 +166,7 @@ TEST_CASE("compile greater than operator expressions", "[gt][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3>2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -269,7 +269,7 @@ TEST_CASE("compile less than or equal operator expressions", "[le][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3<=2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -372,7 +372,7 @@ TEST_CASE("compile greater than or equal operator expressions", "[ge][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3>=2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -475,7 +475,7 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3=2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -485,7 +485,7 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
         extern OperatorCode<OpType::IntInt> eq_int_int_code;
 
         Compiler compiler {"0=1<2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 8);
@@ -497,19 +497,19 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
         Compiler compiler {"3.0=2.0", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
     }
     SECTION("check that multiple operators are parsed")
     {
         Compiler compiler {"3=2=1", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("check that white space is allowed after the operator")
     {
         Compiler compiler {"3= 2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -517,7 +517,7 @@ TEST_CASE("compile equal to operator expressions", "[eq][compile]")
     {
         Compiler compiler {"4=^", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
 }
 
@@ -618,7 +618,7 @@ TEST_CASE("compile not equal to operator expressions", "[ne][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3<>2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }

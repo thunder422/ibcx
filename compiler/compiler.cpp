@@ -37,9 +37,9 @@ DataType Compiler::compileStringConstant()
         getNextChar();
         std::string string = parseStringConstant();
         addStrConstInstruction(string);
-        return DataType::String;
+        return DataType::String();
     }
-    return DataType::Null;
+    return {};
 }
 
 std::string Compiler::parseStringConstant()
@@ -259,7 +259,7 @@ DataType Compiler::addNumConstInstruction(bool floating_point, const std::string
 
 void Compiler::convertToDouble(DataType operand_data_type)
 {
-    if (operand_data_type == DataType::Integer) {
+    if (operand_data_type.isInteger()) {
         if (last_operand_was_constant) {
             changeConstantToDouble();
         } else {
@@ -279,7 +279,7 @@ void Compiler::changeConstantToDouble()
 
 void Compiler::convertToInteger(DataType operand_data_type)
 {
-    if (operand_data_type == DataType::Double) {
+    if (operand_data_type.isDouble()) {
         if (last_operand_was_constant) {
             changeConstantToInteger();
         } else {

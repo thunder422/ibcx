@@ -7,6 +7,7 @@
 
 #include "catch.hpp"
 #include "compiler.h"
+#include "programerror.h"
 #include "programunit.h"
 
 
@@ -16,14 +17,14 @@ TEST_CASE("string constants", "[const][compile]")
 
     SECTION("parse the initial double quote character")
     {
-        Compiler compiler {R"*("test")*", program};
+        Compiler compiler {R"("test")", program};
 
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() != '"');
     }
     SECTION("parse past the ending double quote character")
     {
-        Compiler compiler {R"*("test")*", program};
+        Compiler compiler {R"("test")", program};
 
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() == EOF);
@@ -37,14 +38,14 @@ TEST_CASE("string constants", "[const][compile]")
     }
     SECTION("make sure parsing stops after ending double quote")
     {
-        Compiler compiler {R"*("test"+)*", program};
+        Compiler compiler {R"("test"+)", program};
 
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() == '+');
     }
     SECTION("parse two sequential double quotes as part of the constant")
     {
-        Compiler compiler {R"*("te""st")*", program};
+        Compiler compiler {R"("te""st")", program};
 
         compiler.compileStringConstant();
         REQUIRE(compiler.peekNextChar() == EOF);
@@ -54,18 +55,18 @@ TEST_CASE("string constants", "[const][compile]")
         Compiler compiler {"123", program};
 
         auto data_type = compiler.compileStringConstant();
-        REQUIRE(data_type == DataType::Null);
+        REQUIRE_FALSE(data_type);
     }
     SECTION("check for a string return data type when there is a string constant")
     {
-        Compiler compiler {R"*("test")*", program};
+        Compiler compiler {R"("test")", program};
 
         auto data_type = compiler.compileStringConstant();
-        REQUIRE(data_type == DataType::String);
+        REQUIRE(data_type.isString());
     }
     SECTION("check that a string constant is added to the program code")
     {
-        Compiler compiler {R"*("test")*", program};
+        Compiler compiler {R"("test")", program};
 
         compiler.compileStringConstant();
         auto code_line = compiler.getCodeLine();
@@ -76,9 +77,9 @@ TEST_CASE("string constants", "[const][compile]")
     }
     SECTION("check that each string has a unique operand (index) value")
     {
-        Compiler compiler1 {R"*("first")*", program};
+        Compiler compiler1 {R"("first")", program};
         compiler1.compileStringConstant();
-        Compiler compiler2 {R"*("second")*", program};
+        Compiler compiler2 {R"("second")", program};
         compiler2.compileStringConstant();
 
         auto code_line1 = compiler1.getCodeLine();
@@ -96,7 +97,7 @@ TEST_CASE("string constants", "[const][compile]")
     }
     SECTION("check that an empty string is compiled correctly")
     {
-        Compiler compiler {R"*("")*", program};
+        Compiler compiler {R"("")", program};
         compiler.compileStringConstant();
 
         auto code_line = compiler.getCodeLine();
@@ -107,13 +108,13 @@ TEST_CASE("string constants", "[const][compile]")
     }
     SECTION("check that a string with an embedded double quote is stored correctly")
     {
-        Compiler compiler {R"*("te""st")*", program};
+        Compiler compiler {R"("te""st")", program};
 
         compiler.compileStringConstant();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 2);
         auto operand = code_line[1].operand();
-        REQUIRE(program.getConstantString(operand) == R"*(te"st)*");
+        REQUIRE(program.getConstantString(operand) == R"(te"st)");
     }
 }

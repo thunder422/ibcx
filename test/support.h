@@ -9,15 +9,19 @@
 #define SUPPORT_H
 
 
-#define REQUIRE_CODESIZE_OPERAND(expected_code_size, expected_data_type, number) \
-    REQUIRE(data_type == expected_data_type); \
+#define REQUIRE_CODESIZE_OPERAND(expected_code_size, number) \
     auto code_line = compiler.getCodeLine(); \
     REQUIRE(code_line.size() == expected_code_size); \
     auto operand = code_line[1].operand(); \
     REQUIRE(program.getConstantNumber(operand) == number);
 
-#define REQUIRE_OPERAND(expected_data_type, number) \
-    REQUIRE_CODESIZE_OPERAND(2, expected_data_type, number)
+#define REQUIRE_DOUBLE_OPERAND(number) \
+    REQUIRE(data_type.isDouble()); \
+    REQUIRE_CODESIZE_OPERAND(2, number)
+
+#define REQUIRE_INTEGER_OPERAND(number) \
+    REQUIRE(data_type.isInteger()); \
+    REQUIRE_CODESIZE_OPERAND(2, number)
 
 
 #endif  // SUPPORT_H

@@ -20,7 +20,7 @@ TEST_CASE("compile negate operator expressions", "[neg][compile]")
     SECTION("make sure operand and constant operand are parsed")
     {
         Compiler compiler {"--2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -31,7 +31,7 @@ TEST_CASE("compile negate operator expressions", "[neg][compile]")
         auto code_line = compiler.getCodeLine();
 
         extern Code neg_dbl_code;
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
         REQUIRE(code_line.size() == 3);
         REQUIRE(code_line[2].instructionCode()->getValue() == neg_dbl_code.getValue());
     }
@@ -42,7 +42,7 @@ TEST_CASE("compile negate operator expressions", "[neg][compile]")
         auto code_line = compiler.getCodeLine();
 
         extern Code neg_int_code;
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
         REQUIRE(code_line.size() == 3);
         REQUIRE(code_line[2].instructionCode()->getValue() == neg_int_code.getValue());
     }
@@ -52,12 +52,12 @@ TEST_CASE("compile negate operator expressions", "[neg][compile]")
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
+            REQUIRE_THROWS_AS(compiler.compileExpression(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compiler.compileExpression(DataType::Null);
+                compiler.compileExpression();
             }
             catch (const CompileError &error) {
                 REQUIRE(error.what() == std::string("expected numeric expression"));
@@ -69,7 +69,7 @@ TEST_CASE("compile negate operator expressions", "[neg][compile]")
     SECTION("check that white space is allowed after a negate operator")
     {
         Compiler compiler {"- 2", program};
-        auto data_type = compiler.compileExpression();
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code neg_int_code;
@@ -182,28 +182,28 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3^2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("make sure the operator is the correct character")
     {
         Compiler compiler {"3a2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == 'a');
     }
     SECTION("make sure white space is allowed before the operator")
     {
         Compiler compiler {"3 ^2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("make sure white space is allowed after the operator")
     {
         Compiler compiler {"3 ^ 2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -220,12 +220,12 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), ExpNumExprError);
+            REQUIRE_THROWS_AS(compiler.compileExpression(), ExpNumExprError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compiler.compileExpression(DataType::Null);
+                compiler.compileExpression();
             }
             catch (const ExpNumExprError &error) {
                 REQUIRE(error.column == 2);
@@ -241,7 +241,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_int_int_code.getValue());
     }
@@ -253,7 +253,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_dbl_code.getValue());
     }
@@ -265,7 +265,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_dbl_int_code.getValue());
     }
@@ -277,7 +277,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == exp_int_dbl_code.getValue());
     }
@@ -287,7 +287,7 @@ TEST_CASE("compile exponential operator expressions", "[exp][compile]")
         extern OperatorCode<OpType::DblInt> exp_dbl_int_code;
 
         Compiler compiler {"3^2.0^4", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(compiler.peekNextChar() == EOF);
@@ -717,7 +717,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3*2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -729,7 +729,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == mul_int_int_code.getValue());
     }
@@ -741,7 +741,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == mul_dbl_dbl_code.getValue());
     }
@@ -753,7 +753,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == mul_dbl_int_code.getValue());
     }
@@ -765,7 +765,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         auto data_type = compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == mul_int_dbl_code.getValue());
     }
@@ -775,7 +775,7 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
         extern OperatorCode<OpType::DblInt> mul_dbl_int_code;
 
         Compiler compiler {"3*2.0*4", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(compiler.peekNextChar() == EOF);
@@ -784,13 +784,13 @@ TEST_CASE("compile multiply operator expressions", "[mul][compile]")
     {
         Compiler compiler {"*4", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
     SECTION("check for error when there is a bad right hand side operand")
     {
         Compiler compiler {"4*^", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
 }
 
@@ -1000,7 +1000,7 @@ TEST_CASE("compile divide operator expressions", "[div][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3/2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -1215,7 +1215,7 @@ TEST_CASE("compile integer divide operator expressions", "[intdiv][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3.0\\2.0", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -1229,12 +1229,12 @@ TEST_CASE("compile integer divide operator expressions", "[intdiv][compile]")
 
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == int_div_code.getValue());
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
     }
     SECTION("make sure multiple integer divide operators are compiled")
     {
         Compiler compiler {"3.0\\2.0\\1.0", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -1242,13 +1242,13 @@ TEST_CASE("compile integer divide operator expressions", "[intdiv][compile]")
     {
         Compiler compiler {"\\4", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
     SECTION("check for error when there is a bad right hand side operand")
     {
         Compiler compiler {"4\\^", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
 }
 
@@ -1362,7 +1362,7 @@ TEST_CASE("apply necessary conversions to integer divide operator", "[intdiv][co
         extern Code cvtdbl_code;
 
         Compiler compiler {"3.0\\1*2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 9);
@@ -1398,7 +1398,7 @@ TEST_CASE("compile mod operator expressions", "[mod][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"5 MOD 3", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() != 'M');
         REQUIRE(compiler.peekNextChar() == EOF);
@@ -1411,7 +1411,7 @@ TEST_CASE("compile mod operator expressions", "[mod][compile]")
         extern OperatorCode<OpType::IntInt> mod_int_int_code;
 
         Compiler compiler {"100 MOD 2 Mod 1.5 MOD (5.0 mod 4)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 14);
@@ -1424,13 +1424,13 @@ TEST_CASE("compile mod operator expressions", "[mod][compile]")
     {
         Compiler compiler {"MOD 4", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
     SECTION("check for error when there is a bad right hand side operand")
     {
         Compiler compiler {"4MOD^", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
 }
 
@@ -1612,7 +1612,7 @@ TEST_CASE("compile add operator expressions", "[add][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3+2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -1624,7 +1624,7 @@ TEST_CASE("compile add operator expressions", "[add][compile]")
         extern OperatorCode<OpType::IntInt> add_int_int_code;
 
         Compiler compiler {"100 + 2 + 1.5 + (5.0 + 4)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 14);
@@ -1637,13 +1637,13 @@ TEST_CASE("compile add operator expressions", "[add][compile]")
     {
         Compiler compiler {"+4", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
     SECTION("check for error when there is a bad right hand side operand")
     {
         Compiler compiler {"4+^", program};
 
-        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), ExpNumExprError);
+        REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), ExpNumExprError);
     }
 }
 
@@ -1817,7 +1817,7 @@ TEST_CASE("compile subtract operator expressions", "[sub][compile]")
     SECTION("make sure both operands and operator are parsed")
     {
         Compiler compiler {"3-2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }

@@ -25,7 +25,7 @@ TEST_CASE("compiling integer constants from a string", "[integers]")
         Compiler compiler {"%", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
         auto code_line = compiler.getCodeLine();
-        REQUIRE(data_type == DataType::Null);
+        REQUIRE_FALSE(data_type);
         REQUIRE(code_line.size() == 0);
         REQUIRE(compiler.peekNextChar() == '%');
     }
@@ -35,26 +35,26 @@ TEST_CASE("compiling integer constants from a string", "[integers]")
 
         Compiler compiler {"1", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Integer, "1");
+        REQUIRE_INTEGER_OPERAND("1");
         REQUIRE(code_line[0].instructionCode()->getValue() == const_int_code.getValue());
     }
     SECTION("compile a multiple digit number")
     {
         Compiler compiler {"123", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Integer, "123");
+        REQUIRE_INTEGER_OPERAND("123");
     }
     SECTION("compile a negative number")
     {
         Compiler compiler {"-234", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Integer, "-234");
+        REQUIRE_INTEGER_OPERAND("-234");
     }
     SECTION("terminate compiling at correct character")
     {
         Compiler compiler {"345+", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Integer, "345");
+        REQUIRE_INTEGER_OPERAND("345");
         REQUIRE(compiler.peekNextChar() == '+');
     }
 }
@@ -68,19 +68,19 @@ TEST_CASE("compiling floating point constants from a string", "[doubles]")
     {
         Compiler compiler {"0.5", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "0.5");
+        REQUIRE_DOUBLE_OPERAND("0.5");
     }
     SECTION("compile a number with a decimal point at the beginning")
     {
         Compiler compiler {".75", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, ".75");
+        REQUIRE_DOUBLE_OPERAND(".75");
     }
     SECTION("compile a number with a second decimal point (should ignore second one)")
     {
         Compiler compiler {"0.1.", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "0.1");
+        REQUIRE_DOUBLE_OPERAND("0.1");
         REQUIRE(compiler.peekNextChar() == '.');
     }
     SECTION("compile a number to a double constant in the code_line")
@@ -89,40 +89,40 @@ TEST_CASE("compiling floating point constants from a string", "[doubles]")
 
         Compiler compiler {"1.2", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "1.2");
+        REQUIRE_DOUBLE_OPERAND("1.2");
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
     }
     SECTION("compile a number with an exponent")
     {
         Compiler compiler {"1e0", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "1e0");
+        REQUIRE_DOUBLE_OPERAND("1e0");
     }
     SECTION("make sure compiling stops before a second 'E'")
     {
         Compiler compiler {"1e0E", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "1e0");
+        REQUIRE_DOUBLE_OPERAND("1e0");
         REQUIRE(compiler.peekNextChar() == 'E');
     }
     SECTION("compile a number with a minus exponent")
     {
         Compiler compiler {"1e-2", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "1e-2");
+        REQUIRE_DOUBLE_OPERAND("1e-2");
     }
     SECTION("compile a number with a minus exponent terminated be a minus operator")
     {
         Compiler compiler {"1e-2-", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "1e-2");
+        REQUIRE_DOUBLE_OPERAND("1e-2");
         REQUIRE(compiler.peekNextChar() == '-');
     }
     SECTION("compile a number with a plus exponent")
     {
         Compiler compiler {"1e+2", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "1e+2");
+        REQUIRE_DOUBLE_OPERAND("1e+2");
     }
 }
 
@@ -157,7 +157,7 @@ TEST_CASE("handle leading zero of a constant correctly including errors", "[zero
     {
         Compiler compiler {"0-", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Integer, "0");
+        REQUIRE_INTEGER_OPERAND("0");
         REQUIRE(compiler.peekNextChar() == '-');
     }
 }
@@ -222,7 +222,7 @@ TEST_CASE("check for correct exponent format", "[exponent]")
     {
         Compiler compiler {"1eq", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Integer, "1");
+        REQUIRE_INTEGER_OPERAND("1");
         REQUIRE(compiler.peekNextChar() == 'q');
     }
     SECTION("check for an error if there is no digit after an exponent sign")
@@ -279,21 +279,21 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         Compiler compiler {"-e", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
         auto code_line = compiler.getCodeLine();
-        REQUIRE(data_type == DataType::Null);
+        REQUIRE_FALSE(data_type);
         REQUIRE(code_line.size() == 0);
     }
     SECTION("allow a period after a negative sign")
     {
         Compiler compiler {"-.1", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "-.1");
+        REQUIRE_DOUBLE_OPERAND("-.1");
     }
     SECTION("look for negate operator status (false if not negate operator)")
     {
         Compiler compiler {"-1-", program};
         auto constant_number = ConstNumCompiler::create(compiler);
         auto data_type = constant_number->compile();
-        REQUIRE_OPERAND(DataType::Integer, "-1");
+        REQUIRE_INTEGER_OPERAND("-1");
         REQUIRE(compiler.peekNextChar() == '-');
         REQUIRE_FALSE(constant_number->negateOperator());
     }
@@ -303,7 +303,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         auto constant_number = ConstNumCompiler::create(compiler);
         auto data_type = constant_number->compile();
         auto code_line = compiler.getCodeLine();
-        REQUIRE(data_type == DataType::Null);
+        REQUIRE_FALSE(data_type);
         REQUIRE(compiler.peekNextChar() == 'e');
         REQUIRE(constant_number->negateOperator());
     }
@@ -312,7 +312,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         Compiler compiler {"-1e1-", program};
         auto constant_number = ConstNumCompiler::create(compiler);
         auto data_type = constant_number->compile();
-        REQUIRE_OPERAND(DataType::Double, "-1e1");
+        REQUIRE_DOUBLE_OPERAND("-1e1");
         REQUIRE(compiler.peekNextChar() == '-');
         REQUIRE(constant_number->unparsedChar() == 0);
     }
@@ -321,7 +321,7 @@ TEST_CASE("look for possible exit conditions", "[exit]")
         Compiler compiler {"-1eqv", program};
         auto constant_number = ConstNumCompiler::create(compiler);
         auto data_type = constant_number->compile();
-        REQUIRE_OPERAND(DataType::Integer, "-1");
+        REQUIRE_INTEGER_OPERAND("-1");
         REQUIRE(compiler.peekNextChar() == 'q');
         REQUIRE(constant_number->unparsedChar() == 'e');
     }
@@ -399,7 +399,7 @@ TEST_CASE("check other numeric constants from the IBCP tests", "[other]")
     {
         Compiler compiler {"1..", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "1.");
+        REQUIRE_DOUBLE_OPERAND("1.");
         REQUIRE(compiler.peekNextChar() == '.');
     }
 }
@@ -522,7 +522,7 @@ TEST_CASE("constant errors", "[errors]")
 
         Compiler compiler {"12345678901", program};
         auto data_type = ConstNumCompiler::create(compiler)->compile();
-        REQUIRE_OPERAND(DataType::Double, "12345678901")
+        REQUIRE_DOUBLE_OPERAND("12345678901")
         REQUIRE(code_line[0].instructionCode()->getValue() == const_dbl_code.getValue());
     }
     SECTION("compile a double constant too large for a double value (an error)")

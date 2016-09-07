@@ -9,12 +9,76 @@
 #define IBC_DATATYPE_H
 
 
-enum class DataType {
-    Null,
-    Double,
-    Integer,
-    String
+class DataType {
+public:
+    static DataType Double();
+    static DataType Integer();
+    static DataType String();
+
+    DataType();
+    explicit operator bool() const;
+    bool isDouble() const;
+    bool isInteger() const;
+    bool isString() const;
+
+private:
+    enum class Enum {
+        Null,
+        Double,
+        Integer,
+        String
+    };
+
+    DataType(Enum value);
+
+    Enum value;
 };
+
+
+inline DataType::DataType(Enum value) :
+    value {value}
+{
+}
+
+inline DataType DataType::Double()
+{
+    return DataType {Enum::Double};
+}
+
+inline DataType DataType::Integer()
+{
+    return DataType {Enum::Integer};
+}
+
+inline DataType DataType::String()
+{
+    return DataType {Enum::String};
+}
+
+inline DataType::DataType() :
+    value {Enum::Null}
+{
+}
+
+inline DataType::operator bool() const
+{
+    return value != Enum::Null;
+}
+
+inline bool DataType::isDouble() const
+{
+    return value == Enum::Double;
+}
+
+inline bool DataType::isInteger() const
+{
+    return value == Enum::Integer;
+}
+
+inline bool DataType::isString() const
+{
+    return value == Enum::String;
+}
 
 
 #endif  // IBC_DATATYPE_H

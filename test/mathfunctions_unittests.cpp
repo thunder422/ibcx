@@ -19,14 +19,14 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"ABS(-2)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("check that the double function code is added after the operand")
     {
         Compiler compiler {"ABS(-2.1)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code abs_dbl_code;
@@ -38,12 +38,12 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
         Compiler compiler {"ABS(-2.1)", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
     }
     SECTION("check that the integer function code is added after the operand")
     {
         Compiler compiler {"ABS(-2)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code abs_int_code;
@@ -56,12 +56,12 @@ TEST_CASE("compile absolute function expressions", "[abs][compile]")
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
+            REQUIRE_THROWS_AS(compiler.compileExpression(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compiler.compileExpression(DataType::Null);
+                compiler.compileExpression();
             }
             catch (const CompileError &error) {
                 std::string expected_what = "expected opening parentheses";
@@ -166,7 +166,7 @@ TEST_CASE("compile sign function expressions", "[sgn][compile]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"SGN(-2)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -272,7 +272,7 @@ TEST_CASE("compile square root function expressions", "[sqr][compile]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"SQR(6.25)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -341,7 +341,7 @@ TEST_CASE("compile integer function expressions", "[int][compile]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"INT(6.25)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -397,7 +397,7 @@ TEST_CASE("compile fix function expressions", "[fix]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"FIX(6.25)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -441,7 +441,7 @@ TEST_CASE("fractional function expressions", "[frac]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"FRAC(6.25)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -485,7 +485,7 @@ TEST_CASE("cosine function expressions", "[cos]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"COS(0.9)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -519,7 +519,7 @@ TEST_CASE("sine function expressions", "[sin]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"SIN(0.9)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -553,7 +553,7 @@ TEST_CASE("tangent function expressions", "[tan]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"TAN(0.9)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -587,7 +587,7 @@ TEST_CASE("arctangent function expressions", "[atn]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"ATN(0.9)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -621,7 +621,7 @@ TEST_CASE("natural logarithm function expressions", "[log]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"LOG(0.9)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -681,7 +681,7 @@ TEST_CASE("base-e exponential function expressions", "[exp]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"EXP(0.9)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -738,14 +738,14 @@ TEST_CASE("compile convert to double function expressions", "[cdbl][compile]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"CDBL(123)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("check that the function code is added after the operand")
     {
         Compiler compiler {"CDBL(1+1)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code cdbl_code;
@@ -757,12 +757,12 @@ TEST_CASE("compile convert to double function expressions", "[cdbl][compile]")
         Compiler compiler {"CDBL(123)", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
     }
     SECTION("check for an internal convert to integer code for an integer argument")
     {
         Compiler compiler {"CDBL(1.0+2.1)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code cvtint_code;
@@ -813,14 +813,14 @@ TEST_CASE("compile convert to integer function expressions", "[cint][compile]")
     SECTION("make sure function and argument are parsed")
     {
         Compiler compiler {"CINT(123.4)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("check that the function code is added after the operand")
     {
         Compiler compiler {"CINT(1.0+2.1)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code cint_code;
@@ -832,7 +832,7 @@ TEST_CASE("compile convert to integer function expressions", "[cint][compile]")
         Compiler compiler {"CINT(123.4)", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
     }
 }
 
@@ -886,14 +886,14 @@ TEST_CASE("compile random function expressions", "[rnd][compile]")
     SECTION("make sure function with no argument is parsed")
     {
         Compiler compiler {"RND", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("make sure function with an integer argument is parsed")
     {
         Compiler compiler {"RND(10)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -902,12 +902,12 @@ TEST_CASE("compile random function expressions", "[rnd][compile]")
         Compiler compiler {"RND(10)", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
     }
     SECTION("check that the integer function code is added after the operand")
     {
         Compiler compiler {"RND(10)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code rnd_int_code;
@@ -919,12 +919,12 @@ TEST_CASE("compile random function expressions", "[rnd][compile]")
         Compiler compiler {"RND", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Double);
+        REQUIRE(data_type.isDouble());
     }
     SECTION("check that the no argument function code is added to the code")
     {
         Compiler compiler {"RND", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code rnd_code;

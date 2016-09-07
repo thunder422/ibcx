@@ -23,7 +23,7 @@ TEST_CASE("compile numeric expressions with constants", "[constant]")
 
         Compiler compiler {"1", program};
         auto data_type = compiler.compileExpression();
-        REQUIRE_OPERAND(DataType::Integer, "1");
+        REQUIRE_INTEGER_OPERAND("1");
     }
     SECTION("verify an error is thrown when nothing is in the input stream")
     {
@@ -31,12 +31,12 @@ TEST_CASE("compile numeric expressions with constants", "[constant]")
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double), CompileError);
+            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Double()), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compiler.compileExpression(DataType::Double);
+                compiler.compileExpression(DataType::Double());
             }
             catch (const CompileError &error) {
                 REQUIRE(error.what() == std::string("expected numeric expression"));
@@ -54,7 +54,7 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
     SECTION("verify that a parenthetical expression is compiled")
     {
         Compiler compiler {"4^(3^2)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         SECTION("verify that opening parentheses is accepted")
         {
@@ -73,7 +73,7 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
     SECTION("verify that white space is allowed after the opening parenthesis")
     {
         Compiler compiler {"4^( 3^2)", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -83,12 +83,12 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
 
         SECTION("check that the error is thrown")
         {
-            REQUIRE_THROWS_AS(compiler.compileExpression(DataType::Null), CompileError);
+            REQUIRE_THROWS_AS(compiler.compileExpression(), CompileError);
         }
         SECTION("check the message, column and length of the error thrown")
         {
             try {
-                compiler.compileExpression(DataType::Double);
+                compiler.compileExpression(DataType::Double());
             }
             catch (const CompileError &error) {
                 REQUIRE(error.what() == std::string("expected closing parentheses"));
@@ -218,21 +218,21 @@ TEST_CASE("check expressions with various operators", "[operator]")
     SECTION("make sure compiler column is correct when parsing a word")
     {
         Compiler compiler {"3+2bad", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.getColumn() == 3);
     }
     SECTION("make sure eqv operator is parsed correctly when there are no spaces")
     {
         Compiler compiler {"3+2eqv5", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("mark sure compiler column is correct when parsing a word beginning with 'E'")
     {
         Compiler compiler {"3+2ebad", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.getColumn() == 3);
     }

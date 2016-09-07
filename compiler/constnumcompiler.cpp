@@ -71,7 +71,7 @@ DataType ConstNumCompilerImpl::compile()
 {
     parseInput();
     if (number.empty()) {
-        return DataType::Null;
+        return {};
     } else {
         try {
             return compiler.addNumConstInstruction(floating_point, number, first_column);

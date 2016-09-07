@@ -111,7 +111,7 @@ void ConstNumConverter::createIntCode()
 {
     int_value = std::stoi(number);
     const_num_code_info.code_value = const_int_code.getValue();
-    const_num_code_info.data_type = DataType::Integer;
+    const_num_code_info.data_type = DataType::Integer();
     dbl_value = int_value;
 }
 
@@ -119,7 +119,7 @@ void ConstNumConverter::createDblCode()
 {
     dbl_value = std::stod(number);
     const_num_code_info.code_value = const_dbl_code.getValue();
-    const_num_code_info.data_type = DataType::Double;
+    const_num_code_info.data_type = DataType::Double();
     int_value = static_cast<int32_t>(std::lround(dbl_value));
 }
 

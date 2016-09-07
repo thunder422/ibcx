@@ -30,7 +30,7 @@ void compilePrint(Compiler &compiler)
 {
     if (compiler.peekNextChar() != EOF) {
         auto data_type = compiler.compileExpression();
-        if (data_type == DataType::Double) {
+        if (data_type.isDouble()) {
             compiler.addInstruction(print_dbl_code);
         } else {
             compiler.addInstruction(print_int_code);

@@ -19,14 +19,14 @@ TEST_CASE("compile not operator expressions", "[not][compile]")
     SECTION("make sure operator and operand are parsed")
     {
         Compiler compiler {"NOT-2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("check that the not code is added after the operand")
     {
         Compiler compiler {"NOT-2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code not_code;
@@ -38,12 +38,12 @@ TEST_CASE("compile not operator expressions", "[not][compile]")
         Compiler compiler {"NOT 2.0", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
     }
     SECTION("check that multiple not operators are parsed")
     {
         Compiler compiler {"NOT not -2", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -120,7 +120,7 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
         extern Code cvtint_code;
 
         Compiler compiler {"NOT 1.0 + 1.0", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         REQUIRE(code_line.size() == 7);
@@ -183,14 +183,14 @@ TEST_CASE("compile and operator expressions", "[and][compile]")
     SECTION("make sure operator and operands are parsed")
     {
         Compiler compiler {"10 AND 7", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
     SECTION("check that the and code is added after the operand")
     {
         Compiler compiler {"10 AND 7", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
         extern Code and_code;
@@ -202,12 +202,12 @@ TEST_CASE("compile and operator expressions", "[and][compile]")
         Compiler compiler {"10.0 AND 7", program};
         auto data_type = compiler.compileExpression();
 
-        REQUIRE(data_type == DataType::Integer);
+        REQUIRE(data_type.isInteger());
     }
     SECTION("check that multiple and operators are parsed")
     {
         Compiler compiler {"10 AND 7 AND 28", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -279,7 +279,7 @@ TEST_CASE("compile or operator expressions", "[or][compile]")
     SECTION("make sure operator and operands are parsed")
     {
         Compiler compiler {"10 OR 7", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -325,7 +325,7 @@ TEST_CASE("compile exclusive-or operator expressions", "[xor][compile]")
     SECTION("make sure operator and operands are parsed")
     {
         Compiler compiler {"10 XOR 7", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -371,7 +371,7 @@ TEST_CASE("compile equivalence operator expressions", "[eqv][compile]")
     SECTION("make sure operator and operands are parsed")
     {
         Compiler compiler {"10 EQV 7", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
@@ -417,7 +417,7 @@ TEST_CASE("compile implication operator expressions", "[imp][compile]")
     SECTION("make sure operator and operands are parsed")
     {
         Compiler compiler {"10 IMP 7", program};
-        compiler.compileExpression(DataType::Null);
+        compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }

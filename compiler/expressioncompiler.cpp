@@ -28,7 +28,7 @@ public:
     DataType compileExpression() override;
 
 private:
-    DataType compileNumExpression(DataType expected_data_type);
+    DataType compileNumExpression(DataType expected_data_type = {});
     DataType compileImplication();
     DataType compileEquivalence();
     DataType compileOr();
@@ -49,7 +49,7 @@ private:
     DataType compileFunction();
     std::vector<DataType> compileFunctionArguments(FunctionCodes *codes);
     DataType addFunctionCode(FunctionCodes *codes, std::vector<DataType> argument_data_types) const;
-    DataType compileParentheses(DataType expected_data_type);
+    DataType compileParentheses(DataType expected_data_type = {});
     DataType compileNumConstant();
     DataType compileOperator(Precedence precedence,
         DataType (ExpressionCompilerImpl::*compile_operand)(),
@@ -111,7 +111,7 @@ ExpressionCompilerImpl::ExpressionCompilerImpl(Compiler &compiler) :
 DataType ExpressionCompilerImpl::compileExpression(DataType expected_data_type)
 {
     auto data_type = compileNumExpression(expected_data_type);
-    if (data_type == DataType::Null) {
+    if (!data_type) {
         throw ExpNumExprError {compiler.getColumn()};
     }
     return data_type;
@@ -119,17 +119,17 @@ DataType ExpressionCompilerImpl::compileExpression(DataType expected_data_type)
 
 DataType ExpressionCompilerImpl::compileExpression()
 {
-    auto data_type = compileNumExpression(DataType::Null);
+    auto data_type = compileNumExpression();
     return data_type;
 }
 
 DataType ExpressionCompilerImpl::compileNumExpression(DataType expected_data_type)
 {
     auto data_type = compileImplication();
-    if (data_type != DataType::Null) {
-        if (expected_data_type == DataType::Double) {
+    if (data_type) {
+        if (expected_data_type.isDouble()) {
             ConvertToDouble(compiler, data_type);
-        } else if (expected_data_type == DataType::Integer) {
+        } else if (expected_data_type.isInteger()) {
             ConvertToInteger(compiler, data_type);
         }
     }
@@ -184,7 +184,7 @@ DataType ExpressionCompilerImpl::compileNotOperand(OperatorCodes *codes)
 {
     auto data_type = compileNot();
     compiler.convertToInteger(data_type);
-    return addOperatorCode(codes, DataType::Null, DataType::Null);
+    return addOperatorCode(codes, {}, {});
 }
 
 DataType ExpressionCompilerImpl::compileEquality()
@@ -233,7 +233,7 @@ DataType ExpressionCompilerImpl::compileNegation()
 {
     compiler.skipWhiteSpace();
     auto data_type = compileExponential();
-    if (data_type == DataType::Null) {
+    if (!data_type) {
         throw ExpNumExprError {compiler.getColumn()};
     }
     auto codes = Table::operatorCodes(Precedence::Negate);
@@ -244,13 +244,13 @@ DataType ExpressionCompilerImpl::compileNegation()
 DataType ExpressionCompilerImpl::compileNumOperand()
 {
     if (compiler.peekNextChar() == '(') {
-        return compileParentheses(DataType::Null);
+        return compileParentheses();
     }
     if (auto codes = getNotOperatorCodes()) {
         return compileNotOperand(codes);
     }
     auto data_type = compileFunction();
-    if (data_type != DataType::Null) {
+    if (data_type) {
         return data_type;
     }
     return compileNumConstant();
@@ -262,7 +262,7 @@ DataType ExpressionCompilerImpl::compileFunction()
         auto argument_data_types = compileFunctionArguments(codes);
         return addFunctionCode(codes, argument_data_types);
     }
-    return DataType::Null;
+    return {};
 }
 
 std::vector<DataType> ExpressionCompilerImpl::compileFunctionArguments(FunctionCodes *codes)
@@ -301,7 +301,7 @@ DataType ExpressionCompilerImpl::compileNumConstant()
 {
     auto constant_number = ConstNumCompiler::create(compiler);
     auto data_type = constant_number->compile();
-    if (data_type == DataType::Null && constant_number->negateOperator()) {
+    if (!data_type && constant_number->negateOperator()) {
         return compileNegation();
     }
     if (auto unparsed_char = constant_number->unparsedChar()) {
@@ -316,11 +316,11 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
     void (*convert)(Compiler &compiler, DataType data_type))
 {
     auto lhs_data_type = (this->*compile_operand)();
-    if (lhs_data_type != DataType::Null) {
+    if (lhs_data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
             convert(compiler, lhs_data_type);
             auto rhs_data_type = (this->*compile_operand)();
-            if (rhs_data_type == DataType::Null) {
+            if (!rhs_data_type) {
                 throw ExpNumExprError {compiler.getColumn()};
             }
             convert(compiler, rhs_data_type);
