@@ -117,4 +117,13 @@ TEST_CASE("string constants", "[const][compile]")
         auto operand = code_line[1].operand();
         REQUIRE(program.getConstantString(operand) == R"(te"st)");
     }
+
+    SECTION("check that a string constant is compiled as part of an expression")
+    {
+        Compiler compiler {R"("test")", program};
+
+        auto data_type = compiler.compileExpression();
+
+        REQUIRE(data_type.isString());
+    }
 }

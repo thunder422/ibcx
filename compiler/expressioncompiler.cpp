@@ -45,7 +45,7 @@ private:
     DataType compileProduct();
     DataType compileExponential();
     DataType compileNegation();
-    DataType compileNumOperand();
+    DataType compileOperand();
     DataType compileFunction();
     std::vector<DataType> compileFunctionArguments(FunctionCodes *codes);
     DataType addFunctionCode(FunctionCodes *codes, std::vector<DataType> argument_data_types) const;
@@ -228,7 +228,7 @@ DataType ExpressionCompilerImpl::compileProduct()
 
 DataType ExpressionCompilerImpl::compileExponential()
 {
-    return compileOperator(Precedence::Exponential, &ExpressionCompilerImpl::compileNumOperand,
+    return compileOperator(Precedence::Exponential, &ExpressionCompilerImpl::compileOperand,
         SymbolGetCodes);
 }
 
@@ -244,7 +244,7 @@ DataType ExpressionCompilerImpl::compileNegation()
     return data_type;
 }
 
-DataType ExpressionCompilerImpl::compileNumOperand()
+DataType ExpressionCompilerImpl::compileOperand()
 {
     if (compiler.peekNextChar() == '(') {
         return compileParentheses();
@@ -256,7 +256,11 @@ DataType ExpressionCompilerImpl::compileNumOperand()
     if (data_type) {
         return data_type;
     }
-    return compileNumConstant();
+    data_type = compileNumConstant();
+    if (data_type) {
+        return data_type;
+    }
+    return compiler.compileStringConstant();
 }
 
 DataType ExpressionCompilerImpl::compileFunction()
