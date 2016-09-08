@@ -20,6 +20,8 @@ public:
     bool isDouble() const;
     bool isInteger() const;
     bool isString() const;
+    bool isNumeric() const;
+    bool isNotNumeric() const;
 
 private:
     enum class Enum {
@@ -80,5 +82,14 @@ inline bool DataType::isString() const
     return value == Enum::String;
 }
 
+inline bool DataType::isNumeric() const
+{
+    return isDouble() || isInteger();
+}
+
+inline bool DataType::isNotNumeric() const
+{
+    return !isNumeric();
+}
 
 #endif  // IBC_DATATYPE_H

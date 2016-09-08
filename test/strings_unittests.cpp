@@ -7,6 +7,7 @@
 
 #include "catch.hpp"
 #include "compiler.h"
+#include "compileerror.h"
 #include "programerror.h"
 #include "programunit.h"
 
@@ -125,5 +126,14 @@ TEST_CASE("string constants", "[const][compile]")
         auto data_type = compiler.compileExpression();
 
         REQUIRE(data_type.isString());
+    }
+    SECTION("check that a string constant is compiled as part of an expression")
+    {
+        Compiler compiler {R"("test"^5)", program};
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(compiler.compileExpression(), ExpNumExprError);
+        }
     }
 }

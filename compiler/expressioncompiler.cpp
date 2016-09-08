@@ -325,6 +325,9 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
     auto lhs_data_type = (this->*compile_operand)();
     if (lhs_data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
+            if (lhs_data_type.isNotNumeric()) {
+                throw ExpNumExprError {0};
+            }
             convert(compiler, lhs_data_type);
             auto rhs_data_type = (this->*compile_operand)();
             if (!rhs_data_type) {
