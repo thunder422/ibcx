@@ -322,11 +322,13 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
     OperatorCodes *(*get_codes)(Compiler &compiler, Precedence precedence),
     void (*convert)(Compiler &compiler, DataType data_type))
 {
+    auto operand_column = compiler.getColumn();
     auto lhs_data_type = (this->*compile_operand)();
+    auto operand_length = compiler.getColumn() - operand_column;
     if (lhs_data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
             if (lhs_data_type.isNotNumeric()) {
-                throw ExpNumExprError {0};
+                throw ExpNumExprError {operand_column, operand_length};
             }
             convert(compiler, lhs_data_type);
             auto rhs_data_type = (this->*compile_operand)();

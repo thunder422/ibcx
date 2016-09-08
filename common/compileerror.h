@@ -21,7 +21,8 @@ struct CompileError : public std::runtime_error {
 
 
 struct ExpNumExprError : public CompileError {
-    ExpNumExprError(unsigned column) : CompileError {"expected numeric expression", column} { }
+    ExpNumExprError(unsigned column, unsigned length = 1) :
+        CompileError {"expected numeric expression", column, length} { }
 };
 
 

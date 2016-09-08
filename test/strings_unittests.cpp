@@ -129,11 +129,21 @@ TEST_CASE("string constants", "[const][compile]")
     }
     SECTION("check that a string constant is compiled as part of an expression")
     {
-        Compiler compiler {R"("test"^5)", program};
+        Compiler compiler {R"(2+"test"^5)", program};
 
         SECTION("check that the error is thrown")
         {
             REQUIRE_THROWS_AS(compiler.compileExpression(), ExpNumExprError);
+        }
+        SECTION("check the column and length of the error thrown")
+        {
+            try {
+                compiler.compileExpression();
+            }
+            catch (const ExpNumExprError &error) {
+                REQUIRE(error.column == 2);
+                REQUIRE(error.length == 6);
+            }
         }
     }
 }
