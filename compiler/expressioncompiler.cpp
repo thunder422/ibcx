@@ -183,6 +183,9 @@ OperatorCodes *ExpressionCompilerImpl::getNotOperatorCodes()
 DataType ExpressionCompilerImpl::compileNotOperand(OperatorCodes *codes)
 {
     auto data_type = compileNot();
+    if (!data_type) {
+        throw ExpNumExprError {compiler.getColumn()};
+    }
     compiler.convertToInteger(data_type);
     return addOperatorCode(codes, {}, {});
 }

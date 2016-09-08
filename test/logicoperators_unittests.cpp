@@ -173,6 +173,20 @@ TEST_CASE("apply necessary conversions to not operator", "[not][conversion]")
             "              ^^^^^^^^^^\n"
         );
     }
+    SECTION("check that there is a numeric expression after the operator")
+    {
+        std::istringstream iss {"PRINT NOT ?"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.runCode(oss);
+
+        REQUIRE(oss.str() ==
+            "error on line 1:11: expected numeric expression\n"
+            "    PRINT NOT ?\n"
+            "              ^\n"
+        );
+    }
 }
 
 
