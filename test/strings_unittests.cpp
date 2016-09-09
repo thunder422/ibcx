@@ -184,4 +184,23 @@ TEST_CASE("string constants", "[const][compile]")
             }
         }
     }
+    SECTION("check for an error if used as the operand of a not operator")
+    {
+        Compiler compiler {R"(NOT"bad")", program};
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(compiler.compileExpression(), ExpNumExprError);
+        }
+        SECTION("check the column and length of the error thrown")
+        {
+            try {
+                compiler.compileExpression();
+            }
+            catch (const ExpNumExprError &error) {
+                REQUIRE(error.column == 3);
+                REQUIRE(error.length == 5);
+            }
+        }
+    }
 }
