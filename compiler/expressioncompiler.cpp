@@ -184,8 +184,8 @@ DataType ExpressionCompilerImpl::compileNotOperand(OperatorCodes *codes)
 {
     auto operand_column = compiler.getColumn();
     auto data_type = compileNot();
-    auto operand_length = compiler.getColumn() - operand_column;
     if (data_type.isNotNumeric()) {
+        auto operand_length = data_type ? compiler.getColumn() - operand_column : 1;
         throw ExpNumExprError {operand_column, operand_length};
     }
     compiler.convertToInteger(data_type);
@@ -239,8 +239,8 @@ DataType ExpressionCompilerImpl::compileNegation()
     compiler.skipWhiteSpace();
     auto operand_column = compiler.getColumn();
     auto data_type = compileExponential();
-    auto operand_length = compiler.getColumn() - operand_column;
     if (data_type.isNotNumeric()) {
+        auto operand_length = data_type ? compiler.getColumn() - operand_column : 1;
         throw ExpNumExprError {operand_column, operand_length};
     }
     auto codes = Table::operatorCodes(Precedence::Negate);
@@ -337,8 +337,8 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
             convert(compiler, lhs_data_type);
             operand_column = compiler.getColumn();
             auto rhs_data_type = (this->*compile_operand)();
-            operand_length = compiler.getColumn() - operand_column;
             if (rhs_data_type.isNotNumeric()) {
+                operand_length = rhs_data_type ? compiler.getColumn() - operand_column : 1;
                 throw ExpNumExprError {operand_column, operand_length};
             }
             convert(compiler, rhs_data_type);
