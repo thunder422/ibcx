@@ -235,9 +235,11 @@ DataType ExpressionCompilerImpl::compileExponential()
 DataType ExpressionCompilerImpl::compileNegation()
 {
     compiler.skipWhiteSpace();
+    auto operand_column = compiler.getColumn();
     auto data_type = compileExponential();
-    if (!data_type) {
-        throw ExpNumExprError {compiler.getColumn()};
+    auto operand_length = compiler.getColumn() - operand_column;
+    if (data_type.isNotNumeric()) {
+        throw ExpNumExprError {operand_column, operand_length};
     }
     auto codes = Table::operatorCodes(Precedence::Negate);
     compiler.addInstruction(codes->select(data_type).code);
