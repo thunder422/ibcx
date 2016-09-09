@@ -331,9 +331,11 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
                 throw ExpNumExprError {operand_column, operand_length};
             }
             convert(compiler, lhs_data_type);
+            operand_column = compiler.getColumn();
             auto rhs_data_type = (this->*compile_operand)();
-            if (!rhs_data_type) {
-                throw ExpNumExprError {compiler.getColumn()};
+            operand_length = compiler.getColumn() - operand_column;
+            if (rhs_data_type.isNotNumeric()) {
+                throw ExpNumExprError {operand_column, operand_length};
             }
             convert(compiler, rhs_data_type);
             lhs_data_type = addOperatorCode(codes, lhs_data_type, rhs_data_type);
