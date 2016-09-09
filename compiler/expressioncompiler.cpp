@@ -28,7 +28,10 @@ public:
     DataType compileExpression() override;
 
 private:
-    DataType compileNumExpression(DataType expected_data_type = {});
+    using CompileSubExprFunction = DataType (ExpressionCompilerImpl::*)();
+    using GetCodesFunction = OperatorCodes *(*)(Compiler &, Precedence);
+    using ConvertFunction = void (*)(Compiler &compiler, DataType data_type);
+
     DataType compileImplication();
     DataType compileEquivalence();
     DataType compileOr();
@@ -55,6 +58,7 @@ private:
         DataType (ExpressionCompilerImpl::*compile_operand)(),
         OperatorCodes *(*get_codes)(Compiler &, Precedence),
         void (*convert)(Compiler &compiler, DataType data_type) = NoConvert);
+    DataType compileNumExpression(CompileSubExprFunction compile_sub_expression);
     DataType addOperatorCode(OperatorCodes *codes, DataType lhs_data_type, DataType rhs_data_type)
         const;
 
@@ -110,21 +114,6 @@ ExpressionCompilerImpl::ExpressionCompilerImpl(Compiler &compiler) :
 
 DataType ExpressionCompilerImpl::compileExpression(DataType expected_data_type)
 {
-    auto data_type = compileNumExpression(expected_data_type);
-    if (!data_type) {
-        throw ExpNumExprError {compiler.getColumn()};
-    }
-    return data_type;
-}
-
-DataType ExpressionCompilerImpl::compileExpression()
-{
-    auto data_type = compileNumExpression();
-    return data_type;
-}
-
-DataType ExpressionCompilerImpl::compileNumExpression(DataType expected_data_type)
-{
     auto data_type = compileImplication();
     if (data_type) {
         if (expected_data_type.isDouble()) {
@@ -132,8 +121,15 @@ DataType ExpressionCompilerImpl::compileNumExpression(DataType expected_data_typ
         } else if (expected_data_type.isInteger()) {
             ConvertToInteger(compiler, data_type);
         }
+    } else {
+        throw ExpNumExprError {compiler.getColumn()};
     }
     return data_type;
+}
+
+DataType ExpressionCompilerImpl::compileExpression()
+{
+    return compileImplication();
 }
 
 DataType ExpressionCompilerImpl::compileImplication()
@@ -182,12 +178,7 @@ OperatorCodes *ExpressionCompilerImpl::getNotOperatorCodes()
 
 DataType ExpressionCompilerImpl::compileNotOperand(OperatorCodes *codes)
 {
-    auto operand_column = compiler.getColumn();
-    auto data_type = compileNot();
-    if (data_type.isNotNumeric()) {
-        auto operand_length = data_type ? compiler.getColumn() - operand_column : 1;
-        throw ExpNumExprError {operand_column, operand_length};
-    }
+    auto data_type = compileNumExpression(&ExpressionCompilerImpl::compileNot);
     compiler.convertToInteger(data_type);
     return addOperatorCode(codes, {}, {});
 }
@@ -237,12 +228,7 @@ DataType ExpressionCompilerImpl::compileExponential()
 DataType ExpressionCompilerImpl::compileNegation()
 {
     compiler.skipWhiteSpace();
-    auto operand_column = compiler.getColumn();
-    auto data_type = compileExponential();
-    if (data_type.isNotNumeric()) {
-        auto operand_length = data_type ? compiler.getColumn() - operand_column : 1;
-        throw ExpNumExprError {operand_column, operand_length};
-    }
+    auto data_type = compileNumExpression(&ExpressionCompilerImpl::compileExponential);
     auto codes = Table::operatorCodes(Precedence::Negate);
     compiler.addInstruction(codes->select(data_type).code);
     return data_type;
@@ -322,12 +308,11 @@ DataType ExpressionCompilerImpl::compileNumConstant()
 }
 
 DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
-    DataType (ExpressionCompilerImpl::*compile_operand)(),
-    OperatorCodes *(*get_codes)(Compiler &compiler, Precedence precedence),
-    void (*convert)(Compiler &compiler, DataType data_type))
+    CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes,
+    ConvertFunction convert)
 {
     auto operand_column = compiler.getColumn();
-    auto lhs_data_type = (this->*compile_operand)();
+    auto lhs_data_type = (this->*compile_sub_expression)();
     auto operand_length = compiler.getColumn() - operand_column;
     if (lhs_data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
@@ -335,17 +320,23 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
                 throw ExpNumExprError {operand_column, operand_length};
             }
             convert(compiler, lhs_data_type);
-            operand_column = compiler.getColumn();
-            auto rhs_data_type = (this->*compile_operand)();
-            if (rhs_data_type.isNotNumeric()) {
-                operand_length = rhs_data_type ? compiler.getColumn() - operand_column : 1;
-                throw ExpNumExprError {operand_column, operand_length};
-            }
+            auto rhs_data_type = compileNumExpression(compile_sub_expression);
             convert(compiler, rhs_data_type);
             lhs_data_type = addOperatorCode(codes, lhs_data_type, rhs_data_type);
         }
     }
     return lhs_data_type;
+}
+
+DataType ExpressionCompilerImpl::compileNumExpression(CompileSubExprFunction compile_sub_expression)
+{
+    auto operand_column = compiler.getColumn();
+    auto data_type = (this->*compile_sub_expression)();
+    if (data_type.isNotNumeric()) {
+        auto operand_length = data_type ? compiler.getColumn() - operand_column : 1;
+        throw ExpNumExprError {operand_column, operand_length};
+    }
+    return data_type;
 }
 
 DataType ExpressionCompilerImpl::addOperatorCode(OperatorCodes *codes, DataType lhs_data_type,

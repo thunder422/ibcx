@@ -203,4 +203,25 @@ TEST_CASE("string constants", "[const][compile]")
             }
         }
     }
+    #if 1
+    SECTION("another test...")
+    {
+        Compiler compiler {R"*(ABS("bad"))*", program};
+
+        SECTION("check that the error is thrown")
+        {
+            REQUIRE_THROWS_AS(compiler.compileExpression(), ExpNumExprError);
+        }
+        SECTION("check the column and length of the error thrown")
+        {
+            try {
+                compiler.compileExpression();
+            }
+            catch (const ExpNumExprError &error) {
+                REQUIRE(error.column == 4);
+                REQUIRE(error.length == 5);
+            }
+        }
+    }
+    #endif
 }
