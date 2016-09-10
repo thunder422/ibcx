@@ -127,4 +127,14 @@ TEST_CASE("PRINT command handling of string expressions", "[strings]")
 
         REQUIRE(oss.str() == R"(PRINT "test")" "\n");
     }
+    SECTION("execute a PRINT command with a string constant")
+    {
+        std::istringstream iss {R"(print "test")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "test\n");
+    }
 }

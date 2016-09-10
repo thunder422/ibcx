@@ -19,11 +19,12 @@ void recreatePrint(Recreator &recreator);
 void executePrint(Executer &executer);
 void executePrintInt(Executer &executer);
 void executePrintDbl(Executer &executer);
+void executePrintStr(Executer &executer);
 
 CommandCode print_code {"PRINT", compilePrint, recreatePrint, executePrint};
 Code print_dbl_code {recreateNothing, executePrintDbl};
 Code print_int_code {recreateNothing, executePrintInt};
-Code print_str_code {recreateNothing, nullptr};
+Code print_str_code {recreateNothing, executePrintStr};
 
 
 void compilePrint(Compiler &compiler)
@@ -60,5 +61,11 @@ void executePrintInt(Executer &executer)
 void executePrintDbl(Executer &executer)
 {
     executer.output() << executer.topDbl();
+    executer.pop();
+}
+
+void executePrintStr(Executer &executer)
+{
+    executer.output() << *executer.topStr();
     executer.pop();
 }
