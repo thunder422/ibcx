@@ -291,4 +291,17 @@ TEST_CASE("comparison operators with string operands", "[comparison]")
         REQUIRE(code_line.size() == 5);
         REQUIRE(code_line[4].instructionCode()->getValue() == lt_str_str_code.getValue());
     }
+    SECTION("check for an error when string on right side with number on left side")
+    {
+        std::istringstream iss {R"(PRINT 5<"right")"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            R"(error on line 1:9: expected numeric expression)" "\n"
+            R"(    PRINT 5<"right")" "\n"
+            R"(            ^^^^^^^)" "\n"
+        );
+    }
 }

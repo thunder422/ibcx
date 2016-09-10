@@ -344,12 +344,12 @@ DataType ExpressionCompilerImpl::compileComparisonOperator(Precedence precedence
     auto lhs = compileSubExpression(compile_sub_expression);
     if (lhs.data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
-            auto rhs_data_type = (this->*compile_sub_expression)();
+            auto rhs = compileSubExpression(compile_sub_expression);
             try {
-                lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs_data_type);
+                lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs.data_type);
             }
             catch (const ExpNumOperandError &) {
-                throw ExpNumExprError {lhs.column, lhs.length};
+                throw ExpNumExprError {rhs.column, rhs.length};
             }
         }
     }
