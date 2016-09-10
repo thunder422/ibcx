@@ -47,6 +47,7 @@ public:
         unsigned column);
     void convertToDouble(DataType operand_data_type);
     void convertToInteger(DataType operand_data_type);
+    void addStrConstInstruction(const std::string &string);
     ProgramCode &&getCodeLine();
 
 private:
@@ -56,7 +57,6 @@ private:
     char getStringConstantChar();
     char parseStringConstantChar();
     char identifyEmbeddedQuote();
-    void addStrConstInstruction(const std::string &string);
 
     OperatorCodes *savedEqualityOperatorCodes();
     void setEqualityCodes(OperatorCodes *codes);

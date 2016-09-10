@@ -271,7 +271,7 @@ TEST_CASE("execute an END command", "[END]")
     std::ostringstream unused_oss;
     program.compile(iss);
 
-    auto executer = program.createExecutor(unused_oss);
+    auto executer = program.createExecuter(unused_oss);
     REQUIRE_THROWS_AS(executer.executeOneCode(), EndOfProgram);
 }
 

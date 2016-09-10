@@ -66,7 +66,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
         program.compile(iss);
         std::ostringstream oss;
 
-        auto executer = program.createExecutor(oss);
+        auto executer = program.createExecuter(oss);
         executer.executeOneCode();
 
         REQUIRE(oss.str() == "\n");
@@ -77,7 +77,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
         program.compile(iss);
         std::ostringstream oss;
 
-        auto executer = program.createExecutor(oss);
+        auto executer = program.createExecuter(oss);
         executer.executeOneCode();
         executer.executeOneCode();
         executer.executeOneCode();
@@ -90,7 +90,7 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
         program.compile(iss);
         std::ostringstream oss;
 
-        auto executer = program.createExecutor(oss);
+        auto executer = program.createExecuter(oss);
         executer.executeOneCode();
         executer.executeOneCode();
         executer.executeOneCode();

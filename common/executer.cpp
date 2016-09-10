@@ -15,11 +15,13 @@ std::default_random_engine random_number_generator;
 
 
 Executer::Executer(const WordType *code, const double *const_dbl_values,
-        const int32_t *const_int_values, std::ostream &os) :
+        const int32_t *const_int_values, const std::unique_ptr<std::string> *const_str_values,
+        std::ostream &os) :
     code {code},
     execute_functions {Code::getExecuteFunctions()},
     const_dbl_values {const_dbl_values},
     const_int_values {const_int_values},
+    const_str_values {const_str_values},
     os {os}
 {
     reset();

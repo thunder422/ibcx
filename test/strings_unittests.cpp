@@ -8,6 +8,7 @@
 #include "catch.hpp"
 #include "compiler.h"
 #include "compileerror.h"
+#include "executer.h"
 #include "programerror.h"
 #include "programunit.h"
 
@@ -245,5 +246,24 @@ TEST_CASE("recreate string constants", "[const][recreate]")
         program.appendCodeLine(code_line);
 
         REQUIRE(program.recreateLine(0) == R"("te""st")");
+    }
+}
+
+TEST_CASE("execute string constants", "[execute]")
+{
+    ProgramUnit program;
+    std::ostringstream unused_oss;
+
+    Compiler compiler {"", program};
+
+    SECTION("execute a single string constant")
+    {
+        compiler.addStrConstInstruction("test123");
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        auto executer = program.createExecuter(unused_oss);
+        executer.executeOneCode();
+        REQUIRE(*executer.topStr() == "test123");
     }
 }

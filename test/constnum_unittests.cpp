@@ -432,7 +432,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor(unused_oss);
+        auto executer = program.createExecuter(unused_oss);
         executer.executeOneCode();
         REQUIRE(executer.topInt() == 12345);
     }
@@ -442,7 +442,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor(unused_oss);
+        auto executer = program.createExecuter(unused_oss);
         executer.executeOneCode();
         REQUIRE(executer.topInt() == 23456);
     }
@@ -453,7 +453,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor(unused_oss);
+        auto executer = program.createExecuter(unused_oss);
         executer.executeOneCode();
         REQUIRE(executer.topInt() == 12345);
         executer.executeOneCode();
@@ -466,7 +466,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor(unused_oss);
+        auto executer = program.createExecuter(unused_oss);
         executer.executeOneCode();
         executer.executeOneCode();
         REQUIRE(executer.topInt() == 23456);
@@ -479,7 +479,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor(unused_oss);
+        auto executer = program.createExecuter(unused_oss);
         executer.executeOneCode();
         REQUIRE(executer.topDbl() == 12.345);
     }
@@ -489,7 +489,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor(unused_oss);
+        auto executer = program.createExecuter(unused_oss);
         executer.executeOneCode();
         REQUIRE(executer.topDbl() == -2.3456);
     }
@@ -502,7 +502,7 @@ TEST_CASE("execute a constant code", "[execute]")
         auto code_line = compiler.getCodeLine();
         program.appendCodeLine(code_line);
 
-        auto executer = program.createExecutor(unused_oss);
+        auto executer = program.createExecuter(unused_oss);
         executer.executeOneCode();
         REQUIRE(executer.topInt() == 12345);
         executer.executeOneCode();

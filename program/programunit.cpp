@@ -127,7 +127,7 @@ void ProgramUnit::generateProgramError(const RunError &error)
 void ProgramUnit::execute(std::ostream &os)
 {
     ProgramEndGuard end_guard {code};
-    auto executer = createExecutor(os);
+    auto executer = createExecuter(os);
     try {
         executer.run();
     }
@@ -151,10 +151,10 @@ ProgramEndGuard::~ProgramEndGuard()
     code.pop_back();
 }
 
-Executer ProgramUnit::createExecutor(std::ostream &os) const
+Executer ProgramUnit::createExecuter(std::ostream &os) const
 {
     return Executer {code.getBeginning(), const_num_dictionary.getDblValues(),
-                const_num_dictionary.getIntValues(), os};
+        const_num_dictionary.getIntValues(), const_str_dictionary.getStrValues(), os};
 }
 
 ConstNumCodeInfo ProgramUnit::addConstantNumber(bool floating_point, const std::string &number)

@@ -16,10 +16,16 @@
 class ConstStrDictionary : public Dictionary {
 public:
     WordType add(const std::string &string);
+    const std::unique_ptr<std::string> *getStrValues() const;
 
 private:
     std::vector<std::unique_ptr<std::string>> str_values;
 };
+
+inline const std::unique_ptr<std::string> *ConstStrDictionary::getStrValues() const
+{
+    return str_values.data();
+}
 
 
 #endif  // IBC_CONSTSTR_H

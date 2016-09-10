@@ -32,7 +32,7 @@ public:
     std::string recreateLine(unsigned line_index, unsigned error_offset = -1) const;
     bool runCode(std::ostream &os) noexcept;
     void run(std::ostream &os);
-    Executer createExecutor(std::ostream &os) const;
+    Executer createExecuter(std::ostream &os) const;
 
     ConstNumCodeInfo addConstantNumber(bool floating_point, const std::string &number);
     bool isConstantNumberConvertibleToInteger(WordType index) const;

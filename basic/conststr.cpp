@@ -7,6 +7,7 @@
 
 #include "code.h"
 #include "conststr.h"
+#include "executer.h"
 #include "recreator.h"
 
 
@@ -33,4 +34,10 @@ void recreateConstStr(Recreator &recreator)
     recreator.push(string);
 }
 
-Code const_str_code {recreateConstStr, nullptr};
+void executeConstStr(Executer &executer)
+{
+    auto operand = executer.getOperand();
+    executer.pushConstStr(operand);
+}
+
+Code const_str_code {recreateConstStr, executeConstStr};

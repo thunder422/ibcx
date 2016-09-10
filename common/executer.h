@@ -9,6 +9,7 @@
 #define IBC_EXECUTER_H
 
 #include <iosfwd>
+#include <memory>
 #include <random>
 #include <stack>
 
@@ -21,15 +22,17 @@ public:
     struct StackItem {
         StackItem(double dbl_value);
         StackItem(int32_t int_value);
+        StackItem(std::string *str_value);
 
         union {
             double dbl_value;
             int32_t int_value;
+            std::string *str_value;
         };
     };
 
     Executer(const WordType *code, const double *const_dbl_values, const int32_t *const_int_values,
-        std::ostream &os);
+        const std::unique_ptr<std::string> *const_str_values, std::ostream &os);
     void run();
     void executeOneCode();
     unsigned currentOffset() const;
@@ -38,8 +41,10 @@ public:
     template <typename T> void push(T value);
     void pushConstDbl(WordType operand);
     void pushConstInt(WordType operand);
+    void pushConstStr(WordType operand);
     double topDbl() const;
     int32_t topInt() const;
+    const std::string *topStr() const;
     template <typename T> T top() const;
     double topIntAsDbl() const;
     void pop();
@@ -60,6 +65,7 @@ private:
     const ExecuteFunctionPointer *execute_functions;
     const double *const_dbl_values;
     const int32_t *const_int_values;
+    const std::unique_ptr<std::string> *const_str_values;
 
     WordType *program_counter;
     std::stack<StackItem> stack;
@@ -88,6 +94,11 @@ inline void Executer::pushConstInt(WordType operand)
     stack.emplace(const_int_values[operand]);
 }
 
+inline void Executer::pushConstStr(WordType operand)
+{
+    stack.emplace(const_str_values[operand].get());
+}
+
 inline double Executer::topDbl() const
 {
     return stack.top().dbl_value;
@@ -96,6 +107,11 @@ inline double Executer::topDbl() const
 inline int32_t Executer::topInt() const
 {
     return stack.top().int_value;
+}
+
+inline const std::string *Executer::topStr() const
+{
+    return stack.top().str_value;
 }
 
 template <>
@@ -153,6 +169,11 @@ inline Executer::StackItem::StackItem(double dbl_value) :
 
 inline Executer::StackItem::StackItem(int32_t int_value) :
     int_value {int_value}
+{
+}
+
+inline Executer::StackItem::StackItem(std::string *str_value) :
+    str_value {str_value}
 {
 }
 
