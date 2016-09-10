@@ -24,6 +24,7 @@ void executePrintDbl(Executer &executer);
 CommandCode print_code {"PRINT", compilePrint, recreatePrint, executePrint};
 Code print_dbl_code {recreatePrintItem, executePrintDbl};
 Code print_int_code {recreatePrintItem, executePrintInt};
+Code print_str_code {nullptr, nullptr};
 
 
 void compilePrint(Compiler &compiler)
@@ -32,8 +33,10 @@ void compilePrint(Compiler &compiler)
         auto data_type = compiler.compileExpression();
         if (data_type.isDouble()) {
             compiler.addInstruction(print_dbl_code);
-        } else {
+        } else if (data_type.isInteger()) {
             compiler.addInstruction(print_int_code);
+        } else {
+            compiler.addInstruction(print_str_code);
         }
     }
     compiler.addInstruction(print_code);

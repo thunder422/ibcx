@@ -98,3 +98,23 @@ TEST_CASE("execute simple PRINT commands", "[execute]")
         REQUIRE(oss.str() == "2.34e-107\n");
     }
 }
+
+TEST_CASE("PRINT command handling of string expressions", "[strings]")
+{
+    ProgramUnit program;
+
+    SECTION("compile a PRINT command with a string constant")
+    {
+        auto code_line = CommandCompiler::create(R"(PRINT "test")", program)->compile();
+
+        extern Code const_str_code;
+        extern Code print_str_code;
+        extern CommandCode print_code;
+        REQUIRE(code_line.size() == 4);
+        REQUIRE(code_line[0].instructionCode()->getValue() == const_str_code.getValue());
+        auto operand = code_line[1].operand();
+        REQUIRE(program.getConstantString(operand) == "test");
+        REQUIRE(code_line[2].instructionCode()->getValue() == print_str_code.getValue());
+        REQUIRE(code_line[3].instructionCode()->getValue() == print_code.getValue());
+    }
+}
