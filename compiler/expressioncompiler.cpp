@@ -32,6 +32,12 @@ private:
     using GetCodesFunction = OperatorCodes *(*)(Compiler &, Precedence);
     using ConvertFunction = void (*)(Compiler &compiler, DataType data_type);
 
+    struct SubExpression {
+        unsigned column;
+        unsigned length;
+        DataType data_type;
+    };
+
     DataType compileImplication();
     DataType compileEquivalence();
     DataType compileOr();
@@ -58,6 +64,8 @@ private:
         DataType (ExpressionCompilerImpl::*compile_operand)(),
         OperatorCodes *(*get_codes)(Compiler &, Precedence),
         void (*convert)(Compiler &compiler, DataType data_type) = NoConvert);
+    ExpressionCompilerImpl::SubExpression
+        compileSubExpression(CompileSubExprFunction compile_sub_expression);
     DataType compileNumExpression(CompileSubExprFunction compile_sub_expression);
     DataType addOperatorCode(OperatorCodes *codes, DataType lhs_data_type, DataType rhs_data_type)
         const;
@@ -114,17 +122,19 @@ ExpressionCompilerImpl::ExpressionCompilerImpl(Compiler &compiler) :
 
 DataType ExpressionCompilerImpl::compileExpression(DataType expected_data_type)
 {
-    auto data_type = compileImplication();
-    if (data_type) {
-        if (expected_data_type.isDouble()) {
-            ConvertToDouble(compiler, data_type);
+    auto sub_expression = compileSubExpression(&ExpressionCompilerImpl::compileImplication);
+    if (sub_expression.data_type) {
+        if (sub_expression.data_type.isNotNumeric()) {
+            throw ExpNumExprError {sub_expression.column, sub_expression.length};
+        } else if (expected_data_type.isDouble()) {
+            ConvertToDouble(compiler, sub_expression.data_type);
         } else if (expected_data_type.isInteger()) {
-            ConvertToInteger(compiler, data_type);
+            ConvertToInteger(compiler, sub_expression.data_type);
         }
     } else {
         throw ExpNumExprError {compiler.getColumn()};
     }
-    return data_type;
+    return sub_expression.data_type;
 }
 
 DataType ExpressionCompilerImpl::compileExpression()
@@ -311,21 +321,29 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
     CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes,
     ConvertFunction convert)
 {
-    auto operand_column = compiler.getColumn();
-    auto lhs_data_type = (this->*compile_sub_expression)();
-    auto operand_length = compiler.getColumn() - operand_column;
-    if (lhs_data_type) {
+    auto lhs = compileSubExpression(compile_sub_expression);
+    if (lhs.data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
-            if (lhs_data_type.isNotNumeric()) {
-                throw ExpNumExprError {operand_column, operand_length};
+            if (lhs.data_type.isNotNumeric()) {
+                throw ExpNumExprError {lhs.column, lhs.length};
             }
-            convert(compiler, lhs_data_type);
+            convert(compiler, lhs.data_type);
             auto rhs_data_type = compileNumExpression(compile_sub_expression);
             convert(compiler, rhs_data_type);
-            lhs_data_type = addOperatorCode(codes, lhs_data_type, rhs_data_type);
+            lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs_data_type);
         }
     }
-    return lhs_data_type;
+    return lhs.data_type;
+}
+
+ExpressionCompilerImpl::SubExpression
+ExpressionCompilerImpl::compileSubExpression(CompileSubExprFunction compile_sub_expression)
+{
+    SubExpression sub_expression;
+    sub_expression.column = compiler.getColumn();
+    sub_expression.data_type = (this->*compile_sub_expression)();
+    sub_expression.length = compiler.getColumn() - sub_expression.column;
+    return sub_expression;
 }
 
 DataType ExpressionCompilerImpl::compileNumExpression(CompileSubExprFunction compile_sub_expression)

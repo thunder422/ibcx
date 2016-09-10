@@ -203,8 +203,7 @@ TEST_CASE("string constants", "[const][compile]")
             }
         }
     }
-    #if 1
-    SECTION("another test...")
+    SECTION("check for an error if used as an argument to a multi-type function")
     {
         Compiler compiler {R"*(ABS("bad"))*", program};
 
@@ -223,5 +222,4 @@ TEST_CASE("string constants", "[const][compile]")
             }
         }
     }
-    #endif
 }
