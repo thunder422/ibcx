@@ -228,7 +228,7 @@ TEST_CASE("recreate string constants", "[const][recreate]")
 {
     ProgramUnit program;
 
-    SECTION("recreate an integer constant")
+    SECTION("recreate an string constant")
     {
         Compiler compiler {R"("test")", program};
         compiler.compileStringConstant();
@@ -236,5 +236,14 @@ TEST_CASE("recreate string constants", "[const][recreate]")
         program.appendCodeLine(code_line);
 
         REQUIRE(program.recreateLine(0) == R"("test")");
+    }
+    SECTION("recreate an string constant with an embedded double quote")
+    {
+        Compiler compiler {R"("te""st")", program};
+        compiler.compileStringConstant();
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        REQUIRE(program.recreateLine(0) == R"("te""st")");
     }
 }

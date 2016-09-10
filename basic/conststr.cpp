@@ -23,7 +23,12 @@ WordType ConstStrDictionary::add(const std::string &string)
 void recreateConstStr(Recreator &recreator)
 {
     auto string = std::string {'"'};
-    string += recreator.getConstStrOperand();
+    for (auto c : recreator.getConstStrOperand()) {
+        string += c;
+        if (c == '"') {
+            string += c;
+        }
+    }
     string += '"';
     recreator.push(string);
 }
