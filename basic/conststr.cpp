@@ -5,7 +5,10 @@
  * (See accompanying file LICENSE or <http://www.gnu.org/licenses/>)
  */
 
+#include "code.h"
 #include "conststr.h"
+#include "recreator.h"
+
 
 WordType ConstStrDictionary::add(const std::string &string)
 {
@@ -15,3 +18,14 @@ WordType ConstStrDictionary::add(const std::string &string)
     }
     return entry.operand;
 }
+
+
+void recreateConstStr(Recreator &recreator)
+{
+    auto string = std::string {'"'};
+    string += recreator.getConstStrOperand();
+    string += '"';
+    recreator.push(string);
+}
+
+Code const_str_code {recreateConstStr, nullptr};

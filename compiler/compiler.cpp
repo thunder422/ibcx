@@ -67,11 +67,12 @@ char Compiler::identifyEmbeddedQuote()
     return peekNextChar() == '"' ? getNextChar() : 0;
 }
 
-Code const_str_code {nullptr, nullptr};
 
 void Compiler::addStrConstInstruction(const std::string &string)
 {
+    extern Code const_str_code;
     code_line.emplace_back(const_str_code.getValue());
+
     auto operand = program.addConstantString(string);
     code_line.emplace_back(operand);
 }

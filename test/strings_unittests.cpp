@@ -223,3 +223,18 @@ TEST_CASE("string constants", "[const][compile]")
         }
     }
 }
+
+TEST_CASE("recreate string constants", "[const][recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("recreate an integer constant")
+    {
+        Compiler compiler {R"("test")", program};
+        compiler.compileStringConstant();
+        auto code_line = compiler.getCodeLine();
+        program.appendCodeLine(code_line);
+
+        REQUIRE(program.recreateLine(0) == R"("test")");
+    }
+}

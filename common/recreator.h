@@ -25,6 +25,7 @@ public:
 
     virtual std::string &&recreate() = 0;
     virtual std::string getConstNumOperand() const = 0;
+    virtual std::string getConstStrOperand() const = 0;
     virtual void addCommandKeyword(CommandCode command_code) = 0;
     virtual void push(const std::string &operand) = 0;
 

@@ -22,6 +22,7 @@ public:
 
     std::string &&recreate() override;
     std::string getConstNumOperand() const override;
+    std::string getConstStrOperand() const override;
     void addCommandKeyword(CommandCode command_code) override;
     void push(const std::string &operand) override;
 
@@ -131,6 +132,12 @@ std::string RecreatorImpl::getConstNumOperand() const
 {
     auto operand = program_reader.getOperand();
     return program.getConstantNumber(operand);
+}
+
+std::string RecreatorImpl::getConstStrOperand() const
+{
+    auto operand = program_reader.getOperand();
+    return program.getConstantString(operand);
 }
 
 void RecreatorImpl::addCommandKeyword(CommandCode command_code)
