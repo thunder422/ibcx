@@ -16,15 +16,14 @@
 
 void compilePrint(Compiler &compiler);
 void recreatePrint(Recreator &recreator);
-void recreatePrintItem(Recreator &recreator);
 void executePrint(Executer &executer);
 void executePrintInt(Executer &executer);
 void executePrintDbl(Executer &executer);
 
 CommandCode print_code {"PRINT", compilePrint, recreatePrint, executePrint};
-Code print_dbl_code {recreatePrintItem, executePrintDbl};
-Code print_int_code {recreatePrintItem, executePrintInt};
-Code print_str_code {nullptr, nullptr};
+Code print_dbl_code {recreateNothing, executePrintDbl};
+Code print_int_code {recreateNothing, executePrintInt};
+Code print_str_code {recreateNothing, nullptr};
 
 
 void compilePrint(Compiler &compiler)
@@ -46,12 +45,6 @@ void recreatePrint(Recreator &recreator)
 {
     recreator.addCommandKeyword(print_code);
 }
-
-void recreatePrintItem(Recreator &recreator)
-{
-    (void)recreator;
-}
-
 
 void executePrint(Executer &executer)
 {

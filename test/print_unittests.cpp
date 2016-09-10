@@ -117,4 +117,14 @@ TEST_CASE("PRINT command handling of string expressions", "[strings]")
         REQUIRE(code_line[2].instructionCode()->getValue() == print_str_code.getValue());
         REQUIRE(code_line[3].instructionCode()->getValue() == print_code.getValue());
     }
+    SECTION("recreate a PRINT command with a string constant")
+    {
+        std::istringstream iss {R"(print "test")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "test")" "\n");
+    }
 }
