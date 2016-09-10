@@ -126,6 +126,7 @@ private:
 
 
 struct ExpNumOperandError { };
+struct ExpStrOperandError { };
 
 
 #endif  // IBC_OPERATORS_H

@@ -92,6 +92,8 @@ OperatorCodes::Info CompOperatorCodes::select(DataType lhs_data_type, DataType r
     if (lhs_data_type.isString()) {
         if (rhs_data_type.isString()) {
             return OperatorCodes::Info {str_str_code, DataType::Integer()};
+        } else {
+            throw ExpStrOperandError {};
         }
     } else if (lhs_data_type.isDouble()) {
         if (rhs_data_type.isDouble()) {

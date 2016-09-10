@@ -351,6 +351,9 @@ DataType ExpressionCompilerImpl::compileComparisonOperator(Precedence precedence
             catch (const ExpNumOperandError &) {
                 throw ExpNumExprError {rhs.column, rhs.length};
             }
+            catch (const ExpStrOperandError &) {
+                throw ExpStrExprError {rhs.column, rhs.length};
+            }
         }
     }
     return lhs.data_type;

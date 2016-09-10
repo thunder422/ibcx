@@ -26,4 +26,10 @@ struct ExpNumExprError : public CompileError {
 };
 
 
+struct ExpStrExprError : public CompileError {
+    ExpStrExprError(unsigned column, unsigned length = 1) :
+        CompileError {"expected string expression", column, length} { }
+};
+
+
 #endif  // IBC_COMPILEERROR_H

@@ -304,4 +304,17 @@ TEST_CASE("comparison operators with string operands", "[comparison]")
             R"(            ^^^^^^^)" "\n"
         );
     }
+    SECTION("check for an error when number on right side with string on left side")
+    {
+        std::istringstream iss {R"(PRINT "left"<5)"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            R"(error on line 1:14: expected string expression)" "\n"
+            R"(    PRINT "left"<5)" "\n"
+            R"(                 ^)" "\n"
+        );
+    }
 }
