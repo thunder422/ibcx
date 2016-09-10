@@ -11,6 +11,7 @@
 
 using DblCompareFunction = bool(*)(double, double);
 using IntCompareFunction = bool(*)(int32_t, int32_t);
+using StrCompareFunction = bool(*)(const std::string *, const std::string *);
 
 template <DblCompareFunction compare>
 void executeCompareDblDbl(Executer &executer)
@@ -44,6 +45,14 @@ void executeCompareIntInt(Executer &executer)
     executer.setTopIntFromBool(compare(executer.topInt(), rhs));
 }
 
+template <StrCompareFunction compare>
+void executeCompareStrStr(Executer &executer)
+{
+    auto rhs = executer.topStr();
+    executer.pop();
+    executer.setTopIntFromBool(compare(executer.topStr(), rhs));
+}
+
 // ----------------------------------------
 
 inline bool lt(double lhs, double rhs)
@@ -56,11 +65,16 @@ inline bool lt(int32_t lhs, int32_t rhs)
     return lhs < rhs;
 }
 
+inline bool lt(const std::string *lhs, const std::string *rhs)
+{
+    return *lhs < *rhs;
+}
+
 OperatorCode<OpType::DblDbl> lt_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<lt>};
 OperatorCode<OpType::IntDbl> lt_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<lt>};
 OperatorCode<OpType::DblInt> lt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<lt>};
 OperatorCode<OpType::IntInt> lt_int_int_code {recreateBinaryOperator, executeCompareIntInt<lt>};
-OperatorCode<OpType::StrStr> lt_str_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrStr> lt_str_str_code {recreateBinaryOperator, executeCompareStrStr<lt>};
 
 CompOperatorCodes lt_codes {
     Precedence::Relation, "<",
@@ -80,11 +94,16 @@ inline bool gt(int32_t lhs, int32_t rhs)
     return lhs > rhs;
 }
 
+inline bool gt(const std::string *lhs, const std::string *rhs)
+{
+    return *lhs > *rhs;
+}
+
 OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<gt>};
 OperatorCode<OpType::IntDbl> gt_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<gt>};
 OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<gt>};
 OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, executeCompareIntInt<gt>};
-OperatorCode<OpType::StrStr> gt_str_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrStr> gt_str_str_code {recreateBinaryOperator, executeCompareStrStr<gt>};
 
 CompOperatorCodes gt_codes {
     Precedence::Relation, ">",
@@ -104,11 +123,16 @@ inline bool le(int32_t lhs, int32_t rhs)
     return lhs <= rhs;
 }
 
+inline bool le(const std::string *lhs, const std::string *rhs)
+{
+    return *lhs <= *rhs;
+}
+
 OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<le>};
 OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<le>};
 OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<le>};
 OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeCompareIntInt<le>};
-OperatorCode<OpType::StrStr> le_str_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrStr> le_str_str_code {recreateBinaryOperator, executeCompareStrStr<le>};
 
 CompOperatorCodes le_codes {
     Precedence::Relation, "<=",
@@ -128,11 +152,15 @@ inline bool ge(int32_t lhs, int32_t rhs)
     return lhs >= rhs;
 }
 
+inline bool ge(const std::string *lhs, const std::string *rhs)
+{
+    return *lhs >= *rhs;
+}
 OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<ge>};
 OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<ge>};
 OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ge>};
 OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, executeCompareIntInt<ge>};
-OperatorCode<OpType::StrStr> ge_str_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrStr> ge_str_str_code {recreateBinaryOperator, executeCompareStrStr<ge>};
 
 CompOperatorCodes ge_codes {
     Precedence::Relation, ">=",

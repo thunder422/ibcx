@@ -358,4 +358,61 @@ TEST_CASE("comparison operators with string operands", "[comparison]")
 
         REQUIRE(oss.str() == R"(PRINT "left" >= "right")" "\n");
     }
+
+    SECTION("execute less-than operator with string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "left"<"right")" "\n"
+            R"(PRINT "left"<"RIGHT")" "\n"
+            R"(PRINT "same"<"same")" "\n"
+        };
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n0\n");
+    }
+    SECTION("execute greater-than operator with string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "left">"right")" "\n"
+            R"(PRINT "left" >"RIGHT")" "\n"
+            R"(PRINT "same"> "same")" "\n"
+        };
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n-1\n0\n");
+    }
+    SECTION("execute less-than or-equal operator with string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "left"<="right")" "\n"
+            R"(PRINT "left"<="RIGHT")" "\n"
+            R"(PRINT "same"<="same")" "\n"
+        };
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n-1\n");
+    }
+    SECTION("execute greater-than or-equal operator with string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "left">="right")" "\n"
+            R"(PRINT "left">="RIGHT")" "\n"
+            R"(PRINT "same">="same")" "\n"
+        };
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n-1\n-1\n");
+    }
 }
