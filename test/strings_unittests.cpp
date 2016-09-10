@@ -267,3 +267,17 @@ TEST_CASE("execute string constants", "[execute]")
         REQUIRE(*executer.topStr() == "test123");
     }
 }
+
+
+TEST_CASE("comparison operators with string operands", "[comparison]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure both string operands and operator are parsed")
+    {
+        Compiler compiler {R"("left"<"test")", program};
+        compiler.compileExpression();
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

@@ -64,6 +64,8 @@ private:
         DataType (ExpressionCompilerImpl::*compile_operand)(),
         OperatorCodes *(*get_codes)(Compiler &, Precedence),
         void (*convert)(Compiler &compiler, DataType data_type) = NoConvert);
+    DataType compileComparisonOperator(Precedence precedence,
+        CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes);
     ExpressionCompilerImpl::SubExpression
         compileSubExpression(CompileSubExprFunction compile_sub_expression);
     DataType compileNumExpression(CompileSubExprFunction compile_sub_expression);
@@ -201,8 +203,8 @@ DataType ExpressionCompilerImpl::compileEquality()
 
 DataType ExpressionCompilerImpl::compileRelation()
 {
-    return compileOperator(Precedence::Relation, &ExpressionCompilerImpl::compileSummation,
-        ComparisonGetCodes);
+    return compileComparisonOperator(Precedence::Relation,
+        &ExpressionCompilerImpl::compileSummation, ComparisonGetCodes);
 }
 
 DataType ExpressionCompilerImpl::compileSummation()
@@ -330,6 +332,22 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
             convert(compiler, lhs.data_type);
             auto rhs_data_type = compileNumExpression(compile_sub_expression);
             convert(compiler, rhs_data_type);
+            lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs_data_type);
+        }
+    }
+    return lhs.data_type;
+}
+
+DataType ExpressionCompilerImpl::compileComparisonOperator(Precedence precedence,
+    CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes)
+{
+    auto lhs = compileSubExpression(compile_sub_expression);
+    if (lhs.data_type) {
+        while (auto codes = get_codes(compiler, precedence)) {
+            auto rhs_data_type = (this->*compile_sub_expression)();
+            if (!rhs_data_type) {
+                throw ExpNumExprError {lhs.column, lhs.length};
+            }
             lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs_data_type);
         }
     }
