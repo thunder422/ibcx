@@ -60,7 +60,7 @@ OperatorCode<OpType::DblDbl> lt_dbl_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntDbl> lt_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<lt>};
 OperatorCode<OpType::DblInt> lt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<lt>};
 OperatorCode<OpType::IntInt> lt_int_int_code {recreateBinaryOperator, executeCompareIntInt<lt>};
-OperatorCode<OpType::StrStr> lt_str_str_code {nullptr, nullptr};
+OperatorCode<OpType::StrStr> lt_str_str_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes lt_codes {
     Precedence::Relation, "<",
@@ -84,7 +84,7 @@ OperatorCode<OpType::DblDbl> gt_dbl_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntDbl> gt_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<gt>};
 OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<gt>};
 OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, executeCompareIntInt<gt>};
-OperatorCode<OpType::StrStr> gt_str_str_code {nullptr, nullptr};
+OperatorCode<OpType::StrStr> gt_str_str_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes gt_codes {
     Precedence::Relation, ">",
@@ -108,7 +108,7 @@ OperatorCode<OpType::DblDbl> le_dbl_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<le>};
 OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<le>};
 OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeCompareIntInt<le>};
-OperatorCode<OpType::StrStr> le_str_str_code {nullptr, nullptr};
+OperatorCode<OpType::StrStr> le_str_str_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes le_codes {
     Precedence::Relation, "<=",
@@ -132,7 +132,7 @@ OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<ge>};
 OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ge>};
 OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, executeCompareIntInt<ge>};
-OperatorCode<OpType::StrStr> ge_str_str_code {nullptr, nullptr};
+OperatorCode<OpType::StrStr> ge_str_str_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes ge_codes {
     Precedence::Relation, ">=",

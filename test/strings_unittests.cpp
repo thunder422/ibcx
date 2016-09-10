@@ -317,4 +317,45 @@ TEST_CASE("comparison operators with string operands", "[comparison]")
             R"(                 ^)" "\n"
         );
     }
+
+    SECTION("recreate less-than operator with string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"<"right")"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" < "right")" "\n");
+    }
+    SECTION("recreate greater-than operator with string operands")
+    {
+        std::istringstream iss {R"(PRINT "left">"right")"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" > "right")" "\n");
+    }
+    SECTION("recreate less-than or equal operator with string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"<="right")"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" <= "right")" "\n");
+    }
+    SECTION("recreate greater-than or equal operator with string operands")
+    {
+        std::istringstream iss {R"(PRINT "left">="right")"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" >= "right")" "\n");
+    }
 }
