@@ -19,7 +19,8 @@ enum class OpType {
     DblDbl,
     IntDbl,
     DblInt,
-    IntInt
+    IntInt,
+    StrStr
 };
 
 
@@ -83,10 +84,21 @@ private:
 };
 
 
-class CompOperatorCodes : public NumOperatorCodes {
+class CompOperatorCodes : public OperatorCodes {
 public:
-    using NumOperatorCodes::NumOperatorCodes;
+    CompOperatorCodes(Precedence precedence, const char *keyword,
+        OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
+        OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code,
+        OperatorCode<OpType::StrStr> &str_str_code);
+    std::vector<WordType> codeValues() const;
     Info select(DataType lhs_data_type, DataType rhs_data_type) const override;
+
+private:
+    OperatorCode<OpType::DblDbl> &dbl_dbl_code;
+    OperatorCode<OpType::IntDbl> &int_dbl_code;
+    OperatorCode<OpType::DblInt> &dbl_int_code;
+    OperatorCode<OpType::IntInt> &int_int_code;
+    OperatorCode<OpType::StrStr> &str_str_code;
 };
 
 
@@ -111,6 +123,9 @@ public:
 private:
     OperatorCode<OpType::IntInt> &code;
 };
+
+
+struct ExpNumOperandError { };
 
 
 #endif  // IBC_OPERATORS_H

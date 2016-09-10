@@ -9,6 +9,7 @@
 #include "compiler.h"
 #include "compileerror.h"
 #include "executer.h"
+#include "operators.h"
 #include "programerror.h"
 #include "programunit.h"
 
@@ -273,11 +274,21 @@ TEST_CASE("comparison operators with string operands", "[comparison]")
 {
     ProgramUnit program;
 
-    SECTION("make sure both string operands and operator are parsed")
+    SECTION("make sure both string operands and relation operator are parsed")
     {
         Compiler compiler {R"("left"<"test")", program};
         compiler.compileExpression();
 
         REQUIRE(compiler.peekNextChar() == EOF);
+    }
+    SECTION("check for an relation operator code after the operands")
+    {
+        Compiler compiler {R"("left"<"test")", program};
+        compiler.compileExpression();
+        auto code_line = compiler.getCodeLine();
+
+        extern OperatorCode<OpType::StrStr> lt_str_str_code;
+        REQUIRE(code_line.size() == 5);
+        REQUIRE(code_line[4].instructionCode()->getValue() == lt_str_str_code.getValue());
     }
 }
