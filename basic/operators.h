@@ -56,6 +56,20 @@ private:
 };
 
 
+struct NumCodes {
+    NumCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
+        OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code);
+    enum class ErrorSide {Left, Right};
+    OperatorCodes::Info select(DataType lhs_data_type, DataType rhs_data_type, ErrorSide error_side)
+        const;
+
+    OperatorCode<OpType::DblDbl> &dbl_dbl_code;
+    OperatorCode<OpType::IntDbl> &int_dbl_code;
+    OperatorCode<OpType::DblInt> &dbl_int_code;
+    OperatorCode<OpType::IntInt> &int_int_code;
+};
+
+
 class NumOperatorCodes : public OperatorCodes {
 public:
     NumOperatorCodes(Precedence precedence, const char *keyword,
@@ -65,10 +79,7 @@ public:
     std::vector<WordType> codeValues() const override;
 
 private:
-    OperatorCode<OpType::DblDbl> &dbl_dbl_code;
-    OperatorCode<OpType::IntDbl> &int_dbl_code;
-    OperatorCode<OpType::DblInt> &dbl_int_code;
-    OperatorCode<OpType::IntInt> &int_int_code;
+    NumCodes num_codes;
 };
 
 
@@ -94,10 +105,7 @@ public:
     Info select(DataType lhs_data_type, DataType rhs_data_type) const override;
 
 private:
-    OperatorCode<OpType::DblDbl> &dbl_dbl_code;
-    OperatorCode<OpType::IntDbl> &int_dbl_code;
-    OperatorCode<OpType::DblInt> &dbl_int_code;
-    OperatorCode<OpType::IntInt> &int_int_code;
+    NumCodes num_codes;
     OperatorCode<OpType::StrStr> &str_str_code;
 };
 
