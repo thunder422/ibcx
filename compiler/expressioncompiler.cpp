@@ -197,7 +197,7 @@ DataType ExpressionCompilerImpl::compileNotOperand(OperatorCodes *codes)
 
 DataType ExpressionCompilerImpl::compileEquality()
 {
-    return compileOperator(Precedence::Equality, &ExpressionCompilerImpl::compileRelation,
+    return compileComparisonOperator(Precedence::Equality, &ExpressionCompilerImpl::compileRelation,
         ComparisonGetCodes);
 }
 

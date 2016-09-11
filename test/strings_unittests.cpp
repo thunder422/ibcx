@@ -270,7 +270,7 @@ TEST_CASE("execute string constants", "[execute]")
 }
 
 
-TEST_CASE("comparison operators with string operands", "[comparison]")
+TEST_CASE("relational operators with string operands", "[relational]")
 {
     ProgramUnit program;
 
@@ -414,5 +414,19 @@ TEST_CASE("comparison operators with string operands", "[comparison]")
         program.run(oss);
 
         REQUIRE(oss.str() == "0\n-1\n-1\n");
+    }
+}
+
+
+TEST_CASE("equality operators with string operands", "[equality]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure both string operands and equality operator are parsed")
+    {
+        Compiler compiler {R"("left"="right")", program};
+        compiler.compileExpression();
+
+        REQUIRE(compiler.peekNextChar() == EOF);
     }
 }
