@@ -45,15 +45,20 @@ NumOperatorCodes::NumOperatorCodes(Precedence precedence, const char *keyword,
 
 OperatorCodes::Info NumOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
 {
-    if (lhs_data_type.isInteger() && rhs_data_type.isInteger()) {
-        return OperatorCodes::Info {int_int_code, DataType::Integer()};
+    if (lhs_data_type.isDouble()) {
+        if (rhs_data_type.isDouble()) {
+            return OperatorCodes::Info {dbl_dbl_code, DataType::Double()};
+        } else if (rhs_data_type.isInteger()) {
+            return OperatorCodes::Info {dbl_int_code, DataType::Double()};
+        }
     } else if (lhs_data_type.isInteger()) {
-        return OperatorCodes::Info {int_dbl_code, DataType::Double()};
-    } else if (rhs_data_type.isInteger()) {
-        return OperatorCodes::Info {dbl_int_code, DataType::Double()};
-    } else {
-        return OperatorCodes::Info {dbl_dbl_code, DataType::Double()};
+        if (rhs_data_type.isDouble()) {
+            return OperatorCodes::Info {int_dbl_code, DataType::Double()};
+        } else if (rhs_data_type.isInteger()) {
+            return OperatorCodes::Info {int_int_code, DataType::Integer()};
+        }
     }
+    throw ExpNumLeftOperandError {};
 }
 
 std::vector<WordType> NumOperatorCodes::codeValues() const
@@ -109,7 +114,7 @@ OperatorCodes::Info NumStrOperatorCodes::select(DataType lhs_data_type, DataType
             return OperatorCodes::Info {int_int_code, DataType::Integer()};
         }
     }
-    throw ExpNumOperandError {};
+    throw ExpNumRightOperandError {};
 }
 
 

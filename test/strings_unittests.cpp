@@ -493,4 +493,17 @@ TEST_CASE("concatenation operator expressions", "[concat]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+    SECTION("check for error if subtract operator has string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"-"right")"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            R"(error on line 1:7: expected numeric expression)" "\n"
+            R"(    PRINT "left"-"right")" "\n"
+            R"(          ^^^^^^)" "\n"
+        );
+    }
 }

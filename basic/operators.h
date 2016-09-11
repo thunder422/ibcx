@@ -132,7 +132,8 @@ private:
 };
 
 
-struct ExpNumOperandError { };
+struct ExpNumLeftOperandError { };
+struct ExpNumRightOperandError { };
 struct ExpStrOperandError { };
 
 

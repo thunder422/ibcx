@@ -348,7 +348,10 @@ DataType ExpressionCompilerImpl::compileNumStrOperator(Precedence precedence,
             try {
                 lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs.data_type);
             }
-            catch (const ExpNumOperandError &) {
+            catch (const ExpNumLeftOperandError &) {
+                throw ExpNumExprError {lhs.column, lhs.length};
+            }
+            catch (const ExpNumRightOperandError &) {
                 throw ExpNumExprError {rhs.column, rhs.length};
             }
             catch (const ExpStrOperandError &) {
