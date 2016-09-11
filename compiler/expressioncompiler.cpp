@@ -60,11 +60,11 @@ private:
     DataType addFunctionCode(FunctionCodes *codes, std::vector<DataType> argument_data_types) const;
     DataType compileParentheses(DataType expected_data_type = {});
     DataType compileNumConstant();
-    DataType compileOperator(Precedence precedence,
+    DataType compileNumOperator(Precedence precedence,
         DataType (ExpressionCompilerImpl::*compile_operand)(),
         OperatorCodes *(*get_codes)(Compiler &, Precedence),
         void (*convert)(Compiler &compiler, DataType data_type) = NoConvert);
-    DataType compileComparisonOperator(Precedence precedence,
+    DataType compileNumStrOperator(Precedence precedence,
         CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes);
     ExpressionCompilerImpl::SubExpression
         compileSubExpression(CompileSubExprFunction compile_sub_expression);
@@ -146,31 +146,31 @@ DataType ExpressionCompilerImpl::compileExpression()
 
 DataType ExpressionCompilerImpl::compileImplication()
 {
-    return compileOperator(Precedence::Imp, &ExpressionCompilerImpl::compileEquivalence,
+    return compileNumOperator(Precedence::Imp, &ExpressionCompilerImpl::compileEquivalence,
         WordGetCodes, ConvertToInteger);
 }
 
 DataType ExpressionCompilerImpl::compileEquivalence()
 {
-    return compileOperator(Precedence::Eqv, &ExpressionCompilerImpl::compileOr, WordGetCodes,
+    return compileNumOperator(Precedence::Eqv, &ExpressionCompilerImpl::compileOr, WordGetCodes,
         ConvertToInteger);
 }
 
 DataType ExpressionCompilerImpl::compileOr()
 {
-    return compileOperator(Precedence::Or, &ExpressionCompilerImpl::compileExclusiveOr,
+    return compileNumOperator(Precedence::Or, &ExpressionCompilerImpl::compileExclusiveOr,
         WordGetCodes, ConvertToInteger);
 }
 
 DataType ExpressionCompilerImpl::compileExclusiveOr()
 {
-    return compileOperator(Precedence::Xor, &ExpressionCompilerImpl::compileAnd, WordGetCodes,
+    return compileNumOperator(Precedence::Xor, &ExpressionCompilerImpl::compileAnd, WordGetCodes,
         ConvertToInteger);
 }
 
 DataType ExpressionCompilerImpl::compileAnd()
 {
-    return compileOperator(Precedence::And, &ExpressionCompilerImpl::compileNot, WordGetCodes,
+    return compileNumOperator(Precedence::And, &ExpressionCompilerImpl::compileNot, WordGetCodes,
         ConvertToInteger);
 }
 
@@ -197,43 +197,43 @@ DataType ExpressionCompilerImpl::compileNotOperand(OperatorCodes *codes)
 
 DataType ExpressionCompilerImpl::compileEquality()
 {
-    return compileComparisonOperator(Precedence::Equality, &ExpressionCompilerImpl::compileRelation,
+    return compileNumStrOperator(Precedence::Equality, &ExpressionCompilerImpl::compileRelation,
         ComparisonGetCodes);
 }
 
 DataType ExpressionCompilerImpl::compileRelation()
 {
-    return compileComparisonOperator(Precedence::Relation,
-        &ExpressionCompilerImpl::compileSummation, ComparisonGetCodes);
+    return compileNumStrOperator(Precedence::Relation, &ExpressionCompilerImpl::compileSummation,
+        ComparisonGetCodes);
 }
 
 DataType ExpressionCompilerImpl::compileSummation()
 {
-    return compileOperator(Precedence::Summation, &ExpressionCompilerImpl::compileModulo,
+    return compileNumStrOperator(Precedence::Summation, &ExpressionCompilerImpl::compileModulo,
         SymbolGetCodes);
 }
 
 DataType ExpressionCompilerImpl::compileModulo()
 {
-    return compileOperator(Precedence::Modulo, &ExpressionCompilerImpl::compileIntegerDivision,
+    return compileNumOperator(Precedence::Modulo, &ExpressionCompilerImpl::compileIntegerDivision,
         WordGetCodes);
 }
 
 DataType ExpressionCompilerImpl::compileIntegerDivision()
 {
-    return compileOperator(Precedence::IntDivide, &ExpressionCompilerImpl::compileProduct,
+    return compileNumOperator(Precedence::IntDivide, &ExpressionCompilerImpl::compileProduct,
         SymbolGetCodes, ConvertToDouble);
 }
 
 DataType ExpressionCompilerImpl::compileProduct()
 {
-    return compileOperator(Precedence::Product, &ExpressionCompilerImpl::compileExponential,
+    return compileNumOperator(Precedence::Product, &ExpressionCompilerImpl::compileExponential,
         SymbolGetCodes);
 }
 
 DataType ExpressionCompilerImpl::compileExponential()
 {
-    return compileOperator(Precedence::Exponential, &ExpressionCompilerImpl::compileOperand,
+    return compileNumOperator(Precedence::Exponential, &ExpressionCompilerImpl::compileOperand,
         SymbolGetCodes);
 }
 
@@ -319,7 +319,7 @@ DataType ExpressionCompilerImpl::compileNumConstant()
     return data_type;
 }
 
-DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
+DataType ExpressionCompilerImpl::compileNumOperator(Precedence precedence,
     CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes,
     ConvertFunction convert)
 {
@@ -338,7 +338,7 @@ DataType ExpressionCompilerImpl::compileOperator(Precedence precedence,
     return lhs.data_type;
 }
 
-DataType ExpressionCompilerImpl::compileComparisonOperator(Precedence precedence,
+DataType ExpressionCompilerImpl::compileNumStrOperator(Precedence precedence,
     CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes)
 {
     auto lhs = compileSubExpression(compile_sub_expression);

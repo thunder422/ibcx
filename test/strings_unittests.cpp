@@ -480,3 +480,17 @@ TEST_CASE("equality operators with string operands", "[equality]")
         REQUIRE(oss.str() == "-1\n-1\n0\n");
     }
 }
+
+
+TEST_CASE("concatenation operator expressions", "[concat]")
+{
+    ProgramUnit program;
+
+    SECTION("make sure both string operands and operator are parsed")
+    {
+        Compiler compiler {R"("left"+"right")", program};
+        compiler.compileExpression();
+
+        REQUIRE(compiler.peekNextChar() == EOF);
+    }
+}

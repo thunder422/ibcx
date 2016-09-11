@@ -84,9 +84,9 @@ private:
 };
 
 
-class CompOperatorCodes : public OperatorCodes {
+class NumStrOperatorCodes : public OperatorCodes {
 public:
-    CompOperatorCodes(Precedence precedence, const char *keyword,
+    NumStrOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
         OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code,
         OperatorCode<OpType::StrStr> &str_str_code);
@@ -99,6 +99,13 @@ private:
     OperatorCode<OpType::DblInt> &dbl_int_code;
     OperatorCode<OpType::IntInt> &int_int_code;
     OperatorCode<OpType::StrStr> &str_str_code;
+};
+
+
+class CompOperatorCodes : public NumStrOperatorCodes {
+public:
+    using NumStrOperatorCodes::NumStrOperatorCodes;
+    Info select(DataType lhs_data_type, DataType rhs_data_type) const override;
 };
 
 

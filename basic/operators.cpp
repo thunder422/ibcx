@@ -65,7 +65,7 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
 }
 
 
-CompOperatorCodes::CompOperatorCodes(Precedence precedence, const char *keyword,
+NumStrOperatorCodes::NumStrOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
         OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code,
         OperatorCode<OpType::StrStr> &str_str_code) :
@@ -78,7 +78,7 @@ CompOperatorCodes::CompOperatorCodes(Precedence precedence, const char *keyword,
     Table::addOperatorCodes(precedence, *this, keyword);
 }
 
-std::vector<WordType> CompOperatorCodes::codeValues() const
+std::vector<WordType> NumStrOperatorCodes::codeValues() const
 {
     return std::vector<WordType> {
         dbl_dbl_code.getValue(), int_dbl_code.getValue(),
@@ -87,23 +87,24 @@ std::vector<WordType> CompOperatorCodes::codeValues() const
     };
 }
 
-OperatorCodes::Info CompOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
+OperatorCodes::Info NumStrOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type)
+    const
 {
     if (lhs_data_type.isString()) {
         if (rhs_data_type.isString()) {
-            return OperatorCodes::Info {str_str_code, DataType::Integer()};
+            return OperatorCodes::Info {str_str_code, DataType{}};
         } else {
             throw ExpStrOperandError {};
         }
     } else if (lhs_data_type.isDouble()) {
         if (rhs_data_type.isDouble()) {
-            return OperatorCodes::Info {dbl_dbl_code, DataType::Integer()};
+            return OperatorCodes::Info {dbl_dbl_code, DataType::Double()};
         } else if (rhs_data_type.isInteger()) {
-            return OperatorCodes::Info {dbl_int_code, DataType::Integer()};
+            return OperatorCodes::Info {dbl_int_code, DataType::Double()};
         }
     } else {
         if (rhs_data_type.isDouble()) {
-            return OperatorCodes::Info {int_dbl_code, DataType::Integer()};
+            return OperatorCodes::Info {int_dbl_code, DataType::Double()};
         } else if (rhs_data_type.isInteger()) {
             return OperatorCodes::Info {int_int_code, DataType::Integer()};
         }
@@ -171,4 +172,12 @@ OperatorCodes::Info LogicOperatorCodes::select(DataType unused_data_type1,
 std::vector<WordType> LogicOperatorCodes::codeValues() const
 {
     return std::vector<WordType> {code.getValue()};
+}
+
+
+OperatorCodes::Info CompOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
+{
+    auto info = NumStrOperatorCodes::select(lhs_data_type, rhs_data_type);
+    info.result_data_type = DataType::Integer();
+    return info;
 }
