@@ -506,4 +506,11 @@ TEST_CASE("concatenation operator expressions", "[concat]")
             R"(          ^^^^^^)" "\n"
         );
     }
+    SECTION("check that concatenation expression has temporary string data type")
+    {
+        Compiler compiler {R"("left"+"right")", program};
+        auto data_type = compiler.compileExpression();
+
+        REQUIRE(data_type.isTmpStr());
+    }
 }

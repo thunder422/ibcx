@@ -112,7 +112,7 @@ OperatorCodes::Info NumStrOperatorCodes::select(DataType lhs_data_type, DataType
 {
     if (lhs_data_type.isString()) {
         if (rhs_data_type.isString()) {
-            return Info {str_str_code, DataType{}};
+            return Info {str_str_code, DataType::TmpStr()};
         } else {
             throw ExpStrOperandError {};
         }

@@ -14,12 +14,14 @@ public:
     static DataType Double();
     static DataType Integer();
     static DataType String();
+    static DataType TmpStr();
 
     DataType();
     explicit operator bool() const;
     bool isDouble() const;
     bool isInteger() const;
     bool isString() const;
+    bool isTmpStr() const;
     bool isNumeric() const;
     bool isNotNumeric() const;
 
@@ -28,7 +30,8 @@ private:
         Null,
         Double,
         Integer,
-        String
+        String,
+        TmpStr
     };
 
     DataType(Enum value);
@@ -57,6 +60,11 @@ inline DataType DataType::String()
     return DataType {Enum::String};
 }
 
+inline DataType DataType::TmpStr()
+{
+    return DataType {Enum::TmpStr};
+}
+
 inline DataType::DataType() :
     value {Enum::Null}
 {
@@ -80,6 +88,11 @@ inline bool DataType::isInteger() const
 inline bool DataType::isString() const
 {
     return value == Enum::String;
+}
+
+inline bool DataType::isTmpStr() const
+{
+    return value == Enum::TmpStr;
 }
 
 inline bool DataType::isNumeric() const
