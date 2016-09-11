@@ -156,6 +156,7 @@ inline bool ge(const std::string *lhs, const std::string *rhs)
 {
     return *lhs >= *rhs;
 }
+
 OperatorCode<OpType::DblDbl> ge_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<ge>};
 OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<ge>};
 OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ge>};
@@ -180,11 +181,16 @@ inline bool eq(int32_t lhs, int32_t rhs)
     return lhs == rhs;
 }
 
+inline bool eq(const std::string *lhs, const std::string *rhs)
+{
+    return *lhs == *rhs;
+}
+
 OperatorCode<OpType::DblDbl> eq_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<eq>};
 OperatorCode<OpType::IntDbl> eq_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<eq>};
 OperatorCode<OpType::DblInt> eq_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<eq>};
 OperatorCode<OpType::IntInt> eq_int_int_code {recreateBinaryOperator, executeCompareIntInt<eq>};
-OperatorCode<OpType::StrStr> eq_str_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrStr> eq_str_str_code {recreateBinaryOperator, executeCompareStrStr<eq>};
 
 CompOperatorCodes eq_codes {
     Precedence::Equality, "=",
@@ -204,11 +210,16 @@ inline bool ne(int32_t lhs, int32_t rhs)
     return lhs != rhs;
 }
 
+inline bool ne(const std::string *lhs, const std::string *rhs)
+{
+    return *lhs != *rhs;
+}
+
 OperatorCode<OpType::DblDbl> ne_dbl_dbl_code {recreateBinaryOperator, executeCompareDblDbl<ne>};
 OperatorCode<OpType::IntDbl> ne_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<ne>};
 OperatorCode<OpType::DblInt> ne_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ne>};
 OperatorCode<OpType::IntInt> ne_int_int_code {recreateBinaryOperator, executeCompareIntInt<ne>};
-OperatorCode<OpType::StrStr> ne_str_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrStr> ne_str_str_code {recreateBinaryOperator, executeCompareStrStr<ne>};
 
 CompOperatorCodes ne_codes {
     Precedence::Equality, "<>",

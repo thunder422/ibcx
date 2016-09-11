@@ -450,4 +450,33 @@ TEST_CASE("equality operators with string operands", "[equality]")
 
         REQUIRE(oss.str() == R"(PRINT "left" <> "right")" "\n");
     }
+
+    SECTION("execute equal operator with string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "left"="right")" "\n"
+            R"(PRINT "left"="RIGHT")" "\n"
+            R"(PRINT "same"="same")" "\n"
+        };
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "0\n0\n-1\n");
+    }
+    SECTION("execute not-equal operator with string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "left"<>"right")" "\n"
+            R"(PRINT "left"<>"RIGHT")" "\n"
+            R"(PRINT "same"<>"same")" "\n"
+        };
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n-1\n0\n");
+    }
 }
