@@ -184,7 +184,7 @@ OperatorCode<OpType::DblDbl> eq_dbl_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntDbl> eq_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<eq>};
 OperatorCode<OpType::DblInt> eq_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<eq>};
 OperatorCode<OpType::IntInt> eq_int_int_code {recreateBinaryOperator, executeCompareIntInt<eq>};
-OperatorCode<OpType::StrStr> eq_str_str_code {nullptr, nullptr};
+OperatorCode<OpType::StrStr> eq_str_str_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes eq_codes {
     Precedence::Equality, "=",
@@ -208,7 +208,7 @@ OperatorCode<OpType::DblDbl> ne_dbl_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::IntDbl> ne_int_dbl_code {recreateBinaryOperator, executeCompareIntDbl<ne>};
 OperatorCode<OpType::DblInt> ne_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ne>};
 OperatorCode<OpType::IntInt> ne_int_int_code {recreateBinaryOperator, executeCompareIntInt<ne>};
-OperatorCode<OpType::StrStr> ne_str_str_code {nullptr, nullptr};
+OperatorCode<OpType::StrStr> ne_str_str_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes ne_codes {
     Precedence::Equality, "<>",

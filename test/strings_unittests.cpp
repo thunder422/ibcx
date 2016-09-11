@@ -429,4 +429,25 @@ TEST_CASE("equality operators with string operands", "[equality]")
 
         REQUIRE(compiler.peekNextChar() == EOF);
     }
+
+    SECTION("recreate equal operator with string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"="right")"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" = "right")" "\n");
+    }
+    SECTION("recreate not-equal operator with string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"<>"right")"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" <> "right")" "\n");
+    }
 }
