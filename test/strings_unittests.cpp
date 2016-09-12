@@ -513,4 +513,11 @@ TEST_CASE("concatenation operator expressions", "[concat]")
 
         REQUIRE(data_type.isTmpStr());
     }
+    SECTION("check that parentheses allow string expressions")
+    {
+        Compiler compiler {R"(("left"+"right"))", program};
+        auto data_type = compiler.compileExpression();
+
+        REQUIRE(data_type.isTmpStr());
+    }
 }

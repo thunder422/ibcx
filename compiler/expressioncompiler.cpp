@@ -57,8 +57,9 @@ private:
     DataType compileOperand();
     DataType compileFunction();
     std::vector<DataType> compileFunctionArguments(FunctionCodes *codes);
+    DataType compileFunctionArgument(DataType expected_data_type);
     DataType addFunctionCode(FunctionCodes *codes, std::vector<DataType> argument_data_types) const;
-    DataType compileParentheses(DataType expected_data_type = {});
+    DataType compileParentheses();
     DataType compileNumConstant();
     DataType compileNumOperator(Precedence precedence,
         DataType (ExpressionCompilerImpl::*compile_operand)(),
@@ -278,12 +279,21 @@ std::vector<DataType> ExpressionCompilerImpl::compileFunctionArguments(FunctionC
 {
     std::vector<DataType> argument_data_types;
     if (compiler.peekNextChar() == '(') {
-        auto data_type = compileParentheses(codes->argumentDataType());
+        auto data_type = compileFunctionArgument(codes->argumentDataType());
         argument_data_types.push_back(data_type);
     } else if (!codes->argumentOptional()) {
         throw CompileError {"expected opening parentheses", compiler.getColumn()};
     }
     return argument_data_types;
+}
+
+DataType ExpressionCompilerImpl::compileFunctionArgument(DataType expected_data_type)
+{
+    compiler.getNextChar();
+    compiler.skipWhiteSpace();
+    auto data_type = compileExpression(expected_data_type);
+    compiler.getNextChar();
+    return data_type;
 }
 
 DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes,
@@ -294,11 +304,14 @@ DataType ExpressionCompilerImpl::addFunctionCode(FunctionCodes *codes,
     return info.result_data_type;
 }
 
-DataType ExpressionCompilerImpl::compileParentheses(DataType expected_data_type)
+DataType ExpressionCompilerImpl::compileParentheses()
 {
     compiler.getNextChar();
     compiler.skipWhiteSpace();
-    auto data_type = compileExpression(expected_data_type);
+    auto data_type = compileExpression();
+    if (!data_type) {
+        throw ExpExprError {compiler.getColumn()};
+    }
     if (compiler.peekNextChar() != ')') {
         throw CompileError {"expected closing parentheses", compiler.getColumn()};
     }

@@ -342,4 +342,8 @@ TEST_CASE("miscellaneous error class coverage", "[misc-coverage]")
     {
         std::unique_ptr<ExpStrExprError> error {new ExpStrExprError {0}};
     }
+    SECTION("cover dynamically allocated expected expression error class")
+    {
+        std::unique_ptr<ExpExprError> error {new ExpExprError {0}};
+    }
 }

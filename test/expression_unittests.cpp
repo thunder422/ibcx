@@ -155,7 +155,7 @@ TEST_CASE("compile numeric expressions with parentheses", "[parentheses]")
         program.compileSource(iss, oss);
 
         REQUIRE(oss.str() ==
-            "error on line 1:8: expected numeric expression\n"
+            "error on line 1:8: expected expression\n"
             "    PRINT (\n"
             "           ^\n"
         );
