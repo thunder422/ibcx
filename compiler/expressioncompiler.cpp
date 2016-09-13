@@ -292,6 +292,9 @@ DataType ExpressionCompilerImpl::compileFunctionArgument(DataType expected_data_
     compiler.getNextChar();
     compiler.skipWhiteSpace();
     auto data_type = compileExpression(expected_data_type);
+    if (compiler.peekNextChar() != ')') {
+        throw CompileError {"expected closing parentheses", compiler.getColumn()};
+    }
     compiler.getNextChar();
     return data_type;
 }

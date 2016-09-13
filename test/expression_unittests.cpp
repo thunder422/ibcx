@@ -237,3 +237,22 @@ TEST_CASE("check expressions with various operators", "[operator]")
         REQUIRE(compiler.getColumn() == 3);
     }
 }
+
+TEST_CASE("parentheses related checks", "[more-parens]")
+{
+    ProgramUnit program;
+
+    SECTION("report an error if there is no expression after a function open parentheses")
+    {
+        std::istringstream iss {"PRINT ABS(123"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            "error on line 1:14: expected closing parentheses\n"
+            "    PRINT ABS(123\n"
+            "                 ^\n"
+        );
+    }
+}
