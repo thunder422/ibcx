@@ -59,9 +59,7 @@ private:
 struct NumCodes {
     NumCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
         OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code);
-    enum class ErrorSide {Left, Right};
-    OperatorCodes::Info select(DataType lhs_data_type, DataType rhs_data_type, ErrorSide error_side)
-        const;
+    OperatorCodes::Info select(DataType lhs_data_type, DataType rhs_data_type) const;
 
     OperatorCode<OpType::DblDbl> &dbl_dbl_code;
     OperatorCode<OpType::IntDbl> &int_dbl_code;
@@ -140,8 +138,7 @@ private:
 };
 
 
-struct ExpNumLeftOperandError { };
-struct ExpNumRightOperandError { };
+struct ExpNumOperandError { };
 struct ExpStrOperandError { };
 
 

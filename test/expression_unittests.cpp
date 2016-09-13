@@ -294,4 +294,17 @@ TEST_CASE("parentheses related checks", "[more-parens]")
             R"(                  ^)" "\n"
         );
     }
+    SECTION("check for correct error when string used with subtract and with missing expression")
+    {
+        std::istringstream iss {R"(PRINT "test"-()"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            R"(error on line 1:7: expected numeric expression)" "\n"
+            R"(    PRINT "test"-()" "\n"
+            R"(          ^^^^^^)" "\n"
+        );
+    }
 }

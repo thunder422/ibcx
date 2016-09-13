@@ -42,8 +42,7 @@ NumCodes::NumCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code,
 {
 }
 
-OperatorCodes::Info NumCodes::select(DataType lhs_data_type, DataType rhs_data_type,
-    ErrorSide error_side) const
+OperatorCodes::Info NumCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
 {
     if (lhs_data_type.isDouble()) {
         if (rhs_data_type.isDouble()) {
@@ -58,11 +57,7 @@ OperatorCodes::Info NumCodes::select(DataType lhs_data_type, DataType rhs_data_t
             return OperatorCodes::Info {int_int_code, DataType::Integer()};
         }
     }
-    if (error_side == ErrorSide::Left) {
-        throw ExpNumLeftOperandError {};
-    } else {
-        throw ExpNumRightOperandError {};
-    }
+    throw ExpNumOperandError {};
 }
 
 
@@ -76,7 +71,7 @@ NumOperatorCodes::NumOperatorCodes(Precedence precedence, const char *keyword,
 
 OperatorCodes::Info NumOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
 {
-    return num_codes.select(lhs_data_type, rhs_data_type, NumCodes::ErrorSide::Left);
+    return num_codes.select(lhs_data_type, rhs_data_type);
 }
 
 std::vector<WordType> NumOperatorCodes::codeValues() const
@@ -117,7 +112,7 @@ OperatorCodes::Info NumStrOperatorCodes::select(DataType lhs_data_type, DataType
             throw ExpStrOperandError {};
         }
     } else {
-        return num_codes.select(lhs_data_type, rhs_data_type, NumCodes::ErrorSide::Right);
+        return num_codes.select(lhs_data_type, rhs_data_type);
     }
 }
 

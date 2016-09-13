@@ -86,12 +86,16 @@ private:
         DataType (ExpressionCompilerImpl::*compile_operand)(),
         OperatorCodes *(*get_codes)(Compiler &, Precedence),
         void (*convert)(Compiler &compiler, DataType data_type) = NoConvert);
+    DataType compileNumExpression(CompileSubExprFunction compile_sub_expression);
     DataType compileNumStrOperator(Precedence precedence,
         CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes);
     ExpressionCompilerImpl::SubExpression
         compileSubExpression(CompileSubExprFunction compile_sub_expression);
-    DataType compileNumExpression(CompileSubExprFunction compile_sub_expression);
-    DataType addOperatorCode(OperatorCodes *codes, DataType lhs_data_type, DataType rhs_data_type)
+    void validateLeftOperand(const OperatorCodes *codes, const SubExpression &lhs);
+    void setExpressionErrorFactory(DataType data_type);
+    DataType addOperatorCodeWithErrorCheck(const OperatorCodes *codes, DataType lhs_data_type,
+        const SubExpression &rhs);
+    DataType addOperatorCode(const OperatorCodes *codes, DataType lhs_data_type, DataType rhs_data_type)
         const;
 
     Compiler &compiler;
@@ -378,30 +382,26 @@ DataType ExpressionCompilerImpl::compileNumOperator(Precedence precedence,
     return lhs.data_type;
 }
 
+DataType ExpressionCompilerImpl::compileNumExpression(CompileSubExprFunction compile_sub_expression)
+{
+    auto operand_column = compiler.getColumn();
+    auto data_type = (this->*compile_sub_expression)();
+    if (data_type.isNotNumeric()) {
+        auto operand_length = data_type ? compiler.getColumn() - operand_column : 1;
+        throw ExpNumExprError {operand_column, operand_length};
+    }
+    return data_type;
+}
+
 DataType ExpressionCompilerImpl::compileNumStrOperator(Precedence precedence,
     CompileSubExprFunction compile_sub_expression, GetCodesFunction get_codes)
 {
     auto lhs = compileSubExpression(compile_sub_expression);
     if (lhs.data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
-            if (lhs.data_type.isNumeric()) {
-                expression_error.reset(new NumExprErrorFactory);
-            } else {
-                expression_error.reset(new StrExprErrorFactory);
-            }
+            validateLeftOperand(codes, lhs);
             auto rhs = compileSubExpression(compile_sub_expression);
-            try {
-                lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs.data_type);
-            }
-            catch (const ExpNumLeftOperandError &) {
-                throw ExpNumExprError {lhs.column, lhs.length};
-            }
-            catch (const ExpNumRightOperandError &) {
-                throw ExpNumExprError {rhs.column, rhs.length};
-            }
-            catch (const ExpStrOperandError &) {
-                throw ExpStrExprError {rhs.column, rhs.length};
-            }
+            lhs.data_type = addOperatorCodeWithErrorCheck(codes, lhs.data_type, rhs);
         }
     }
     return lhs.data_type;
@@ -417,18 +417,42 @@ ExpressionCompilerImpl::compileSubExpression(CompileSubExprFunction compile_sub_
     return sub_expression;
 }
 
-DataType ExpressionCompilerImpl::compileNumExpression(CompileSubExprFunction compile_sub_expression)
+void ExpressionCompilerImpl::validateLeftOperand(const OperatorCodes *codes,
+    const SubExpression &lhs)
 {
-    auto operand_column = compiler.getColumn();
-    auto data_type = (this->*compile_sub_expression)();
-    if (data_type.isNotNumeric()) {
-        auto operand_length = data_type ? compiler.getColumn() - operand_column : 1;
-        throw ExpNumExprError {operand_column, operand_length};
+    try {
+        codes->select(lhs.data_type, lhs.data_type);
     }
-    return data_type;
+    catch (const ExpNumOperandError &) {
+        throw ExpNumExprError {lhs.column, lhs.length};
+    }
+    setExpressionErrorFactory(lhs.data_type);
 }
 
-DataType ExpressionCompilerImpl::addOperatorCode(OperatorCodes *codes, DataType lhs_data_type,
+void ExpressionCompilerImpl::setExpressionErrorFactory(DataType data_type)
+{
+    if (data_type.isNumeric()) {
+        expression_error.reset(new NumExprErrorFactory);
+    } else {
+        expression_error.reset(new StrExprErrorFactory);
+    }
+}
+
+DataType ExpressionCompilerImpl::addOperatorCodeWithErrorCheck(const OperatorCodes *codes,
+    DataType lhs_data_type, const SubExpression &rhs)
+{
+    try {
+        return addOperatorCode(codes, lhs_data_type, rhs.data_type);
+    }
+    catch (const ExpNumOperandError &) {
+        throw ExpNumExprError {rhs.column, rhs.length};
+    }
+    catch (const ExpStrOperandError &) {
+        throw ExpStrExprError {rhs.column, rhs.length};
+    }
+}
+
+DataType ExpressionCompilerImpl::addOperatorCode(const OperatorCodes *codes, DataType lhs_data_type,
     DataType rhs_data_type) const
 {
     auto info = codes->select(lhs_data_type, rhs_data_type);
