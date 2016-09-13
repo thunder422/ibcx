@@ -268,4 +268,17 @@ TEST_CASE("parentheses related checks", "[more-parens]")
             "             ^\n"
         );
     }
+    SECTION("check for correct error when expression missing in a pure numeric expression")
+    {
+        std::istringstream iss {"PRINT 5*("};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            "error on line 1:10: expected numeric expression\n"
+            "    PRINT 5*(\n"
+            "             ^\n"
+        );
+    }
 }

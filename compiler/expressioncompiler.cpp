@@ -362,6 +362,7 @@ DataType ExpressionCompilerImpl::compileNumOperator(Precedence precedence,
                 throw ExpNumExprError {lhs.column, lhs.length};
             }
             convert(compiler, lhs.data_type);
+            expression_error.reset(new NumExprErrorFactory);
             auto rhs_data_type = compileNumExpression(compile_sub_expression);
             convert(compiler, rhs_data_type);
             lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs_data_type);
