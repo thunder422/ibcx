@@ -32,6 +32,13 @@ struct NumExprErrorFactory : public ExprErrorFactory {
     }
 };
 
+struct StrExprErrorFactory : public ExprErrorFactory {
+    void create(unsigned column) override
+    {
+        throw ExpStrExprError {column};
+    }
+};
+
 void NoConvert(Compiler &compiler, DataType data_type);
 
 class ExpressionCompilerImpl : public ExpressionCompiler {
@@ -377,7 +384,11 @@ DataType ExpressionCompilerImpl::compileNumStrOperator(Precedence precedence,
     auto lhs = compileSubExpression(compile_sub_expression);
     if (lhs.data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
-            expression_error.reset(new NumExprErrorFactory);
+            if (lhs.data_type.isNumeric()) {
+                expression_error.reset(new NumExprErrorFactory);
+            } else {
+                expression_error.reset(new StrExprErrorFactory);
+            }
             auto rhs = compileSubExpression(compile_sub_expression);
             try {
                 lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs.data_type);

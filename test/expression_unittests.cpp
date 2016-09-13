@@ -281,4 +281,17 @@ TEST_CASE("parentheses related checks", "[more-parens]")
             "             ^\n"
         );
     }
+    SECTION("check for the correct error when expression missing in a string expression")
+    {
+        std::istringstream iss {R"(PRINT "test"+()"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            R"(error on line 1:15: expected string expression)" "\n"
+            R"(    PRINT "test"+()" "\n"
+            R"(                  ^)" "\n"
+        );
+    }
 }
