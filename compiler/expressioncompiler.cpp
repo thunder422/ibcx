@@ -18,6 +18,20 @@
 #include "table.h"
 
 
+struct ExprErrorFactory {
+    virtual void create(unsigned column)
+    {
+        throw ExpExprError {column};
+    }
+};
+
+struct NumExprErrorFactory : public ExprErrorFactory {
+    void create(unsigned column) override
+    {
+        throw ExpNumExprError {column};
+    }
+};
+
 void NoConvert(Compiler &compiler, DataType data_type);
 
 class ExpressionCompilerImpl : public ExpressionCompiler {
@@ -74,6 +88,7 @@ private:
         const;
 
     Compiler &compiler;
+    std::unique_ptr<ExprErrorFactory> expression_error;
 };
 
 // ----------------------------------------
@@ -119,7 +134,8 @@ void ConvertToInteger(Compiler &compiler, DataType data_type)
 // ----------------------------------------
 
 ExpressionCompilerImpl::ExpressionCompilerImpl(Compiler &compiler) :
-    compiler {compiler}
+    compiler {compiler},
+    expression_error {new ExprErrorFactory}
 {
 }
 
@@ -313,7 +329,7 @@ DataType ExpressionCompilerImpl::compileParentheses()
     compiler.skipWhiteSpace();
     auto data_type = compileExpression();
     if (!data_type) {
-        throw ExpExprError {compiler.getColumn()};
+        expression_error->create(compiler.getColumn());
     }
     if (compiler.peekNextChar() != ')') {
         throw CompileError {"expected closing parentheses", compiler.getColumn()};
@@ -360,6 +376,7 @@ DataType ExpressionCompilerImpl::compileNumStrOperator(Precedence precedence,
     auto lhs = compileSubExpression(compile_sub_expression);
     if (lhs.data_type) {
         while (auto codes = get_codes(compiler, precedence)) {
+            expression_error.reset(new NumExprErrorFactory);
             auto rhs = compileSubExpression(compile_sub_expression);
             try {
                 lhs.data_type = addOperatorCode(codes, lhs.data_type, rhs.data_type);
