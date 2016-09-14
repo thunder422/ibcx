@@ -542,4 +542,15 @@ TEST_CASE("concatenation operator expressions", "[concat]")
         REQUIRE(code_line.size() == 8);
         REQUIRE(code_line[7].instructionCode()->getValue() == add_tmp_str_code.getValue());
     }
+    SECTION("compile with left and right side temporary string operands")
+    {
+        Compiler compiler {R"("left1"+"left2"+("right1"+"right2")))", program};
+
+        compiler.compileExpression();
+        auto code_line = compiler.getCodeLine();
+
+        extern Code add_tmp_tmp_code;
+        REQUIRE(code_line.size() == 11);
+        REQUIRE(code_line[10].instructionCode()->getValue() == add_tmp_tmp_code.getValue());
+    }
 }
