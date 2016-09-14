@@ -87,8 +87,9 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
 // ----------------------------------------
 
 StrCodes::StrCodes(OperatorCode<OpType::StrStr> &str_str_code,
-        OperatorCode<OpType::StrTmp> &str_tmp_code) :
+        OperatorCode<OpType::TmpStr> &tmp_str_code, OperatorCode<OpType::StrTmp> &str_tmp_code) :
     str_str_code {str_str_code},
+    tmp_str_code {tmp_str_code},
     str_tmp_code {str_tmp_code}
 {
 }
@@ -101,6 +102,8 @@ OperatorCodes::Info StrCodes::select(DataType lhs_data_type, DataType rhs_data_t
         } else if (rhs_data_type.isTmpStr()) {
             return OperatorCodes::Info {str_tmp_code, DataType::TmpStr()};
         }
+    } else if (lhs_data_type.isTmpStr()) {
+        return OperatorCodes::Info {tmp_str_code, DataType::TmpStr()};
     }
     throw ExpStrOperandError {};
 }
@@ -110,9 +113,10 @@ OperatorCodes::Info StrCodes::select(DataType lhs_data_type, DataType rhs_data_t
 NumStrOperatorCodes::NumStrOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
         OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code,
-        OperatorCode<OpType::StrStr> &str_str_code, OperatorCode<OpType::StrTmp> &str_tmp_code) :
+        OperatorCode<OpType::StrStr> &str_str_code, OperatorCode<OpType::TmpStr> &tmp_str_code,
+        OperatorCode<OpType::StrTmp> &str_tmp_code) :
     num_codes {dbl_dbl_code, int_dbl_code, dbl_int_code, int_int_code},
-    str_codes {str_str_code, str_tmp_code}
+    str_codes {str_str_code, tmp_str_code, str_tmp_code}
 {
     Table::addOperatorCodes(precedence, *this, keyword);
 }

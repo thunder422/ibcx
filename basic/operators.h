@@ -21,7 +21,8 @@ enum class OpType {
     DblInt,
     IntInt,
     StrStr,
-    StrTmp
+    StrTmp,
+    TmpStr
 };
 
 
@@ -95,11 +96,12 @@ private:
 
 
 struct StrCodes {
-    StrCodes(OperatorCode<OpType::StrStr> &str_str_code,
+    StrCodes(OperatorCode<OpType::StrStr> &str_str_code, OperatorCode<OpType::TmpStr> &tmp_str_code,
         OperatorCode<OpType::StrTmp> &str_tmp_code);
     OperatorCodes::Info select(DataType lhs_data_type, DataType rhs_data_type) const;
 
     OperatorCode<OpType::StrStr> &str_str_code;
+    OperatorCode<OpType::TmpStr> &tmp_str_code;
     OperatorCode<OpType::StrTmp> &str_tmp_code;
 };
 
@@ -109,7 +111,8 @@ public:
     NumStrOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
         OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code,
-        OperatorCode<OpType::StrStr> &str_str_code, OperatorCode<OpType::StrTmp> &str_tmp_code);
+        OperatorCode<OpType::StrStr> &str_str_code, OperatorCode<OpType::TmpStr> &tmp_str_code,
+        OperatorCode<OpType::StrTmp> &str_tmp_code);
     std::vector<WordType> codeValues() const;
     Info select(DataType lhs_data_type, DataType rhs_data_type) const override;
 
