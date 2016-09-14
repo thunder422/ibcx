@@ -31,6 +31,7 @@ std::vector<WordType> UnaryOperatorCodes::codeValues() const
     return std::vector<WordType> {dbl_code.getValue(), int_code.getValue()};
 }
 
+// ----------------------------------------
 
 NumCodes::NumCodes(OperatorCode<OpType::DblDbl> &dbl_dbl_code,
         OperatorCode<OpType::IntDbl> &int_dbl_code, OperatorCode<OpType::DblInt> &dbl_int_code,
@@ -60,6 +61,7 @@ OperatorCodes::Info NumCodes::select(DataType lhs_data_type, DataType rhs_data_t
     throw ExpNumOperandError {};
 }
 
+// ----------------------------------------
 
 NumOperatorCodes::NumOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
@@ -82,13 +84,35 @@ std::vector<WordType> NumOperatorCodes::codeValues() const
     };
 }
 
+// ----------------------------------------
+
+StrCodes::StrCodes(OperatorCode<OpType::StrStr> &str_str_code,
+        OperatorCode<OpType::StrTmp> &str_tmp_code) :
+    str_str_code {str_str_code},
+    str_tmp_code {str_tmp_code}
+{
+}
+
+OperatorCodes::Info StrCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
+{
+    if (lhs_data_type.isString()) {
+        if (rhs_data_type.isString()) {
+            return OperatorCodes::Info {str_str_code, DataType::TmpStr()};
+        } else if (rhs_data_type.isTmpStr()) {
+            return OperatorCodes::Info {str_tmp_code, DataType::TmpStr()};
+        }
+    }
+    throw ExpStrOperandError {};
+}
+
+// ----------------------------------------
 
 NumStrOperatorCodes::NumStrOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &dbl_dbl_code, OperatorCode<OpType::IntDbl> &int_dbl_code,
         OperatorCode<OpType::DblInt> &dbl_int_code, OperatorCode<OpType::IntInt> &int_int_code,
-        OperatorCode<OpType::StrStr> &str_str_code) :
+        OperatorCode<OpType::StrStr> &str_str_code, OperatorCode<OpType::StrTmp> &str_tmp_code) :
     num_codes {dbl_dbl_code, int_dbl_code, dbl_int_code, int_int_code},
-    str_str_code {str_str_code}
+    str_codes {str_str_code, str_tmp_code}
 {
     Table::addOperatorCodes(precedence, *this, keyword);
 }
@@ -98,24 +122,21 @@ std::vector<WordType> NumStrOperatorCodes::codeValues() const
     return std::vector<WordType> {
         num_codes.dbl_dbl_code.getValue(), num_codes.int_dbl_code.getValue(),
         num_codes.dbl_int_code.getValue(), num_codes.int_int_code.getValue(),
-        str_str_code.getValue()
+        str_codes.str_str_code.getValue(), str_codes.str_tmp_code.getValue()
     };
 }
 
 OperatorCodes::Info NumStrOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type)
     const
 {
-    if (lhs_data_type.isString()) {
-        if (rhs_data_type.isString()) {
-            return Info {str_str_code, DataType::TmpStr()};
-        } else {
-            throw ExpStrOperandError {};
-        }
-    } else {
+    if (lhs_data_type.isNumeric()) {
         return num_codes.select(lhs_data_type, rhs_data_type);
+    } else {
+        return str_codes.select(lhs_data_type, rhs_data_type);
     }
 }
 
+// ----------------------------------------
 
 IntDivOperatorCode::IntDivOperatorCode(Precedence precedence, const char *keyword,
         OperatorCode<OpType::DblDbl> &code) :
@@ -136,6 +157,7 @@ std::vector<WordType> IntDivOperatorCode::codeValues() const
     return std::vector<WordType> {code.getValue()};
 }
 
+// ----------------------------------------
 
 NotOperatorCodes::NotOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::Int> &code) :
@@ -157,6 +179,7 @@ std::vector<WordType> NotOperatorCodes::codeValues() const
     return std::vector<WordType> {code.getValue()};
 }
 
+// ----------------------------------------
 
 LogicOperatorCodes::LogicOperatorCodes(Precedence precedence, const char *keyword,
         OperatorCode<OpType::IntInt> &code) :
@@ -178,6 +201,7 @@ std::vector<WordType> LogicOperatorCodes::codeValues() const
     return std::vector<WordType> {code.getValue()};
 }
 
+// ----------------------------------------
 
 OperatorCodes::Info CompOperatorCodes::select(DataType lhs_data_type, DataType rhs_data_type) const
 {

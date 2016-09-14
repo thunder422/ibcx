@@ -325,11 +325,12 @@ OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, executeAd
 OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAddDblInt};
 OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
 OperatorCode<OpType::StrStr> add_str_str_code {nullptr, nullptr};
+OperatorCode<OpType::StrTmp> add_str_tmp_code {nullptr, nullptr};
 
 NumStrOperatorCodes add_codes {
     Precedence::Summation, "+",
     add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code, add_int_int_code,
-    add_str_str_code
+    add_str_str_code, add_str_tmp_code
 };
 
 // ----------------------------------------

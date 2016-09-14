@@ -520,4 +520,15 @@ TEST_CASE("concatenation operator expressions", "[concat]")
 
         REQUIRE(data_type.isTmpStr());
     }
+    SECTION("compile with right side temporary string operand")
+    {
+        Compiler compiler {R"("left"+("right1"+"right2"))", program};
+
+        compiler.compileExpression();
+        auto code_line = compiler.getCodeLine();
+
+        extern Code add_str_tmp_code;
+        REQUIRE(code_line.size() == 8);
+        REQUIRE(code_line[7].instructionCode()->getValue() == add_str_tmp_code.getValue());
+    }
 }
