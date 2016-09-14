@@ -482,7 +482,7 @@ TEST_CASE("equality operators with string operands", "[equality]")
 }
 
 
-TEST_CASE("concatenation operator expressions", "[concat]")
+TEST_CASE("compile concatenation operator expressions", "[compile][concat]")
 {
     ProgramUnit program;
 
@@ -533,7 +533,7 @@ TEST_CASE("concatenation operator expressions", "[concat]")
     }
     SECTION("compile with left side temporary string operand")
     {
-        Compiler compiler {R"("left1"+"left2"+"right"))", program};
+        Compiler compiler {R"("left1"+"left2"+"right")", program};
 
         compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
@@ -544,7 +544,7 @@ TEST_CASE("concatenation operator expressions", "[concat]")
     }
     SECTION("compile with left and right side temporary string operands")
     {
-        Compiler compiler {R"("left1"+"left2"+("right1"+"right2")))", program};
+        Compiler compiler {R"("left1"+"left2"+("right1"+"right2"))", program};
 
         compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
@@ -552,5 +552,18 @@ TEST_CASE("concatenation operator expressions", "[concat]")
         extern Code add_tmp_tmp_code;
         REQUIRE(code_line.size() == 11);
         REQUIRE(code_line[10].instructionCode()->getValue() == add_tmp_tmp_code.getValue());
+    }
+    SECTION("check for error with the left side temporary string on and right side not a string")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"+123)"};
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+
+        REQUIRE(oss.str() ==
+            R"(error on line 1:23: expected string expression)" "\n"
+            R"(    PRINT "left1"+"left2"+123)" "\n"
+            R"(                          ^^^)" "\n"
+        );
     }
 }

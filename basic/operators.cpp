@@ -107,7 +107,7 @@ OperatorCodes::Info StrCodes::select(DataType lhs_data_type, DataType rhs_data_t
     } else if (lhs_data_type.isTmpStr()) {
         if (rhs_data_type.isString()) {
             return OperatorCodes::Info {tmp_str_code, DataType::TmpStr()};
-        } else {
+        } else if (rhs_data_type.isTmpStr()) {
             return OperatorCodes::Info {tmp_tmp_code, DataType::TmpStr()};
         }
     }
