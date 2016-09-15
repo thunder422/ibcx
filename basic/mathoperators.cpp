@@ -324,10 +324,10 @@ OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, executeAd
 OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, executeAddIntDbl};
 OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAddDblInt};
 OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
-OperatorCode<OpType::StrStr> add_str_str_code {nullptr, nullptr};
-OperatorCode<OpType::TmpStr> add_tmp_str_code {nullptr, nullptr};
-OperatorCode<OpType::StrTmp> add_str_tmp_code {nullptr, nullptr};
-OperatorCode<OpType::TmpTmp> add_tmp_tmp_code {nullptr, nullptr};
+OperatorCode<OpType::StrStr> add_str_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpStr> add_tmp_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrTmp> add_str_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpTmp> add_tmp_tmp_code {recreateBinaryOperator, nullptr};
 
 NumStrOperatorCodes add_codes {
     Precedence::Summation, "+",

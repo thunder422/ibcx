@@ -132,7 +132,8 @@ std::vector<WordType> NumStrOperatorCodes::codeValues() const
     return std::vector<WordType> {
         num_codes.dbl_dbl_code.getValue(), num_codes.int_dbl_code.getValue(),
         num_codes.dbl_int_code.getValue(), num_codes.int_int_code.getValue(),
-        str_codes.str_str_code.getValue(), str_codes.str_tmp_code.getValue()
+        str_codes.str_str_code.getValue(), str_codes.tmp_str_code.getValue(),
+        str_codes.str_tmp_code.getValue(), str_codes.tmp_tmp_code.getValue()
     };
 }
 

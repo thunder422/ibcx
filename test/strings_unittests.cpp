@@ -567,3 +567,235 @@ TEST_CASE("compile concatenation operator expressions", "[compile][concat]")
         );
     }
 }
+
+TEST_CASE("recreate expressions with concatentation and temporary strings", "[recreate]")
+{
+    ProgramUnit program;
+
+    SECTION("concatenation with two string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"+"right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" + "right")" "\n");
+    }
+    SECTION("concatenation with left temporary string and right string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"+"right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" + "right")" "\n");
+    }
+    SECTION("concatenation with left string and right temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"+("right1"+"right2"))"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" + ("right1" + "right2"))" "\n");
+    }
+    SECTION("concatenation with two temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"+("right1"+"right2"))"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" + ("right1" + "right2"))" "\n");
+    }
+
+    SECTION("less-than with left temporary string and right string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"<"right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" < "right")" "\n");
+    }
+    SECTION("less-than with left string and right temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"<"right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" < "right1" + "right2")" "\n");
+    }
+    SECTION("less-than with two temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"<"right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" < "right1" + "right2")" "\n");
+    }
+
+    SECTION("greater-than with left temporary string and right string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2">"right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" > "right")" "\n");
+    }
+    SECTION("greater-than with left string and right temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left">"right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" > "right1" + "right2")" "\n");
+    }
+    SECTION("greater-than with two temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2">"right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" > "right1" + "right2")" "\n");
+    }
+
+    SECTION("less-than-or-equal with left temporary string and right string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"<="right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" <= "right")" "\n");
+    }
+    SECTION("less-than-or-equal with left string and right temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"<="right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" <= "right1" + "right2")" "\n");
+    }
+    SECTION("less-than-or-equal with two temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"<="right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" <= "right1" + "right2")" "\n");
+    }
+
+    SECTION("greater-than-or-equal with left temporary string and right string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2">="right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" >= "right")" "\n");
+    }
+    SECTION("greater-than-or-equal with left string and right temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left">="right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" >= "right1" + "right2")" "\n");
+    }
+    SECTION("greater-than-or-equal with two temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2">="right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" >= "right1" + "right2")" "\n");
+    }
+
+    SECTION("equal with left temporary string and right string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"="right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" = "right")" "\n");
+    }
+    SECTION("equal with left string and right temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"="right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" = "right1" + "right2")" "\n");
+    }
+    SECTION("equal with two temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"="right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" = "right1" + "right2")" "\n");
+    }
+
+    SECTION("not-equal with left temporary string and right string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"<>"right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" <> "right")" "\n");
+    }
+    SECTION("not-equal with left string and right temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left"<>"right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left" <> "right1" + "right2")" "\n");
+    }
+    SECTION("not-equal with two temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "left1"+"left2"<>"right1"+"right2")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.recreate(oss);
+
+        REQUIRE(oss.str() == R"(PRINT "left1" + "left2" <> "right1" + "right2")" "\n");
+    }
+}

@@ -75,9 +75,9 @@ OperatorCode<OpType::IntDbl> lt_int_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::DblInt> lt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<lt>};
 OperatorCode<OpType::IntInt> lt_int_int_code {recreateBinaryOperator, executeCompareIntInt<lt>};
 OperatorCode<OpType::StrStr> lt_str_str_code {recreateBinaryOperator, executeCompareStrStr<lt>};
-OperatorCode<OpType::TmpStr> lt_tmp_str_code {nullptr, nullptr};
-OperatorCode<OpType::StrTmp> lt_str_tmp_code {nullptr, nullptr};
-OperatorCode<OpType::TmpTmp> lt_tmp_tmp_code {nullptr, nullptr};
+OperatorCode<OpType::TmpStr> lt_tmp_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrTmp> lt_str_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpTmp> lt_tmp_tmp_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes lt_codes {
     Precedence::Relation, "<",
@@ -107,9 +107,9 @@ OperatorCode<OpType::IntDbl> gt_int_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::DblInt> gt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<gt>};
 OperatorCode<OpType::IntInt> gt_int_int_code {recreateBinaryOperator, executeCompareIntInt<gt>};
 OperatorCode<OpType::StrStr> gt_str_str_code {recreateBinaryOperator, executeCompareStrStr<gt>};
-OperatorCode<OpType::TmpStr> gt_tmp_str_code {nullptr, nullptr};
-OperatorCode<OpType::StrTmp> gt_str_tmp_code {nullptr, nullptr};
-OperatorCode<OpType::TmpTmp> gt_tmp_tmp_code {nullptr, nullptr};
+OperatorCode<OpType::TmpStr> gt_tmp_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrTmp> gt_str_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpTmp> gt_tmp_tmp_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes gt_codes {
     Precedence::Relation, ">",
@@ -139,9 +139,9 @@ OperatorCode<OpType::IntDbl> le_int_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::DblInt> le_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<le>};
 OperatorCode<OpType::IntInt> le_int_int_code {recreateBinaryOperator, executeCompareIntInt<le>};
 OperatorCode<OpType::StrStr> le_str_str_code {recreateBinaryOperator, executeCompareStrStr<le>};
-OperatorCode<OpType::TmpStr> le_tmp_str_code {nullptr, nullptr};
-OperatorCode<OpType::StrTmp> le_str_tmp_code {nullptr, nullptr};
-OperatorCode<OpType::TmpTmp> le_tmp_tmp_code {nullptr, nullptr};
+OperatorCode<OpType::TmpStr> le_tmp_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrTmp> le_str_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpTmp> le_tmp_tmp_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes le_codes {
     Precedence::Relation, "<=",
@@ -171,9 +171,9 @@ OperatorCode<OpType::IntDbl> ge_int_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::DblInt> ge_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ge>};
 OperatorCode<OpType::IntInt> ge_int_int_code {recreateBinaryOperator, executeCompareIntInt<ge>};
 OperatorCode<OpType::StrStr> ge_str_str_code {recreateBinaryOperator, executeCompareStrStr<ge>};
-OperatorCode<OpType::TmpStr> ge_tmp_str_code {nullptr, nullptr};
-OperatorCode<OpType::StrTmp> ge_str_tmp_code {nullptr, nullptr};
-OperatorCode<OpType::TmpTmp> ge_tmp_tmp_code {nullptr, nullptr};
+OperatorCode<OpType::TmpStr> ge_tmp_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrTmp> ge_str_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpTmp> ge_tmp_tmp_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes ge_codes {
     Precedence::Relation, ">=",
@@ -203,9 +203,9 @@ OperatorCode<OpType::IntDbl> eq_int_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::DblInt> eq_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<eq>};
 OperatorCode<OpType::IntInt> eq_int_int_code {recreateBinaryOperator, executeCompareIntInt<eq>};
 OperatorCode<OpType::StrStr> eq_str_str_code {recreateBinaryOperator, executeCompareStrStr<eq>};
-OperatorCode<OpType::TmpStr> eq_tmp_str_code {nullptr, nullptr};
-OperatorCode<OpType::StrTmp> eq_str_tmp_code {nullptr, nullptr};
-OperatorCode<OpType::TmpTmp> eq_tmp_tmp_code {nullptr, nullptr};
+OperatorCode<OpType::TmpStr> eq_tmp_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrTmp> eq_str_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpTmp> eq_tmp_tmp_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes eq_codes {
     Precedence::Equality, "=",
@@ -235,9 +235,9 @@ OperatorCode<OpType::IntDbl> ne_int_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::DblInt> ne_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<ne>};
 OperatorCode<OpType::IntInt> ne_int_int_code {recreateBinaryOperator, executeCompareIntInt<ne>};
 OperatorCode<OpType::StrStr> ne_str_str_code {recreateBinaryOperator, executeCompareStrStr<ne>};
-OperatorCode<OpType::TmpStr> ne_tmp_str_code {nullptr, nullptr};
-OperatorCode<OpType::StrTmp> ne_str_tmp_code {nullptr, nullptr};
-OperatorCode<OpType::TmpTmp> ne_tmp_tmp_code {nullptr, nullptr};
+OperatorCode<OpType::TmpStr> ne_tmp_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrTmp> ne_str_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpTmp> ne_tmp_tmp_code {recreateBinaryOperator, nullptr};
 
 CompOperatorCodes ne_codes {
     Precedence::Equality, "<>",
