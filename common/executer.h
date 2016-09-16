@@ -53,6 +53,7 @@ public:
     void setTopIntFromInt64(int64_t value);
     void setTopIntFromDouble(double value);
     void setTopIntFromBool(bool value);
+    void setTop(std::string *value);
     std::ostream &output();
     bool stackEmpty() const;
     double getRandomNumber();
@@ -159,6 +160,11 @@ inline void Executer::setTopIntFromDouble(double value)
 inline void Executer::setTopIntFromBool(bool value)
 {
     stack.top().int_value = value ? -1 : 0;
+}
+
+inline void Executer::setTop(std::string *value)
+{
+    stack.top().str_value = value;
 }
 
 

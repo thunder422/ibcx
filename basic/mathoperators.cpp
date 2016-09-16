@@ -320,11 +320,20 @@ void executeAddIntInt(Executer &executer)
     executer.setTopIntFromInt64(result);
 }
 
+void executeCatStrStr(Executer &executer)
+{
+    auto rhs = executer.topStr();
+    executer.pop();
+    auto result = new std::string {*executer.topStr()};
+    *result += *rhs;
+    executer.setTop(result);
+}
+
 OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, executeAddDblDbl};
 OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, executeAddIntDbl};
 OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAddDblInt};
 OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
-OperatorCode<OpType::StrStr> add_str_str_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::StrStr> add_str_str_code {recreateBinaryOperator, executeCatStrStr};
 OperatorCode<OpType::TmpStr> add_tmp_str_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::StrTmp> add_str_tmp_code {recreateBinaryOperator, nullptr};
 OperatorCode<OpType::TmpTmp> add_tmp_tmp_code {recreateBinaryOperator, nullptr};

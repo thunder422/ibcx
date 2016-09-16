@@ -20,12 +20,13 @@ void executePrint(Executer &executer);
 void executePrintInt(Executer &executer);
 void executePrintDbl(Executer &executer);
 void executePrintStr(Executer &executer);
+void executePrintTmp(Executer &executer);
 
 CommandCode print_code {"PRINT", compilePrint, recreatePrint, executePrint};
 Code print_dbl_code {recreateNothing, executePrintDbl};
 Code print_int_code {recreateNothing, executePrintInt};
 Code print_str_code {recreateNothing, executePrintStr};
-Code print_tmp_code {recreateNothing, nullptr};
+Code print_tmp_code {recreateNothing, executePrintTmp};
 
 
 void compilePrint(Compiler &compiler)
@@ -67,8 +68,21 @@ void executePrintDbl(Executer &executer)
     executer.pop();
 }
 
+inline const std::string *printTopString(Executer &executer)
+{
+    auto operand = executer.topStr();
+    executer.output() << *operand;
+    executer.pop();
+    return operand;
+}
+
 void executePrintStr(Executer &executer)
 {
-    executer.output() << *executer.topStr();
-    executer.pop();
+    printTopString(executer);
+}
+
+void executePrintTmp(Executer &executer)
+{
+    auto operand = printTopString(executer);
+    delete operand;
 }

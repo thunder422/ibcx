@@ -799,3 +799,19 @@ TEST_CASE("recreate expressions with concatentation and temporary strings", "[re
         REQUIRE(oss.str() == R"(PRINT "left1" + "left2" <> "right1" + "right2")" "\n");
     }
 }
+
+TEST_CASE("execute expressions with concatentation and temporary strings", "[execute]")
+{
+    ProgramUnit program;
+
+    SECTION("concatenation with two string operands")
+    {
+        std::istringstream iss {R"(PRINT "Left"+"Right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "LeftRight\n");
+    }
+}
