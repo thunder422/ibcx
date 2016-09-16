@@ -138,3 +138,17 @@ TEST_CASE("PRINT command handling of string expressions", "[strings]")
         REQUIRE(oss.str() == "test\n");
     }
 }
+
+TEST_CASE("PRINT command handling of temporary string expressions", "[tmpstrs]")
+{
+    ProgramUnit program;
+
+    SECTION("compile a PRINT command with a temporary string")
+    {
+        auto code_line = CommandCompiler::create(R"(PRINT "Left"+"Right")", program)->compile();
+
+        extern Code print_tmp_code;
+        REQUIRE(code_line.size() == 7);
+        REQUIRE(code_line[5].instructionCode()->getValue() == print_tmp_code.getValue());
+    }
+}

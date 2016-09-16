@@ -25,6 +25,7 @@ CommandCode print_code {"PRINT", compilePrint, recreatePrint, executePrint};
 Code print_dbl_code {recreateNothing, executePrintDbl};
 Code print_int_code {recreateNothing, executePrintInt};
 Code print_str_code {recreateNothing, executePrintStr};
+Code print_tmp_code {recreateNothing, nullptr};
 
 
 void compilePrint(Compiler &compiler)
@@ -35,8 +36,10 @@ void compilePrint(Compiler &compiler)
             compiler.addInstruction(print_dbl_code);
         } else if (data_type.isInteger()) {
             compiler.addInstruction(print_int_code);
-        } else {
+        } else if (data_type.isString()) {
             compiler.addInstruction(print_str_code);
+        } else {
+            compiler.addInstruction(print_tmp_code);
         }
     }
     compiler.addInstruction(print_code);
