@@ -17,17 +17,20 @@
 #include "wordtype.h"
 
 
+using tmp_string = std::unique_ptr<std::string>;
+
 class Executer {
 public:
     struct StackItem {
         StackItem(double dbl_value);
         StackItem(int32_t int_value);
-        StackItem(std::string *str_value);
+        StackItem(const std::string *str_value);
 
         union {
             double dbl_value;
             int32_t int_value;
-            std::string *str_value;
+            const std::string *str_value;
+            std::string *tmp_value;
         };
     };
 
@@ -46,6 +49,7 @@ public:
     int32_t topInt() const;
     const std::string *topStr() const;
     std::string *topTmpStr() const;
+    tmp_string moveTopTmpStr();
     template <typename T> T top() const;
     double topIntAsDbl() const;
     void pop();
@@ -55,6 +59,7 @@ public:
     void setTopIntFromDouble(double value);
     void setTopIntFromBool(bool value);
     void setTop(std::string *value);
+    void setTop(const std::string &value);
     std::ostream &output();
     bool stackEmpty() const;
     double getRandomNumber();
@@ -118,7 +123,12 @@ inline const std::string *Executer::topStr() const
 
 inline std::string *Executer::topTmpStr() const
 {
-    return stack.top().str_value;
+    return stack.top().tmp_value;
+}
+
+inline tmp_string Executer::moveTopTmpStr()
+{
+    return tmp_string{stack.top().tmp_value};
 }
 
 template <>
@@ -173,6 +183,11 @@ inline void Executer::setTop(std::string *value)
     stack.top().str_value = value;
 }
 
+inline void Executer::setTop(const std::string &value)
+{
+    stack.top().tmp_value = new std::string{value};
+}
+
 
 inline Executer::StackItem::StackItem(double dbl_value) :
     dbl_value {dbl_value}
@@ -184,7 +199,7 @@ inline Executer::StackItem::StackItem(int32_t int_value) :
 {
 }
 
-inline Executer::StackItem::StackItem(std::string *str_value) :
+inline Executer::StackItem::StackItem(const std::string *str_value) :
     str_value {str_value}
 {
 }

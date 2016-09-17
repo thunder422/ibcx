@@ -250,7 +250,7 @@ TEST_CASE("recreate string constants", "[const][recreate]")
     }
 }
 
-TEST_CASE("execute string constants", "[execute]")
+TEST_CASE("execute string constants", "[const][execute]")
 {
     ProgramUnit program;
     std::ostringstream unused_oss;
@@ -482,7 +482,7 @@ TEST_CASE("equality operators with string operands", "[equality]")
 }
 
 
-TEST_CASE("compile concatenation operator expressions", "[compile][concat]")
+TEST_CASE("compile concatenation operator expressions", "[cat][compile]")
 {
     ProgramUnit program;
 
@@ -527,9 +527,9 @@ TEST_CASE("compile concatenation operator expressions", "[compile][concat]")
         compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        extern Code add_str_tmp_code;
+        extern Code cat_str_tmp_code;
         REQUIRE(code_line.size() == 8);
-        REQUIRE(code_line[7].instructionCode()->getValue() == add_str_tmp_code.getValue());
+        REQUIRE(code_line[7].instructionCode()->getValue() == cat_str_tmp_code.getValue());
     }
     SECTION("compile with left side temporary string operand")
     {
@@ -538,9 +538,9 @@ TEST_CASE("compile concatenation operator expressions", "[compile][concat]")
         compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        extern Code add_tmp_str_code;
+        extern Code cat_tmp_str_code;
         REQUIRE(code_line.size() == 8);
-        REQUIRE(code_line[7].instructionCode()->getValue() == add_tmp_str_code.getValue());
+        REQUIRE(code_line[7].instructionCode()->getValue() == cat_tmp_str_code.getValue());
     }
     SECTION("compile with left and right side temporary string operands")
     {
@@ -549,9 +549,9 @@ TEST_CASE("compile concatenation operator expressions", "[compile][concat]")
         compiler.compileExpression();
         auto code_line = compiler.getCodeLine();
 
-        extern Code add_tmp_tmp_code;
+        extern Code cat_tmp_tmp_code;
         REQUIRE(code_line.size() == 11);
-        REQUIRE(code_line[10].instructionCode()->getValue() == add_tmp_tmp_code.getValue());
+        REQUIRE(code_line[10].instructionCode()->getValue() == cat_tmp_tmp_code.getValue());
     }
     SECTION("check for error with the left side temporary string on and right side not a string")
     {
@@ -568,7 +568,7 @@ TEST_CASE("compile concatenation operator expressions", "[compile][concat]")
     }
 }
 
-TEST_CASE("recreate expressions with concatentation and temporary strings", "[recreate]")
+TEST_CASE("recreate expressions with concatentation and temporary strings", "[cat][recreate]")
 {
     ProgramUnit program;
 
@@ -612,6 +612,11 @@ TEST_CASE("recreate expressions with concatentation and temporary strings", "[re
 
         REQUIRE(oss.str() == R"(PRINT "left1" + "left2" + ("right1" + "right2"))" "\n");
     }
+}
+
+TEST_CASE("recreate relational expressions with temporary strings", "[relational][recreate]")
+{
+    ProgramUnit program;
 
     SECTION("less-than with left temporary string and right string operands")
     {
@@ -736,6 +741,11 @@ TEST_CASE("recreate expressions with concatentation and temporary strings", "[re
 
         REQUIRE(oss.str() == R"(PRINT "left1" + "left2" >= "right1" + "right2")" "\n");
     }
+}
+
+TEST_CASE("recreate equality expressions with temporary strings", "[equality][recreate]")
+{
+    ProgramUnit program;
 
     SECTION("equal with left temporary string and right string operands")
     {
@@ -800,7 +810,7 @@ TEST_CASE("recreate expressions with concatentation and temporary strings", "[re
     }
 }
 
-TEST_CASE("execute expressions with concatentation and temporary strings", "[execute]")
+TEST_CASE("execute expressions with concatentation and temporary strings", "[cat][execute]")
 {
     ProgramUnit program;
 

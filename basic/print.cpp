@@ -68,21 +68,15 @@ void executePrintDbl(Executer &executer)
     executer.pop();
 }
 
-inline const std::string *printTopString(Executer &executer)
-{
-    auto operand = executer.topStr();
-    executer.output() << *operand;
-    executer.pop();
-    return operand;
-}
-
 void executePrintStr(Executer &executer)
 {
-    printTopString(executer);
+    executer.output() << *executer.topStr();
+    executer.pop();
 }
 
 void executePrintTmp(Executer &executer)
 {
-    auto operand = printTopString(executer);
-    delete operand;
+    auto operand = executer.moveTopTmpStr();
+    executer.output() << *operand;
+    executer.pop();
 }

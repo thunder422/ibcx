@@ -320,53 +320,57 @@ void executeAddIntInt(Executer &executer)
     executer.setTopIntFromInt64(result);
 }
 
+OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, executeAddDblDbl};
+OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, executeAddIntDbl};
+OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAddDblInt};
+OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
+
 void executeCatStrStr(Executer &executer)
 {
     auto rhs = executer.topStr();
     executer.pop();
-    auto result = new std::string{*executer.topStr()};
-    *result += *rhs;
-    executer.setTop(result);
+
+    executer.setTop(*executer.topStr());
+    *executer.topTmpStr() += *rhs;
 }
 
 void executeCatTmpStr(Executer &executer)
 {
     auto rhs = executer.topStr();
     executer.pop();
+
     *executer.topTmpStr() += *rhs;
 }
 
 void executeCatStrTmp(Executer &executer)
 {
-    auto result = executer.topTmpStr();
+    auto rhs_result = executer.topTmpStr();
     executer.pop();
-    auto local = std::string{*executer.topStr()};
-    std::swap(local, *result);
-    *result += local;
-    executer.setTop(result);
+
+    auto lhs_rhs = std::string{*executer.topStr()};
+    std::swap(lhs_rhs, *rhs_result);
+
+    executer.setTop(rhs_result);
+    *executer.topTmpStr() += lhs_rhs;
 }
 
 void executeCatTmpTmp(Executer &executer)
 {
-    auto rhs = executer.topTmpStr();
+    auto rhs = executer.moveTopTmpStr();
     executer.pop();
+
     *executer.topTmpStr() += *rhs;
-    delete rhs;
 }
 
-OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, executeAddDblDbl};
-OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, executeAddIntDbl};
-OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAddDblInt};
-OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
-OperatorCode<OpType::StrStr> add_str_str_code {recreateBinaryOperator, executeCatStrStr};
-OperatorCode<OpType::TmpStr> add_tmp_str_code {recreateBinaryOperator, executeCatTmpStr};
-OperatorCode<OpType::StrTmp> add_str_tmp_code {recreateBinaryOperator, executeCatStrTmp};
-OperatorCode<OpType::TmpTmp> add_tmp_tmp_code {recreateBinaryOperator, executeCatTmpTmp};
+OperatorCode<OpType::StrStr> cat_str_str_code {recreateBinaryOperator, executeCatStrStr};
+OperatorCode<OpType::TmpStr> cat_tmp_str_code {recreateBinaryOperator, executeCatTmpStr};
+OperatorCode<OpType::StrTmp> cat_str_tmp_code {recreateBinaryOperator, executeCatStrTmp};
+OperatorCode<OpType::TmpTmp> cat_tmp_tmp_code {recreateBinaryOperator, executeCatTmpTmp};
 
 NumStrOperatorCodes add_codes {
     Precedence::Summation, "+",
     add_dbl_dbl_code, add_int_dbl_code, add_dbl_int_code, add_int_int_code,
-    add_str_str_code, add_tmp_str_code, add_str_tmp_code, add_tmp_tmp_code
+    cat_str_str_code, cat_tmp_str_code, cat_str_tmp_code, cat_tmp_tmp_code
 };
 
 // ----------------------------------------
