@@ -814,4 +814,34 @@ TEST_CASE("execute expressions with concatentation and temporary strings", "[exe
 
         REQUIRE(oss.str() == "LeftRight\n");
     }
+    SECTION("concatenation with left temporary string and right string operands")
+    {
+        std::istringstream iss {R"(PRINT "Left1"+"Left2"+"Right")"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "Left1Left2Right\n");
+    }
+    SECTION("concatenation with left string and right temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "Left"+("Right1"+"Right2"))"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "LeftRight1Right2\n");
+    }
+    SECTION("concatenation with two temporary string operands")
+    {
+        std::istringstream iss {R"(PRINT "Left1"+"Left2"+("Right1"+"Right2"))"};
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "Left1Left2Right1Right2\n");
+    }
 }

@@ -324,9 +324,34 @@ void executeCatStrStr(Executer &executer)
 {
     auto rhs = executer.topStr();
     executer.pop();
-    auto result = new std::string {*executer.topStr()};
+    auto result = new std::string{*executer.topStr()};
     *result += *rhs;
     executer.setTop(result);
+}
+
+void executeCatTmpStr(Executer &executer)
+{
+    auto rhs = executer.topStr();
+    executer.pop();
+    *executer.topTmpStr() += *rhs;
+}
+
+void executeCatStrTmp(Executer &executer)
+{
+    auto result = executer.topTmpStr();
+    executer.pop();
+    auto local = std::string{*executer.topStr()};
+    std::swap(local, *result);
+    *result += local;
+    executer.setTop(result);
+}
+
+void executeCatTmpTmp(Executer &executer)
+{
+    auto rhs = executer.topTmpStr();
+    executer.pop();
+    *executer.topTmpStr() += *rhs;
+    delete rhs;
 }
 
 OperatorCode<OpType::DblDbl> add_dbl_dbl_code {recreateBinaryOperator, executeAddDblDbl};
@@ -334,9 +359,9 @@ OperatorCode<OpType::IntDbl> add_int_dbl_code {recreateBinaryOperator, executeAd
 OperatorCode<OpType::DblInt> add_dbl_int_code {recreateBinaryOperator, executeAddDblInt};
 OperatorCode<OpType::IntInt> add_int_int_code {recreateBinaryOperator, executeAddIntInt};
 OperatorCode<OpType::StrStr> add_str_str_code {recreateBinaryOperator, executeCatStrStr};
-OperatorCode<OpType::TmpStr> add_tmp_str_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::StrTmp> add_str_tmp_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::TmpTmp> add_tmp_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpStr> add_tmp_str_code {recreateBinaryOperator, executeCatTmpStr};
+OperatorCode<OpType::StrTmp> add_str_tmp_code {recreateBinaryOperator, executeCatStrTmp};
+OperatorCode<OpType::TmpTmp> add_tmp_tmp_code {recreateBinaryOperator, executeCatTmpTmp};
 
 NumStrOperatorCodes add_codes {
     Precedence::Summation, "+",

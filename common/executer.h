@@ -45,6 +45,7 @@ public:
     double topDbl() const;
     int32_t topInt() const;
     const std::string *topStr() const;
+    std::string *topTmpStr() const;
     template <typename T> T top() const;
     double topIntAsDbl() const;
     void pop();
@@ -111,6 +112,11 @@ inline int32_t Executer::topInt() const
 }
 
 inline const std::string *Executer::topStr() const
+{
+    return stack.top().str_value;
+}
+
+inline std::string *Executer::topTmpStr() const
 {
     return stack.top().str_value;
 }
