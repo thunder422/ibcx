@@ -50,7 +50,35 @@ void executeCompareStrStr(Executer &executer)
 {
     auto rhs = executer.topStr();
     executer.pop();
-    executer.setTopIntFromBool(compare(executer.topStr(), rhs));
+    auto lhs = executer.topStr();
+    executer.setTopIntFromBool(compare(lhs, rhs));
+}
+
+template <StrCompareFunction compare>
+void executeCompareTmpStr(Executer &executer)
+{
+    auto rhs = executer.topStr();
+    executer.pop();
+    auto lhs = executer.moveTopTmpStr();
+    executer.setTopIntFromBool(compare(lhs.get(), rhs));
+}
+
+template <StrCompareFunction compare>
+void executeCompareStrTmp(Executer &executer)
+{
+    auto rhs = executer.moveTopTmpStr();
+    executer.pop();
+    auto lhs = executer.topStr();
+    executer.setTopIntFromBool(compare(lhs, rhs.get()));
+}
+
+template <StrCompareFunction compare>
+void executeCompareTmpTmp(Executer &executer)
+{
+    auto rhs = executer.moveTopTmpStr();
+    executer.pop();
+    auto lhs = executer.moveTopTmpStr();
+    executer.setTopIntFromBool(compare(lhs.get(), rhs.get()));
 }
 
 // ----------------------------------------
@@ -75,9 +103,9 @@ OperatorCode<OpType::IntDbl> lt_int_dbl_code {recreateBinaryOperator, executeCom
 OperatorCode<OpType::DblInt> lt_dbl_int_code {recreateBinaryOperator, executeCompareDblInt<lt>};
 OperatorCode<OpType::IntInt> lt_int_int_code {recreateBinaryOperator, executeCompareIntInt<lt>};
 OperatorCode<OpType::StrStr> lt_str_str_code {recreateBinaryOperator, executeCompareStrStr<lt>};
-OperatorCode<OpType::TmpStr> lt_tmp_str_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::StrTmp> lt_str_tmp_code {recreateBinaryOperator, nullptr};
-OperatorCode<OpType::TmpTmp> lt_tmp_tmp_code {recreateBinaryOperator, nullptr};
+OperatorCode<OpType::TmpStr> lt_tmp_str_code {recreateBinaryOperator, executeCompareTmpStr<lt>};
+OperatorCode<OpType::StrTmp> lt_str_tmp_code {recreateBinaryOperator, executeCompareStrTmp<lt>};
+OperatorCode<OpType::TmpTmp> lt_tmp_tmp_code {recreateBinaryOperator, executeCompareTmpTmp<lt>};
 
 CompOperatorCodes lt_codes {
     Precedence::Relation, "<",

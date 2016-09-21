@@ -810,7 +810,7 @@ TEST_CASE("recreate equality expressions with temporary strings", "[equality][re
     }
 }
 
-TEST_CASE("execute expressions with concatentation and temporary strings", "[cat][execute]")
+TEST_CASE("execute concatentation expressions with temporary strings", "[cat][execute]")
 {
     ProgramUnit program;
 
@@ -853,5 +853,53 @@ TEST_CASE("execute expressions with concatentation and temporary strings", "[cat
         program.run(oss);
 
         REQUIRE(oss.str() == "Left1Left2Right1Right2\n");
+    }
+}
+
+TEST_CASE("execute relational expressions with temporary strings", "[relational][execute]")
+{
+    ProgramUnit program;
+
+    SECTION("less-than with left temporary string and right string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "a"+"a"<"bb")" "\n"
+            R"(PRINT "c"+"c"<"bb")" "\n"
+            R"(PRINT "b"+"b"<"bb")"
+        };
+        std::ostringstream oss;
+
+        program.compileSource(iss, oss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n0\n");
+    }
+    SECTION("less-than with left string and right temporary string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "aa"<"b"+"b")" "\n"
+            R"(PRINT "cc"<"b"+"b")" "\n"
+            R"(PRINT "bb"<"b"+"b")"
+        };
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n0\n");
+    }
+    SECTION("less-than with two temporary string operands")
+    {
+        std::istringstream iss {
+            R"(PRINT "a"+"a"<"b"+"b")" "\n"
+            R"(PRINT "c"+"c"<"b"+"b")" "\n"
+            R"(PRINT "b"+"b"<"b"+"b")"
+        };
+        std::ostringstream oss;
+
+        program.compile(iss);
+        program.run(oss);
+
+        REQUIRE(oss.str() == "-1\n0\n0\n");
     }
 }
